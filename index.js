@@ -1,5 +1,5 @@
 // output/Data.Boolean/index.js
-var otherwise = true;
+vwerwerwerar otherwise = true;
 
 // output/Data.Functor/foreign.js
 var arrayMap = function(f) {
@@ -1211,9 +1211,9 @@ var evaluate = function(timekNot) {
     };
   };
 };
-export {
-  evaluate,
-  launch,
+exwerwerport {
+  evaluawerte,
+  launcwerh,
   scheduleNoteEvents,
-  setTempo
-};
+  setTempower
+
