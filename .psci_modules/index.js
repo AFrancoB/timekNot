@@ -1,1 +1,0 @@
-import('./$PSCI/index.js').then(({ $main }) => $main());
