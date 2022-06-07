@@ -3,12 +3,14 @@ import * as Control_Applicative from "../Control.Applicative/index.js";
 import * as Control_Bind from "../Control.Bind/index.js";
 import * as Data_Either from "../Data.Either/index.js";
 import * as Data_EuclideanRing from "../Data.EuclideanRing/index.js";
+import * as Data_Functor from "../Data.Functor/index.js";
 import * as Data_Ord from "../Data.Ord/index.js";
 import * as Data_Ratio from "../Data.Ratio/index.js";
 import * as Data_Tempo from "../Data.Tempo/index.js";
 import * as Effect from "../Effect/index.js";
 import * as Effect_Console from "../Effect.Console/index.js";
 import * as Effect_Ref from "../Effect.Ref/index.js";
+import * as Foreign from "../Foreign/index.js";
 var setTempo = function (timekNot) {
     return function (t) {
         return Effect_Ref.write(Data_Tempo.fromForeignTempo(t))(timekNot.tempo);
@@ -17,9 +19,14 @@ var setTempo = function (timekNot) {
 var scheduleNoteEvents = function (v) {
     return function (v1) {
         return function (v2) {
-            return Control_Applicative.pure(Effect.applicativeEffect)([ {
-                s: "cp"
-            } ]);
+            var events = [ {
+                s: "cp",
+                n: 0
+            }, {
+                s: "bd",
+                n: 1
+            } ];
+            return Control_Applicative.pure(Effect.applicativeEffect)(Data_Functor.map(Data_Functor.functorArray)(Foreign.unsafeToForeign)(events));
         };
     };
 };
@@ -51,7 +58,7 @@ var evaluate = function (timekNot) {
                         error: ""
                     };
                 };
-                throw new Error("Failed pattern match at Main (line 39, column 3 - line 43, column 42): " + [ pr.constructor.name ]);
+                throw new Error("Failed pattern match at Main (line 41, column 3 - line 45, column 42): " + [ pr.constructor.name ]);
             };
         };
     };

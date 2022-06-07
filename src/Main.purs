@@ -15,6 +15,8 @@ import Data.Rational
 import Data.List
 import Data.Array
 
+import Foreign 
+
 type AST = Boolean
 
 type TimekNot = {
@@ -40,12 +42,13 @@ evaluate timekNot _ _ = do
     Left error -> pure $ { success: false, error }
     Right p -> do
       write p timekNot.ast 
-      pure $ { success: true, error: "" }
+      pure $ { success: true, error: "" }    --- here you might add the eval time with purescript. 
 
 
 setTempo :: TimekNot -> ForeignTempo -> Effect Unit
 setTempo timekNot t = write (fromForeignTempo t) timekNot.tempo
 
 
-scheduleNoteEvents :: TimekNot -> DateTime -> DateTime -> forall opts. Effect (Array { s :: String })
-scheduleNoteEvents _ _ _ = pure [{ s: "cp" }]
+scheduleNoteEvents :: TimekNot -> DateTime -> DateTime -> forall opts. Effect (Array Foreign)
+scheduleNoteEvents _ _ _ = pure $ map unsafeToForeign events
+  where events = [{ s: "cp", n: 0 }, { s: "bd", n: 1}]

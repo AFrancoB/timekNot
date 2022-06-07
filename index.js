@@ -1,9 +1,24 @@
 // output/Data.Boolean/index.js
 var otherwise = true;
 
+// output/Data.Functor/foreign.js
+var arrayMap = function(f) {
+  return function(arr) {
+    var l = arr.length;
+    var result = new Array(l);
+    for (var i = 0; i < l; i++) {
+      result[i] = f(arr[i]);
+    }
+    return result;
+  };
+};
+
 // output/Data.Functor/index.js
 var map = function(dict) {
   return dict.map;
+};
+var functorArray = {
+  map: arrayMap
 };
 
 // output/Control.Apply/index.js
@@ -431,6 +446,11 @@ var traverseArrayImpl = function() {
   };
 }();
 
+// output/Unsafe.Coerce/foreign.js
+var unsafeCoerce2 = function(x) {
+  return x;
+};
+
 // output/Data.Enum/index.js
 var toEnum = function(dict) {
   return dict.toEnum;
@@ -440,17 +460,17 @@ var fromEnum = function(dict) {
 };
 
 // output/Data.Date.Component/index.js
-var $runtime_lazy = function(name, moduleName, init) {
-  var state = 0;
+var $runtime_lazy = function(name2, moduleName, init2) {
+  var state2 = 0;
   var val;
   return function(lineNumber) {
-    if (state === 2)
+    if (state2 === 2)
       return val;
-    if (state === 1)
-      throw new ReferenceError(name + " was needed before it finished initializing (module " + moduleName + ", line " + lineNumber + ")", moduleName, lineNumber);
-    state = 1;
-    val = init();
-    state = 2;
+    if (state2 === 1)
+      throw new ReferenceError(name2 + " was needed before it finished initializing (module " + moduleName + ", line " + lineNumber + ")", moduleName, lineNumber);
+    state2 = 1;
+    val = init2();
+    state2 = 2;
     return val;
   };
 };
@@ -1030,17 +1050,17 @@ var ap = function(dictMonad) {
 };
 
 // output/Effect/index.js
-var $runtime_lazy2 = function(name, moduleName, init) {
-  var state = 0;
+var $runtime_lazy2 = function(name2, moduleName, init2) {
+  var state2 = 0;
   var val;
   return function(lineNumber) {
-    if (state === 2)
+    if (state2 === 2)
       return val;
-    if (state === 1)
-      throw new ReferenceError(name + " was needed before it finished initializing (module " + moduleName + ", line " + lineNumber + ")", moduleName, lineNumber);
-    state = 1;
-    val = init();
-    state = 2;
+    if (state2 === 1)
+      throw new ReferenceError(name2 + " was needed before it finished initializing (module " + moduleName + ", line " + lineNumber + ")", moduleName, lineNumber);
+    state2 = 1;
+    val = init2();
+    state2 = 2;
     return val;
   };
 };
@@ -1128,6 +1148,14 @@ var write = function(val) {
 // output/Effect.Ref/index.js
 var $$new = _new;
 
+// output/Foreign/foreign.js
+var isArray = Array.isArray || function(value) {
+  return Object.prototype.toString.call(value) === "[object Array]";
+};
+
+// output/Foreign/index.js
+var unsafeToForeign = unsafeCoerce2;
+
 // output/Main/index.js
 var setTempo = function(timekNot) {
   return function(t) {
@@ -1137,9 +1165,14 @@ var setTempo = function(timekNot) {
 var scheduleNoteEvents = function(v) {
   return function(v1) {
     return function(v2) {
-      return pure(applicativeEffect)([{
-        s: "cp"
-      }]);
+      var events = [{
+        s: "cp",
+        n: 0
+      }, {
+        s: "bd",
+        n: 1
+      }];
+      return pure(applicativeEffect)(map(functorArray)(unsafeToForeign)(events));
     };
   };
 };
@@ -1173,7 +1206,7 @@ var evaluate = function(timekNot) {
           };
         }
         ;
-        throw new Error("Failed pattern match at Main (line 39, column 3 - line 43, column 42): " + [pr.constructor.name]);
+        throw new Error("Failed pattern match at Main (line 41, column 3 - line 45, column 42): " + [pr.constructor.name]);
       };
     };
   };
