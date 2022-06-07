@@ -3,7 +3,6 @@ import * as Control_Applicative from "../Control.Applicative/index.js";
 import * as Control_Bind from "../Control.Bind/index.js";
 import * as Data_Either from "../Data.Either/index.js";
 import * as Data_EuclideanRing from "../Data.EuclideanRing/index.js";
-import * as Data_List from "../Data.List/index.js";
 import * as Data_Ord from "../Data.Ord/index.js";
 import * as Data_Ratio from "../Data.Ratio/index.js";
 import * as Data_Tempo from "../Data.Tempo/index.js";
@@ -18,9 +17,9 @@ var setTempo = function (timekNot) {
 var scheduleNoteEvents = function (v) {
     return function (v1) {
         return function (v2) {
-            return Control_Applicative.pure(Effect.applicativeEffect)(Data_List.singleton({
+            return Control_Applicative.pure(Effect.applicativeEffect)([ {
                 s: "cp"
-            }));
+            } ]);
         };
     };
 };
@@ -52,7 +51,7 @@ var evaluate = function (timekNot) {
                         error: ""
                     };
                 };
-                throw new Error("Failed pattern match at Main (line 38, column 3 - line 42, column 42): " + [ pr.constructor.name ]);
+                throw new Error("Failed pattern match at Main (line 39, column 3 - line 43, column 42): " + [ pr.constructor.name ]);
             };
         };
     };

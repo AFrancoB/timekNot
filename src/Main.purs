@@ -13,6 +13,7 @@ import Effect.Ref (new,write)
 
 import Data.Rational
 import Data.List
+import Data.Array
 
 type AST = Boolean
 
@@ -46,5 +47,5 @@ setTempo :: TimekNot -> ForeignTempo -> Effect Unit
 setTempo timekNot t = write (fromForeignTempo t) timekNot.tempo
 
 
-scheduleNoteEvents :: TimekNot -> DateTime -> DateTime -> forall opts. Effect (List { s :: String })
-scheduleNoteEvents _ _ _ = pure $ singleton { s: "cp" } 
+scheduleNoteEvents :: TimekNot -> DateTime -> DateTime -> forall opts. Effect (Array { s :: String })
+scheduleNoteEvents _ _ _ = pure [{ s: "cp" }]

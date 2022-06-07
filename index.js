@@ -342,99 +342,44 @@ var div = function(dict) {
   return dict.div;
 };
 
-// output/Control.Monad/index.js
-var ap = function(dictMonad) {
-  return function(f) {
-    return function(a) {
-      return bind(dictMonad.Bind1())(f)(function(f$prime) {
-        return bind(dictMonad.Bind1())(a)(function(a$prime) {
-          return pure(dictMonad.Applicative0())(f$prime(a$prime));
-        });
-      });
+// output/Data.Ratio/index.js
+var Ratio = /* @__PURE__ */ function() {
+  function Ratio2(value0, value1) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+  ;
+  Ratio2.create = function(value0) {
+    return function(value1) {
+      return new Ratio2(value0, value1);
+    };
+  };
+  return Ratio2;
+}();
+var reduce = function(dictOrd) {
+  return function(dictEuclideanRing) {
+    return function(n) {
+      return function(d) {
+        var g = gcd(dictOrd.Eq0())(dictEuclideanRing)(n)(d);
+        var d$prime = div(dictEuclideanRing)(d)(g);
+        return new Ratio(mul(dictEuclideanRing.CommutativeRing0().Ring0().Semiring0())(div(dictEuclideanRing)(n)(g))(signum(dictOrd)(dictEuclideanRing.CommutativeRing0().Ring0())(d$prime)), abs(dictOrd)(dictEuclideanRing.CommutativeRing0().Ring0())(d$prime));
+      };
     };
   };
 };
 
-// output/Effect/foreign.js
-var pureE = function(a) {
-  return function() {
-    return a;
-  };
-};
-var bindE = function(a) {
-  return function(f) {
-    return function() {
-      return f(a())();
-    };
-  };
-};
-
-// output/Effect/index.js
-var $runtime_lazy = function(name, moduleName, init) {
-  var state = 0;
-  var val;
-  return function(lineNumber) {
-    if (state === 2)
-      return val;
-    if (state === 1)
-      throw new ReferenceError(name + " was needed before it finished initializing (module " + moduleName + ", line " + lineNumber + ")", moduleName, lineNumber);
-    state = 1;
-    val = init();
-    state = 2;
-    return val;
-  };
-};
-var monadEffect = {
-  Applicative0: function() {
-    return applicativeEffect;
-  },
-  Bind1: function() {
-    return bindEffect;
+// output/Data.Date/foreign.js
+var createDate = function(y, m, d) {
+  var date2 = new Date(Date.UTC(y, m, d));
+  if (y >= 0 && y < 100) {
+    date2.setUTCFullYear(y);
   }
+  return date2;
 };
-var bindEffect = {
-  bind: bindE,
-  Apply0: function() {
-    return $lazy_applyEffect(0);
-  }
-};
-var applicativeEffect = {
-  pure: pureE,
-  Apply0: function() {
-    return $lazy_applyEffect(0);
-  }
-};
-var $lazy_functorEffect = /* @__PURE__ */ $runtime_lazy("functorEffect", "Effect", function() {
-  return {
-    map: liftA1(applicativeEffect)
-  };
-});
-var $lazy_applyEffect = /* @__PURE__ */ $runtime_lazy("applyEffect", "Effect", function() {
-  return {
-    apply: ap(monadEffect),
-    Functor0: function() {
-      return $lazy_functorEffect(0);
-    }
-  };
-});
-var functorEffect = /* @__PURE__ */ $lazy_functorEffect(20);
-
-// output/Effect.Ref/foreign.js
-var _new = function(val) {
-  return function() {
-    return { value: val };
-  };
-};
-var write = function(val) {
-  return function(ref) {
-    return function() {
-      ref.value = val;
-    };
-  };
-};
-
-// output/Effect.Ref/index.js
-var $$new = _new;
+function canonicalDateImpl(ctor, y, m, d) {
+  var date2 = createDate(y, m - 1, d);
+  return ctor(date2.getUTCFullYear())(date2.getUTCMonth() + 1)(date2.getUTCDate());
+}
 
 // output/Data.Traversable/foreign.js
 var traverseArrayImpl = function() {
@@ -486,72 +431,6 @@ var traverseArrayImpl = function() {
   };
 }();
 
-// output/Data.List.Types/index.js
-var Nil = /* @__PURE__ */ function() {
-  function Nil2() {
-  }
-  ;
-  Nil2.value = new Nil2();
-  return Nil2;
-}();
-var Cons = /* @__PURE__ */ function() {
-  function Cons2(value0, value1) {
-    this.value0 = value0;
-    this.value1 = value1;
-  }
-  ;
-  Cons2.create = function(value0) {
-    return function(value1) {
-      return new Cons2(value0, value1);
-    };
-  };
-  return Cons2;
-}();
-
-// output/Data.List/index.js
-var singleton3 = function(a) {
-  return new Cons(a, Nil.value);
-};
-
-// output/Data.Ratio/index.js
-var Ratio = /* @__PURE__ */ function() {
-  function Ratio2(value0, value1) {
-    this.value0 = value0;
-    this.value1 = value1;
-  }
-  ;
-  Ratio2.create = function(value0) {
-    return function(value1) {
-      return new Ratio2(value0, value1);
-    };
-  };
-  return Ratio2;
-}();
-var reduce = function(dictOrd) {
-  return function(dictEuclideanRing) {
-    return function(n) {
-      return function(d) {
-        var g = gcd(dictOrd.Eq0())(dictEuclideanRing)(n)(d);
-        var d$prime = div(dictEuclideanRing)(d)(g);
-        return new Ratio(mul(dictEuclideanRing.CommutativeRing0().Ring0().Semiring0())(div(dictEuclideanRing)(n)(g))(signum(dictOrd)(dictEuclideanRing.CommutativeRing0().Ring0())(d$prime)), abs(dictOrd)(dictEuclideanRing.CommutativeRing0().Ring0())(d$prime));
-      };
-    };
-  };
-};
-
-// output/Data.Date/foreign.js
-var createDate = function(y, m, d) {
-  var date2 = new Date(Date.UTC(y, m, d));
-  if (y >= 0 && y < 100) {
-    date2.setUTCFullYear(y);
-  }
-  return date2;
-};
-function canonicalDateImpl(ctor, y, m, d) {
-  var date2 = createDate(y, m - 1, d);
-  return ctor(date2.getUTCFullYear())(date2.getUTCMonth() + 1)(date2.getUTCDate());
-}
-
 // output/Data.Enum/index.js
 var toEnum = function(dict) {
   return dict.toEnum;
@@ -561,7 +440,7 @@ var fromEnum = function(dict) {
 };
 
 // output/Data.Date.Component/index.js
-var $runtime_lazy2 = function(name, moduleName, init) {
+var $runtime_lazy = function(name, moduleName, init) {
   var state = 0;
   var val;
   return function(lineNumber) {
@@ -980,7 +859,7 @@ var boundedEnumMonth = {
     return $lazy_enumMonth(0);
   }
 };
-var $lazy_enumMonth = /* @__PURE__ */ $runtime_lazy2("enumMonth", "Data.Date.Component", function() {
+var $lazy_enumMonth = /* @__PURE__ */ $runtime_lazy("enumMonth", "Data.Date.Component", function() {
   return {
     succ: function() {
       var $58 = toEnum(boundedEnumMonth);
@@ -1123,6 +1002,83 @@ function now() {
   return Date.now();
 }
 
+// output/Effect/foreign.js
+var pureE = function(a) {
+  return function() {
+    return a;
+  };
+};
+var bindE = function(a) {
+  return function(f) {
+    return function() {
+      return f(a())();
+    };
+  };
+};
+
+// output/Control.Monad/index.js
+var ap = function(dictMonad) {
+  return function(f) {
+    return function(a) {
+      return bind(dictMonad.Bind1())(f)(function(f$prime) {
+        return bind(dictMonad.Bind1())(a)(function(a$prime) {
+          return pure(dictMonad.Applicative0())(f$prime(a$prime));
+        });
+      });
+    };
+  };
+};
+
+// output/Effect/index.js
+var $runtime_lazy2 = function(name, moduleName, init) {
+  var state = 0;
+  var val;
+  return function(lineNumber) {
+    if (state === 2)
+      return val;
+    if (state === 1)
+      throw new ReferenceError(name + " was needed before it finished initializing (module " + moduleName + ", line " + lineNumber + ")", moduleName, lineNumber);
+    state = 1;
+    val = init();
+    state = 2;
+    return val;
+  };
+};
+var monadEffect = {
+  Applicative0: function() {
+    return applicativeEffect;
+  },
+  Bind1: function() {
+    return bindEffect;
+  }
+};
+var bindEffect = {
+  bind: bindE,
+  Apply0: function() {
+    return $lazy_applyEffect(0);
+  }
+};
+var applicativeEffect = {
+  pure: pureE,
+  Apply0: function() {
+    return $lazy_applyEffect(0);
+  }
+};
+var $lazy_functorEffect = /* @__PURE__ */ $runtime_lazy2("functorEffect", "Effect", function() {
+  return {
+    map: liftA1(applicativeEffect)
+  };
+});
+var $lazy_applyEffect = /* @__PURE__ */ $runtime_lazy2("applyEffect", "Effect", function() {
+  return {
+    apply: ap(monadEffect),
+    Functor0: function() {
+      return $lazy_functorEffect(0);
+    }
+  };
+});
+var functorEffect = /* @__PURE__ */ $lazy_functorEffect(20);
+
 // output/Effect.Now/index.js
 var nowDateTime = /* @__PURE__ */ map(functorEffect)(toDateTime)(now);
 
@@ -1155,6 +1111,23 @@ var log2 = function(s) {
   };
 };
 
+// output/Effect.Ref/foreign.js
+var _new = function(val) {
+  return function() {
+    return { value: val };
+  };
+};
+var write = function(val) {
+  return function(ref) {
+    return function() {
+      ref.value = val;
+    };
+  };
+};
+
+// output/Effect.Ref/index.js
+var $$new = _new;
+
 // output/Main/index.js
 var setTempo = function(timekNot) {
   return function(t) {
@@ -1164,9 +1137,9 @@ var setTempo = function(timekNot) {
 var scheduleNoteEvents = function(v) {
   return function(v1) {
     return function(v2) {
-      return pure(applicativeEffect)(singleton3({
+      return pure(applicativeEffect)([{
         s: "cp"
-      }));
+      }]);
     };
   };
 };
@@ -1200,7 +1173,7 @@ var evaluate = function(timekNot) {
           };
         }
         ;
-        throw new Error("Failed pattern match at Main (line 38, column 3 - line 42, column 42): " + [pr.constructor.name]);
+        throw new Error("Failed pattern match at Main (line 39, column 3 - line 43, column 42): " + [pr.constructor.name]);
       };
     };
   };
