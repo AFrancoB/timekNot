@@ -36,10 +36,8 @@ import Partial.Unsafe
 import Data.Map as M
 
 
-data Pruebilla = Pru Number Int Int
-
-mapaDePosiciones:: M.Map Int Pruebilla
-mapaDePosiciones = M.singleton 0 $ Pru 2.666 230 0
+-- mapaDePosiciones:: M.Map Int Pruebilla
+-- mapaDePosiciones = M.singleton 0 $ Pru 2.666 230 0
 
 
 func = M.fromFoldableWithIndex $ fromFoldable [0.0,1.0,2.0]
