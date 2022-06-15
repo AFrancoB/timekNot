@@ -6,7 +6,7 @@ import Prim.Boolean
 import Data.Either
 import Data.Identity
 import Data.Array as Arr
-import Data.List
+import Data.List hiding (many)
 import Data.Typelevel.Bool
 import Data.Int
 import Data.Tuple
@@ -23,6 +23,8 @@ import Effect.Console (log)
 
 import Data.Rational
 import Data.Ratio
+
+import Data.NonEmpty as N
 
 import Parsing
 import Parsing.String
@@ -63,28 +65,78 @@ type P = ParserT String Identity
 -- chain!!!! check that out.
 -- from complex to simple parsers
 
--- data Rhythmic = 
---   Onset Boolean |
---   Pattern (List Rhythmic) | -- piling adjacent things no white space
---   Subdivision (List Rhythmic) | -- list separated by spaces -- space as operator
---   Euclidean Euclidean Int Int Int | 
---   Repetition Rhythmic Int  
+data Rhythmic = 
+  Onsets (List Boolean) |
+  Pattern (List Rhythmic) | -- piling adjacent things no white space
+  Subdivision (List Rhythmic) | -- list separated by spaces -- space as operator
+  Euclidean Euclidean Int Int Int | 
+  Repetition Rhythmic Int  
 
 -- --data EuclideanType = Full | K | InverseK
 
--- -- data Euclidean = Full Rhythmic Rhythmic | K Rhythmic | InverseK Rhythmic
+data Euclidean = Full Rhythmic Rhythmic | K Rhythmic | InverseK Rhythmic
 
--- instance euclideanShowInstance :: Show Euclidean where
---   show (Full x y) = (show x) <>"on ks and not on ks " <> (show y)
---   show (K x) = show x
---   show (InverseK x) = show x
+instance euclideanShowInstance :: Show Euclidean where
+  show (Full x y) = (show x) <>"on ks and not on ks " <> (show y)
+  show (K x) = show x
+  show (InverseK x) = show x
 
--- instance rhythmicShowInstance :: Show Rhythmic where
---   show (Onset on) = show on
---   show (Pattern on) = show on
---   show (Subdivision on n) = (show on) <>" subdivided in "<> (show n)
---   show (Euclidean eu k n off) = show eu <> " euclidean " <> (show k) <> "," <> (show n) <> "," <> (show off)
---   show (Repetition on n) = show on <> " times " <> (show n)
+instance rhythmicShowInstance :: Show Rhythmic where
+  show (Onsets on) = show on
+  show (Pattern ons) = show ons
+  show (Subdivision ons) = show ons
+  show (Euclidean eu k n off) = show eu <> " euclidean " <> (show k) <> "," <> (show n) <> "," <> (show off)
+  show (Repetition on n) = show on <> " times " <> (show n)
+
+
+-- topRhythmic :: P Rhythmic
+-- topRhythmic = do
+--     r <- choice [
+--         subdivision,
+--         euclidean,
+--         repetition,
+--         pattern,
+--         ]
+--     eof
+--     pure r
+
+--chainl digit (string "+" $> add) 0
+
+patterns:: P Rhythmic 
+patterns = do
+    x <- chainl1 (choice [try onsets]) (char ' ' $> chainRhythms)
+    _ <- pure 1
+    pure x
+
+chainRhythms:: Rhythmic -> Rhythmic -> Rhythmic
+chainRhythms x y =  Pattern $ snoc (fromFoldable [x]) y
+
+
+onsets:: P Rhythmic
+-- pattern = ... a List of Rhythmic with no whitespace ...
+onsets = do
+  xs <- many onset
+  _ <- pure 1
+  pure $ Onsets xs 
+
+onset:: P Boolean
+onset = do
+    x <- choice [(oneOf ['x']) *> (pure $ true),(oneOf ['o']) *> (pure $ false)]
+    _ <- pure 1
+    pure x
+
+ 
+-- patternise:: Rhythmic -> Rhythmic -> Rhythmic
+-- patternise x y = Pattern $ concat $ fromFoldable [x,y] 
+
+-- como disegnar un operador para dos onsets que luego se pueda generalisar para dos rhythmics?
+
+
+--   euclideanElement -- [xxox](3,8) OR x(3,8)
+--   repetitionElement -- [xxox]!3 OR x!3
+--   some other rhythmic wrapped in [ ]
+--   ...an x or an o... -> Onset
+--   ...fails
 
 
 -- parsePattern:: P Rhythmic

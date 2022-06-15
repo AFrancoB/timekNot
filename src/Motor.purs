@@ -27,6 +27,8 @@ import Data.Ratio
 import Effect (Effect)
 import Effect.Now (nowDateTime)
 
+import Data.Newtype
+
 import Data.DateTime
 import Data.DateTime.Instant
 import Data.Tempo
@@ -47,7 +49,7 @@ makeTime h min sec milisec =
 
 
 t:: Tempo
-t = {freq: (1%1),time: (DateTime (makeDate 2022 June 3) (makeTime 19 11 25 100)), count: fromInt 0 }
+t = {freq: (1%2),time: (DateTime (makeDate 2022 June 3) (makeTime 19 11 25 100)), count: fromInt 0 }
 
 ws:: Int -> Int -> DateTime
 ws x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
@@ -64,9 +66,19 @@ oDur = (1%2)
 o:: List Number
 o = fromFoldable [0.0,0.2,0.5] -- at this level a metric unit should be added. For testing: 0,0.1 (metre 1), 0.2,0.3 (metre 2), 0.4,0.5 (metre 3), 0.6,0.7 (metre 4), etc...
 
+countToStart:: Int
+countToStart = 327
 -------------
 
-onsetPosition:: List Number -> Rational -> Tempo -> DateTime -> DateTime -> DateTime -> List (Tuple Number Int) -- change to MMap Instant Int
+fromPassageToTime:: List Boolean -> Tempo -> DateTime -> DateTime -> DateTime -> M.Map Int Coordenada
+fromPassageToTime x t ws we eval = 
+    let passageLength = fromInt $ length x   -- oDur
+        onsets = (fromInt <<< snd) <$> (filter (\x -> fst x == true) $ zip x (0..(length x)))
+        oPercen = map (toNumber <<< (_/passageLength)) onsets
+    in onsetPosition oPercen passageLength t ws we eval
+
+
+onsetPosition:: List Number -> Rational -> Tempo -> DateTime -> DateTime -> DateTime -> M.Map Int Coordenada -- change to MMap Instant Int
 onsetPosition o oDur t ws we eval = 
     let countAtStart = timeToCount t ws --rational
         passageAtStart = toNumber (countAtStart/oDur)
@@ -79,21 +91,27 @@ onsetPosition o oDur t ws we eval =
         multiOnsets = (floor $ passageAtEnd) - (floor $ passageAtStart)
 
         filtrado = filterEvents multiOnsets percentAtStart percentAtEnd passageAtStart o
-      in filtrado 
+        posToTime = map (\x -> positionToTime t oDur x) filtrado
+      in M.fromFoldableWithIndex posToTime
 
---data Indices = Indices Int Int -- index of pattern and index of event
+type TimeStamp = Number
+type IPassage = Int 
+type IEvent = Int
 
--- NewType wrap and unwrap
--- the first rational actually needs to be the pattern index, make mock tests for this
-countToStart:: Int
-countToStart = 327
--- estos ya fueron filtrados!!!
+data Coordenada = Coord TimeStamp IPassage IEvent 
 
--- fromPositionToTimeStamp:: Int -> Number -> Number -> Tempo -> Instant
--- fromPositionToTimeStamp countToStart oDur posicion tempo =
---     let dur = (oDur / (tempo.freq)) * posicion
---     in countToTime tempo $ ((I.toNumber countToStart) + dur)
+instance coordenadaShowInstance :: Show Coordenada where
+  show (Coord x y z) = "time: "<>show x<>", iPassage: "<>show y<>", iEvent: "<>show z
 
+
+-- crear instancias de coordenada y en la funcion de abajo debe de ser:
+-- :: Tempo -> Rational -> Tuple Number Int -> Coord TimeStamp IPassage IEvent
+positionToTime:: Tempo -> Rational -> Tuple Number Int -> Coordenada
+positionToTime t oDur (Tuple pos iEvent) = 
+    let posInTempo = (toRat pos) * oDur
+        countInTime = countToTime t posInTempo
+    in Coord (unwrap $ unInstant $ fromDateTime countInTime) (floor pos) iEvent
+    
 
 filterEvents:: Int ->  Number -> Number -> Number -> List Number -> List (Tuple Number Int) -- posicion e indiceEvento falta pattern
 filterEvents mo start end passageAtStart o 
@@ -152,9 +170,6 @@ multiplePatternW indexAtPhrase mo first o last' =
     in map (_ + iToN indexAtPhrase) $ concat $ toL [first,middle,last] 
 
 
--- multiplePatternW mo first middle last = si la primer lista tiene cosas pasa las cosas sin adicion, la lista de enmedio nunca esta vacia pero siempre se le suma un 1 y se acumula cuanto mas mo. La lista ultima si tiene cosas se le suma uno a partir del tail del floor del middle list, si viene vacia no se pasa nada.
-
-
 toL x = fromFoldable x
 
 iToN x = I.toNumber x
@@ -164,18 +179,16 @@ floor x = I.floor x
 
 toRat:: Number -> Rational
 toRat x = 
-    let 
-        pFact = 1000000
+    let pFact = 1000000
         floored = floor x -- 12
         fract = x - (iToN floored) -- 12.5 - 12.0 = 0.5
         fract' = I.round $ fract * (iToN pFact) -- 500000
     in (floored%1) + (fract'%pFact) -- 12 + (500000%1000000)
 
 
--- Starting from, for example, the number 4.123: I think one approach might be to take the fractional part of the number (eg. 0.123) and multiply it by some precision factor - say 1000000 - so 0.123 becomes 123000.0 and then convert that to Int and put it over the precision factor to form a Rational - 123000 % 1000000 - then add that to the whole number part as a Rational.
+justFractional:: Number -> Number
+justFractional x = x - (iToN $ floor x)
 
-
---fromDateTime
 
 
 type Event =
