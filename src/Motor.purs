@@ -49,7 +49,7 @@ makeTime h min sec milisec =
 
 
 t:: Tempo
-t = {freq: (1%2),time: (DateTime (makeDate 2022 June 3) (makeTime 19 11 25 100)), count: fromInt 0 }
+t = {freq: (2%1),time: (DateTime (makeDate 2022 June 3) (makeTime 19 11 25 100)), count: fromInt 0 }
 
 ws:: Int -> Int -> DateTime
 ws x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
@@ -70,28 +70,28 @@ countToStart:: Int
 countToStart = 327
 -------------
 
-fromPassageToTime:: List Boolean -> Tempo -> DateTime -> DateTime -> DateTime -> M.Map Int Coordenada
-fromPassageToTime x t ws we eval = 
+fromPassageToCoord:: List Boolean -> Tempo -> DateTime -> DateTime -> DateTime -> M.Map Int Coordenada
+fromPassageToCoord x t ws we eval = 
     let passageLength = fromInt $ length x   -- oDur
         onsets = (fromInt <<< snd) <$> (filter (\x -> fst x == true) $ zip x (0..(length x)))
         oPercen = map (toNumber <<< (_/passageLength)) onsets
-    in onsetPosition oPercen passageLength t ws we eval
+    in passagePosition oPercen passageLength t ws we eval
 
 
-onsetPosition:: List Number -> Rational -> Tempo -> DateTime -> DateTime -> DateTime -> M.Map Int Coordenada -- change to MMap Instant Int
-onsetPosition o oDur t ws we eval = 
-    let countAtStart = timeToCount t ws --rational
-        passageAtStart = toNumber (countAtStart/oDur)
+passagePosition:: List Number -> Rational -> Tempo -> DateTime -> DateTime -> DateTime -> M.Map Int Coordenada -- change to MMap Instant Int
+passagePosition o lenPasaje t ws we eval = 
+    let countAtStart = timeToCountNumber t ws --rational
+        passageAtStart =  countAtStart/ (toNumber lenPasaje)
         percentAtStart = passageAtStart - (iToN $ floor $ passageAtStart)
 
-        countAtEnd = timeToCount t we
-        passageAtEnd = toNumber (countAtEnd/oDur)
+        countAtEnd = timeToCountNumber t we
+        passageAtEnd = countAtEnd/ (toNumber lenPasaje)
         percentAtEnd = passageAtEnd - (iToN $ floor $ passageAtEnd)
 
-        multiOnsets = (floor $ passageAtEnd) - (floor $ passageAtStart)
+        nPassages = (floor $ passageAtEnd) - (floor $ passageAtStart)
 
-        filtrado = filterEvents multiOnsets percentAtStart percentAtEnd passageAtStart o
-        posToTime = map (\x -> positionToTime t oDur x) filtrado
+        filtrado = filterEvents nPassages percentAtStart percentAtEnd passageAtStart o
+        posToTime = map (\x -> positionToTime t lenPasaje x) filtrado
       in M.fromFoldableWithIndex posToTime
 
 type TimeStamp = Number
@@ -107,17 +107,17 @@ instance coordenadaShowInstance :: Show Coordenada where
 -- crear instancias de coordenada y en la funcion de abajo debe de ser:
 -- :: Tempo -> Rational -> Tuple Number Int -> Coord TimeStamp IPassage IEvent
 positionToTime:: Tempo -> Rational -> Tuple Number Int -> Coordenada
-positionToTime t oDur (Tuple pos iEvent) = 
-    let posInTempo = (toRat pos) * oDur
+positionToTime t lenPasaje (Tuple pos iEvent) = 
+    let posInTempo = (toRat pos) * lenPasaje 
         countInTime = countToTime t posInTempo
     in Coord (unwrap $ unInstant $ fromDateTime countInTime) (floor pos) iEvent
     
 
 filterEvents:: Int ->  Number -> Number -> Number -> List Number -> List (Tuple Number Int) -- posicion e indiceEvento falta pattern
-filterEvents mo start end passageAtStart o 
-    | mo == 0 = zip x $ getIndexSimple start end o
+filterEvents nPassages start end passageAtStart o 
+    | nPassages == 0 = zip x $ getIndexSimple start end o
         where x = map (_ + (iToN $ floor passageAtStart)) $ filter (\x -> (x >= start) && (x < end)) o
-    | mo == 1 =
+    | nPassages == 1 =
         let firstList = filter (\x -> (x >= start) && (x < 1.0)) o
             indexFst = getIndexOfFirstList firstList o
             lastList = filter (\x -> (x >= 0.0) && (x < end)) o
@@ -128,11 +128,11 @@ filterEvents mo start end passageAtStart o
     | otherwise =
         let firstList = filter (\x -> (x >= start) && (x < 1.0)) o
             fstIndex = getIndexOfFirstList firstList o
-            middleList = take (floor ((iToN (length o))*((iToN mo) - 1.0))) $ cycle o
+            middleList = take (floor ((iToN (length o))*((iToN nPassages) - 1.0))) $ cycle o
             middleIndex = getIndexOfMiddleList (length middleList) o 
             lastList = filter (\x -> (x >= 0.0) && (x < end)) o
             lastIndex = getIndexOfLastList lastList o
-            listOfEvents = multiplePatternW (floor passageAtStart) mo firstList o lastList
+            listOfEvents = multiplePatternW (floor passageAtStart) nPassages firstList o lastList
             listOfIndexes =  concat $ toL [fstIndex,middleIndex,lastIndex]
         in zip listOfEvents listOfIndexes
 

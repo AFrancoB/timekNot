@@ -102,6 +102,12 @@ instance rhythmicShowInstance :: Show Rhythmic where
 
 --chainl digit (string "+" $> add) 0
 
+topRhythmic:: P Rhythmic
+topRhythmic = do
+  r <- choice [patterns]
+  eof
+  pure r
+
 patterns:: P Rhythmic 
 patterns = do
     x <- chainl1 (choice [try onsets]) (char ' ' $> chainRhythms)
@@ -110,6 +116,7 @@ patterns = do
 
 chainRhythms:: Rhythmic -> Rhythmic -> Rhythmic
 chainRhythms x y =  Pattern $ snoc (fromFoldable [x]) y
+
 
 
 onsets:: P Rhythmic
