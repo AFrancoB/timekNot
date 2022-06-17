@@ -1,4 +1,4 @@
-module Rhythmic where
+module Rhythmic (Rhythmic(..),Euclidean, topRhythmic) where
 
 import Prelude
 import Prim.Boolean
@@ -6,7 +6,7 @@ import Prim.Boolean
 import Data.Either
 import Data.Identity
 import Data.Array as Arr
-import Data.List hiding (many)
+import Data.List.Lazy hiding (many,Pattern)
 import Data.Typelevel.Bool
 import Data.Int
 import Data.Tuple
@@ -32,6 +32,13 @@ import Parsing.String.Basic
 import Parsing.Combinators
 import Parsing.Language (haskellStyle)
 import Parsing.Token (makeTokenParser)
+
+import Data.DateTime
+import Data.DateTime.Instant
+import Data.Tempo
+import Data.Enum
+import Data.Map as M
+import Partial.Unsafe
 
 type P = ParserT String Identity
 
@@ -82,9 +89,9 @@ instance euclideanShowInstance :: Show Euclidean where
   show (InverseK x) = show x
 
 instance rhythmicShowInstance :: Show Rhythmic where
-  show (Onsets on) = show on
-  show (Pattern ons) = show ons
-  show (Subdivision ons) = show ons
+  show (Onsets on) = "onsets " <> show on
+  show (Pattern ons) = "pattern " <> show ons
+  show (Subdivision ons) = "subdivision: " <> show ons
   show (Euclidean eu k n off) = show eu <> " euclidean " <> (show k) <> "," <> (show n) <> "," <> (show off)
   show (Repetition on n) = show on <> " times " <> (show n)
 
@@ -101,6 +108,23 @@ instance rhythmicShowInstance :: Show Rhythmic where
 --     pure r
 
 --chainl digit (string "+" $> add) 0
+
+-- fromPassageToCoord:: List Boolean -> Tempo -> DateTime -> DateTime -> DateTime -> M.Map Int Coordenada
+
+--fromPassageToCoord
+
+-- program:: String -> Either ParseError (M.Map Int Coordenada)
+-- program str = fromPassageToCoord' toBool
+--   where toBool = parseToBools $ runParser str topRhythmic
+
+-- fromPassageToCoord':: Either ParseError (List Boolean) -> Either ParseError (M.Map Int Coordenada)
+-- fromPassageToCoord' (Left x) = Left x
+-- fromPassageToCoord' (Right x) = Right $ fromPassageToCoord x t (ws 0 0) (we 1 0) eval
+
+-- parseToBools:: Either ParseError (Rhythmic) -> Either ParseError (List Boolean)
+-- parseToBools (Left x)  = Left x
+-- parseToBools (Right x) = Right $ fromRhythmicToList x
+
 
 topRhythmic:: P Rhythmic
 topRhythmic = do
@@ -124,7 +148,7 @@ onsets:: P Rhythmic
 onsets = do
   xs <- many onset
   _ <- pure 1
-  pure $ Onsets xs 
+  pure $ Onsets $ fromFoldable xs 
 
 onset:: P Boolean
 onset = do
@@ -268,3 +292,36 @@ brackets = tokenParser.brackets
 comma = tokenParser.comma
 semi = tokenParser.semi
 integer = tokenParser.integer
+
+
+
+
+
+---- testing stuff ---------------
+makeDate :: Int -> Month -> Int -> Date
+makeDate y m d = 
+    unsafePartial $ fromJust $ 
+       canonicalDate <$> toEnum y <@> m <*> toEnum d
+
+makeTime :: Int -> Int -> Int -> Int -> Time
+makeTime h min sec milisec = 
+    unsafePartial $ fromJust $ Time <$> toEnum h <*> toEnum min <*> toEnum sec <*> toEnum milisec
+
+
+t:: Tempo
+t = {freq: (2%1),time: (DateTime (makeDate 2022 June 3) (makeTime 19 11 25 100)), count: fromInt 0 }
+
+ws:: Int -> Int -> DateTime
+ws x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
+
+we:: Int -> Int -> DateTime
+we x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
+
+eval:: DateTime
+eval = (DateTime (makeDate 2022 June 3) (makeTime 19 13 5 150))
+
+oDur:: Rational  -- transposition value 2
+oDur = (1%2)
+
+o:: List Number
+o = fromFoldable [0.0,0.2,0.5] -- at this level a metric unit should be added. For testing: 0,0.1 (metre 1), 0.2,0.3 (metre 2), 0.4,0.5 (metre 3), 0.6,0.7 (metre 4), etc...

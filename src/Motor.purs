@@ -1,4 +1,4 @@
-module Motor where
+module Motor (fromPassageToCoord, Coordenada(..)) where
 
 import Prelude
 import Prim.Boolean
@@ -6,7 +6,7 @@ import Prim.Boolean
 import Data.Either
 import Data.Identity
 import Data.Array as Arr
-import Data.List.Lazy
+import Data.List.Lazy hiding (Pattern(..))
 import Data.Typelevel.Bool
 import Data.Int as I
 import Data.Tuple
@@ -36,6 +36,7 @@ import Data.Enum
 import Data.Map as M
 import Partial.Unsafe
 
+import Rhythmic
 
 ---- testing stuff ---------------
 makeDate :: Int -> Month -> Int -> Date
@@ -70,12 +71,22 @@ countToStart:: Int
 countToStart = 327
 -------------
 
-fromPassageToCoord:: List Boolean -> Tempo -> DateTime -> DateTime -> DateTime -> M.Map Int Coordenada
-fromPassageToCoord x t ws we eval = 
-    let passageLength = fromInt $ length x   -- oDur
+fromPassageToCoord:: Rhythmic -> Tempo -> DateTime -> DateTime -> DateTime -> M.Map Int Coordenada
+fromPassageToCoord rhy t ws we eval = 
+    let x = fromRhythmicToList rhy
+        passageLength = fromInt $ length x   -- oDur
         onsets = (fromInt <<< snd) <$> (filter (\x -> fst x == true) $ zip x (0..(length x)))
         oPercen = map (toNumber <<< (_/passageLength)) onsets
     in passagePosition oPercen passageLength t ws we eval
+
+fromRhythmicToList:: Rhythmic -> List Boolean
+fromRhythmicToList (Onsets x) = x
+fromRhythmicToList (Pattern x) = concat $ map fromPatternToList x
+fromRhythmicToList _ = fromFoldable [false]
+
+fromPatternToList:: Rhythmic -> List Boolean
+fromPatternToList (Onsets x) = x 
+fromPatternToList _ = fromFoldable [false] -- placeholder
 
 
 passagePosition:: List Number -> Rational -> Tempo -> DateTime -> DateTime -> DateTime -> M.Map Int Coordenada -- change to MMap Instant Int
@@ -94,11 +105,7 @@ passagePosition o lenPasaje t ws we eval =
         posToTime = map (\x -> positionToTime t lenPasaje x) filtrado
       in M.fromFoldableWithIndex posToTime
 
-type TimeStamp = Number
-type IPassage = Int 
-type IEvent = Int
-
-data Coordenada = Coord TimeStamp IPassage IEvent 
+data Coordenada = Coord Number Int Int 
 
 instance coordenadaShowInstance :: Show Coordenada where
   show (Coord x y z) = "time: "<>show x<>", iPassage: "<>show y<>", iEvent: "<>show z
