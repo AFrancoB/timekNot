@@ -79,8 +79,19 @@ setTempo :: TimekNot -> ForeignTempo -> Effect Unit
 setTempo timekNot t = write (fromForeignTempo t) timekNot.tempo
 
 -- here a func that goes from rhythmicInto (passing through map) Event
-scheduleNoteEvents :: TimekNot -> DateTime -> DateTime -> forall opts. Effect (Array Foreign)
-scheduleNoteEvents tk ws we =  timekNotToEvents tk ws we
+scheduleNoteEvents :: TimekNot -> Number -> Number -> forall opts. Effect (Array Foreign)
+scheduleNoteEvents tk ws we =  timekNotToEvents tk (numToDateTime ws) (numToDateTime we)
+
+-- make unsafe function and correct with david's advice later
+numToDateTime:: Number -> DateTime 
+numToDateTime x =
+      let asMaybeInstant = instant $ Milliseconds x -- Maybe Instant
+          asInstant = unsafeMaybeMilliseconds asMaybeInstant
+      in toDateTime asInstant 
+
+unsafeMaybeMilliseconds:: Maybe Instant -> Instant
+unsafeMaybeMilliseconds (Just x) = x
+unsafeMaybeMilliseconds Nothing = unsafeMaybeMilliseconds $ instant $ Milliseconds 0.0
 
 timekNotToEvents:: TimekNot -> DateTime -> DateTime -> forall opts. Effect (Array Foreign)
 timekNotToEvents tk ws we = do
@@ -100,17 +111,6 @@ fromCoordenateToArray x t ws we eval =
 
 coordToEvent:: Coordenada -> {whenPosix:: Number, s:: String, n:: Int}
 coordToEvent (Coord num iEv iPas) = {whenPosix: num, s: "cp", n: 0 }
-
--- make unsafe function and correct with david's advice later
-numToDateTime:: Number -> DateTime 
-numToDateTime x =
-      let asMaybeInstant = instant $ Milliseconds x -- Maybe Instant
-          asInstant = unsafeMaybeMilliseconds asMaybeInstant
-      in toDateTime asInstant 
-
-unsafeMaybeMilliseconds:: Maybe Instant -> Instant
-unsafeMaybeMilliseconds (Just x) = x
-unsafeMaybeMilliseconds Nothing = unsafeMaybeMilliseconds $ instant $ Milliseconds 0.0
 
 testMaybeInstant:: Number -> Maybe Instant
 testMaybeInstant x = instant $ Milliseconds x -- Maybe Instant
