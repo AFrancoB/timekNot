@@ -48,7 +48,7 @@ type TimekNot = {
 
 launch :: Effect TimekNot
 launch = do
-  log "testLang: launch"
+  log "timekNot-CU: launch"
   ast <- new $ Onsets $ fromFoldable [false]
   tempo <- newTempo (4 % 1) >>= new 
   eval <- nowDateTime >>= new
@@ -60,7 +60,7 @@ launch = do
 
 evaluate :: TimekNot -> String -> Effect { success :: Boolean, error :: String }
 evaluate timekNot str = do
-  log "testLang: evaluate"
+  log "timekNot-CU: evaluate"
   -- placeholder: assume any evaluation yields the valid program
   eval <- nowDateTime
   let pr = pErrorToString $ runParser str topRhythmic -- :: Either String AST 
@@ -80,7 +80,10 @@ setTempo timekNot t = write (fromForeignTempo t) timekNot.tempo
 
 -- here a func that goes from rhythmicInto (passing through map) Event
 scheduleNoteEvents :: TimekNot -> Number -> Number -> forall opts. Effect (Array Foreign)
-scheduleNoteEvents tk ws we =  timekNotToEvents tk (numToDateTime ws) (numToDateTime we)
+scheduleNoteEvents tk ws we =  do
+    x <- timekNotToEvents tk (numToDateTime ws) (numToDateTime we)
+    log $ show x
+    pure x
 
 -- make unsafe function and correct with david's advice later
 numToDateTime:: Number -> DateTime 
