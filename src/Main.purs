@@ -76,21 +76,15 @@ setTempo timekNot t = write (fromForeignTempo t) timekNot.tempo
 
 -- here a func that goes from rhythmicInto (passing through map) Event
 scheduleNoteEvents :: TimekNot -> DateTime -> DateTime -> forall opts. Effect (Array Foreign)
-scheduleNoteEvents tk ws we = pure $ map unsafeToForeign events
---    where events = fromCoordenateToEffect
-      where events = [{ s: "cp", n: 0 }, { s: "bd", n: 1}]
+scheduleNoteEvents tk ws we =  timekNotToEvents tk ws we
 
------ conectar getThings con scheduleNoteEvents
-
-getThings:: TimekNot -> DateTime -> DateTime -> forall opts. Effect (Array Foreign)
-getThings tk ws we = do
+timekNotToEvents:: TimekNot -> DateTime -> DateTime -> forall opts. Effect (Array Foreign)
+timekNotToEvents tk ws we = do
     rhy <- read tk.ast
     t <- read tk.tempo
     eval <- read tk.eval
     let events = fromCoordenateToArray rhy t ws we eval
     pure $ map unsafeToForeign events
-
-
 
 fromCoordenateToArray:: Rhythmic -> Tempo -> DateTime -> DateTime -> DateTime -> Array {whenPosix:: Number, s:: String, n:: Int}
 fromCoordenateToArray x t ws we eval = 
