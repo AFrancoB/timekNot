@@ -2023,6 +2023,61 @@ var adjust = function(dictDuration) {
   };
 };
 
+// output/Data.DateTime.Instant/foreign.js
+var createDateTime = function(y, m, d, h, mi, s, ms) {
+  var dateTime = new Date(Date.UTC(y, m, d, h, mi, s, ms));
+  if (y >= 0 && y < 100) {
+    dateTime.setUTCFullYear(y);
+  }
+  return dateTime;
+};
+function fromDateTimeImpl(y, mo, d, h, mi, s, ms) {
+  return createDateTime(y, mo - 1, d, h, mi, s, ms).getTime();
+}
+function toDateTimeImpl(ctor) {
+  return function(instant2) {
+    var dt = new Date(instant2);
+    return ctor(dt.getUTCFullYear())(dt.getUTCMonth() + 1)(dt.getUTCDate())(dt.getUTCHours())(dt.getUTCMinutes())(dt.getUTCSeconds())(dt.getUTCMilliseconds());
+  };
+}
+
+// output/Data.DateTime.Instant/index.js
+var unInstant = function(v) {
+  return v;
+};
+var toDateTime = /* @__PURE__ */ function() {
+  var mkDateTime = function(y) {
+    return function(mo) {
+      return function(d) {
+        return function(h) {
+          return function(mi) {
+            return function(s) {
+              return function(ms) {
+                return new DateTime(canonicalDate(y)(fromJust()(toEnum(boundedEnumMonth)(mo)))(d), new Time(h, mi, s, ms));
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+  return toDateTimeImpl(mkDateTime);
+}();
+var instant = function(v) {
+  if (v >= -86399778816e5 && v <= 8639977881599999) {
+    return new Just(v);
+  }
+  ;
+  if (otherwise) {
+    return Nothing.value;
+  }
+  ;
+  throw new Error("Failed pattern match at Data.DateTime.Instant (line 44, column 1 - line 44, column 41): " + [v.constructor.name]);
+};
+var fromDateTime = function(v) {
+  return fromDateTimeImpl(year(v.value0), fromEnum(boundedEnumMonth)(month(v.value0)), day(v.value0), hour(v.value1), minute(v.value1), second(v.value1), millisecond(v.value1));
+};
+
 // output/Control.Monad/index.js
 var ap = function(dictMonad) {
   return function(f) {
@@ -3463,61 +3518,6 @@ var fromInt = function(i) {
   return reduce(ordInt)(euclideanRingInt)(i)(1);
 };
 
-// output/Data.DateTime.Instant/foreign.js
-var createDateTime = function(y, m, d, h, mi, s, ms) {
-  var dateTime = new Date(Date.UTC(y, m, d, h, mi, s, ms));
-  if (y >= 0 && y < 100) {
-    dateTime.setUTCFullYear(y);
-  }
-  return dateTime;
-};
-function fromDateTimeImpl(y, mo, d, h, mi, s, ms) {
-  return createDateTime(y, mo - 1, d, h, mi, s, ms).getTime();
-}
-function toDateTimeImpl(ctor) {
-  return function(instant2) {
-    var dt = new Date(instant2);
-    return ctor(dt.getUTCFullYear())(dt.getUTCMonth() + 1)(dt.getUTCDate())(dt.getUTCHours())(dt.getUTCMinutes())(dt.getUTCSeconds())(dt.getUTCMilliseconds());
-  };
-}
-
-// output/Data.DateTime.Instant/index.js
-var unInstant = function(v) {
-  return v;
-};
-var toDateTime = /* @__PURE__ */ function() {
-  var mkDateTime = function(y) {
-    return function(mo) {
-      return function(d) {
-        return function(h) {
-          return function(mi) {
-            return function(s) {
-              return function(ms) {
-                return new DateTime(canonicalDate(y)(fromJust()(toEnum(boundedEnumMonth)(mo)))(d), new Time(h, mi, s, ms));
-              };
-            };
-          };
-        };
-      };
-    };
-  };
-  return toDateTimeImpl(mkDateTime);
-}();
-var instant = function(v) {
-  if (v >= -86399778816e5 && v <= 8639977881599999) {
-    return new Just(v);
-  }
-  ;
-  if (otherwise) {
-    return Nothing.value;
-  }
-  ;
-  throw new Error("Failed pattern match at Data.DateTime.Instant (line 44, column 1 - line 44, column 41): " + [v.constructor.name]);
-};
-var fromDateTime = function(v) {
-  return fromDateTimeImpl(year(v.value0), fromEnum(boundedEnumMonth)(month(v.value0)), day(v.value0), hour(v.value1), minute(v.value1), second(v.value1), millisecond(v.value1));
-};
-
 // output/Effect.Now/foreign.js
 function now() {
   return Date.now();
@@ -4862,6 +4862,32 @@ var fromPassageToCoord = function(rhy) {
 };
 
 // output/Main/index.js
+var unsafeMaybeMilliseconds = function($copy_v) {
+  var $tco_done = false;
+  var $tco_result;
+  function $tco_loop(v) {
+    if (v instanceof Just) {
+      $tco_done = true;
+      return v.value0;
+    }
+    ;
+    if (v instanceof Nothing) {
+      $copy_v = instant(0);
+      return;
+    }
+    ;
+    throw new Error("Failed pattern match at Main (line 111, column 1 - line 111, column 51): " + [v.constructor.name]);
+  }
+  ;
+  while (!$tco_done) {
+    $tco_result = $tco_loop($copy_v);
+  }
+  ;
+  return $tco_result;
+};
+var testMaybeInstant = function(x) {
+  return instant(x);
+};
 var setTempo = function(timekNot) {
   return function(t1) {
     return write(fromForeignTempo(t1))(timekNot.tempo);
@@ -4876,7 +4902,12 @@ var pErrorToString = function(v) {
     return new Right(v.value0);
   }
   ;
-  throw new Error("Failed pattern match at Main (line 70, column 1 - line 70, column 70): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Main (line 74, column 1 - line 74, column 70): " + [v.constructor.name]);
+};
+var numToDateTime = function(x) {
+  var asMaybeInstant = instant(x);
+  var asInstant = unsafeMaybeMilliseconds(asMaybeInstant);
+  return toDateTime(asInstant);
 };
 var makeTime = function(h) {
   return function(min3) {
@@ -4944,7 +4975,7 @@ var evaluate = function(timekNot) {
         };
       }
       ;
-      throw new Error("Failed pattern match at Main (line 63, column 3 - line 68, column 42): " + [pr.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 67, column 3 - line 72, column 42): " + [pr.constructor.name]);
     };
   };
 };
@@ -5000,11 +5031,14 @@ export {
   launch,
   makeDate,
   makeTime,
+  numToDateTime,
   pErrorToString,
   scheduleNoteEvents,
   setTempo,
   t,
+  testMaybeInstant,
   timekNotToEvents,
+  unsafeMaybeMilliseconds,
   we,
   ws
 };

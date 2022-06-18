@@ -4,6 +4,7 @@ import * as Control_Bind from "../Control.Bind/index.js";
 import * as Data_Date from "../Data.Date/index.js";
 import * as Data_Date_Component from "../Data.Date.Component/index.js";
 import * as Data_DateTime from "../Data.DateTime/index.js";
+import * as Data_DateTime_Instant from "../Data.DateTime.Instant/index.js";
 import * as Data_Either from "../Data.Either/index.js";
 import * as Data_Enum from "../Data.Enum/index.js";
 import * as Data_EuclideanRing from "../Data.EuclideanRing/index.js";
@@ -28,6 +29,28 @@ import * as Foreign from "../Foreign/index.js";
 import * as Motor from "../Motor/index.js";
 import * as Parsing from "../Parsing/index.js";
 import * as Rhythmic from "../Rhythmic/index.js";
+var unsafeMaybeMilliseconds = function ($copy_v) {
+    var $tco_done = false;
+    var $tco_result;
+    function $tco_loop(v) {
+        if (v instanceof Data_Maybe.Just) {
+            $tco_done = true;
+            return v.value0;
+        };
+        if (v instanceof Data_Maybe.Nothing) {
+            $copy_v = Data_DateTime_Instant.instant(0.0);
+            return;
+        };
+        throw new Error("Failed pattern match at Main (line 111, column 1 - line 111, column 51): " + [ v.constructor.name ]);
+    };
+    while (!$tco_done) {
+        $tco_result = $tco_loop($copy_v);
+    };
+    return $tco_result;
+};
+var testMaybeInstant = function (x) {
+    return Data_DateTime_Instant.instant(x);
+};
 var setTempo = function (timekNot) {
     return function (t1) {
         return Effect_Ref.write(Data_Tempo.fromForeignTempo(t1))(timekNot.tempo);
@@ -40,7 +63,12 @@ var pErrorToString = function (v) {
     if (v instanceof Data_Either.Right) {
         return new Data_Either.Right(v.value0);
     };
-    throw new Error("Failed pattern match at Main (line 70, column 1 - line 70, column 70): " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at Main (line 74, column 1 - line 74, column 70): " + [ v.constructor.name ]);
+};
+var numToDateTime = function (x) {
+    var asMaybeInstant = Data_DateTime_Instant.instant(x);
+    var asInstant = unsafeMaybeMilliseconds(asMaybeInstant);
+    return Data_DateTime_Instant.toDateTime(asInstant);
 };
 var makeTime = function (h) {
     return function (min) {
@@ -106,7 +134,7 @@ var evaluate = function (timekNot) {
                     error: ""
                 };
             };
-            throw new Error("Failed pattern match at Main (line 63, column 3 - line 68, column 42): " + [ pr.constructor.name ]);
+            throw new Error("Failed pattern match at Main (line 67, column 3 - line 72, column 42): " + [ pr.constructor.name ]);
         };
     };
 };
@@ -163,6 +191,9 @@ export {
     timekNotToEvents,
     fromCoordenateToArray,
     coordToEvent,
+    numToDateTime,
+    unsafeMaybeMilliseconds,
+    testMaybeInstant,
     makeDate,
     makeTime,
     t,
