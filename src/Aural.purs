@@ -49,3 +49,5 @@ data Aural = Aural String Int
 
 instance auralShowInstance :: Show Aural where
   show (Aural sample n) = "aural "<>sample <>" n: "<>show n 
+
+
