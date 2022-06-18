@@ -41,7 +41,7 @@ var unsafeMaybeMilliseconds = function ($copy_v) {
             $copy_v = Data_DateTime_Instant.instant(0.0);
             return;
         };
-        throw new Error("Failed pattern match at Main (line 111, column 1 - line 111, column 51): " + [ v.constructor.name ]);
+        throw new Error("Failed pattern match at Main (line 92, column 1 - line 92, column 51): " + [ v.constructor.name ]);
     };
     while (!$tco_done) {
         $tco_result = $tco_loop($copy_v);
@@ -178,7 +178,7 @@ var timekNotToEvents = function (tk) {
 var scheduleNoteEvents = function (tk) {
     return function (ws1) {
         return function (we1) {
-            return timekNotToEvents(tk)(ws1)(we1);
+            return timekNotToEvents(tk)(numToDateTime(ws1))(numToDateTime(we1));
         };
     };
 };
@@ -188,11 +188,11 @@ export {
     pErrorToString,
     setTempo,
     scheduleNoteEvents,
+    numToDateTime,
+    unsafeMaybeMilliseconds,
     timekNotToEvents,
     fromCoordenateToArray,
     coordToEvent,
-    numToDateTime,
-    unsafeMaybeMilliseconds,
     testMaybeInstant,
     makeDate,
     makeTime,
