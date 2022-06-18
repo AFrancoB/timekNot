@@ -21,6 +21,10 @@ import Data.List as L
 import Data.Map as M
 import Data.Tuple
 
+import Data.DateTime
+import Data.DateTime.Instant
+import Data.Time.Duration
+
 import Foreign 
 
 import Partial.Unsafe
@@ -96,6 +100,24 @@ fromCoordenateToArray x t ws we eval =
 
 coordToEvent:: Coordenada -> {whenPosix:: Number, s:: String, n:: Int}
 coordToEvent (Coord num iEv iPas) = {whenPosix: num, s: "cp", n: 0 }
+
+-- make unsafe function and correct with david's advice later
+numToDateTime:: Number -> DateTime 
+numToDateTime x =
+      let asMaybeInstant = instant $ Milliseconds x -- Maybe Instant
+          asInstant = unsafeMaybeMilliseconds asMaybeInstant
+      in toDateTime asInstant 
+
+unsafeMaybeMilliseconds:: Maybe Instant -> Instant
+unsafeMaybeMilliseconds (Just x) = x
+unsafeMaybeMilliseconds Nothing = unsafeMaybeMilliseconds $ instant $ Milliseconds 0.0
+
+testMaybeInstant:: Number -> Maybe Instant
+testMaybeInstant x = instant $ Milliseconds x -- Maybe Instant
+
+-- toDateTime :: Instant -> DateTime
+
+-- instant :: Milliseconds -> Maybe Instant
 
 
 
