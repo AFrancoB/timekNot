@@ -80,10 +80,7 @@ setTempo timekNot t = write (fromForeignTempo t) timekNot.tempo
 
 -- here a func that goes from rhythmicInto (passing through map) Event
 scheduleNoteEvents :: TimekNot -> Number -> Number -> forall opts. Effect (Array Foreign)
-scheduleNoteEvents tk ws we =  do
-    x <- timekNotToEvents tk (numToDateTime ws) (numToDateTime we)
-    log $ show x
-    pure x
+scheduleNoteEvents tk ws we = timekNotToEvents tk (numToDateTime ws) (numToDateTime we)
 
 -- make unsafe function and correct with david's advice later
 numToDateTime:: Number -> DateTime 
@@ -102,6 +99,7 @@ timekNotToEvents tk ws we = do
     t <- read tk.tempo
     eval <- read tk.eval
     let events = fromCoordenateToArray rhy t ws we eval
+    log $ show events
     pure $ map unsafeToForeign events
 
 fromCoordenateToArray:: Rhythmic -> Tempo -> DateTime -> DateTime -> DateTime -> Array {whenPosix:: Number, s:: String, n:: Int}

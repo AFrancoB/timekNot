@@ -17,6 +17,7 @@ import * as Data_Maybe from "../Data.Maybe/index.js";
 import * as Data_Ord from "../Data.Ord/index.js";
 import * as Data_Ratio from "../Data.Ratio/index.js";
 import * as Data_Rational from "../Data.Rational/index.js";
+import * as Data_Show from "../Data.Show/index.js";
 import * as Data_Tempo from "../Data.Tempo/index.js";
 import * as Data_Time from "../Data.Time/index.js";
 import * as Data_Time_Component from "../Data.Time.Component/index.js";
@@ -104,7 +105,7 @@ var ws = function (x) {
     };
 };
 var launch = function __do() {
-    Effect_Console.log("testLang: launch")();
+    Effect_Console.log("timekNot-CU: launch")();
     var ast = Effect_Ref["new"](new Rhythmic.Onsets(Data_List_Lazy.fromFoldable(Data_Foldable.foldableArray)([ false ])))();
     var tempo = Control_Bind.bind(Effect.bindEffect)(Data_Tempo.newTempo(Data_Ratio.reduce(Data_Ord.ordInt)(Data_EuclideanRing.euclideanRingInt)(4)(1)))(Effect_Ref["new"])();
     var eval1 = Control_Bind.bind(Effect.bindEffect)(Effect_Now.nowDateTime)(Effect_Ref["new"])();
@@ -117,7 +118,7 @@ var launch = function __do() {
 var evaluate = function (timekNot) {
     return function (str) {
         return function __do() {
-            Effect_Console.log("testLang: evaluate")();
+            Effect_Console.log("timekNot-CU: evaluate")();
             var eval1 = Effect_Now.nowDateTime();
             var pr = pErrorToString(Parsing.runParser(str)(Rhythmic.topRhythmic));
             if (pr instanceof Data_Either.Left) {
@@ -170,6 +171,19 @@ var timekNotToEvents = function (tk) {
                 var t1 = Effect_Ref.read(tk.tempo)();
                 var eval1 = Effect_Ref.read(tk["eval"])();
                 var events = fromCoordenateToArray(rhy)(t1)(ws1)(we1)(eval1);
+                Effect_Console.log(Data_Show.show(Data_Show.showArray(Data_Show.showRecord()()(Data_Show.showRecordFieldsCons({
+                    reflectSymbol: function () {
+                        return "n";
+                    }
+                })(Data_Show.showRecordFieldsCons({
+                    reflectSymbol: function () {
+                        return "s";
+                    }
+                })(Data_Show.showRecordFieldsCons({
+                    reflectSymbol: function () {
+                        return "whenPosix";
+                    }
+                })(Data_Show.showRecordFieldsNil)(Data_Show.showNumber))(Data_Show.showString))(Data_Show.showInt))))(events))();
                 return Data_Functor.map(Data_Functor.functorArray)(Foreign.unsafeToForeign)(events);
             };
         };

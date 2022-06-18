@@ -54,6 +54,15 @@ var arrayMap = function(f) {
 // output/Data.Unit/foreign.js
 var unit = void 0;
 
+// output/Type.Proxy/index.js
+var $$Proxy = /* @__PURE__ */ function() {
+  function $$Proxy2() {
+  }
+  ;
+  $$Proxy2.value = new $$Proxy2();
+  return $$Proxy2;
+}();
+
 // output/Data.Functor/index.js
 var map = function(dict) {
   return dict.map;
@@ -168,6 +177,18 @@ var refEq = function(r1) {
 var eqIntImpl = refEq;
 var eqNumberImpl = refEq;
 var eqCharImpl = refEq;
+
+// output/Data.Symbol/index.js
+var reflectSymbol = function(dict) {
+  return dict.reflectSymbol;
+};
+
+// output/Record.Unsafe/foreign.js
+var unsafeGet = function(label) {
+  return function(rec) {
+    return rec[label];
+  };
+};
 
 // output/Data.Eq/index.js
 var eqNumber = {
@@ -396,6 +417,13 @@ var empty = function(dict) {
 };
 
 // output/Data.Show/foreign.js
+var showIntImpl = function(n) {
+  return n.toString();
+};
+var showNumberImpl = function(n) {
+  var str = n.toString();
+  return isNaN(str + ".0") ? str : str + ".0";
+};
 var showCharImpl = function(c) {
   var code = c.charCodeAt(0);
   if (code < 32 || code === 127) {
@@ -419,6 +447,33 @@ var showCharImpl = function(c) {
   }
   return c === "'" || c === "\\" ? "'\\" + c + "'" : "'" + c + "'";
 };
+var showStringImpl = function(s) {
+  var l = s.length;
+  return '"' + s.replace(/[\0-\x1F\x7F"\\]/g, function(c, i) {
+    switch (c) {
+      case '"':
+      case "\\":
+        return "\\" + c;
+      case "\x07":
+        return "\\a";
+      case "\b":
+        return "\\b";
+      case "\f":
+        return "\\f";
+      case "\n":
+        return "\\n";
+      case "\r":
+        return "\\r";
+      case "	":
+        return "\\t";
+      case "\v":
+        return "\\v";
+    }
+    var k = i + 1;
+    var empty3 = k < l && s[k] >= "0" && s[k] <= "9" ? "\\&" : "";
+    return "\\" + c.charCodeAt(0).toString(10) + empty3;
+  }) + '"';
+};
 var showArrayImpl = function(f) {
   return function(xs) {
     var ss = [];
@@ -428,8 +483,53 @@ var showArrayImpl = function(f) {
     return "[" + ss.join(",") + "]";
   };
 };
+var cons = function(head4) {
+  return function(tail2) {
+    return [head4].concat(tail2);
+  };
+};
+var intercalate = function(separator) {
+  return function(xs) {
+    return xs.join(separator);
+  };
+};
 
 // output/Data.Show/index.js
+var showString = {
+  show: showStringImpl
+};
+var showRecordFieldsNil = {
+  showRecordFields: function(v) {
+    return function(v1) {
+      return [];
+    };
+  }
+};
+var showRecordFields = function(dict) {
+  return dict.showRecordFields;
+};
+var showRecord = function() {
+  return function() {
+    return function(dictShowRecordFields) {
+      return {
+        show: function(record) {
+          var v = showRecordFields(dictShowRecordFields)($$Proxy.value)(record);
+          if (v.length === 0) {
+            return "{}";
+          }
+          ;
+          return intercalate(" ")(["{", intercalate(", ")(v), "}"]);
+        }
+      };
+    };
+  };
+};
+var showNumber = {
+  show: showNumberImpl
+};
+var showInt = {
+  show: showIntImpl
+};
 var showChar = {
   show: showCharImpl
 };
@@ -439,6 +539,22 @@ var show = function(dict) {
 var showArray = function(dictShow) {
   return {
     show: showArrayImpl(show(dictShow))
+  };
+};
+var showRecordFieldsCons = function(dictIsSymbol) {
+  return function(dictShowRecordFields) {
+    return function(dictShow) {
+      return {
+        showRecordFields: function(v) {
+          return function(record) {
+            var tail2 = showRecordFields(dictShowRecordFields)($$Proxy.value)(record);
+            var key = reflectSymbol(dictIsSymbol)($$Proxy.value);
+            var focus = unsafeGet(key)(record);
+            return cons(intercalate(": ")([key, show(dictShow)(focus)]))(tail2);
+          };
+        }
+      };
+    };
   };
 };
 
@@ -4943,7 +5059,7 @@ var ws = function(x) {
   };
 };
 var launch = function __do() {
-  log2("testLang: launch")();
+  log2("timekNot-CU: launch")();
   var ast = $$new(new Onsets(fromFoldable(foldableArray)([false])))();
   var tempo = bind(bindEffect)(newTempo(reduce(ordInt)(euclideanRingInt)(4)(1)))($$new)();
   var eval1 = bind(bindEffect)(nowDateTime)($$new)();
@@ -4956,7 +5072,7 @@ var launch = function __do() {
 var evaluate = function(timekNot) {
   return function(str) {
     return function __do2() {
-      log2("testLang: evaluate")();
+      log2("timekNot-CU: evaluate")();
       var eval1 = nowDateTime();
       var pr = pErrorToString(runParser(str)(topRhythmic));
       if (pr instanceof Left) {
@@ -5011,6 +5127,19 @@ var timekNotToEvents = function(tk) {
         var t1 = read(tk.tempo)();
         var eval1 = read(tk["eval"])();
         var events = fromCoordenateToArray(rhy)(t1)(ws1)(we1)(eval1);
+        log2(show(showArray(showRecord()()(showRecordFieldsCons({
+          reflectSymbol: function() {
+            return "n";
+          }
+        })(showRecordFieldsCons({
+          reflectSymbol: function() {
+            return "s";
+          }
+        })(showRecordFieldsCons({
+          reflectSymbol: function() {
+            return "whenPosix";
+          }
+        })(showRecordFieldsNil)(showNumber))(showString))(showInt))))(events))();
         return map(functorArray)(unsafeToForeign)(events);
       };
     };
