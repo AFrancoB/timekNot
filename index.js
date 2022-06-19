@@ -533,6 +533,19 @@ var showInt = {
 var showChar = {
   show: showCharImpl
 };
+var showBoolean = {
+  show: function(v) {
+    if (v) {
+      return "true";
+    }
+    ;
+    if (!v) {
+      return "false";
+    }
+    ;
+    throw new Error("Failed pattern match at Data.Show (line 23, column 1 - line 25, column 23): " + [v.constructor.name]);
+  }
+};
 var show = function(dict) {
   return dict.show;
 };
@@ -2782,6 +2795,28 @@ var foldableList2 = {
     };
   }
 };
+var showList2 = function(dictShow) {
+  return {
+    show: function(xs) {
+      return "(fromFoldable [" + (function() {
+        var v = step(xs);
+        if (v instanceof Nil2) {
+          return "";
+        }
+        ;
+        if (v instanceof Cons2) {
+          return show(dictShow)(v.value0) + foldl(foldableList2)(function(shown) {
+            return function(x$prime) {
+              return shown + ("," + show(dictShow)(x$prime));
+            };
+          })("")(v.value1);
+        }
+        ;
+        throw new Error("Failed pattern match at Data.List.Lazy.Types (line 66, column 13 - line 69, column 78): " + [v.constructor.name]);
+      }() + "])");
+    }
+  };
+};
 var foldableWithIndexList = {
   foldrWithIndex: function(f) {
     return function(b) {
@@ -3655,7 +3690,7 @@ var origin = function(x) {
   return maybe(x.time)(identity(categoryFn))(adjust(durationMilliseconds)(toNumber2(increment))(x.time));
 };
 var newTempo = function(freq) {
-  return function __do2() {
+  return function __do3() {
     var time3 = nowDateTime();
     return {
       freq,
@@ -4673,6 +4708,39 @@ var oneOf2 = function(ss) {
 };
 
 // output/Rhythmic/index.js
+var Full = /* @__PURE__ */ function() {
+  function Full2(value0, value1) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+  ;
+  Full2.create = function(value0) {
+    return function(value1) {
+      return new Full2(value0, value1);
+    };
+  };
+  return Full2;
+}();
+var K = /* @__PURE__ */ function() {
+  function K2(value0) {
+    this.value0 = value0;
+  }
+  ;
+  K2.create = function(value0) {
+    return new K2(value0);
+  };
+  return K2;
+}();
+var InverseK = /* @__PURE__ */ function() {
+  function InverseK2(value0) {
+    this.value0 = value0;
+  }
+  ;
+  InverseK2.create = function(value0) {
+    return new InverseK2(value0);
+  };
+  return InverseK2;
+}();
 var Onsets = /* @__PURE__ */ function() {
   function Onsets2(value0) {
     this.value0 = value0;
@@ -4693,6 +4761,48 @@ var Pattern = /* @__PURE__ */ function() {
   };
   return Pattern2;
 }();
+var Subdivision = /* @__PURE__ */ function() {
+  function Subdivision2(value0) {
+    this.value0 = value0;
+  }
+  ;
+  Subdivision2.create = function(value0) {
+    return new Subdivision2(value0);
+  };
+  return Subdivision2;
+}();
+var Euclidean = /* @__PURE__ */ function() {
+  function Euclidean2(value0, value1, value2, value3) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+    this.value3 = value3;
+  }
+  ;
+  Euclidean2.create = function(value0) {
+    return function(value1) {
+      return function(value2) {
+        return function(value3) {
+          return new Euclidean2(value0, value1, value2, value3);
+        };
+      };
+    };
+  };
+  return Euclidean2;
+}();
+var Repetition = /* @__PURE__ */ function() {
+  function Repetition2(value0, value1) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+  ;
+  Repetition2.create = function(value0) {
+    return function(value1) {
+      return new Repetition2(value0, value1);
+    };
+  };
+  return Repetition2;
+}();
 var onset = /* @__PURE__ */ bind(bindParserT)(/* @__PURE__ */ choice(foldableArray)([/* @__PURE__ */ applySecond(applyParserT)(/* @__PURE__ */ oneOf2(["x"]))(/* @__PURE__ */ pure(applicativeParserT)(true)), /* @__PURE__ */ applySecond(applyParserT)(/* @__PURE__ */ oneOf2(["o"]))(/* @__PURE__ */ pure(applicativeParserT)(false))]))(function(x) {
   return bind(bindParserT)(pure(applicativeParserT)(1))(function() {
     return pure(applicativeParserT)(x);
@@ -4703,6 +4813,48 @@ var onsets = /* @__PURE__ */ bind(bindParserT)(/* @__PURE__ */ many(onset))(func
     return pure(applicativeParserT)(new Onsets(fromFoldable(foldableList)(xs)));
   });
 });
+var rhythmicShowInstance = {
+  show: function(v) {
+    if (v instanceof Onsets) {
+      return "onsets " + show(showList2(showBoolean))(v.value0);
+    }
+    ;
+    if (v instanceof Pattern) {
+      return "pattern " + show(showList2(rhythmicShowInstance))(v.value0);
+    }
+    ;
+    if (v instanceof Subdivision) {
+      return "subdivision: " + show(showList2(rhythmicShowInstance))(v.value0);
+    }
+    ;
+    if (v instanceof Euclidean) {
+      return show(euclideanShowInstance)(v.value0) + (" euclidean " + (show(showInt)(v.value1) + ("," + (show(showInt)(v.value2) + ("," + show(showInt)(v.value3))))));
+    }
+    ;
+    if (v instanceof Repetition) {
+      return show(rhythmicShowInstance)(v.value0) + (" times " + show(showInt)(v.value1));
+    }
+    ;
+    throw new Error("Failed pattern match at Rhythmic (line 91, column 1 - line 96, column 60): " + [v.constructor.name]);
+  }
+};
+var euclideanShowInstance = {
+  show: function(v) {
+    if (v instanceof Full) {
+      return show(rhythmicShowInstance)(v.value0) + ("on ks and not on ks " + show(rhythmicShowInstance)(v.value1));
+    }
+    ;
+    if (v instanceof K) {
+      return show(rhythmicShowInstance)(v.value0);
+    }
+    ;
+    if (v instanceof InverseK) {
+      return show(rhythmicShowInstance)(v.value0);
+    }
+    ;
+    throw new Error("Failed pattern match at Rhythmic (line 86, column 1 - line 89, column 29): " + [v.constructor.name]);
+  }
+};
 var chainRhythms = function(x) {
   return function(y) {
     return new Pattern(snoc(fromFoldable(foldableArray)([x]))(y));
@@ -4992,7 +5144,7 @@ var unsafeMaybeMilliseconds = function($copy_v) {
       return;
     }
     ;
-    throw new Error("Failed pattern match at Main (line 94, column 1 - line 94, column 51): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 99, column 1 - line 99, column 51): " + [v.constructor.name]);
   }
   ;
   while (!$tco_done) {
@@ -5018,7 +5170,7 @@ var pErrorToString = function(v) {
     return new Right(v.value0);
   }
   ;
-  throw new Error("Failed pattern match at Main (line 76, column 1 - line 76, column 70): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Main (line 81, column 1 - line 81, column 70): " + [v.constructor.name]);
 };
 var numToDateTime = function(x) {
   var asMaybeInstant = instant(x);
@@ -5073,8 +5225,10 @@ var launch = function __do() {
 };
 var evaluate = function(timekNot) {
   return function(str) {
-    return function __do2() {
+    return function __do3() {
       log2("timekNot-CU: evaluate")();
+      var rhythmic = read(timekNot.ast)();
+      log2(show(rhythmicShowInstance)(rhythmic))();
       var eval1 = nowDateTime();
       var pr = pErrorToString(runParser(str)(topRhythmic));
       if (pr instanceof Left) {
@@ -5093,7 +5247,7 @@ var evaluate = function(timekNot) {
         };
       }
       ;
-      throw new Error("Failed pattern match at Main (line 69, column 3 - line 74, column 42): " + [pr.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 74, column 3 - line 79, column 42): " + [pr.constructor.name]);
     };
   };
 };
@@ -5124,7 +5278,7 @@ var fromCoordenateToArray = function(x) {
 var timekNotToEvents = function(tk) {
   return function(ws1) {
     return function(we1) {
-      return function __do2() {
+      return function __do3() {
         var rhy = read(tk.ast)();
         var t1 = read(tk.tempo)();
         var eval1 = read(tk["eval"])();
@@ -5154,6 +5308,44 @@ var scheduleNoteEvents = function(tk) {
     };
   };
 };
+var timekNotToEvents$prime = function(tk) {
+  return function(ws1) {
+    return function(we1) {
+      return function __do3() {
+        var rhy = read(tk.ast)();
+        var t1 = read(tk.tempo)();
+        var eval1 = read(tk["eval"])();
+        var events = fromCoordenateToArray(rhy)(t1)(numToDateTime(ws1))(numToDateTime(we1))(eval1);
+        return events;
+      };
+    };
+  };
+};
+var test2 = function __do2() {
+  log2("timekNot-CU: launch")();
+  var ast = $$new(new Onsets(fromFoldable(foldableArray)([true, true, false, true])))();
+  var tempo = bind(bindEffect)(newTempo(reduce(ordInt)(euclideanRingInt)(4)(1)))($$new)();
+  var eval1 = bind(bindEffect)(nowDateTime)($$new)();
+  var x = timekNotToEvents$prime({
+    ast,
+    tempo,
+    "eval": eval1
+  })(ws$prime)(we$prime)();
+  log2(show(showArray(showRecord()()(showRecordFieldsCons({
+    reflectSymbol: function() {
+      return "n";
+    }
+  })(showRecordFieldsCons({
+    reflectSymbol: function() {
+      return "s";
+    }
+  })(showRecordFieldsCons({
+    reflectSymbol: function() {
+      return "whenPosix";
+    }
+  })(showRecordFieldsNil)(showNumber))(showString))(showInt))))(x))();
+  return x;
+};
 export {
   coordToEvent,
   $$eval as eval,
@@ -5167,8 +5359,10 @@ export {
   scheduleNoteEvents,
   setTempo,
   t,
+  test2 as test,
   testMaybeInstant,
   timekNotToEvents,
+  timekNotToEvents$prime,
   unsafeMaybeMilliseconds,
   we,
   we$prime,

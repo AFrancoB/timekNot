@@ -43,7 +43,7 @@ var unsafeMaybeMilliseconds = function ($copy_v) {
             $copy_v = Data_DateTime_Instant.instant(0.0);
             return;
         };
-        throw new Error("Failed pattern match at Main (line 94, column 1 - line 94, column 51): " + [ v.constructor.name ]);
+        throw new Error("Failed pattern match at Main (line 99, column 1 - line 99, column 51): " + [ v.constructor.name ]);
     };
     while (!$tco_done) {
         $tco_result = $tco_loop($copy_v);
@@ -65,7 +65,7 @@ var pErrorToString = function (v) {
     if (v instanceof Data_Either.Right) {
         return new Data_Either.Right(v.value0);
     };
-    throw new Error("Failed pattern match at Main (line 76, column 1 - line 76, column 70): " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at Main (line 81, column 1 - line 81, column 70): " + [ v.constructor.name ]);
 };
 var numToDateTime = function (x) {
     var asMaybeInstant = Data_DateTime_Instant.instant(x);
@@ -122,6 +122,8 @@ var evaluate = function (timekNot) {
     return function (str) {
         return function __do() {
             Effect_Console.log("timekNot-CU: evaluate")();
+            var rhythmic = Effect_Ref.read(timekNot.ast)();
+            Effect_Console.log(Data_Show.show(Rhythmic.rhythmicShowInstance)(rhythmic))();
             var eval1 = Effect_Now.nowDateTime();
             var pr = pErrorToString(Parsing.runParser(str)(Rhythmic.topRhythmic));
             if (pr instanceof Data_Either.Left) {
@@ -138,7 +140,7 @@ var evaluate = function (timekNot) {
                     error: ""
                 };
             };
-            throw new Error("Failed pattern match at Main (line 69, column 3 - line 74, column 42): " + [ pr.constructor.name ]);
+            throw new Error("Failed pattern match at Main (line 74, column 3 - line 79, column 42): " + [ pr.constructor.name ]);
         };
     };
 };
@@ -199,6 +201,44 @@ var scheduleNoteEvents = function (tk) {
         };
     };
 };
+var timekNotToEvents$prime = function (tk) {
+    return function (ws1) {
+        return function (we1) {
+            return function __do() {
+                var rhy = Effect_Ref.read(tk.ast)();
+                var t1 = Effect_Ref.read(tk.tempo)();
+                var eval1 = Effect_Ref.read(tk["eval"])();
+                var events = fromCoordenateToArray(rhy)(t1)(numToDateTime(ws1))(numToDateTime(we1))(eval1);
+                return events;
+            };
+        };
+    };
+};
+var test = function __do() {
+    Effect_Console.log("timekNot-CU: launch")();
+    var ast = Effect_Ref["new"](new Rhythmic.Onsets(Data_List_Lazy.fromFoldable(Data_Foldable.foldableArray)([ true, true, false, true ])))();
+    var tempo = Control_Bind.bind(Effect.bindEffect)(Data_Tempo.newTempo(Data_Ratio.reduce(Data_Ord.ordInt)(Data_EuclideanRing.euclideanRingInt)(4)(1)))(Effect_Ref["new"])();
+    var eval1 = Control_Bind.bind(Effect.bindEffect)(Effect_Now.nowDateTime)(Effect_Ref["new"])();
+    var x = timekNotToEvents$prime({
+        ast: ast,
+        tempo: tempo,
+        "eval": eval1
+    })(ws$prime)(we$prime)();
+    Effect_Console.log(Data_Show.show(Data_Show.showArray(Data_Show.showRecord()()(Data_Show.showRecordFieldsCons({
+        reflectSymbol: function () {
+            return "n";
+        }
+    })(Data_Show.showRecordFieldsCons({
+        reflectSymbol: function () {
+            return "s";
+        }
+    })(Data_Show.showRecordFieldsCons({
+        reflectSymbol: function () {
+            return "whenPosix";
+        }
+    })(Data_Show.showRecordFieldsNil)(Data_Show.showNumber))(Data_Show.showString))(Data_Show.showInt))))(x))();
+    return x;
+};
 export {
     launch,
     evaluate,
@@ -218,5 +258,7 @@ export {
     we,
     ws$prime,
     we$prime,
-    $$eval as eval
+    $$eval as eval,
+    test,
+    timekNotToEvents$prime
 };

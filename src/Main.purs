@@ -46,6 +46,9 @@ type TimekNot = {
   eval :: Ref DateTime
   }
 
+-- instance timekNotShowInstance :: Show TimekNot where
+--   show x = show $ read x.ast
+
 
 
 launch :: Effect TimekNot
@@ -63,6 +66,8 @@ launch = do
 evaluate :: TimekNot -> String -> Effect { success :: Boolean, error :: String }
 evaluate timekNot str = do
   log "timekNot-CU: evaluate"
+  rhythmic <- read timekNot.ast
+  log $ show rhythmic
   -- placeholder: assume any evaluation yields the valid program
   eval <- nowDateTime
   let pr = pErrorToString $ runParser str topRhythmic -- :: Either String AST 
@@ -149,21 +154,21 @@ we' = unwrap $ unInstant $ fromDateTime $ we 1 0
 eval:: DateTime
 eval = (DateTime (makeDate 2022 June 3) (makeTime 19 13 5 150))
 
---- this needs to be sorted as soon as possible!!!!!
---test :: Number -> Number -> forall opts. Effect (Array {whenPosix:: Number, s:: String, n:: Int})
--- test = do
---   log "timekNot-CU: launch"
---   ast <- new $ Onsets $ fromFoldable [true,true,false,true]
---   tempo <- newTempo (4 % 1) >>= new 
---   eval <- nowDateTime >>= new
---   x <- timekNotToEvents' {ast,tempo,eval} ws' we'
---   log $ show x
---   pure x
+-- this needs to be sorted as soon as possible!!!!!
+test :: forall opts. Effect (Array {whenPosix:: Number, s:: String, n:: Int})
+test = do
+  log "timekNot-CU: launch"
+  ast <- new $ Onsets $ fromFoldable [true,true,false,true]
+  tempo <- newTempo (4 % 1) >>= new 
+  eval <- nowDateTime >>= new
+  x <- timekNotToEvents' {ast,tempo,eval} ws' we'
+  log $ show x
+  pure x
 
--- timekNotToEvents':: TimekNot -> Number -> Number -> forall opts. Effect (Array {whenPosix:: Number, s:: String, n:: Int})
--- timekNotToEvents' tk ws we = do
---     rhy <- read tk.ast
---     t <- read tk.tempo
---     eval <- read tk.eval
---     let events = fromCoordenateToArray rhy t (numToDateTime ws) (numToDateTime we) eval
---     pure events
+timekNotToEvents':: TimekNot -> Number -> Number -> forall opts. Effect (Array {whenPosix:: Number, s:: String, n:: Int})
+timekNotToEvents' tk ws we = do
+    rhy <- read tk.ast
+    t <- read tk.tempo
+    eval <- read tk.eval
+    let events = fromCoordenateToArray rhy t (numToDateTime ws) (numToDateTime we) eval
+    pure events
