@@ -87,9 +87,8 @@ setTempo :: TimekNot -> ForeignTempo -> Effect Unit
 setTempo timekNot t = write (fromForeignTempo t) timekNot.tempo
 
 -- here a func that goes from rhythmicInto (passing through map) Event
-scheduleNoteEvents :: TimekNot -> DateTime -> DateTime -> forall opts. Effect (Array Foreign)
+scheduleNoteEvents :: TimekNot -> Number -> Number -> forall opts. Effect (Array Foreign)
 scheduleNoteEvents tk ws we = timekNotToEvents tk ws we
-    
 
 
 -- pure $ map unsafeToForeign events
@@ -107,15 +106,18 @@ unsafeMaybeMilliseconds:: Maybe Instant -> Instant
 unsafeMaybeMilliseconds (Just x) = x
 unsafeMaybeMilliseconds Nothing = unsafeMaybeMilliseconds $ instant $ Milliseconds 0.0
 
-timekNotToEvents:: TimekNot -> DateTime -> DateTime -> forall opts. Effect (Array Foreign)
+timekNotToEvents:: TimekNot -> Number -> Number -> forall opts. Effect (Array Foreign)
 timekNotToEvents tk ws we = do
+    let ws' = numToDateTime ws
+    let we' = numToDateTime we
     rhy <- read tk.ast
     t <- read tk.tempo
     eval <- read tk.eval
+
     log $ show rhy
     log $ show ws
     log $ show we
-    let events = fromCoordenateToArray rhy t ws we eval -- here seems to be the issue
+    let events = fromCoordenateToArray rhy t ws' we' eval -- here seems to be the issue
     log $ show events
     pure $ map unsafeToForeign events
 

@@ -123,36 +123,21 @@ var join = function(dictBind) {
   };
 };
 
-// output/Data.DateTime/foreign.js
-var createUTC = function(y, mo, d, h, m, s, ms) {
-  var date2 = new Date(Date.UTC(y, mo, d, h, m, s, ms));
+// output/Data.DateTime.Instant/foreign.js
+var createDateTime = function(y, m, d, h, mi, s, ms) {
+  var dateTime = new Date(Date.UTC(y, m, d, h, mi, s, ms));
   if (y >= 0 && y < 100) {
-    date2.setUTCFullYear(y);
+    dateTime.setUTCFullYear(y);
   }
-  return date2.getTime();
+  return dateTime;
 };
-function calcDiff(rec1, rec2) {
-  var msUTC1 = createUTC(rec1.year, rec1.month - 1, rec1.day, rec1.hour, rec1.minute, rec1.second, rec1.millisecond);
-  var msUTC2 = createUTC(rec2.year, rec2.month - 1, rec2.day, rec2.hour, rec2.minute, rec2.second, rec2.millisecond);
-  return msUTC1 - msUTC2;
+function fromDateTimeImpl(y, mo, d, h, mi, s, ms) {
+  return createDateTime(y, mo - 1, d, h, mi, s, ms).getTime();
 }
-function adjustImpl(just) {
-  return function(nothing) {
-    return function(offset) {
-      return function(rec) {
-        var msUTC = createUTC(rec.year, rec.month - 1, rec.day, rec.hour, rec.minute, rec.second, rec.millisecond);
-        var dt = new Date(msUTC + offset);
-        return isNaN(dt.getTime()) ? nothing : just({
-          year: dt.getUTCFullYear(),
-          month: dt.getUTCMonth() + 1,
-          day: dt.getUTCDate(),
-          hour: dt.getUTCHours(),
-          minute: dt.getUTCMinutes(),
-          second: dt.getUTCSeconds(),
-          millisecond: dt.getUTCMilliseconds()
-        });
-      };
-    };
+function toDateTimeImpl(ctor) {
+  return function(instant2) {
+    var dt = new Date(instant2);
+    return ctor(dt.getUTCFullYear())(dt.getUTCMonth() + 1)(dt.getUTCDate())(dt.getUTCHours())(dt.getUTCMinutes())(dt.getUTCSeconds())(dt.getUTCMilliseconds());
   };
 }
 
@@ -1231,69 +1216,6 @@ var December = /* @__PURE__ */ function() {
   December2.value = new December2();
   return December2;
 }();
-var showYear = {
-  show: function(v) {
-    return "(Year " + (show(showInt)(v) + ")");
-  }
-};
-var showMonth = {
-  show: function(v) {
-    if (v instanceof January) {
-      return "January";
-    }
-    ;
-    if (v instanceof February) {
-      return "February";
-    }
-    ;
-    if (v instanceof March) {
-      return "March";
-    }
-    ;
-    if (v instanceof April) {
-      return "April";
-    }
-    ;
-    if (v instanceof May) {
-      return "May";
-    }
-    ;
-    if (v instanceof June) {
-      return "June";
-    }
-    ;
-    if (v instanceof July) {
-      return "July";
-    }
-    ;
-    if (v instanceof August) {
-      return "August";
-    }
-    ;
-    if (v instanceof September) {
-      return "September";
-    }
-    ;
-    if (v instanceof October) {
-      return "October";
-    }
-    ;
-    if (v instanceof November) {
-      return "November";
-    }
-    ;
-    if (v instanceof December) {
-      return "December";
-    }
-    ;
-    throw new Error("Failed pattern match at Data.Date.Component (line 101, column 1 - line 113, column 29): " + [v.constructor.name]);
-  }
-};
-var showDay = {
-  show: function(v) {
-    return "(Day " + (show(showInt)(v) + ")");
-  }
-};
 var ordYear = ordInt;
 var ordDay = ordInt;
 var eqYear = eqInt;
@@ -1850,11 +1772,6 @@ var $$Date = /* @__PURE__ */ function() {
 var year = function(v) {
   return v.value0;
 };
-var showDate = {
-  show: function(v) {
-    return "(Date " + (show(showYear)(v.value0) + (" " + (show(showMonth)(v.value1) + (" " + (show(showDay)(v.value2) + ")")))));
-  }
-};
 var month = function(v) {
   return v.value1;
 };
@@ -1896,6 +1813,39 @@ var exactDate = function(y) {
   };
 };
 
+// output/Data.DateTime/foreign.js
+var createUTC = function(y, mo, d, h, m, s, ms) {
+  var date2 = new Date(Date.UTC(y, mo, d, h, m, s, ms));
+  if (y >= 0 && y < 100) {
+    date2.setUTCFullYear(y);
+  }
+  return date2.getTime();
+};
+function calcDiff2(rec1, rec2) {
+  var msUTC1 = createUTC(rec1.year, rec1.month - 1, rec1.day, rec1.hour, rec1.minute, rec1.second, rec1.millisecond);
+  var msUTC2 = createUTC(rec2.year, rec2.month - 1, rec2.day, rec2.hour, rec2.minute, rec2.second, rec2.millisecond);
+  return msUTC1 - msUTC2;
+}
+function adjustImpl(just) {
+  return function(nothing) {
+    return function(offset) {
+      return function(rec) {
+        var msUTC = createUTC(rec.year, rec.month - 1, rec.day, rec.hour, rec.minute, rec.second, rec.millisecond);
+        var dt = new Date(msUTC + offset);
+        return isNaN(dt.getTime()) ? nothing : just({
+          year: dt.getUTCFullYear(),
+          month: dt.getUTCMonth() + 1,
+          day: dt.getUTCDate(),
+          hour: dt.getUTCHours(),
+          minute: dt.getUTCMinutes(),
+          second: dt.getUTCSeconds(),
+          millisecond: dt.getUTCMilliseconds()
+        });
+      };
+    };
+  };
+}
+
 // output/Data.Time.Component/index.js
 var $runtime_lazy3 = function(name2, moduleName, init3) {
   var state2 = 0;
@@ -1910,26 +1860,6 @@ var $runtime_lazy3 = function(name2, moduleName, init3) {
     state2 = 2;
     return val;
   };
-};
-var showSecond = {
-  show: function(v) {
-    return "(Second " + (show(showInt)(v) + ")");
-  }
-};
-var showMinute = {
-  show: function(v) {
-    return "(Minute " + (show(showInt)(v) + ")");
-  }
-};
-var showMillisecond = {
-  show: function(v) {
-    return "(Millisecond " + (show(showInt)(v) + ")");
-  }
-};
-var showHour = {
-  show: function(v) {
-    return "(Hour " + (show(showInt)(v) + ")");
-  }
 };
 var ordSecond = ordInt;
 var ordMinute = ordInt;
@@ -2176,11 +2106,6 @@ var Time = /* @__PURE__ */ function() {
   };
   return Time2;
 }();
-var showTime = {
-  show: function(v) {
-    return "(Time " + (show(showHour)(v.value0) + (" " + (show(showMinute)(v.value1) + (" " + (show(showSecond)(v.value2) + (" " + (show(showMillisecond)(v.value3) + ")")))))));
-  }
-};
 var second = function(v) {
   return v.value2;
 };
@@ -2219,15 +2144,10 @@ var toRecord = function(v) {
     millisecond: fromEnum(boundedEnumMillisecond)(millisecond(v.value1))
   };
 };
-var showDateTime = {
-  show: function(v) {
-    return "(DateTime " + (show(showDate)(v.value0) + (" " + (show(showTime)(v.value1) + ")")));
-  }
-};
 var diff = function(dictDuration) {
   return function(dt1) {
     return function(dt2) {
-      return toDuration(dictDuration)(calcDiff(toRecord(dt1), toRecord(dt2)));
+      return toDuration(dictDuration)(calcDiff2(toRecord(dt1), toRecord(dt2)));
     };
   };
 };
@@ -2240,24 +2160,6 @@ var adjust = function(dictDuration) {
     };
   };
 };
-
-// output/Data.DateTime.Instant/foreign.js
-var createDateTime = function(y, m, d, h, mi, s, ms) {
-  var dateTime = new Date(Date.UTC(y, m, d, h, mi, s, ms));
-  if (y >= 0 && y < 100) {
-    dateTime.setUTCFullYear(y);
-  }
-  return dateTime;
-};
-function fromDateTimeImpl(y, mo, d, h, mi, s, ms) {
-  return createDateTime(y, mo - 1, d, h, mi, s, ms).getTime();
-}
-function toDateTimeImpl(ctor) {
-  return function(instant2) {
-    var dt = new Date(instant2);
-    return ctor(dt.getUTCFullYear())(dt.getUTCMonth() + 1)(dt.getUTCDate())(dt.getUTCHours())(dt.getUTCMinutes())(dt.getUTCSeconds())(dt.getUTCMilliseconds());
-  };
-}
 
 // output/Data.DateTime.Instant/index.js
 var unInstant = function(v) {
@@ -5233,7 +5135,7 @@ var unsafeMaybeMilliseconds = function($copy_v) {
       return;
     }
     ;
-    throw new Error("Failed pattern match at Main (line 106, column 1 - line 106, column 51): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 105, column 1 - line 105, column 51): " + [v.constructor.name]);
   }
   ;
   while (!$tco_done) {
@@ -5334,14 +5236,16 @@ var fromCoordenateToArray = function(x) {
 var timekNotToEvents = function(tk) {
   return function(ws) {
     return function(we) {
+      var ws$prime = numToDateTime(ws);
+      var we$prime = numToDateTime(we);
       return function __do2() {
         var rhy = read(tk.ast)();
         var t = read(tk.tempo)();
         var $$eval = read(tk["eval"])();
         log2(show(rhythmicShowInstance)(rhy))();
-        log2(show(showDateTime)(ws))();
-        log2(show(showDateTime)(we))();
-        var events = fromCoordenateToArray(rhy)(t)(ws)(we)($$eval);
+        log2(show(showNumber)(ws))();
+        log2(show(showNumber)(we))();
+        var events = fromCoordenateToArray(rhy)(t)(ws$prime)(we$prime)($$eval);
         log2(show(showArray(showRecord()()(showRecordFieldsCons({
           reflectSymbol: function() {
             return "n";
