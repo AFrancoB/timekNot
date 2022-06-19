@@ -11,6 +11,7 @@ import Effect.Console (log)
 import Data.Tempo
 import Data.DateTime
 import Effect.Ref (new,write)
+import Data.Traversable
 
 import Data.Rational
 import Data.List.Lazy 
@@ -120,8 +121,15 @@ fromCoordenateToArray x t ws we eval =
     let coords = fromPassageToCoord x t ws we eval
         coordsfromMapToArray = L.toUnfoldable $ M.values coords -- Array
         events = map coordToEvent coordsfromMapToArray
+        debug = debugging coordsfromMapToArray
       in events
 
+
+debugging:: Array Coordenada -> Effect Unit
+debugging x = do
+    -- map (\x -> log $ show x) x
+    traverse_ (\a -> log $ show a) $ x
+    pure unit
 
 coordToEvent:: Coordenada -> {whenPosix:: Number, s:: String, n:: Int}
 coordToEvent (Coord num iEv iPas) = {whenPosix: num, s: "cp", n: 0 }

@@ -14,6 +14,7 @@ import * as Data_Ratio from "../Data.Ratio/index.js";
 import * as Data_Show from "../Data.Show/index.js";
 import * as Data_Tempo from "../Data.Tempo/index.js";
 import * as Data_Unfoldable from "../Data.Unfoldable/index.js";
+import * as Data_Unit from "../Data.Unit/index.js";
 import * as Effect from "../Effect/index.js";
 import * as Effect_Console from "../Effect.Console/index.js";
 import * as Effect_Now from "../Effect.Now/index.js";
@@ -34,7 +35,7 @@ var unsafeMaybeMilliseconds = function ($copy_v) {
             $copy_v = Data_DateTime_Instant.instant(0.0);
             return;
         };
-        throw new Error("Failed pattern match at Main (line 104, column 1 - line 104, column 51): " + [ v.constructor.name ]);
+        throw new Error("Failed pattern match at Main (line 105, column 1 - line 105, column 51): " + [ v.constructor.name ]);
     };
     while (!$tco_done) {
         $tco_result = $tco_loop($copy_v);
@@ -56,7 +57,7 @@ var pErrorToString = function (v) {
     if (v instanceof Data_Either.Right) {
         return new Data_Either.Right(v.value0);
     };
-    throw new Error("Failed pattern match at Main (line 81, column 1 - line 81, column 70): " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at Main (line 82, column 1 - line 82, column 70): " + [ v.constructor.name ]);
 };
 var numToDateTime = function (x) {
     var asMaybeInstant = Data_DateTime_Instant.instant(x);
@@ -95,8 +96,16 @@ var evaluate = function (timekNot) {
                     error: ""
                 };
             };
-            throw new Error("Failed pattern match at Main (line 74, column 3 - line 79, column 42): " + [ pr.constructor.name ]);
+            throw new Error("Failed pattern match at Main (line 75, column 3 - line 80, column 42): " + [ pr.constructor.name ]);
         };
+    };
+};
+var debugging = function (x) {
+    return function __do() {
+        Data_Foldable.traverse_(Effect.applicativeEffect)(Data_Foldable.foldableArray)(function (a) {
+            return Effect_Console.log(Data_Show.show(Motor.coordenadaShowInstance)(a));
+        })(x)();
+        return Data_Unit.unit;
     };
 };
 var coordToEvent = function (v) {
@@ -113,6 +122,7 @@ var fromCoordenateToArray = function (x) {
                 return function ($$eval) {
                     var coords = Motor.fromPassageToCoord(x)(t)(ws)(we)($$eval);
                     var coordsfromMapToArray = Data_List.toUnfoldable(Data_Unfoldable.unfoldableArray)(Data_Map_Internal.values(coords));
+                    var debug = debugging(coordsfromMapToArray);
                     var events = Data_Functor.map(Data_Functor.functorArray)(coordToEvent)(coordsfromMapToArray);
                     return events;
                 };
@@ -164,6 +174,7 @@ export {
     unsafeMaybeMilliseconds,
     timekNotToEvents,
     fromCoordenateToArray,
+    debugging,
     coordToEvent,
     testMaybeInstant
 };

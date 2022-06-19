@@ -957,6 +957,18 @@ var over = function() {
 var foldr = function(dict) {
   return dict.foldr;
 };
+var traverse_ = function(dictApplicative) {
+  return function(dictFoldable) {
+    return function(f) {
+      return foldr(dictFoldable)(function() {
+        var $316 = applySecond(dictApplicative.Apply0());
+        return function($317) {
+          return $316(f($317));
+        };
+      }())(pure(dictApplicative)(unit));
+    };
+  };
+};
 var foldl = function(dict) {
   return dict.foldl;
 };
@@ -5119,6 +5131,11 @@ var fromPassageToCoord = function(rhy) {
     };
   };
 };
+var coordenadaShowInstance = {
+  show: function(v) {
+    return "time: " + (show(showNumber)(v.value0) + (", iPassage: " + (show(showInt)(v.value1) + (", iEvent: " + show(showInt)(v.value2)))));
+  }
+};
 
 // output/Main/index.js
 var unsafeMaybeMilliseconds = function($copy_v) {
@@ -5135,7 +5152,7 @@ var unsafeMaybeMilliseconds = function($copy_v) {
       return;
     }
     ;
-    throw new Error("Failed pattern match at Main (line 104, column 1 - line 104, column 51): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 105, column 1 - line 105, column 51): " + [v.constructor.name]);
   }
   ;
   while (!$tco_done) {
@@ -5161,7 +5178,7 @@ var pErrorToString = function(v) {
     return new Right(v.value0);
   }
   ;
-  throw new Error("Failed pattern match at Main (line 81, column 1 - line 81, column 70): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Main (line 82, column 1 - line 82, column 70): " + [v.constructor.name]);
 };
 var numToDateTime = function(x) {
   var asMaybeInstant = instant(x);
@@ -5202,8 +5219,16 @@ var evaluate = function(timekNot) {
         };
       }
       ;
-      throw new Error("Failed pattern match at Main (line 74, column 3 - line 79, column 42): " + [pr.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 75, column 3 - line 80, column 42): " + [pr.constructor.name]);
     };
+  };
+};
+var debugging = function(x) {
+  return function __do2() {
+    traverse_(applicativeEffect)(foldableArray)(function(a) {
+      return log2(show(coordenadaShowInstance)(a));
+    })(x)();
+    return unit;
   };
 };
 var coordToEvent = function(v) {
@@ -5220,6 +5245,7 @@ var fromCoordenateToArray = function(x) {
         return function($$eval) {
           var coords = fromPassageToCoord(x)(t)(ws)(we)($$eval);
           var coordsfromMapToArray = toUnfoldable(unfoldableArray)(values(coords));
+          var debug2 = debugging(coordsfromMapToArray);
           var events = map(functorArray)(coordToEvent)(coordsfromMapToArray);
           return events;
         };
@@ -5263,6 +5289,7 @@ var scheduleNoteEvents = function(tk) {
 };
 export {
   coordToEvent,
+  debugging,
   evaluate,
   fromCoordenateToArray,
   launch,
