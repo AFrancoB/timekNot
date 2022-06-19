@@ -4992,7 +4992,7 @@ var unsafeMaybeMilliseconds = function($copy_v) {
       return;
     }
     ;
-    throw new Error("Failed pattern match at Main (line 92, column 1 - line 92, column 51): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 94, column 1 - line 94, column 51): " + [v.constructor.name]);
   }
   ;
   while (!$tco_done) {
@@ -5018,7 +5018,7 @@ var pErrorToString = function(v) {
     return new Right(v.value0);
   }
   ;
-  throw new Error("Failed pattern match at Main (line 74, column 1 - line 74, column 70): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Main (line 76, column 1 - line 76, column 70): " + [v.constructor.name]);
 };
 var numToDateTime = function(x) {
   var asMaybeInstant = instant(x);
@@ -5053,14 +5053,16 @@ var we = function(x) {
     return new DateTime(makeDate(2022)(June.value)(3), makeTime(19)(15)(x)(y));
   };
 };
+var we$prime = /* @__PURE__ */ unwrap()(/* @__PURE__ */ unInstant(/* @__PURE__ */ fromDateTime(/* @__PURE__ */ we(1)(0))));
 var ws = function(x) {
   return function(y) {
     return new DateTime(makeDate(2022)(June.value)(3), makeTime(19)(15)(x)(y));
   };
 };
+var ws$prime = /* @__PURE__ */ unwrap()(/* @__PURE__ */ unInstant(/* @__PURE__ */ fromDateTime(/* @__PURE__ */ ws(0)(0))));
 var launch = function __do() {
   log2("timekNot-CU: launch")();
-  var ast = $$new(new Onsets(fromFoldable(foldableArray)([false])))();
+  var ast = $$new(new Onsets(fromFoldable(foldableArray)([true])))();
   var tempo = bind(bindEffect)(newTempo(reduce(ordInt)(euclideanRingInt)(4)(1)))($$new)();
   var eval1 = bind(bindEffect)(nowDateTime)($$new)();
   return {
@@ -5091,7 +5093,7 @@ var evaluate = function(timekNot) {
         };
       }
       ;
-      throw new Error("Failed pattern match at Main (line 67, column 3 - line 72, column 42): " + [pr.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 69, column 3 - line 74, column 42): " + [pr.constructor.name]);
     };
   };
 };
@@ -5169,5 +5171,7 @@ export {
   timekNotToEvents,
   unsafeMaybeMilliseconds,
   we,
-  ws
+  we$prime,
+  ws,
+  ws$prime
 };

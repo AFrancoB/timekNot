@@ -14,6 +14,7 @@ import * as Data_List from "../Data.List/index.js";
 import * as Data_List_Lazy from "../Data.List.Lazy/index.js";
 import * as Data_Map_Internal from "../Data.Map.Internal/index.js";
 import * as Data_Maybe from "../Data.Maybe/index.js";
+import * as Data_Newtype from "../Data.Newtype/index.js";
 import * as Data_Ord from "../Data.Ord/index.js";
 import * as Data_Ratio from "../Data.Ratio/index.js";
 import * as Data_Rational from "../Data.Rational/index.js";
@@ -42,7 +43,7 @@ var unsafeMaybeMilliseconds = function ($copy_v) {
             $copy_v = Data_DateTime_Instant.instant(0.0);
             return;
         };
-        throw new Error("Failed pattern match at Main (line 92, column 1 - line 92, column 51): " + [ v.constructor.name ]);
+        throw new Error("Failed pattern match at Main (line 94, column 1 - line 94, column 51): " + [ v.constructor.name ]);
     };
     while (!$tco_done) {
         $tco_result = $tco_loop($copy_v);
@@ -64,7 +65,7 @@ var pErrorToString = function (v) {
     if (v instanceof Data_Either.Right) {
         return new Data_Either.Right(v.value0);
     };
-    throw new Error("Failed pattern match at Main (line 74, column 1 - line 74, column 70): " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at Main (line 76, column 1 - line 76, column 70): " + [ v.constructor.name ]);
 };
 var numToDateTime = function (x) {
     var asMaybeInstant = Data_DateTime_Instant.instant(x);
@@ -99,14 +100,16 @@ var we = function (x) {
         return new Data_DateTime.DateTime(makeDate(2022)(Data_Date_Component.June.value)(3), makeTime(19)(15)(x)(y));
     };
 };
+var we$prime = /* #__PURE__ */ Data_Newtype.unwrap()(/* #__PURE__ */ Data_DateTime_Instant.unInstant(/* #__PURE__ */ Data_DateTime_Instant.fromDateTime(/* #__PURE__ */ we(1)(0))));
 var ws = function (x) {
     return function (y) {
         return new Data_DateTime.DateTime(makeDate(2022)(Data_Date_Component.June.value)(3), makeTime(19)(15)(x)(y));
     };
 };
+var ws$prime = /* #__PURE__ */ Data_Newtype.unwrap()(/* #__PURE__ */ Data_DateTime_Instant.unInstant(/* #__PURE__ */ Data_DateTime_Instant.fromDateTime(/* #__PURE__ */ ws(0)(0))));
 var launch = function __do() {
     Effect_Console.log("timekNot-CU: launch")();
-    var ast = Effect_Ref["new"](new Rhythmic.Onsets(Data_List_Lazy.fromFoldable(Data_Foldable.foldableArray)([ false ])))();
+    var ast = Effect_Ref["new"](new Rhythmic.Onsets(Data_List_Lazy.fromFoldable(Data_Foldable.foldableArray)([ true ])))();
     var tempo = Control_Bind.bind(Effect.bindEffect)(Data_Tempo.newTempo(Data_Ratio.reduce(Data_Ord.ordInt)(Data_EuclideanRing.euclideanRingInt)(4)(1)))(Effect_Ref["new"])();
     var eval1 = Control_Bind.bind(Effect.bindEffect)(Effect_Now.nowDateTime)(Effect_Ref["new"])();
     return {
@@ -135,7 +138,7 @@ var evaluate = function (timekNot) {
                     error: ""
                 };
             };
-            throw new Error("Failed pattern match at Main (line 67, column 3 - line 72, column 42): " + [ pr.constructor.name ]);
+            throw new Error("Failed pattern match at Main (line 69, column 3 - line 74, column 42): " + [ pr.constructor.name ]);
         };
     };
 };
@@ -213,5 +216,7 @@ export {
     t,
     ws,
     we,
+    ws$prime,
+    we$prime,
     $$eval as eval
 };
