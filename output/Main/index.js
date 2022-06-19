@@ -63,7 +63,7 @@ var scheduleNoteEvents = function (tk) {
     return function (ws1) {
         return function (we1) {
             var events = [ {
-                sample: "cp",
+                s: "cp",
                 n: 0
             } ];
             return Control_Applicative.pure(Effect.applicativeEffect)(Data_Functor.map(Data_Functor.functorArray)(Foreign.unsafeToForeign)(events));

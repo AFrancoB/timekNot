@@ -88,7 +88,7 @@ setTempo timekNot t = write (fromForeignTempo t) timekNot.tempo
 -- here a func that goes from rhythmicInto (passing through map) Event
 scheduleNoteEvents :: TimekNot -> Number -> Number -> forall opts. Effect (Array Foreign)
 scheduleNoteEvents tk ws we = pure $ map unsafeToForeign events
-      where events = [{sample: "cp", n: 0}]
+      where events = [{s: "cp", n: 0}]
 --timekNotToEvents tk (numToDateTime ws) (numToDateTime we)
 
 -- make unsafe function and correct with david's advice later

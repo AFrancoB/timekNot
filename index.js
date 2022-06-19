@@ -5165,7 +5165,7 @@ var scheduleNoteEvents = function(tk) {
   return function(ws1) {
     return function(we1) {
       var events = [{
-        sample: "cp",
+        s: "cp",
         n: 0
       }];
       return pure(applicativeEffect)(map(functorArray)(unsafeToForeign)(events));
