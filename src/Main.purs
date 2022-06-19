@@ -55,10 +55,9 @@ type TimekNot = {
 launch :: Effect TimekNot
 launch = do
   log "timekNot-CU: launch"
-  ast <- new $ Onsets $ fromFoldable [false]
-  tempo <- newTempo (4 % 1) >>= new 
+  ast <- new $ Onsets $ fromFoldable []
+  tempo <- newTempo (1 % 1) >>= new 
   eval <- nowDateTime >>= new
---  eval <- new $ (origin tempo)
   pure { ast, tempo, eval}  
 
 --parseProgram:: String -> Either ParseError (M.Map Int Coordenada)
@@ -126,15 +125,7 @@ fromCoordenateToArray x t ws we eval =
     let coords = fromPassageToCoord x t ws we eval
         coordsfromMapToArray = L.toUnfoldable $ M.values coords -- Array
         events = map coordToEvent coordsfromMapToArray
-  --      debug = debugging coordsfromMapToArray
       in events
-
-
-debugging:: Number -> Effect Unit
-debugging a = do
-    -- map (\x -> log $ show x) x
-    log $ show a
-    pure unit
 
 coordToEvent:: Coordenada -> {whenPosix:: Number, s:: String, n:: Int}
 coordToEvent (Coord num iEv iPas) = {whenPosix: num, s: "cp", n: 0 }
@@ -190,6 +181,6 @@ testMaybeInstant x = instant $ Milliseconds x -- Maybe Instant
 --     pure events
 
 
-ws'' = 1655673873.207149
+-- ws'' = 1655673873.207149
 
-whenPosix = 1655673873452000.0
+-- whenPosix = 1655673873452000.0
