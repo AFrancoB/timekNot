@@ -88,7 +88,10 @@ setTempo timekNot t = write (fromForeignTempo t) timekNot.tempo
 
 -- here a func that goes from rhythmicInto (passing through map) Event
 scheduleNoteEvents :: TimekNot -> Number -> Number -> forall opts. Effect (Array Foreign)
-scheduleNoteEvents tk ws we = timekNotToEvents tk (numToDateTime ws) (numToDateTime we)
+scheduleNoteEvents tk ws we = 
+    let d1 = debugging ws
+        d2 = debugging we
+    in timekNotToEvents tk (numToDateTime ws) (numToDateTime we)
 
 
 -- pure $ map unsafeToForeign events
@@ -123,14 +126,14 @@ fromCoordenateToArray x t ws we eval =
     let coords = fromPassageToCoord x t ws we eval
         coordsfromMapToArray = L.toUnfoldable $ M.values coords -- Array
         events = map coordToEvent coordsfromMapToArray
-        debug = debugging coordsfromMapToArray
+  --      debug = debugging coordsfromMapToArray
       in events
 
 
-debugging:: Array Coordenada -> Effect Unit
-debugging x = do
+debugging:: Number -> Effect Unit
+debugging a = do
     -- map (\x -> log $ show x) x
-    traverse_ (\a -> log $ show a) $ x
+    log $ show a
     pure unit
 
 coordToEvent:: Coordenada -> {whenPosix:: Number, s:: String, n:: Int}

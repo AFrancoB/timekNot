@@ -36,7 +36,7 @@ var unsafeMaybeMilliseconds = function ($copy_v) {
             $copy_v = Data_DateTime_Instant.instant(0.0);
             return;
         };
-        throw new Error("Failed pattern match at Main (line 105, column 1 - line 105, column 51): " + [ v.constructor.name ]);
+        throw new Error("Failed pattern match at Main (line 108, column 1 - line 108, column 51): " + [ v.constructor.name ]);
     };
     while (!$tco_done) {
         $tco_result = $tco_loop($copy_v);
@@ -101,11 +101,9 @@ var evaluate = function (timekNot) {
         };
     };
 };
-var debugging = function (x) {
+var debugging = function (a) {
     return function __do() {
-        Data_Foldable.traverse_(Effect.applicativeEffect)(Data_Foldable.foldableArray)(function (a) {
-            return Effect_Console.log(Data_Show.show(Motor.coordenadaShowInstance)(a));
-        })(x)();
+        Effect_Console.log(Data_Show.show(Data_Show.showNumber)(a))();
         return Data_Unit.unit;
     };
 };
@@ -123,7 +121,6 @@ var fromCoordenateToArray = function (x) {
                 return function ($$eval) {
                     var coords = Motor.fromPassageToCoord(x)(t)(ws)(we)($$eval);
                     var coordsfromMapToArray = Data_List.toUnfoldable(Data_Unfoldable.unfoldableArray)(Data_Map_Internal.values(coords));
-                    var debug = debugging(coordsfromMapToArray);
                     var events = Data_Functor.map(Data_Functor.functorArray)(coordToEvent)(coordsfromMapToArray);
                     return events;
                 };
@@ -163,6 +160,8 @@ var timekNotToEvents = function (tk) {
 var scheduleNoteEvents = function (tk) {
     return function (ws) {
         return function (we) {
+            var d2 = debugging(we);
+            var d1 = debugging(ws);
             return timekNotToEvents(tk)(numToDateTime(ws))(numToDateTime(we));
         };
     };
