@@ -5144,7 +5144,7 @@ var unsafeMaybeMilliseconds = function($copy_v) {
       return;
     }
     ;
-    throw new Error("Failed pattern match at Main (line 101, column 1 - line 101, column 51): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 104, column 1 - line 104, column 51): " + [v.constructor.name]);
   }
   ;
   while (!$tco_done) {
@@ -5159,17 +5159,6 @@ var testMaybeInstant = function(x) {
 var setTempo = function(timekNot) {
   return function(t1) {
     return write(fromForeignTempo(t1))(timekNot.tempo);
-  };
-};
-var scheduleNoteEvents = function(tk) {
-  return function(ws1) {
-    return function(we1) {
-      var events = [{
-        s: "cp",
-        n: 0
-      }];
-      return pure(applicativeEffect)(map(functorArray)(unsafeToForeign)(events));
-    };
   };
 };
 var pErrorToString = function(v) {
@@ -5239,7 +5228,6 @@ var evaluate = function(timekNot) {
     return function __do3() {
       log2("timekNot-CU: evaluate")();
       var rhythmic = read(timekNot.ast)();
-      log2(show(rhythmicShowInstance)(rhythmic))();
       var eval1 = nowDateTime();
       var pr = pErrorToString(runParser(str)(topRhythmic));
       if (pr instanceof Left) {
@@ -5293,6 +5281,7 @@ var timekNotToEvents = function(tk) {
         var rhy = read(tk.ast)();
         var t1 = read(tk.tempo)();
         var eval1 = read(tk["eval"])();
+        log2(show(rhythmicShowInstance)(rhy))();
         var events = fromCoordenateToArray(rhy)(t1)(ws1)(we1)(eval1);
         log2(show(showArray(showRecord()()(showRecordFieldsCons({
           reflectSymbol: function() {
@@ -5309,6 +5298,13 @@ var timekNotToEvents = function(tk) {
         })(showRecordFieldsNil)(showNumber))(showString))(showInt))))(events))();
         return map(functorArray)(unsafeToForeign)(events);
       };
+    };
+  };
+};
+var scheduleNoteEvents = function(tk) {
+  return function(ws1) {
+    return function(we1) {
+      return timekNotToEvents(tk)(numToDateTime(ws1))(numToDateTime(we1));
     };
   };
 };

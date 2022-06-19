@@ -67,7 +67,7 @@ evaluate :: TimekNot -> String -> Effect { success :: Boolean, error :: String }
 evaluate timekNot str = do
   log "timekNot-CU: evaluate"
   rhythmic <- read timekNot.ast
-  log $ show rhythmic
+ -- log $ show rhythmic
   -- placeholder: assume any evaluation yields the valid program
   eval <- nowDateTime
   let pr = pErrorToString $ runParser str topRhythmic -- :: Either String AST 
@@ -87,9 +87,12 @@ setTempo timekNot t = write (fromForeignTempo t) timekNot.tempo
 
 -- here a func that goes from rhythmicInto (passing through map) Event
 scheduleNoteEvents :: TimekNot -> Number -> Number -> forall opts. Effect (Array Foreign)
-scheduleNoteEvents tk ws we = pure $ map unsafeToForeign events
-      where events = [{s: "cp", n: 0}]
---timekNotToEvents tk (numToDateTime ws) (numToDateTime we)
+scheduleNoteEvents tk ws we = timekNotToEvents tk (numToDateTime ws) (numToDateTime we)
+
+
+-- pure $ map unsafeToForeign events
+--       where events = [{s: "cp", n: 0}]
+
 
 -- make unsafe function and correct with david's advice later
 numToDateTime:: Number -> DateTime 
@@ -107,6 +110,7 @@ timekNotToEvents tk ws we = do
     rhy <- read tk.ast
     t <- read tk.tempo
     eval <- read tk.eval
+    log $ show rhy
     let events = fromCoordenateToArray rhy t ws we eval
     log $ show events
     pure $ map unsafeToForeign events
