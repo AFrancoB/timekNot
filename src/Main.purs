@@ -112,6 +112,8 @@ timekNotToEvents tk ws we = do
     t <- read tk.tempo
     eval <- read tk.eval
     log $ show rhy
+    log $ show ws
+    log $ show we
     let events = fromCoordenateToArray rhy t ws we eval -- here seems to be the issue
     log $ show events
     pure $ map unsafeToForeign events
