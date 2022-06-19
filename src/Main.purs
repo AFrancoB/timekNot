@@ -30,6 +30,8 @@ import Foreign
 import Partial.Unsafe
 import Data.Enum
 
+import Data.Newtype
+
 import Parsing
 
 import Motor
@@ -143,5 +145,22 @@ ws x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
 we:: Int -> Int -> DateTime
 we x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
 
+ws':: Number
+ws' = unwrap $ unInstant $ fromDateTime $ ws 0 0
+
+we':: Number
+we' = unwrap $ unInstant $ fromDateTime $ we 1 0
+
 eval:: DateTime
 eval = (DateTime (makeDate 2022 June 3) (makeTime 19 13 5 150))
+
+
+--- this needs to be sorted as soon as possible!!!!!
+-- test :: forall opts. Effect (Array {whenPosix:: Number, s:: String, n:: Int})
+-- test = do
+--   log "timekNot-CU: launch"
+--   ast <- new $ Onsets $ fromFoldable [false]
+--   tempo <- newTempo (4 % 1) >>= new 
+--   eval <- nowDateTime >>= new
+--   x <- scheduleNoteEvents {ast,tempo,eval} ws' we'
+--   pure x

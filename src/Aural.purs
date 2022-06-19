@@ -51,3 +51,5 @@ instance auralShowInstance :: Show Aural where
   show (Aural sample n) = "aural "<>sample <>" n: "<>show n 
 
 
+-- aural:: P Aural
+-- aural = do
