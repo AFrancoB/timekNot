@@ -54,7 +54,7 @@ type TimekNot = {
 launch :: Effect TimekNot
 launch = do
   log "timekNot-CU: launch"
-  ast <- new $ Onsets $ fromFoldable [true]
+  ast <- new $ Onsets $ fromFoldable [false]
   tempo <- newTempo (4 % 1) >>= new 
   eval <- nowDateTime >>= new
 --  eval <- new $ (origin tempo)
@@ -111,7 +111,7 @@ timekNotToEvents tk ws we = do
     t <- read tk.tempo
     eval <- read tk.eval
     log $ show rhy
-    let events = fromCoordenateToArray rhy t ws we eval
+    let events = fromCoordenateToArray rhy t ws we eval -- here seems to be the issue
     log $ show events
     pure $ map unsafeToForeign events
 
@@ -133,48 +133,48 @@ testMaybeInstant x = instant $ Milliseconds x -- Maybe Instant
 
 
 -----------------------------test-------------------
-makeDate :: Int -> Month -> Int -> Date
-makeDate y m d = 
-    unsafePartial $ fromJust $ 
-       canonicalDate <$> toEnum y <@> m <*> toEnum d
+-- makeDate :: Int -> Month -> Int -> Date
+-- makeDate y m d = 
+--     unsafePartial $ fromJust $ 
+--        canonicalDate <$> toEnum y <@> m <*> toEnum d
 
-makeTime :: Int -> Int -> Int -> Int -> Time
-makeTime h min sec milisec = 
-    unsafePartial $ fromJust $ Time <$> toEnum h <*> toEnum min <*> toEnum sec <*> toEnum milisec
+-- makeTime :: Int -> Int -> Int -> Int -> Time
+-- makeTime h min sec milisec = 
+--     unsafePartial $ fromJust $ Time <$> toEnum h <*> toEnum min <*> toEnum sec <*> toEnum milisec
 
-t:: Tempo
-t = {freq: (2%1),time: (DateTime (makeDate 2022 June 3) (makeTime 19 11 25 100)), count: fromInt 0 }
+-- t:: Tempo
+-- t = {freq: (2%1),time: (DateTime (makeDate 2022 June 3) (makeTime 19 11 25 100)), count: fromInt 0 }
 
-ws:: Int -> Int -> DateTime
-ws x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
+-- ws:: Int -> Int -> DateTime
+-- ws x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
 
-we:: Int -> Int -> DateTime
-we x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
+-- we:: Int -> Int -> DateTime
+-- we x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
 
-ws':: Number
-ws' = unwrap $ unInstant $ fromDateTime $ ws 0 0
+-- ws':: Number
+-- ws' = unwrap $ unInstant $ fromDateTime $ ws 0 0
 
-we':: Number
-we' = unwrap $ unInstant $ fromDateTime $ we 1 0
+-- we':: Number
+-- we' = unwrap $ unInstant $ fromDateTime $ we 1 0
 
-eval:: DateTime
-eval = (DateTime (makeDate 2022 June 3) (makeTime 19 13 5 150))
+-- eval:: DateTime
+-- eval = (DateTime (makeDate 2022 June 3) (makeTime 19 13 5 150))
 
--- this needs to be sorted as soon as possible!!!!!
-test :: forall opts. Effect (Array {whenPosix:: Number, s:: String, n:: Int})
-test = do
-  log "timekNot-CU: launch"
-  ast <- new $ Onsets $ fromFoldable [true,true,false,true]
-  tempo <- newTempo (4 % 1) >>= new 
-  eval <- nowDateTime >>= new
-  x <- timekNotToEvents' {ast,tempo,eval} ws' we'
-  log $ show x
-  pure x
+-- -- this needs to be sorted as soon as possible!!!!!
+-- test :: forall opts. Effect (Array {whenPosix:: Number, s:: String, n:: Int})
+-- test = do
+--   log "timekNot-CU: launch"
+--   ast <- new $ Onsets $ fromFoldable [true,true,false,true]
+--   tempo <- newTempo (4 % 1) >>= new 
+--   eval <- nowDateTime >>= new
+--   x <- timekNotToEvents' {ast,tempo,eval} ws' we'
+--   log $ show x
+--   pure x
 
-timekNotToEvents':: TimekNot -> Number -> Number -> forall opts. Effect (Array {whenPosix:: Number, s:: String, n:: Int})
-timekNotToEvents' tk ws we = do
-    rhy <- read tk.ast
-    t <- read tk.tempo
-    eval <- read tk.eval
-    let events = fromCoordenateToArray rhy t (numToDateTime ws) (numToDateTime we) eval
-    pure events
+-- timekNotToEvents':: TimekNot -> Number -> Number -> forall opts. Effect (Array {whenPosix:: Number, s:: String, n:: Int})
+-- timekNotToEvents' tk ws we = do
+--     rhy <- read tk.ast
+--     t <- read tk.tempo
+--     eval <- read tk.eval
+--     let events = fromCoordenateToArray rhy t (numToDateTime ws) (numToDateTime we) eval
+--     pure events

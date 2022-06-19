@@ -77,15 +77,6 @@ var voidLeft = function(dictFunctor) {
 var functorArray = {
   map: arrayMap
 };
-var flap = function(dictFunctor) {
-  return function(ff2) {
-    return function(x) {
-      return map(dictFunctor)(function(f) {
-        return f(x);
-      })(ff2);
-    };
-  };
-};
 
 // output/Control.Apply/index.js
 var apply = function(dict) {
@@ -132,17 +123,22 @@ var join = function(dictBind) {
   };
 };
 
-// output/Data.Date/foreign.js
-var createDate = function(y, m, d) {
-  var date2 = new Date(Date.UTC(y, m, d));
+// output/Data.DateTime.Instant/foreign.js
+var createDateTime = function(y, m, d, h, mi, s, ms) {
+  var dateTime = new Date(Date.UTC(y, m, d, h, mi, s, ms));
   if (y >= 0 && y < 100) {
-    date2.setUTCFullYear(y);
+    dateTime.setUTCFullYear(y);
   }
-  return date2;
+  return dateTime;
 };
-function canonicalDateImpl(ctor, y, m, d) {
-  var date2 = createDate(y, m - 1, d);
-  return ctor(date2.getUTCFullYear())(date2.getUTCMonth() + 1)(date2.getUTCDate());
+function fromDateTimeImpl(y, mo, d, h, mi, s, ms) {
+  return createDateTime(y, mo - 1, d, h, mi, s, ms).getTime();
+}
+function toDateTimeImpl(ctor) {
+  return function(instant2) {
+    var dt = new Date(instant2);
+    return ctor(dt.getUTCFullYear())(dt.getUTCMonth() + 1)(dt.getUTCDate())(dt.getUTCHours())(dt.getUTCMinutes())(dt.getUTCSeconds())(dt.getUTCMilliseconds());
+  };
 }
 
 // output/Data.Bounded/foreign.js
@@ -392,6 +388,19 @@ var boundedChar = {
 var bottom = function(dict) {
   return dict.bottom;
 };
+
+// output/Data.Date/foreign.js
+var createDate = function(y, m, d) {
+  var date2 = new Date(Date.UTC(y, m, d));
+  if (y >= 0 && y < 100) {
+    date2.setUTCFullYear(y);
+  }
+  return date2;
+};
+function canonicalDateImpl(ctor, y, m, d) {
+  var date2 = createDate(y, m - 1, d);
+  return ctor(date2.getUTCFullYear())(date2.getUTCMonth() + 1)(date2.getUTCDate());
+}
 
 // output/Data.Enum/foreign.js
 function toCharCode(c) {
@@ -2152,24 +2161,6 @@ var adjust = function(dictDuration) {
   };
 };
 
-// output/Data.DateTime.Instant/foreign.js
-var createDateTime = function(y, m, d, h, mi, s, ms) {
-  var dateTime = new Date(Date.UTC(y, m, d, h, mi, s, ms));
-  if (y >= 0 && y < 100) {
-    dateTime.setUTCFullYear(y);
-  }
-  return dateTime;
-};
-function fromDateTimeImpl(y, mo, d, h, mi, s, ms) {
-  return createDateTime(y, mo - 1, d, h, mi, s, ms).getTime();
-}
-function toDateTimeImpl(ctor) {
-  return function(instant2) {
-    var dt = new Date(instant2);
-    return ctor(dt.getUTCFullYear())(dt.getUTCMonth() + 1)(dt.getUTCDate())(dt.getUTCHours())(dt.getUTCMinutes())(dt.getUTCSeconds())(dt.getUTCMilliseconds());
-  };
-}
-
 // output/Data.DateTime.Instant/index.js
 var unInstant = function(v) {
   return v;
@@ -3679,8 +3670,8 @@ var nowDateTime = /* @__PURE__ */ map(functorEffect)(toDateTime)(now);
 
 // output/Data.Tempo/index.js
 var timeToCountNumber = function(x) {
-  return function(t2) {
-    var timeDiff = unwrap()(diff(durationMilliseconds)(t2)(x.time));
+  return function(t) {
+    var timeDiff = unwrap()(diff(durationMilliseconds)(t)(x.time));
     var df = timeDiff * toNumber2(x.freq) / 1e3;
     return df + toNumber2(x.count);
   };
@@ -3690,7 +3681,7 @@ var origin = function(x) {
   return maybe(x.time)(identity(categoryFn))(adjust(durationMilliseconds)(toNumber2(increment))(x.time));
 };
 var newTempo = function(freq) {
-  return function __do3() {
+  return function __do2() {
     var time3 = nowDateTime();
     return {
       freq,
@@ -5157,8 +5148,8 @@ var testMaybeInstant = function(x) {
   return instant(x);
 };
 var setTempo = function(timekNot) {
-  return function(t1) {
-    return write(fromForeignTempo(t1))(timekNot.tempo);
+  return function(t) {
+    return write(fromForeignTempo(t))(timekNot.tempo);
   };
 };
 var pErrorToString = function(v) {
@@ -5177,58 +5168,23 @@ var numToDateTime = function(x) {
   var asInstant = unsafeMaybeMilliseconds(asMaybeInstant);
   return toDateTime(asInstant);
 };
-var makeTime = function(h) {
-  return function(min3) {
-    return function(sec) {
-      return function(milisec) {
-        return fromJust()(apply(applyMaybe)(apply(applyMaybe)(apply(applyMaybe)(map(functorMaybe)(Time.create)(toEnum(boundedEnumHour)(h)))(toEnum(boundedEnumMinute)(min3)))(toEnum(boundedEnumSecond)(sec)))(toEnum(boundedEnumMillisecond)(milisec)));
-      };
-    };
-  };
-};
-var makeDate = function(y) {
-  return function(m) {
-    return function(d) {
-      return fromJust()(apply(applyMaybe)(flap(functorMaybe)(map(functorMaybe)(canonicalDate)(toEnum(boundedEnumYear)(y)))(m))(toEnum(boundedEnumDay)(d)));
-    };
-  };
-};
-var t = /* @__PURE__ */ function() {
-  return {
-    freq: reduce(ordInt)(euclideanRingInt)(2)(1),
-    time: new DateTime(makeDate(2022)(June.value)(3), makeTime(19)(11)(25)(100)),
-    count: fromInt(0)
-  };
-}();
-var we = function(x) {
-  return function(y) {
-    return new DateTime(makeDate(2022)(June.value)(3), makeTime(19)(15)(x)(y));
-  };
-};
-var we$prime = /* @__PURE__ */ unwrap()(/* @__PURE__ */ unInstant(/* @__PURE__ */ fromDateTime(/* @__PURE__ */ we(1)(0))));
-var ws = function(x) {
-  return function(y) {
-    return new DateTime(makeDate(2022)(June.value)(3), makeTime(19)(15)(x)(y));
-  };
-};
-var ws$prime = /* @__PURE__ */ unwrap()(/* @__PURE__ */ unInstant(/* @__PURE__ */ fromDateTime(/* @__PURE__ */ ws(0)(0))));
 var launch = function __do() {
   log2("timekNot-CU: launch")();
-  var ast = $$new(new Onsets(fromFoldable(foldableArray)([true])))();
+  var ast = $$new(new Onsets(fromFoldable(foldableArray)([false])))();
   var tempo = bind(bindEffect)(newTempo(reduce(ordInt)(euclideanRingInt)(4)(1)))($$new)();
-  var eval1 = bind(bindEffect)(nowDateTime)($$new)();
+  var $$eval = bind(bindEffect)(nowDateTime)($$new)();
   return {
     ast,
     tempo,
-    "eval": eval1
+    "eval": $$eval
   };
 };
 var evaluate = function(timekNot) {
   return function(str) {
-    return function __do3() {
+    return function __do2() {
       log2("timekNot-CU: evaluate")();
       var rhythmic = read(timekNot.ast)();
-      var eval1 = nowDateTime();
+      var $$eval = nowDateTime();
       var pr = pErrorToString(runParser(str)(topRhythmic));
       if (pr instanceof Left) {
         return {
@@ -5238,7 +5194,7 @@ var evaluate = function(timekNot) {
       }
       ;
       if (pr instanceof Right) {
-        write(eval1)(timekNot["eval"])();
+        write($$eval)(timekNot["eval"])();
         write(pr.value0)(timekNot.ast)();
         return {
           success: true,
@@ -5250,9 +5206,6 @@ var evaluate = function(timekNot) {
     };
   };
 };
-var $$eval = /* @__PURE__ */ function() {
-  return new DateTime(makeDate(2022)(June.value)(3), makeTime(19)(13)(5)(150));
-}();
 var coordToEvent = function(v) {
   return {
     whenPosix: v.value0,
@@ -5261,11 +5214,11 @@ var coordToEvent = function(v) {
   };
 };
 var fromCoordenateToArray = function(x) {
-  return function(t1) {
-    return function(ws1) {
-      return function(we1) {
-        return function(eval1) {
-          var coords = fromPassageToCoord(x)(t1)(ws1)(we1)(eval1);
+  return function(t) {
+    return function(ws) {
+      return function(we) {
+        return function($$eval) {
+          var coords = fromPassageToCoord(x)(t)(ws)(we)($$eval);
           var coordsfromMapToArray = toUnfoldable(unfoldableArray)(values(coords));
           var events = map(functorArray)(coordToEvent)(coordsfromMapToArray);
           return events;
@@ -5275,14 +5228,14 @@ var fromCoordenateToArray = function(x) {
   };
 };
 var timekNotToEvents = function(tk) {
-  return function(ws1) {
-    return function(we1) {
-      return function __do3() {
+  return function(ws) {
+    return function(we) {
+      return function __do2() {
         var rhy = read(tk.ast)();
-        var t1 = read(tk.tempo)();
-        var eval1 = read(tk["eval"])();
+        var t = read(tk.tempo)();
+        var $$eval = read(tk["eval"])();
         log2(show(rhythmicShowInstance)(rhy))();
-        var events = fromCoordenateToArray(rhy)(t1)(ws1)(we1)(eval1);
+        var events = fromCoordenateToArray(rhy)(t)(ws)(we)($$eval);
         log2(show(showArray(showRecord()()(showRecordFieldsCons({
           reflectSymbol: function() {
             return "n";
@@ -5302,70 +5255,22 @@ var timekNotToEvents = function(tk) {
   };
 };
 var scheduleNoteEvents = function(tk) {
-  return function(ws1) {
-    return function(we1) {
-      return timekNotToEvents(tk)(numToDateTime(ws1))(numToDateTime(we1));
+  return function(ws) {
+    return function(we) {
+      return timekNotToEvents(tk)(numToDateTime(ws))(numToDateTime(we));
     };
   };
-};
-var timekNotToEvents$prime = function(tk) {
-  return function(ws1) {
-    return function(we1) {
-      return function __do3() {
-        var rhy = read(tk.ast)();
-        var t1 = read(tk.tempo)();
-        var eval1 = read(tk["eval"])();
-        var events = fromCoordenateToArray(rhy)(t1)(numToDateTime(ws1))(numToDateTime(we1))(eval1);
-        return events;
-      };
-    };
-  };
-};
-var test2 = function __do2() {
-  log2("timekNot-CU: launch")();
-  var ast = $$new(new Onsets(fromFoldable(foldableArray)([true, true, false, true])))();
-  var tempo = bind(bindEffect)(newTempo(reduce(ordInt)(euclideanRingInt)(4)(1)))($$new)();
-  var eval1 = bind(bindEffect)(nowDateTime)($$new)();
-  var x = timekNotToEvents$prime({
-    ast,
-    tempo,
-    "eval": eval1
-  })(ws$prime)(we$prime)();
-  log2(show(showArray(showRecord()()(showRecordFieldsCons({
-    reflectSymbol: function() {
-      return "n";
-    }
-  })(showRecordFieldsCons({
-    reflectSymbol: function() {
-      return "s";
-    }
-  })(showRecordFieldsCons({
-    reflectSymbol: function() {
-      return "whenPosix";
-    }
-  })(showRecordFieldsNil)(showNumber))(showString))(showInt))))(x))();
-  return x;
 };
 export {
   coordToEvent,
-  $$eval as eval,
   evaluate,
   fromCoordenateToArray,
   launch,
-  makeDate,
-  makeTime,
   numToDateTime,
   pErrorToString,
   scheduleNoteEvents,
   setTempo,
-  t,
-  test2 as test,
   testMaybeInstant,
   timekNotToEvents,
-  timekNotToEvents$prime,
-  unsafeMaybeMilliseconds,
-  we,
-  we$prime,
-  ws,
-  ws$prime
+  unsafeMaybeMilliseconds
 };
