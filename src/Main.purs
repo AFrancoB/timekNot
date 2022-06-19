@@ -51,7 +51,7 @@ type TimekNot = {
 launch :: Effect TimekNot
 launch = do
   log "timekNot-CU: launch"
-  ast <- new $ Onsets $ fromFoldable [false]
+  ast <- new $ Onsets $ fromFoldable [true]
   tempo <- newTempo (4 % 1) >>= new 
   eval <- nowDateTime >>= new
 --  eval <- new $ (origin tempo)
@@ -118,11 +118,6 @@ coordToEvent (Coord num iEv iPas) = {whenPosix: num, s: "cp", n: 0 }
 testMaybeInstant:: Number -> Maybe Instant
 testMaybeInstant x = instant $ Milliseconds x -- Maybe Instant
 
--- toDateTime :: Instant -> DateTime
-
--- instant :: Milliseconds -> Maybe Instant
-
-
 
 
 
@@ -154,13 +149,21 @@ we' = unwrap $ unInstant $ fromDateTime $ we 1 0
 eval:: DateTime
 eval = (DateTime (makeDate 2022 June 3) (makeTime 19 13 5 150))
 
-
 --- this needs to be sorted as soon as possible!!!!!
--- test :: forall opts. Effect (Array {whenPosix:: Number, s:: String, n:: Int})
+--test :: Number -> Number -> forall opts. Effect (Array {whenPosix:: Number, s:: String, n:: Int})
 -- test = do
 --   log "timekNot-CU: launch"
---   ast <- new $ Onsets $ fromFoldable [false]
+--   ast <- new $ Onsets $ fromFoldable [true,true,false,true]
 --   tempo <- newTempo (4 % 1) >>= new 
 --   eval <- nowDateTime >>= new
---   x <- scheduleNoteEvents {ast,tempo,eval} ws' we'
+--   x <- timekNotToEvents' {ast,tempo,eval} ws' we'
+--   log $ show x
 --   pure x
+
+-- timekNotToEvents':: TimekNot -> Number -> Number -> forall opts. Effect (Array {whenPosix:: Number, s:: String, n:: Int})
+-- timekNotToEvents' tk ws we = do
+--     rhy <- read tk.ast
+--     t <- read tk.tempo
+--     eval <- read tk.eval
+--     let events = fromCoordenateToArray rhy t (numToDateTime ws) (numToDateTime we) eval
+--     pure events
