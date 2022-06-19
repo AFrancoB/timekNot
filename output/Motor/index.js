@@ -208,7 +208,7 @@ var positionToTime = function (t1) {
         return function (v) {
             var posInTempo = Data_Semiring.mul(Data_Ratio.semiringRatio(Data_Ord.ordInt)(Data_EuclideanRing.euclideanRingInt))(toRat(v.value0))(lenPasaje);
             var countInTime = Data_Tempo.countToTime(t1)(posInTempo);
-            return new Coord(Data_Newtype.unwrap()(Data_DateTime_Instant.unInstant(Data_DateTime_Instant.fromDateTime(countInTime))), floor(v.value0), v.value1);
+            return new Coord(Data_Newtype.unwrap()(Data_DateTime_Instant.unInstant(Data_DateTime_Instant.fromDateTime(countInTime))) * 1000.0, floor(v.value0), v.value1);
         };
     };
 };

@@ -117,7 +117,7 @@ positionToTime:: Tempo -> Rational -> Tuple Number Int -> Coordenada
 positionToTime t lenPasaje (Tuple pos iEvent) = 
     let posInTempo = (toRat pos) * lenPasaje 
         countInTime = countToTime t posInTempo
-    in Coord (unwrap $ unInstant $ fromDateTime countInTime) (floor pos) iEvent
+    in Coord ((unwrap $ unInstant $ fromDateTime countInTime)*1000.0000) (floor pos) iEvent
     
 
 filterEvents:: Int ->  Number -> Number -> Number -> List Number -> List (Tuple Number Int) -- posicion e indiceEvento falta pattern
