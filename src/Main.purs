@@ -188,3 +188,8 @@ testMaybeInstant x = instant $ Milliseconds x -- Maybe Instant
 --     eval <- read tk.eval
 --     let events = fromCoordenateToArray rhy t (numToDateTime ws) (numToDateTime we) eval
 --     pure events
+
+
+ws'' = 1655673873.207149
+
+whenPosix = 1655673873452000.0

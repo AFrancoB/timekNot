@@ -23,6 +23,8 @@ import * as Foreign from "../Foreign/index.js";
 import * as Motor from "../Motor/index.js";
 import * as Parsing from "../Parsing/index.js";
 import * as Rhythmic from "../Rhythmic/index.js";
+var ws$prime$prime = 1.655673873207149e9;
+var whenPosix = 1.655673873452e15;
 var unsafeMaybeMilliseconds = function ($copy_v) {
     var $tco_done = false;
     var $tco_result;
@@ -177,5 +179,7 @@ export {
     fromCoordenateToArray,
     debugging,
     coordToEvent,
-    testMaybeInstant
+    testMaybeInstant,
+    ws$prime$prime,
+    whenPosix
 };

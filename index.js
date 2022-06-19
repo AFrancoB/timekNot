@@ -5018,7 +5018,7 @@ var positionToTime = function(t1) {
     return function(v) {
       var posInTempo = mul(semiringRatio(ordInt)(euclideanRingInt))(toRat(v.value0))(lenPasaje);
       var countInTime = countToTime(t1)(posInTempo);
-      return new Coord(unwrap()(unInstant(fromDateTime(countInTime))) * 1e3, floor3(v.value0), v.value1);
+      return new Coord(unwrap()(unInstant(fromDateTime(countInTime))) / 1e3, floor3(v.value0), v.value1);
     };
   };
 };
@@ -5121,6 +5121,8 @@ var fromPassageToCoord = function(rhy) {
 };
 
 // output/Main/index.js
+var ws$prime$prime = 1655673873207149e-6;
+var whenPosix = 1655673873452e3;
 var unsafeMaybeMilliseconds = function($copy_v) {
   var $tco_done = false;
   var $tco_result;
@@ -5283,5 +5285,7 @@ export {
   setTempo,
   testMaybeInstant,
   timekNotToEvents,
-  unsafeMaybeMilliseconds
+  unsafeMaybeMilliseconds,
+  whenPosix,
+  ws$prime$prime
 };
