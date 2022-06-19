@@ -5236,8 +5236,8 @@ var fromCoordenateToArray = function(x) {
 var timekNotToEvents = function(tk) {
   return function(ws) {
     return function(we) {
-      var ws$prime = numToDateTime(ws);
-      var we$prime = numToDateTime(we);
+      var ws$prime = numToDateTime(ws * 1e3);
+      var we$prime = numToDateTime(we * 1e3);
       return function __do2() {
         var rhy = read(tk.ast)();
         var t = read(tk.tempo)();

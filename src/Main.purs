@@ -108,8 +108,8 @@ unsafeMaybeMilliseconds Nothing = unsafeMaybeMilliseconds $ instant $ Millisecon
 
 timekNotToEvents:: TimekNot -> Number -> Number -> forall opts. Effect (Array Foreign)
 timekNotToEvents tk ws we = do
-    let ws' = numToDateTime ws
-    let we' = numToDateTime we
+    let ws' = numToDateTime (ws * 1000.0000)
+    let we' = numToDateTime (we * 1000.0000)
     rhy <- read tk.ast
     t <- read tk.tempo
     eval <- read tk.eval
@@ -141,9 +141,6 @@ coordToEvent (Coord num iEv iPas) = {whenPosix: num, s: "cp", n: 0 }
 
 testMaybeInstant:: Number -> Maybe Instant
 testMaybeInstant x = instant $ Milliseconds x -- Maybe Instant
-
-
-
 
 -----------------------------test-------------------
 -- makeDate :: Int -> Month -> Int -> Date

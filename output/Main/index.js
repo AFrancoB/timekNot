@@ -130,8 +130,8 @@ var fromCoordenateToArray = function (x) {
 var timekNotToEvents = function (tk) {
     return function (ws) {
         return function (we) {
-            var ws$prime = numToDateTime(ws);
-            var we$prime = numToDateTime(we);
+            var ws$prime = numToDateTime(ws * 1000.0);
+            var we$prime = numToDateTime(we * 1000.0);
             return function __do() {
                 var rhy = Effect_Ref.read(tk.ast)();
                 var t = Effect_Ref.read(tk.tempo)();
