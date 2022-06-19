@@ -5144,7 +5144,7 @@ var unsafeMaybeMilliseconds = function($copy_v) {
       return;
     }
     ;
-    throw new Error("Failed pattern match at Main (line 99, column 1 - line 99, column 51): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 101, column 1 - line 101, column 51): " + [v.constructor.name]);
   }
   ;
   while (!$tco_done) {
@@ -5159,6 +5159,17 @@ var testMaybeInstant = function(x) {
 var setTempo = function(timekNot) {
   return function(t1) {
     return write(fromForeignTempo(t1))(timekNot.tempo);
+  };
+};
+var scheduleNoteEvents = function(tk) {
+  return function(ws1) {
+    return function(we1) {
+      var events = [{
+        sample: "cp",
+        n: 0
+      }];
+      return pure(applicativeEffect)(map(functorArray)(unsafeToForeign)(events));
+    };
   };
 };
 var pErrorToString = function(v) {
@@ -5298,13 +5309,6 @@ var timekNotToEvents = function(tk) {
         })(showRecordFieldsNil)(showNumber))(showString))(showInt))))(events))();
         return map(functorArray)(unsafeToForeign)(events);
       };
-    };
-  };
-};
-var scheduleNoteEvents = function(tk) {
-  return function(ws1) {
-    return function(we1) {
-      return timekNotToEvents(tk)(numToDateTime(ws1))(numToDateTime(we1));
     };
   };
 };
