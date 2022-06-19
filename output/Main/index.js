@@ -36,7 +36,7 @@ var unsafeMaybeMilliseconds = function ($copy_v) {
             $copy_v = Data_DateTime_Instant.instant(0.0);
             return;
         };
-        throw new Error("Failed pattern match at Main (line 108, column 1 - line 108, column 51): " + [ v.constructor.name ]);
+        throw new Error("Failed pattern match at Main (line 106, column 1 - line 106, column 51): " + [ v.constructor.name ]);
     };
     while (!$tco_done) {
         $tco_result = $tco_loop($copy_v);
@@ -160,9 +160,7 @@ var timekNotToEvents = function (tk) {
 var scheduleNoteEvents = function (tk) {
     return function (ws) {
         return function (we) {
-            var d2 = debugging(we);
-            var d1 = debugging(ws);
-            return timekNotToEvents(tk)(numToDateTime(ws))(numToDateTime(we));
+            return timekNotToEvents(tk)(ws)(we);
         };
     };
 };
