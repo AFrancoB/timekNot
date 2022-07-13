@@ -123,12 +123,12 @@ var getIndexSimple = function (start) {
             })(o1);
             var before = Data_List_Lazy.length(Data_List_Lazy.filter(function (x) {
                 return x < start;
-            })(o1));
+            })(o1)) - 1 | 0;
             var $9 = before === 0;
             if ($9) {
-                return Data_List_Lazy.range(0)(Data_List_Lazy.length(between));
+                return Data_List_Lazy.range(0)(Data_List_Lazy.length(between) - 1 | 0);
             };
-            return Data_List_Lazy.range(before)(Data_List_Lazy.length(between));
+            return Data_List_Lazy.range(before)(Data_List_Lazy.length(between) - 1 | 0);
         };
     };
 };

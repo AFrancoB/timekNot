@@ -123,9 +123,9 @@ filterEvents nPassages start end passageAtStart o
 
 getIndexSimple:: Number -> Number -> List Number -> List Int
 getIndexSimple start end o =   
-    let before = length $ filter (\x -> x < start) o
+    let before = (length $ filter (\x -> x < start) o) -1
         between = filter (\x -> (x > start)&&(end>=x)) o
-    in if before == 0 then (0..(length between)) else (before..(length between))
+    in if before == 0 then (0..((length between)-1)) else (before..((length between)-1))
 
 getIndexOfFirstList:: List Number -> List Number -> List Int
 getIndexOfFirstList x o 

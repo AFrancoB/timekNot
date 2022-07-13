@@ -27646,13 +27646,13 @@ var getIndexSimple = function(start) {
       })(o1);
       var before = length(filter(function(x) {
         return x < start;
-      })(o1));
+      })(o1)) - 1 | 0;
       var $9 = before === 0;
       if ($9) {
-        return range2(0)(length(between2));
+        return range2(0)(length(between2) - 1 | 0);
       }
       ;
-      return range2(before)(length(between2));
+      return range2(before)(length(between2) - 1 | 0);
     };
   };
 };
