@@ -98,8 +98,6 @@ getEventIndex p' len' e' = I.floor $ ((p*len) + e)
                   len = I.toNumber len'
                   e = I.toNumber e'
 
-
-
 f':: Number -> Maybe (Tuple String Int) -> Maybe (Tuple Number String)
 f' x (Just (Tuple st int)) = Just $ Tuple x st
 f' x Nothing = Nothing
