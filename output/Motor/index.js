@@ -134,7 +134,7 @@ var getIndexSimple = function (start) {
 };
 var getIndexOfMiddleList = function (middleLen) {
     return function (o1) {
-        var x = toL(Data_List_Lazy_Types.foldableList)(Data_List_Lazy.range(0)(Data_List_Lazy.length(o1)));
+        var x = toL(Data_List_Lazy_Types.foldableList)(Data_List_Lazy.range(0)(Data_List_Lazy.length(o1) - 1 | 0));
         return Data_List_Lazy.take(middleLen)(Data_List_Lazy.cycle(x));
     };
 };

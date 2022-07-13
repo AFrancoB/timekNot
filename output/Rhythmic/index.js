@@ -46,7 +46,7 @@ var toEvent = function (v) {
     if (v instanceof Data_Maybe.Nothing) {
         return Data_Maybe.Nothing.value;
     };
-    throw new Error("Failed pattern match at Rhythmic (line 67, column 1 - line 67, column 53): " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at Rhythmic (line 78, column 1 - line 78, column 53): " + [ v.constructor.name ]);
 };
 var stringLit = /* #__PURE__ */ (function () {
     return tokenParser.stringLiteral;
@@ -212,7 +212,7 @@ var f$prime = function (x) {
         if (v instanceof Data_Maybe.Nothing) {
             return Data_Maybe.Nothing.value;
         };
-        throw new Error("Failed pattern match at Rhythmic (line 101, column 1 - line 101, column 71): " + [ x.constructor.name, v.constructor.name ]);
+        throw new Error("Failed pattern match at Rhythmic (line 112, column 1 - line 112, column 71): " + [ x.constructor.name, v.constructor.name ]);
     };
 };
 var f = function (v) {
@@ -232,7 +232,7 @@ var f = function (v) {
                 if (v instanceof AST.MetreI) {
                     return f$prime(v1.value0)(Data_List_Lazy.head(Data_List_Lazy.fromFoldable(Data_Foldable.foldableArray)([  ])));
                 };
-                throw new Error("Failed pattern match at Rhythmic (line 90, column 1 - line 90, column 89): " + [ v.constructor.name, len.constructor.name, samples.constructor.name, v1.constructor.name ]);
+                throw new Error("Failed pattern match at Rhythmic (line 101, column 1 - line 101, column 89): " + [ v.constructor.name, len.constructor.name, samples.constructor.name, v1.constructor.name ]);
             };
         };
     };
@@ -271,7 +271,7 @@ var auralIndex = function (v) {
     if (v instanceof Data_Maybe.Nothing) {
         return AST.EventI.value;
     };
-    throw new Error("Failed pattern match at Rhythmic (line 71, column 1 - line 71, column 34): " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at Rhythmic (line 82, column 1 - line 82, column 34): " + [ v.constructor.name ]);
 };
 var passageToEvents = function (rhy) {
     return function (au) {
@@ -291,11 +291,29 @@ var passageToEvents = function (rhy) {
         };
     };
 };
+var passageToEvents$prime = function (rhy) {
+    return function (au) {
+        return function (t1) {
+            return function (ws1) {
+                return function (we1) {
+                    return function (eval1) {
+                        var samplesI = auralIndex(Data_List_Lazy.last(Data_List_Lazy.filter(isSample)(au)));
+                        var samples = sampleWithIndex(Data_List_Lazy.last(Data_List_Lazy.filter(isSample)(au)));
+                        var coords = fromPassageToCoord(rhy)(t1)(ws1)(we1)(eval1);
+                        var lCoord = Data_Functor.map(Data_List_Lazy_Types.functorList)(Data_Tuple.snd)(Data_Map_Internal.toUnfoldable(Data_List_Lazy_Types.unfoldableList)(coords));
+                        var s = samplesWithPosix(samplesI)(Data_List_Lazy.length(samples))(samples)(lCoord);
+                        return lCoord;
+                    };
+                };
+            };
+        };
+    };
+};
 var test = function (secSt) {
     return function (milSt) {
         return function (secEn) {
             return function (milEn) {
-                return passageToEvents(new AST.Onsets(Data_List.fromFoldable(Data_Foldable.foldableArray)([ true, true, true, true, true ])))(Data_List_Lazy.fromFoldable(Data_Foldable.foldableArray)([ new AST.Sample(Data_List.fromFoldable(Data_Foldable.foldableArray)([ "bd", "cp", "808" ]), AST.EventI.value) ]))(t)(ws(secSt)(milSt))(we(secEn)(milEn))($$eval);
+                return passageToEvents$prime(new AST.Onsets(Data_List.fromFoldable(Data_Foldable.foldableArray)([ true, true, false, true, false ])))(Data_List_Lazy.fromFoldable(Data_Foldable.foldableArray)([ new AST.Sample(Data_List.fromFoldable(Data_Foldable.foldableArray)([ "bd", "cp", "808" ]), AST.EventI.value) ]))(t)(ws(secSt)(milSt))(we(secEn)(milEn))($$eval);
             };
         };
     };

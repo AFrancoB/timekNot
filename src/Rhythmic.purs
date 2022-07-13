@@ -48,9 +48,20 @@ import Motor
 type P = ParserT String Identity
 
 
-test secSt milSt secEn milEn = passageToEvents (Onsets (L.fromFoldable [true,true,true,true,true])) (fromFoldable [Sample (L.fromFoldable ["bd","cp","808"]) EventI]) t (ws secSt milSt) (we secEn milEn) eval
+test secSt milSt secEn milEn = passageToEvents' (Onsets (L.fromFoldable [true,true,false,true,false])) (fromFoldable [Sample (L.fromFoldable ["bd","cp","808"]) EventI]) t (ws secSt milSt) (we secEn milEn) eval
 
 --  {whenPosix: num, s: "cp", n: 0 }
+
+-- passageToEvents:: Rhythmic -> List Aural -> Tempo -> DateTime -> DateTime -> DateTime -> List (Maybe Event)
+passageToEvents' rhy au t ws we eval = 
+    let coords = fromPassageToCoord rhy t ws we eval -- Map Int Coord
+        lCoord = snd <$> (M.toUnfoldable coords) -- List Coord, es decir: Nu In In
+        samples = sampleWithIndex $ last $ filter isSample $ au --Maybe Aural
+        samplesI = auralIndex $ last $ filter isSample $ au
+        -- aqui va una funcion con tupletes de samples y coords con el mismo indice!!
+        s = samplesWithPosix samplesI (length samples) samples lCoord
+ --       n = last $ filter isN $ au  -- Maybe Aural 
+    in lCoord
 
 passageToEvents:: Rhythmic -> List Aural -> Tempo -> DateTime -> DateTime -> DateTime -> List (Maybe Event)
 passageToEvents rhy au t ws we eval = 
@@ -135,7 +146,7 @@ sampleWithIndex Nothing = fromFoldable []
 --- 3. de acuerdo al indice hacer el `mod` adecuado
 --- (en el mod el primer arg es el q cambia!!! segundo es el indice)
 --- crear estructura de datos: Event
-
+-- test x x1 y y1= fromPassageToCoord (Onsets $ L.fromFoldable [true,true,true,true,false]) t (ws x x1) (we y y1) eval
 
 fromPassageToCoord:: Rhythmic -> Tempo -> DateTime -> DateTime -> DateTime -> M.Map Int Coordenada
 fromPassageToCoord rhy t ws we eval = 

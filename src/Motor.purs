@@ -134,7 +134,7 @@ getIndexOfFirstList x o
 
 getIndexOfMiddleList:: Int -> List Number -> List Int
 getIndexOfMiddleList middleLen o = take middleLen $ cycle x
-    where x = toL (0..(length o))
+    where x = toL (0..((length o)-1))
 
 getIndexOfLastList:: List Number -> List Number -> List Int
 getIndexOfLastList x o 

@@ -27658,7 +27658,7 @@ var getIndexSimple = function(start) {
 };
 var getIndexOfMiddleList = function(middleLen) {
   return function(o1) {
-    var x = toL(foldableList2)(range2(0)(length(o1)));
+    var x = toL(foldableList2)(range2(0)(length(o1) - 1 | 0));
     return take(middleLen)(cycle(x));
   };
 };
@@ -27799,7 +27799,7 @@ var toEvent = function(v) {
     return Nothing.value;
   }
   ;
-  throw new Error("Failed pattern match at Rhythmic (line 67, column 1 - line 67, column 53): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Rhythmic (line 78, column 1 - line 78, column 53): " + [v.constructor.name]);
 };
 var sampleWithIndex = function(v) {
   if (v instanceof Just && v.value0 instanceof Sample) {
@@ -27907,7 +27907,7 @@ var f$prime = function(x) {
       return Nothing.value;
     }
     ;
-    throw new Error("Failed pattern match at Rhythmic (line 101, column 1 - line 101, column 71): " + [x.constructor.name, v.constructor.name]);
+    throw new Error("Failed pattern match at Rhythmic (line 112, column 1 - line 112, column 71): " + [x.constructor.name, v.constructor.name]);
   };
 };
 var f = function(v) {
@@ -27930,7 +27930,7 @@ var f = function(v) {
           return f$prime(v1.value0)(head2(fromFoldable2(foldableArray)([])));
         }
         ;
-        throw new Error("Failed pattern match at Rhythmic (line 90, column 1 - line 90, column 89): " + [v.constructor.name, len.constructor.name, samples2.constructor.name, v1.constructor.name]);
+        throw new Error("Failed pattern match at Rhythmic (line 101, column 1 - line 101, column 89): " + [v.constructor.name, len.constructor.name, samples2.constructor.name, v1.constructor.name]);
       };
     };
   };
@@ -27957,7 +27957,7 @@ var auralIndex = function(v) {
     return EventI.value;
   }
   ;
-  throw new Error("Failed pattern match at Rhythmic (line 71, column 1 - line 71, column 34): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Rhythmic (line 82, column 1 - line 82, column 34): " + [v.constructor.name]);
 };
 var passageToEvents = function(rhy) {
   return function(au) {
