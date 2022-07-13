@@ -35,6 +35,7 @@ to generate this file without the comments in this block.
   , "purescript-webdirt"
   , "rationals"
   , "refs"
+  , "strings"
   , "tuples"
   , "typelevel"
   ]
