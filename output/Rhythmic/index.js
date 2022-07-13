@@ -208,12 +208,12 @@ var f = function (v) {
             return function (v1) {
                 if (v instanceof AST.EventI) {
                     return f$prime(v1.value0)(Data_List_Lazy.head(Data_List_Lazy.filter(function (s) {
-                        return Data_EuclideanRing.mod(Data_EuclideanRing.euclideanRingInt)(v1.value1)(len) === Data_Tuple.snd(s);
+                        return Data_EuclideanRing.mod(Data_EuclideanRing.euclideanRingInt)(v1.value2)(len) === Data_Tuple.snd(s);
                     })(samples)));
                 };
                 if (v instanceof AST.PassageI) {
                     return f$prime(v1.value0)(Data_List_Lazy.head(Data_List_Lazy.filter(function (s) {
-                        return Data_EuclideanRing.mod(Data_EuclideanRing.euclideanRingInt)(v1.value2)(len) === Data_Tuple.snd(s);
+                        return Data_EuclideanRing.mod(Data_EuclideanRing.euclideanRingInt)(v1.value1)(len) === Data_Tuple.snd(s);
                     })(samples)));
                 };
                 if (v instanceof AST.MetreI) {

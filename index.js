@@ -27904,13 +27904,13 @@ var f = function(v) {
       return function(v1) {
         if (v instanceof EventI) {
           return f$prime(v1.value0)(head2(filter(function(s) {
-            return mod(euclideanRingInt)(v1.value1)(len) === snd(s);
+            return mod(euclideanRingInt)(v1.value2)(len) === snd(s);
           })(samples2)));
         }
         ;
         if (v instanceof PassageI) {
           return f$prime(v1.value0)(head2(filter(function(s) {
-            return mod(euclideanRingInt)(v1.value2)(len) === snd(s);
+            return mod(euclideanRingInt)(v1.value1)(len) === snd(s);
           })(samples2)));
         }
         ;

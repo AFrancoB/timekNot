@@ -88,8 +88,8 @@ samplesWithPosix:: Index -> Int -> List (Tuple String Int) -> List Coordenada ->
 samplesWithPosix index len samples coords = map (f index len samples) coords
 
 f:: Index -> Int -> List (Tuple String Int) -> Coordenada -> Maybe (Tuple Number String)
-f EventI len samples (Coord posix e p) = f' posix $ head $ filter (\s -> (mod e len) == (snd s)) samples
-f PassageI len samples (Coord posix e p) = f' posix $ head $ filter (\s -> (mod p len) == (snd s)) samples
+f EventI len samples (Coord posix p e) = f' posix $ head $ filter (\s -> (mod e len) == (snd s)) samples
+f PassageI len samples (Coord posix p e) = f' posix $ head $ filter (\s -> (mod p len) == (snd s)) samples
 f MetreI len samples (Coord posix e p) = f' posix $ head $ fromFoldable []
 
 f':: Number -> Maybe (Tuple String Int) -> Maybe (Tuple Number String)
