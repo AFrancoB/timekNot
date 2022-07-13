@@ -14,7 +14,7 @@ import Effect.Ref (new,write)
 import Data.Traversable
 
 import Data.Rational
-import Data.List.Lazy 
+import Data.List.Lazy hiding (many,Pattern)
 import Data.Array as A
 
 import Data.List as L
@@ -35,17 +35,11 @@ import Data.Newtype
 
 import Parsing
 
-import Motor
+import AST
 import Rhythmic
 
 
 -- type AST = Boolean
-
-type TimekNot = {
-  ast :: Ref Rhythmic,
-  tempo :: Ref Tempo,
-  eval :: Ref DateTime
-  }
 
 -- instance timekNotShowInstance :: Show TimekNot where
 --   show x = show $ read x.ast
@@ -55,7 +49,7 @@ type TimekNot = {
 launch :: Effect TimekNot
 launch = do
   log "timekNot-CU: launch"
-  ast <- new $ Onsets $ fromFoldable []
+  ast <- new $ Passage (Onsets $ L.fromFoldable []) (L.fromFoldable [])
   tempo <- newTempo (1 % 1) >>= new 
   eval <- nowDateTime >>= new
   pure { ast, tempo, eval}  
@@ -66,11 +60,11 @@ launch = do
 evaluate :: TimekNot -> String -> Effect { success :: Boolean, error :: String }
 evaluate timekNot str = do
   log "timekNot-CU: evaluate"
-  rhythmic <- read timekNot.ast
- -- log $ show rhythmic
+  passage <- read timekNot.ast
+ -- log $ show passage
   -- placeholder: assume any evaluation yields the valid program
   eval <- nowDateTime
-  let pr = pErrorToString $ runParser str topRhythmic -- :: Either String AST 
+  let pr = pErrorToString $ runParser str topPassageParser -- :: Either String AST 
   case pr of
     Left error -> pure $ { success: false, error }
     Right p -> do
@@ -78,7 +72,7 @@ evaluate timekNot str = do
       write p timekNot.ast 
       pure $ { success: true, error: "" }    --- here you might add the eval time with purescript. 
 
-pErrorToString:: Either ParseError Rhythmic -> Either String Rhythmic
+pErrorToString:: Either ParseError Passage -> Either String Passage
 pErrorToString (Left x) = Left $ parseErrorMessage x
 pErrorToString (Right x) = Right x
 
@@ -87,7 +81,7 @@ setTempo timekNot t = write (fromForeignTempo t) timekNot.tempo
 
 -- here a func that goes from rhythmicInto (passing through map) Event
 scheduleNoteEvents :: TimekNot -> Number -> Number -> forall opts. Effect (Array Foreign)
-scheduleNoteEvents tk ws we = timekNotToEvents tk ws we
+scheduleNoteEvents tk ws we = timekNotToForeigns tk ws we
 
 
 -- pure $ map unsafeToForeign events
@@ -105,27 +99,40 @@ unsafeMaybeMilliseconds:: Maybe Instant -> Instant
 unsafeMaybeMilliseconds (Just x) = x
 unsafeMaybeMilliseconds Nothing = unsafeMaybeMilliseconds $ instant $ Milliseconds 0.0
 
-timekNotToEvents:: TimekNot -> Number -> Number -> forall opts. Effect (Array Foreign)
-timekNotToEvents tk ws we = do
+timekNotToForeigns:: TimekNot -> Number -> Number -> forall opts. Effect (Array Foreign)
+timekNotToForeigns tk ws we = do
     let ws' = numToDateTime (ws * 1000.0000)
     let we' = numToDateTime (we * 1000.0000)
-    rhy <- read tk.ast
+    passage <- read tk.ast
     t <- read tk.tempo
     eval <- read tk.eval
 
-    log $ show rhy
+    log $ show passage
     log $ show ws
     log $ show we
-    let events = fromCoordenateToArray rhy t ws' we' eval -- here seems to be the issue
+    let events = fromPassageToArray passage t ws' we' eval
     log $ show events
     pure $ map unsafeToForeign events
 
-fromCoordenateToArray:: Rhythmic -> Tempo -> DateTime -> DateTime -> DateTime -> Array {whenPosix:: Number, s:: String, n:: Int}
-fromCoordenateToArray x t ws we eval = 
-    let coords = fromPassageToCoord x t ws we eval
-        coordsfromMapToArray = L.toUnfoldable $ M.values coords -- Array
-        events = map coordToEvent coordsfromMapToArray
+fromPassageToArray:: Passage -> Tempo -> DateTime -> DateTime -> DateTime -> Array {whenPosix:: Number, s:: String, n:: Int}
+fromPassageToArray (Passage rhy aus) t ws we eval = 
+    let events' = passageToEvents rhy (fromFoldable aus) t ws we eval -- List (Maybe Event)
+--        coordsfromMapToArray = L.toUnfoldable $ M.values coords -- Array
+--        events = map coordToEvent coordsfromMapToArray
+        events = toUnfoldable $ filterMaybe events' -- Array
       in events
+
+
+filterMaybe:: List (Maybe Event) -> List Event
+filterMaybe x = map withoutMaybe $ filter justJust x
+
+withoutMaybe:: Maybe Event -> Event
+withoutMaybe (Just x) = x
+withoutMaybe Nothing = {whenPosix: 0.0, s: "", n: 0}
+
+justJust:: Maybe Event -> Boolean
+justJust (Just _) = true
+justJust Nothing = false
 
 coordToEvent:: Coordenada -> {whenPosix:: Number, s:: String, n:: Int}
 coordToEvent (Coord num iEv iPas) = {whenPosix: num, s: "cp", n: 0 }

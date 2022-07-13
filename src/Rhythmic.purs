@@ -1,4 +1,4 @@
-module Rhythmic (Rhythmic(..),Euclidean, topRhythmic) where
+module Rhythmic (topRhythmic,topPassageParser,fromPassageToCoord, passageToEvents,f,test) where
 
 import Prelude
 import Prim.Boolean
@@ -7,8 +7,9 @@ import Data.Either
 import Data.Identity
 import Data.Array as Arr
 import Data.List.Lazy hiding (many,Pattern)
+import Data.List as L
 import Data.Typelevel.Bool
-import Data.Int
+import Data.Int as I
 import Data.Tuple
 import Data.Tuple.Nested
 
@@ -40,7 +41,123 @@ import Data.Enum
 import Data.Map as M
 import Partial.Unsafe
 
+import AST
+import Aural
+import Motor
+
 type P = ParserT String Identity
+
+
+test secSt milSt secEn milEn = passageToEvents (Onsets (L.fromFoldable [true])) (fromFoldable [Sample (L.fromFoldable ["bd","bd","cp","bd"]) EventI]) t (ws secSt milSt) (we secEn milEn) eval
+
+--  {whenPosix: num, s: "cp", n: 0 }
+
+passageToEvents:: Rhythmic -> List Aural -> Tempo -> DateTime -> DateTime -> DateTime -> List (Maybe Event)
+passageToEvents rhy au t ws we eval = 
+    let coords = fromPassageToCoord rhy t ws we eval -- Map Int Coord
+        lCoord = snd <$> (M.toUnfoldable coords) -- List Coord, es decir: Nu In In
+        samples = sampleWithIndex $ last $ filter isSample $ au --Maybe Aural
+        samplesI = auralIndex $ last $ filter isSample $ au
+        -- aqui va una funcion con tupletes de samples y coords con el mismo indice!!
+        s = samplesWithPosix samplesI (length samples) samples lCoord
+ --       n = last $ filter isN $ au  -- Maybe Aural 
+    in map toEvent s
+
+
+toEvent:: Maybe (Tuple Number String) -> Maybe Event
+toEvent (Just (Tuple posix sample)) = Just {whenPosix: posix, s: sample, n: 0}
+toEvent Nothing = Nothing
+
+auralIndex:: Maybe Aural -> Index
+auralIndex (Just (Sample _ i)) = i
+auralIndex (Just (N _ i)) = i
+auralIndex Nothing = EventI -- this feels very wrong...
+
+
+isSample:: Aural -> Boolean
+isSample (Sample _ _) = true
+isSample _ = false
+
+isN:: Aural -> Boolean
+isN (N _ _) = true
+isN _ = false
+
+
+-- samplesWithCoordinates:: List (Tuple String Int) -> List Coordenada -> List Event
+samplesWithPosix:: Index -> Int -> List (Tuple String Int) -> List Coordenada -> List (Maybe (Tuple Number String))
+samplesWithPosix index len samples coords = map (f index len samples) coords
+
+f:: Index -> Int -> List (Tuple String Int) -> Coordenada -> Maybe (Tuple Number String)
+f EventI len samples (Coord posix e p) = f' posix $ head $ filter (\s -> (mod e len) == (snd s)) samples
+f PassageI len samples (Coord posix e p) = f' posix $ head $ filter (\s -> (mod p len) == (snd s)) samples
+f MetreI len samples (Coord posix e p) = f' posix $ head $ fromFoldable []
+
+f':: Number -> Maybe (Tuple String Int) -> Maybe (Tuple Number String)
+f' x (Just (Tuple st int)) = Just $ Tuple x st
+f' x Nothing = Nothing
+
+-- aqui cada coordenada filtra toda la lista de eventos... suena caro.....
+
+-- sampToEvent:: Index -> Int -> Tuple String Int -> Coordenada -> Event'
+-- sampToEvent EventI len (Tuple samp indx) (Coord posix iEvent p) = if (mod iEvent len) == indx then {whenPosix: posix, s: samp, n: 0} else {whenPosix: posix, s: "", n: 0}
+-- sampToEvent PassageI len (Tuple samp indx) (Coord posix e iPass) = if (mod iPass len) == indx then {whenPosix: posix, s: samp, n: 0} else {whenPosix: posix, s: "", n: 0}
+-- sampToEvent MetreI len (Tuple samp indx) (Coord posix e p) = {whenPosix: posix, s: "", n: 0}
+
+
+-- this outputs a type that indicates what index and the integers of each element of the list like [(bd,0),(bd,1),(cp,2),(bd,3)]  indicate index where?
+
+sampleWithIndex:: Maybe Aural -> List (Tuple String Int)
+sampleWithIndex (Just (Sample au' i)) = zip au (0..(length au))
+        where au = fromFoldable au'
+sampleWithIndex _ = fromFoldable []
+sampleWithIndex Nothing = fromFoldable []
+
+
+-- -- filterByIndex:: Index -> Coordenada -> List (Tuple String Int) -> ???
+-- filterByIndex IEvent (Coord n iE iP) xs = filter (x -> snd == iE) xs 
+
+
+-- attachCoordinate:: List String -> Index -> Coord -> Tuple Num  
+-- attachCoordinate ls IEvent (Coord n ev pas) = 
+
+-- attachAurality:: Coordenada -> List Aural-> Event
+-- attachAurality c aus = 
+
+--- 1. sacar la cola de cada aural
+--- filtrar por tipo y sacar la cola de cada tipo
+--- 2. examinar si es Evento o Pasaje
+--- 3. de acuerdo al indice hacer el `mod` adecuado
+--- (en el mod el primer arg es el q cambia!!! segundo es el indice)
+--- crear estructura de datos: Event
+
+
+fromPassageToCoord:: Rhythmic -> Tempo -> DateTime -> DateTime -> DateTime -> M.Map Int Coordenada
+fromPassageToCoord rhy t ws we eval = 
+    let x = fromRhythmicToList rhy
+        passageLength = fromInt $ length x   -- oDur
+        onsets = (fromInt <<< snd) <$> (filter (\x -> fst x == true) $ zip x (0..(length x)))
+        oPercen = map (toNumber <<< (_/passageLength)) onsets
+    in passagePosition oPercen passageLength t ws we eval
+
+fromRhythmicToList:: Rhythmic -> List Boolean
+fromRhythmicToList (Onsets x) = fromFoldable x
+fromRhythmicToList (Patron x) = concat $ map fromPatternToList $ fromFoldable x
+fromRhythmicToList _ = fromFoldable [false]
+
+fromPatternToList:: Rhythmic -> List Boolean
+fromPatternToList (Onsets x) = fromFoldable x 
+fromPatternToList _ = fromFoldable [false] -- placeholder
+
+topPassageParser:: P Passage
+topPassageParser = do
+    rhy <- topRhythmic
+    whitespace
+    aur <- samples
+    eof
+    pure $ Passage rhy $ L.fromFoldable [aur]
+
+
+-- topRhythmic:: P Rhythmic
 
 -- relevant structures above this one:
 -- Program = [Expression]
@@ -72,74 +189,25 @@ type P = ParserT String Identity
 -- chain!!!! check that out.
 -- from complex to simple parsers
 
-data Rhythmic = 
-  Onsets (List Boolean) |
-  Pattern (List Rhythmic) | -- piling adjacent things no white space
-  Subdivision (List Rhythmic) | -- list separated by spaces -- space as operator
-  Euclidean Euclidean Int Int Int | 
-  Repetition Rhythmic Int  
-
--- --data EuclideanType = Full | K | InverseK
-
-data Euclidean = Full Rhythmic Rhythmic | K Rhythmic | InverseK Rhythmic
-
-instance euclideanShowInstance :: Show Euclidean where
-  show (Full x y) = (show x) <>"on ks and not on ks " <> (show y)
-  show (K x) = show x
-  show (InverseK x) = show x
-
-instance rhythmicShowInstance :: Show Rhythmic where
-  show (Onsets on) = "onsets " <> show on
-  show (Pattern ons) = "pattern " <> show ons
-  show (Subdivision ons) = "subdivision: " <> show ons
-  show (Euclidean eu k n off) = show eu <> " euclidean " <> (show k) <> "," <> (show n) <> "," <> (show off)
-  show (Repetition on n) = show on <> " times " <> (show n)
-
-
--- topRhythmic :: P Rhythmic
--- topRhythmic = do
---     r <- choice [
---         subdivision,
---         euclidean,
---         repetition,
---         pattern,
---         ]
---     eof
---     pure r
-
---chainl digit (string "+" $> add) 0
-
--- fromPassageToCoord:: List Boolean -> Tempo -> DateTime -> DateTime -> DateTime -> M.Map Int Coordenada
-
---fromPassageToCoord
-
--- program:: String -> Either ParseError (M.Map Int Coordenada)
--- program str = fromPassageToCoord' toBool
---   where toBool = parseToBools $ runParser str topRhythmic
-
--- fromPassageToCoord':: Either ParseError (List Boolean) -> Either ParseError (M.Map Int Coordenada)
--- fromPassageToCoord' (Left x) = Left x
--- fromPassageToCoord' (Right x) = Right $ fromPassageToCoord x t (ws 0 0) (we 1 0) eval
-
--- parseToBools:: Either ParseError (Rhythmic) -> Either ParseError (List Boolean)
--- parseToBools (Left x)  = Left x
--- parseToBools (Right x) = Right $ fromRhythmicToList x
-
 
 topRhythmic:: P Rhythmic
 topRhythmic = do
-  r <- choice [patterns]
-  eof
+  r <- choice [onsets]
+  whitespace
+  _ <- string "||"
+  _ <- pure 1 
   pure r
 
-patterns:: P Rhythmic 
-patterns = do
-    x <- chainl1 (choice [try onsets]) (char ' ' $> chainRhythms)
-    _ <- pure 1
-    pure x
 
-chainRhythms:: Rhythmic -> Rhythmic -> Rhythmic
-chainRhythms x y =  Pattern $ snoc (fromFoldable [x]) y
+-- esto no sirve!!!
+-- patterns:: P Rhythmic 
+-- patterns = do
+--     x <- chainl1 (choice [try onsets]) (char ' ' $> chainRhythms)
+--     _ <- pure 1
+--     pure x
+
+-- chainRhythms:: Rhythmic -> Rhythmic -> Rhythmic
+-- chainRhythms x y =  Patron $ snoc (fromFoldable [x]) y
 
 
 
@@ -148,7 +216,7 @@ onsets:: P Rhythmic
 onsets = do
   xs <- many onset
   _ <- pure 1
-  pure $ Onsets $ fromFoldable xs 
+  pure $ Onsets $ L.fromFoldable xs 
 
 onset:: P Boolean
 onset = do
@@ -292,6 +360,7 @@ brackets = tokenParser.brackets
 comma = tokenParser.comma
 semi = tokenParser.semi
 integer = tokenParser.integer
+stringLit = tokenParser.stringLiteral
 
 
 

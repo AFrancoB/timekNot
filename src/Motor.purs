@@ -1,4 +1,4 @@
-module Motor (fromPassageToCoord, Coordenada(..)) where
+module Motor (passagePosition) where
 
 import Prelude
 import Prim.Boolean
@@ -36,7 +36,7 @@ import Data.Enum
 import Data.Map as M
 import Partial.Unsafe
 
-import Rhythmic
+import AST
 
 ---- testing stuff ---------------
 makeDate :: Int -> Month -> Int -> Date
@@ -71,23 +71,6 @@ countToStart:: Int
 countToStart = 327
 -------------
 
-fromPassageToCoord:: Rhythmic -> Tempo -> DateTime -> DateTime -> DateTime -> M.Map Int Coordenada
-fromPassageToCoord rhy t ws we eval = 
-    let x = fromRhythmicToList rhy
-        passageLength = fromInt $ length x   -- oDur
-        onsets = (fromInt <<< snd) <$> (filter (\x -> fst x == true) $ zip x (0..(length x)))
-        oPercen = map (toNumber <<< (_/passageLength)) onsets
-    in passagePosition oPercen passageLength t ws we eval
-
-fromRhythmicToList:: Rhythmic -> List Boolean
-fromRhythmicToList (Onsets x) = x
-fromRhythmicToList (Pattern x) = concat $ map fromPatternToList x
-fromRhythmicToList _ = fromFoldable [false]
-
-fromPatternToList:: Rhythmic -> List Boolean
-fromPatternToList (Onsets x) = x 
-fromPatternToList _ = fromFoldable [false] -- placeholder
-
 
 passagePosition:: List Number -> Rational -> Tempo -> DateTime -> DateTime -> DateTime -> M.Map Int Coordenada -- change to MMap Instant Int
 passagePosition o lenPasaje t ws we eval = 
@@ -104,11 +87,6 @@ passagePosition o lenPasaje t ws we eval =
         filtrado = filterEvents nPassages percentAtStart percentAtEnd passageAtStart o
         posToTime = map (\x -> positionToTime t lenPasaje x) filtrado
       in M.fromFoldableWithIndex posToTime
-
-data Coordenada = Coord Number Int Int 
-
-instance coordenadaShowInstance :: Show Coordenada where
-  show (Coord x y z) = "time: "<>show x<>", iPassage: "<>show y<>", iEvent: "<>show z
 
 
 -- crear instancias de coordenada y en la funcion de abajo debe de ser:
@@ -198,16 +176,6 @@ justFractional x = x - (iToN $ floor x)
 
 
 
-type Event =
-  { 
-  s :: String, -- name of sample bank (ie. old-style with sampleMap)
-  n :: Int, -- number of sample within a bank (ie. old-style with sampleMap)
-  whenPosix :: Number -- when to play the sample, in POSIX/epoch-1970 time
---   when :: Number, -- when to play the sample, in audio context time
---   gain :: Number, -- clamped from 0 to 2; 1 is default and full-scale
---   overgain :: Number, -- additional gain added to gain to go past clamp at 2
---   pan :: Number
-  }
 
 
 -- coordinatesToEvents:: Coordinates -> Events

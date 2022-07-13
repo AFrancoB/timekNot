@@ -4,7 +4,7 @@ import Prim.Boolean
 import Data.Either
 import Data.Identity
 import Data.Array as Arr
-import Data.List.Lazy
+import Data.List.Lazy as L
 import Data.Typelevel.Bool
 import Data.Int
 import Data.Tuple
