@@ -48,7 +48,7 @@ import Motor
 type P = ParserT String Identity
 
 
-test secSt milSt secEn milEn = passageToEvents (Onsets (L.fromFoldable [true])) (fromFoldable [Sample (L.fromFoldable ["bd","bd","cp","bd"]) EventI]) t (ws secSt milSt) (we secEn milEn) eval
+test secSt milSt secEn milEn = passageToEvents (Onsets (L.fromFoldable [true,true,true,true,true])) (fromFoldable [Sample (L.fromFoldable ["bd","cp","808"]) EventI]) t (ws secSt milSt) (we secEn milEn) eval
 
 --  {whenPosix: num, s: "cp", n: 0 }
 
@@ -88,9 +88,17 @@ samplesWithPosix:: Index -> Int -> List (Tuple String Int) -> List Coordenada ->
 samplesWithPosix index len samples coords = map (f index len samples) coords
 
 f:: Index -> Int -> List (Tuple String Int) -> Coordenada -> Maybe (Tuple Number String)
-f EventI len samples (Coord posix p e) = f' posix $ head $ filter (\s -> (mod e len) == (snd s)) samples
+f EventI len samples (Coord posix p e) = f' posix $ head $ filter (\s -> (mod (getEventIndex p len e) len) == (snd s)) samples
 f PassageI len samples (Coord posix p e) = f' posix $ head $ filter (\s -> (mod p len) == (snd s)) samples
-f MetreI len samples (Coord posix e p) = f' posix $ head $ fromFoldable []
+f MetreI len samples (Coord posix p e) = f' posix $ head $ fromFoldable []
+
+getEventIndex:: Int -> Int -> Int -> Int
+getEventIndex p' len' e' = I.floor $ ((p*len) + e)
+            where p = I.toNumber p'
+                  len = I.toNumber len'
+                  e = I.toNumber e'
+
+
 
 f':: Number -> Maybe (Tuple String Int) -> Maybe (Tuple Number String)
 f' x (Just (Tuple st int)) = Just $ Tuple x st
@@ -153,6 +161,7 @@ topPassageParser = do
     rhy <- topRhythmic
     whitespace
     aur <- samples
+    _ <- pure 1 
     eof
     pure $ Passage rhy $ L.fromFoldable [aur]
 

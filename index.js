@@ -27831,8 +27831,10 @@ var topRhythmic = /* @__PURE__ */ bind(bindParserT)(/* @__PURE__ */ choice(folda
 var topPassageParser = /* @__PURE__ */ bind(bindParserT)(topRhythmic)(function(rhy) {
   return discard(discardUnit)(bindParserT)(whitespace2)(function() {
     return bind(bindParserT)(samples)(function(aur) {
-      return discard(discardUnit)(bindParserT)(eof)(function() {
-        return pure(applicativeParserT)(new Passage(rhy, fromFoldable(foldableArray)([aur])));
+      return bind(bindParserT)(pure(applicativeParserT)(1))(function() {
+        return discard(discardUnit)(bindParserT)(eof)(function() {
+          return pure(applicativeParserT)(new Passage(rhy, fromFoldable(foldableArray)([aur])));
+        });
       });
     });
   });
@@ -27843,6 +27845,16 @@ var isSample = function(v) {
   }
   ;
   return false;
+};
+var getEventIndex = function(p$prime) {
+  return function(len$prime) {
+    return function(e$prime) {
+      var p = toNumber(p$prime);
+      var len = toNumber(len$prime);
+      var e = toNumber(e$prime);
+      return floor2(p * len + e);
+    };
+  };
 };
 var fromPatternToList = function(v) {
   if (v instanceof Onsets) {
@@ -27895,7 +27907,7 @@ var f$prime = function(x) {
       return Nothing.value;
     }
     ;
-    throw new Error("Failed pattern match at Rhythmic (line 95, column 1 - line 95, column 71): " + [x.constructor.name, v.constructor.name]);
+    throw new Error("Failed pattern match at Rhythmic (line 103, column 1 - line 103, column 71): " + [x.constructor.name, v.constructor.name]);
   };
 };
 var f = function(v) {
@@ -27904,7 +27916,7 @@ var f = function(v) {
       return function(v1) {
         if (v instanceof EventI) {
           return f$prime(v1.value0)(head2(filter(function(s) {
-            return mod(euclideanRingInt)(v1.value2)(len) === snd(s);
+            return mod(euclideanRingInt)(getEventIndex(v1.value1)(len)(v1.value2))(len) === snd(s);
           })(samples2)));
         }
         ;

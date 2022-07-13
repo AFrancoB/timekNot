@@ -11,6 +11,7 @@ import * as Data_Enum from "../Data.Enum/index.js";
 import * as Data_EuclideanRing from "../Data.EuclideanRing/index.js";
 import * as Data_Foldable from "../Data.Foldable/index.js";
 import * as Data_Functor from "../Data.Functor/index.js";
+import * as Data_Int from "../Data.Int/index.js";
 import * as Data_List from "../Data.List/index.js";
 import * as Data_List_Lazy from "../Data.List.Lazy/index.js";
 import * as Data_List_Lazy_Types from "../Data.List.Lazy.Types/index.js";
@@ -88,8 +89,10 @@ var topRhythmic = /* #__PURE__ */ Control_Bind.bind(Parsing.bindParserT)(/* #__P
 var topPassageParser = /* #__PURE__ */ Control_Bind.bind(Parsing.bindParserT)(topRhythmic)(function (rhy) {
     return Control_Bind.discard(Control_Bind.discardUnit)(Parsing.bindParserT)(whitespace)(function () {
         return Control_Bind.bind(Parsing.bindParserT)(Aural.samples)(function (aur) {
-            return Control_Bind.discard(Control_Bind.discardUnit)(Parsing.bindParserT)(Parsing_String.eof)(function () {
-                return Control_Applicative.pure(Parsing.applicativeParserT)(new AST.Passage(rhy, Data_List.fromFoldable(Data_Foldable.foldableArray)([ aur ])));
+            return Control_Bind.bind(Parsing.bindParserT)(Control_Applicative.pure(Parsing.applicativeParserT)(1))(function () {
+                return Control_Bind.discard(Control_Bind.discardUnit)(Parsing.bindParserT)(Parsing_String.eof)(function () {
+                    return Control_Applicative.pure(Parsing.applicativeParserT)(new AST.Passage(rhy, Data_List.fromFoldable(Data_Foldable.foldableArray)([ aur ])));
+                });
             });
         });
     });
@@ -150,6 +153,16 @@ var integer = /* #__PURE__ */ (function () {
 var identifier = /* #__PURE__ */ (function () {
     return tokenParser.identifier;
 })();
+var getEventIndex = function (p$prime) {
+    return function (len$prime) {
+        return function (e$prime) {
+            var p = Data_Int.toNumber(p$prime);
+            var len = Data_Int.toNumber(len$prime);
+            var e = Data_Int.toNumber(e$prime);
+            return Data_Int.floor(p * len + e);
+        };
+    };
+};
 var fromPatternToList = function (v) {
     if (v instanceof AST.Onsets) {
         return Data_List_Lazy.fromFoldable(Data_List_Types.foldableList)(v.value0);
@@ -199,7 +212,7 @@ var f$prime = function (x) {
         if (v instanceof Data_Maybe.Nothing) {
             return Data_Maybe.Nothing.value;
         };
-        throw new Error("Failed pattern match at Rhythmic (line 95, column 1 - line 95, column 71): " + [ x.constructor.name, v.constructor.name ]);
+        throw new Error("Failed pattern match at Rhythmic (line 103, column 1 - line 103, column 71): " + [ x.constructor.name, v.constructor.name ]);
     };
 };
 var f = function (v) {
@@ -208,7 +221,7 @@ var f = function (v) {
             return function (v1) {
                 if (v instanceof AST.EventI) {
                     return f$prime(v1.value0)(Data_List_Lazy.head(Data_List_Lazy.filter(function (s) {
-                        return Data_EuclideanRing.mod(Data_EuclideanRing.euclideanRingInt)(v1.value2)(len) === Data_Tuple.snd(s);
+                        return Data_EuclideanRing.mod(Data_EuclideanRing.euclideanRingInt)(getEventIndex(v1.value1)(len)(v1.value2))(len) === Data_Tuple.snd(s);
                     })(samples)));
                 };
                 if (v instanceof AST.PassageI) {
@@ -282,7 +295,7 @@ var test = function (secSt) {
     return function (milSt) {
         return function (secEn) {
             return function (milEn) {
-                return passageToEvents(new AST.Onsets(Data_List.fromFoldable(Data_Foldable.foldableArray)([ true ])))(Data_List_Lazy.fromFoldable(Data_Foldable.foldableArray)([ new AST.Sample(Data_List.fromFoldable(Data_Foldable.foldableArray)([ "bd", "bd", "cp", "bd" ]), AST.EventI.value) ]))(t)(ws(secSt)(milSt))(we(secEn)(milEn))($$eval);
+                return passageToEvents(new AST.Onsets(Data_List.fromFoldable(Data_Foldable.foldableArray)([ true, true, true, true, true ])))(Data_List_Lazy.fromFoldable(Data_Foldable.foldableArray)([ new AST.Sample(Data_List.fromFoldable(Data_Foldable.foldableArray)([ "bd", "cp", "808" ]), AST.EventI.value) ]))(t)(ws(secSt)(milSt))(we(secEn)(milEn))($$eval);
             };
         };
     };
