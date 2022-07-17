@@ -1,4 +1,4 @@
-module Rhythmic (topRhythmic,topPassageParser,fromPassageToCoord, passageToEvents,f,test) where
+module Rhythmic (topPassageParser) where
 
 import Prelude
 import Prim.Boolean
@@ -43,137 +43,25 @@ import Partial.Unsafe
 
 import AST
 import Aural
-import Motor
 
 type P = ParserT String Identity
-
-
-test secSt milSt secEn milEn = passageToEvents' (Onsets (L.fromFoldable [true,true,false,true,false])) (fromFoldable [Sample (L.fromFoldable ["bd","cp","808"]) EventI]) t (ws secSt milSt) (we secEn milEn) eval
-
---  {whenPosix: num, s: "cp", n: 0 }
-
--- passageToEvents:: Rhythmic -> List Aural -> Tempo -> DateTime -> DateTime -> DateTime -> List (Maybe Event)
-passageToEvents' rhy au t ws we eval = 
-    let coords = fromPassageToCoord rhy t ws we eval -- Map Int Coord
-        lCoord = snd <$> (M.toUnfoldable coords) -- List Coord, es decir: Nu In In
-        samples = sampleWithIndex $ last $ filter isSample $ au --Maybe Aural
-        samplesI = auralIndex $ last $ filter isSample $ au
-        -- aqui va una funcion con tupletes de samples y coords con el mismo indice!!
-        s = samplesWithPosix samplesI (length samples) samples lCoord
- --       n = last $ filter isN $ au  -- Maybe Aural 
-    in lCoord
-
-passageToEvents:: Rhythmic -> List Aural -> Tempo -> DateTime -> DateTime -> DateTime -> List (Maybe Event)
-passageToEvents rhy au t ws we eval = 
-    let coords = fromPassageToCoord rhy t ws we eval -- Map Int Coord
-        lCoord = snd <$> (M.toUnfoldable coords) -- List Coord, es decir: Nu In In
-        samples = sampleWithIndex $ last $ filter isSample $ au --Maybe Aural
-        samplesI = auralIndex $ last $ filter isSample $ au
-        -- aqui va una funcion con tupletes de samples y coords con el mismo indice!!
-        s = samplesWithPosix samplesI (length samples) samples lCoord
- --       n = last $ filter isN $ au  -- Maybe Aural 
-    in map toEvent s
-
-
-toEvent:: Maybe (Tuple Number String) -> Maybe Event
-toEvent (Just (Tuple posix sample)) = Just {whenPosix: posix, s: sample, n: 0}
-toEvent Nothing = Nothing
-
-auralIndex:: Maybe Aural -> Index
-auralIndex (Just (Sample _ i)) = i
-auralIndex (Just (N _ i)) = i
-auralIndex Nothing = EventI -- this feels very wrong...
-
-
-isSample:: Aural -> Boolean
-isSample (Sample _ _) = true
-isSample _ = false
-
-isN:: Aural -> Boolean
-isN (N _ _) = true
-isN _ = false
-
-
--- samplesWithCoordinates:: List (Tuple String Int) -> List Coordenada -> List Event
-samplesWithPosix:: Index -> Int -> List (Tuple String Int) -> List Coordenada -> List (Maybe (Tuple Number String))
-samplesWithPosix index len samples coords = map (f index len samples) coords
-
-f:: Index -> Int -> List (Tuple String Int) -> Coordenada -> Maybe (Tuple Number String)
-f EventI len samples (Coord posix p e) = f' posix $ head $ filter (\s -> (mod (getEventIndex p len e) len) == (snd s)) samples
-f PassageI len samples (Coord posix p e) = f' posix $ head $ filter (\s -> (mod p len) == (snd s)) samples
-f MetreI len samples (Coord posix p e) = f' posix $ head $ fromFoldable []
-
-getEventIndex:: Int -> Int -> Int -> Int
-getEventIndex p' len' e' = I.floor $ ((p*len) + e)
-            where p = I.toNumber p'
-                  len = I.toNumber len'
-                  e = I.toNumber e'
-
-f':: Number -> Maybe (Tuple String Int) -> Maybe (Tuple Number String)
-f' x (Just (Tuple st int)) = Just $ Tuple x st
-f' x Nothing = Nothing
-
--- aqui cada coordenada filtra toda la lista de eventos... suena caro.....
-
--- sampToEvent:: Index -> Int -> Tuple String Int -> Coordenada -> Event'
--- sampToEvent EventI len (Tuple samp indx) (Coord posix iEvent p) = if (mod iEvent len) == indx then {whenPosix: posix, s: samp, n: 0} else {whenPosix: posix, s: "", n: 0}
--- sampToEvent PassageI len (Tuple samp indx) (Coord posix e iPass) = if (mod iPass len) == indx then {whenPosix: posix, s: samp, n: 0} else {whenPosix: posix, s: "", n: 0}
--- sampToEvent MetreI len (Tuple samp indx) (Coord posix e p) = {whenPosix: posix, s: "", n: 0}
-
-
--- this outputs a type that indicates what index and the integers of each element of the list like [(bd,0),(bd,1),(cp,2),(bd,3)]  indicate index where?
-
-sampleWithIndex:: Maybe Aural -> List (Tuple String Int)
-sampleWithIndex (Just (Sample au' i)) = zip au (0..(length au))
-        where au = fromFoldable au'
-sampleWithIndex _ = fromFoldable []
-sampleWithIndex Nothing = fromFoldable []
-
-
--- -- filterByIndex:: Index -> Coordenada -> List (Tuple String Int) -> ???
--- filterByIndex IEvent (Coord n iE iP) xs = filter (x -> snd == iE) xs 
-
-
--- attachCoordinate:: List String -> Index -> Coord -> Tuple Num  
--- attachCoordinate ls IEvent (Coord n ev pas) = 
-
--- attachAurality:: Coordenada -> List Aural-> Event
--- attachAurality c aus = 
-
---- 1. sacar la cola de cada aural
---- filtrar por tipo y sacar la cola de cada tipo
---- 2. examinar si es Evento o Pasaje
---- 3. de acuerdo al indice hacer el `mod` adecuado
---- (en el mod el primer arg es el q cambia!!! segundo es el indice)
---- crear estructura de datos: Event
--- test x x1 y y1= fromPassageToCoord (Onsets $ L.fromFoldable [true,true,true,true,false]) t (ws x x1) (we y y1) eval
-
-fromPassageToCoord:: Rhythmic -> Tempo -> DateTime -> DateTime -> DateTime -> M.Map Int Coordenada
-fromPassageToCoord rhy t ws we eval = 
-    let x = fromRhythmicToList rhy
-        passageLength = fromInt $ length x   -- oDur
-        onsets = (fromInt <<< snd) <$> (filter (\x -> fst x == true) $ zip x (0..(length x)))
-        oPercen = map (toNumber <<< (_/passageLength)) onsets
-    in passagePosition oPercen passageLength t ws we eval
-
-fromRhythmicToList:: Rhythmic -> List Boolean
-fromRhythmicToList (Onsets x) = fromFoldable x
-fromRhythmicToList (Patron x) = concat $ map fromPatternToList $ fromFoldable x
-fromRhythmicToList _ = fromFoldable [false]
-
-fromPatternToList:: Rhythmic -> List Boolean
-fromPatternToList (Onsets x) = fromFoldable x 
-fromPatternToList _ = fromFoldable [false] -- placeholder
 
 topPassageParser:: P Passage
 topPassageParser = do
     rhy <- topRhythmic
     whitespace
     aur <- samples
+    whitespace 
+    conv <- convergenceParser
     _ <- pure 1 
     eof
-    pure $ Passage rhy $ L.fromFoldable [aur]
+    pure $ Passage rhy (L.fromFoldable [aur]) $ Origin
 
+
+convergenceParser:: P Convergence
+convergenceParser = do
+    x <- choice [(string "eval") *> (pure $ Eval),(string "origin") *> (pure $ Origin)] <|> (pure $ Origin)
+    pure x
 
 -- topRhythmic:: P Rhythmic
 
@@ -212,7 +100,7 @@ topRhythmic:: P Rhythmic
 topRhythmic = do
   r <- choice [onsets]
   whitespace
-  _ <- string "||"
+  _ <- string ":||"
   _ <- pure 1 
   pure r
 
@@ -405,7 +293,7 @@ we:: Int -> Int -> DateTime
 we x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
 
 eval:: DateTime
-eval = (DateTime (makeDate 2022 June 3) (makeTime 19 13 5 150))
+eval = (DateTime (makeDate 2022 June 3) (makeTime 19 14 59 500))
 
 oDur:: Rational  -- transposition value 2
 oDur = (1%2)

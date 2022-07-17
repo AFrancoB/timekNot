@@ -14,6 +14,7 @@ import * as Data_Functor from "../Data.Functor/index.js";
 import * as Data_Int from "../Data.Int/index.js";
 import * as Data_List_Lazy from "../Data.List.Lazy/index.js";
 import * as Data_List_Lazy_Types from "../Data.List.Lazy.Types/index.js";
+import * as Data_List_Types from "../Data.List.Types/index.js";
 import * as Data_Map_Internal from "../Data.Map.Internal/index.js";
 import * as Data_Maybe from "../Data.Maybe/index.js";
 import * as Data_Newtype from "../Data.Newtype/index.js";
@@ -24,11 +25,32 @@ import * as Data_Semiring from "../Data.Semiring/index.js";
 import * as Data_Tempo from "../Data.Tempo/index.js";
 import * as Data_Time from "../Data.Time/index.js";
 import * as Data_Time_Component from "../Data.Time.Component/index.js";
+import * as Data_Time_Duration from "../Data.Time.Duration/index.js";
 import * as Data_Tuple from "../Data.Tuple/index.js";
 var toL = function (dictFoldable) {
     return function (x) {
         return Data_List_Lazy.fromFoldable(dictFoldable)(x);
     };
+};
+var toEvent = function (v) {
+    if (v instanceof Data_Maybe.Just) {
+        return new Data_Maybe.Just({
+            whenPosix: v.value0.value0,
+            s: v.value0.value1,
+            n: 0
+        });
+    };
+    if (v instanceof Data_Maybe.Nothing) {
+        return Data_Maybe.Nothing.value;
+    };
+    throw new Error("Failed pattern match at Motor (line 61, column 1 - line 61, column 53): " + [ v.constructor.name ]);
+};
+var sampleWithIndex = function (v) {
+    if (v instanceof Data_Maybe.Just && v.value0 instanceof AST.Sample) {
+        var au = Data_List_Lazy.fromFoldable(Data_List_Types.foldableList)(v.value0.value0);
+        return Data_List_Lazy.zip(au)(Data_List_Lazy.range(0)(Data_List_Lazy.length(au)));
+    };
+    return Data_List_Lazy.fromFoldable(Data_Foldable.foldableArray)([  ]);
 };
 var oDur = /* #__PURE__ */ Data_Ratio.reduce(Data_Ord.ordInt)(Data_EuclideanRing.euclideanRingInt)(1)(2);
 var o = /* #__PURE__ */ Data_List_Lazy.fromFoldable(Data_Foldable.foldableArray)([ 0.0, 0.2, 0.5 ]);
@@ -65,6 +87,26 @@ var ws = function (x) {
         return new Data_DateTime.DateTime(makeDate(2022)(Data_Date_Component.June.value)(3), makeTime(19)(15)(x)(y));
     };
 };
+var lenRhyth = function (v) {
+    if (v instanceof AST.Onsets) {
+        return Data_List_Lazy.length(Data_List_Lazy.filter(function (x1) {
+            return x1 === true;
+        })(Data_List_Lazy.fromFoldable(Data_List_Types.foldableList)(v.value0)));
+    };
+    return 0;
+};
+var isSample = function (v) {
+    if (v instanceof AST.Sample) {
+        return true;
+    };
+    return false;
+};
+var isN = function (v) {
+    if (v instanceof AST.N) {
+        return true;
+    };
+    return false;
+};
 var iToN = function (x) {
     return Data_Int.toNumber(x);
 };
@@ -81,8 +123,8 @@ var multiplePatternW = function (indexAtPhrase) {
                         return Data_List_Lazy.replicate(lenO)(x);
                     })(toL(Data_List_Lazy_Types.foldableList)(Data_List_Lazy.range(1)(mo - 1 | 0))))))));
                     var last = (function () {
-                        var $7 = Data_Eq.eq(Data_List_Lazy_Types.eqList(Data_Eq.eqNumber))(last$prime)(toL(Data_Foldable.foldableArray)([  ]));
-                        if ($7) {
+                        var $39 = Data_Eq.eq(Data_List_Lazy_Types.eqList(Data_Eq.eqNumber))(last$prime)(toL(Data_Foldable.foldableArray)([  ]));
+                        if ($39) {
                             return toL(Data_Foldable.foldableArray)([  ]);
                         };
                         return Data_Functor.map(Data_List_Lazy_Types.functorList)(function (v) {
@@ -101,8 +143,8 @@ var twoPatternW = function (indexPhrase) {
     return function (first) {
         return function (last$prime) {
             var last = (function () {
-                var $8 = Data_Eq.eq(Data_List_Lazy_Types.eqList(Data_Eq.eqNumber))(last$prime)(toL(Data_Foldable.foldableArray)([  ]));
-                if ($8) {
+                var $40 = Data_Eq.eq(Data_List_Lazy_Types.eqList(Data_Eq.eqNumber))(last$prime)(toL(Data_Foldable.foldableArray)([  ]));
+                if ($40) {
                     return toL(Data_Foldable.foldableArray)([  ]);
                 };
                 return Data_Functor.map(Data_List_Lazy_Types.functorList)(function (v) {
@@ -124,8 +166,8 @@ var getIndexSimple = function (start) {
             var before = Data_List_Lazy.length(Data_List_Lazy.filter(function (x) {
                 return x < start;
             })(o1)) - 1 | 0;
-            var $9 = before === 0;
-            if ($9) {
+            var $41 = before === 0;
+            if ($41) {
                 return Data_List_Lazy.range(0)(Data_List_Lazy.length(between) - 1 | 0);
             };
             return Data_List_Lazy.range(before)(Data_List_Lazy.length(between) - 1 | 0);
@@ -146,7 +188,7 @@ var getIndexOfLastList = function (x) {
         if (Data_Boolean.otherwise) {
             return Data_List_Lazy.range(0)(Data_List_Lazy.length(x) - 1 | 0);
         };
-        throw new Error("Failed pattern match at Motor (line 139, column 1 - line 139, column 60): " + [ x.constructor.name, o1.constructor.name ]);
+        throw new Error("Failed pattern match at Motor (line 195, column 1 - line 195, column 60): " + [ x.constructor.name, o1.constructor.name ]);
     };
 };
 var getIndexOfFirstList = function (x) {
@@ -157,8 +199,33 @@ var getIndexOfFirstList = function (x) {
         if (Data_Boolean.otherwise) {
             return Data_List_Lazy.range(Data_List_Lazy.length(o1) - Data_List_Lazy.length(x) | 0)(Data_List_Lazy.length(o1) - 1 | 0);
         };
-        throw new Error("Failed pattern match at Motor (line 130, column 1 - line 130, column 61): " + [ x.constructor.name, o1.constructor.name ]);
+        throw new Error("Failed pattern match at Motor (line 186, column 1 - line 186, column 61): " + [ x.constructor.name, o1.constructor.name ]);
     };
+};
+var getEventIndex = function (p$prime) {
+    return function (len$prime) {
+        return function (e$prime) {
+            var p = Data_Int.toNumber(p$prime);
+            var len = Data_Int.toNumber(len$prime);
+            var e = Data_Int.toNumber(e$prime);
+            return Data_Int.round(p * len + e);
+        };
+    };
+};
+var fromPatternToList = function (v) {
+    if (v instanceof AST.Onsets) {
+        return Data_List_Lazy.fromFoldable(Data_List_Types.foldableList)(v.value0);
+    };
+    return Data_List_Lazy.fromFoldable(Data_Foldable.foldableArray)([ false ]);
+};
+var fromRhythmicToList = function (v) {
+    if (v instanceof AST.Onsets) {
+        return Data_List_Lazy.fromFoldable(Data_List_Types.foldableList)(v.value0);
+    };
+    if (v instanceof AST.Patron) {
+        return Data_List_Lazy.concat(Data_Functor.map(Data_List_Lazy_Types.functorList)(fromPatternToList)(Data_List_Lazy.fromFoldable(Data_List_Types.foldableList)(v.value0)));
+    };
+    return Data_List_Lazy.fromFoldable(Data_Foldable.foldableArray)([ false ]);
 };
 var floor = function (x) {
     return Data_Int.floor(x);
@@ -222,8 +289,34 @@ var filterEvents = function (nPassages) {
                         var listOfEvents = multiplePatternW(floor(passageAtStart))(nPassages)(firstList)(o1)(lastList);
                         return Data_List_Lazy.zip(listOfEvents)(listOfIndexes);
                     };
-                    throw new Error("Failed pattern match at Motor (line 101, column 1 - line 101, column 92): " + [ nPassages.constructor.name, start.constructor.name, end.constructor.name, passageAtStart.constructor.name, o1.constructor.name ]);
+                    throw new Error("Failed pattern match at Motor (line 157, column 1 - line 157, column 92): " + [ nPassages.constructor.name, start.constructor.name, end.constructor.name, passageAtStart.constructor.name, o1.constructor.name ]);
                 };
+            };
+        };
+    };
+};
+var evalToCountNumber = function (t1) {
+    return function (eval1) {
+        return function (tp) {
+            var x = Data_Newtype.unwrap()(Data_DateTime.diff(Data_Time_Duration.durationMilliseconds)(tp)(eval1));
+            return (x * Data_Rational.toNumber(t1.freq)) / 1000.0;
+        };
+    };
+};
+var evalToCountWrapper = function (v) {
+    return function (v1) {
+        return function (v2) {
+            return function (tp) {
+                if (v instanceof AST.Origin) {
+                    return Data_Tempo.timeToCountNumber(v1)(tp);
+                };
+                if (v instanceof AST.Eval) {
+                    return evalToCountNumber(v1)(v2)(tp);
+                };
+                if (v instanceof AST.Prospective) {
+                    return Data_Tempo.timeToCountNumber(t)(tp);
+                };
+                throw new Error("Failed pattern match at Motor (line 137, column 1 - line 137, column 76): " + [ v.constructor.name, v1.constructor.name, v2.constructor.name, tp.constructor.name ]);
             };
         };
     };
@@ -234,18 +327,45 @@ var passagePosition = function (o1) {
             return function (ws1) {
                 return function (we1) {
                     return function (eval1) {
-                        var countAtStart = Data_Tempo.timeToCountNumber(t1)(ws1);
-                        var passageAtStart = countAtStart / Data_Rational.toNumber(lenPasaje);
-                        var percentAtStart = passageAtStart - iToN(floor(passageAtStart));
-                        var countAtEnd = Data_Tempo.timeToCountNumber(t1)(we1);
-                        var passageAtEnd = countAtEnd / Data_Rational.toNumber(lenPasaje);
-                        var nPassages = floor(passageAtEnd) - floor(passageAtStart) | 0;
-                        var percentAtEnd = passageAtEnd - iToN(floor(passageAtEnd));
-                        var filtrado = filterEvents(nPassages)(percentAtStart)(percentAtEnd)(passageAtStart)(o1);
-                        var posToTime = Data_Functor.map(Data_List_Lazy_Types.functorList)(function (x) {
-                            return positionToTime(t1)(lenPasaje)(x);
-                        })(filtrado);
-                        return Data_Map_Internal.fromFoldableWithIndex(Data_Ord.ordInt)(Data_List_Lazy_Types.foldableWithIndexList)(posToTime);
+                        return function (convergence) {
+                            var countAtStart = evalToCountWrapper(convergence)(t1)(eval1)(ws1);
+                            var passageAtStart = countAtStart / Data_Rational.toNumber(lenPasaje);
+                            var percentAtStart = passageAtStart - iToN(floor(passageAtStart));
+                            var countAtEnd = evalToCountWrapper(convergence)(t1)(eval1)(we1);
+                            var passageAtEnd = countAtEnd / Data_Rational.toNumber(lenPasaje);
+                            var nPassages = floor(passageAtEnd) - floor(passageAtStart) | 0;
+                            var percentAtEnd = passageAtEnd - iToN(floor(passageAtEnd));
+                            var filtrado = filterEvents(nPassages)(percentAtStart)(percentAtEnd)(passageAtStart)(o1);
+                            var posToTime = Data_Functor.map(Data_List_Lazy_Types.functorList)(function (x) {
+                                return positionToTime(t1)(lenPasaje)(x);
+                            })(filtrado);
+                            return Data_Map_Internal.fromFoldableWithIndex(Data_Ord.ordInt)(Data_List_Lazy_Types.foldableWithIndexList)(posToTime);
+                        };
+                    };
+                };
+            };
+        };
+    };
+};
+var fromPassageToCoord = function (rhy) {
+    return function (t1) {
+        return function (ws1) {
+            return function (we1) {
+                return function (eval1) {
+                    return function (convergence) {
+                        var x = fromRhythmicToList(rhy);
+                        var passageLength = Data_Rational.fromInt(Data_List_Lazy.length(x));
+                        var onsets = Data_Functor.map(Data_List_Lazy_Types.functorList)(function ($100) {
+                            return Data_Rational.fromInt(Data_Tuple.snd($100));
+                        })(Data_List_Lazy.filter(function (x1) {
+                            return Data_Tuple.fst(x1) === true;
+                        })(Data_List_Lazy.zip(x)(Data_List_Lazy.range(0)(Data_List_Lazy.length(x)))));
+                        var oPercen = Data_Functor.map(Data_List_Lazy_Types.functorList)(function ($101) {
+                            return Data_Rational.toNumber((function (v) {
+                                return Data_EuclideanRing.div(Data_Ratio.euclideanRingRatio(Data_Ord.ordInt)(Data_EuclideanRing.euclideanRingInt))(v)(passageLength);
+                            })($101));
+                        })(onsets);
+                        return passagePosition(oPercen)(passageLength)(t1)(ws1)(we1)(eval1)(convergence);
                     };
                 };
             };
@@ -253,9 +373,80 @@ var passagePosition = function (o1) {
     };
 };
 var $$eval = /* #__PURE__ */ (function () {
-    return new Data_DateTime.DateTime(makeDate(2022)(Data_Date_Component.June.value)(3), makeTime(19)(13)(5)(150));
+    return new Data_DateTime.DateTime(makeDate(2022)(Data_Date_Component.June.value)(3), makeTime(19)(14)(59)(500));
 })();
 var countToStart = 327;
+var auralIndex = function (v) {
+    if (v instanceof Data_Maybe.Just && v.value0 instanceof AST.Sample) {
+        return v.value0.value1;
+    };
+    if (v instanceof Data_Maybe.Just && v.value0 instanceof AST.N) {
+        return v.value0.value1;
+    };
+    if (v instanceof Data_Maybe.Nothing) {
+        return AST.EventI.value;
+    };
+    throw new Error("Failed pattern match at Motor (line 65, column 1 - line 65, column 34): " + [ v.constructor.name ]);
+};
+var attachPosixWithSample = function (x) {
+    return function (v) {
+        if (v instanceof Data_Maybe.Just) {
+            return new Data_Maybe.Just(new Data_Tuple.Tuple(x, v.value0.value0));
+        };
+        if (v instanceof Data_Maybe.Nothing) {
+            return Data_Maybe.Nothing.value;
+        };
+        throw new Error("Failed pattern match at Motor (line 94, column 1 - line 94, column 90): " + [ x.constructor.name, v.constructor.name ]);
+    };
+};
+var eventForSample = function (v) {
+    return function (len) {
+        return function (samples) {
+            return function (v1) {
+                if (v instanceof AST.EventI) {
+                    return attachPosixWithSample(v1.value0)(Data_List_Lazy.head(Data_List_Lazy.filter(function (s) {
+                        return Data_EuclideanRing.mod(Data_EuclideanRing.euclideanRingInt)(getEventIndex(v1.value1)(len)(v1.value2))(Data_List_Lazy.length(samples)) === Data_Tuple.snd(s);
+                    })(samples)));
+                };
+                if (v instanceof AST.PassageI) {
+                    return attachPosixWithSample(v1.value0)(Data_List_Lazy.head(Data_List_Lazy.filter(function (s) {
+                        return Data_EuclideanRing.mod(Data_EuclideanRing.euclideanRingInt)(v1.value1)(len) === Data_Tuple.snd(s);
+                    })(samples)));
+                };
+                if (v instanceof AST.MetreI) {
+                    return attachPosixWithSample(v1.value0)(Data_List_Lazy.head(Data_List_Lazy.fromFoldable(Data_Foldable.foldableArray)([  ])));
+                };
+                throw new Error("Failed pattern match at Motor (line 82, column 1 - line 82, column 102): " + [ v.constructor.name, len.constructor.name, samples.constructor.name, v1.constructor.name ]);
+            };
+        };
+    };
+};
+var samplesWithPosix = function (index) {
+    return function (len) {
+        return function (samples) {
+            return function (coords) {
+                return Data_Functor.map(Data_List_Lazy_Types.functorList)(eventForSample(index)(len)(samples))(coords);
+            };
+        };
+    };
+};
+var passageToEvents = function (v) {
+    return function (t1) {
+        return function (ws1) {
+            return function (we1) {
+                return function (eval1) {
+                    var samplesI = auralIndex(Data_List_Lazy.last(Data_List_Lazy.filter(isSample)(Data_List_Lazy.fromFoldable(Data_List_Types.foldableList)(v.value1))));
+                    var samples = sampleWithIndex(Data_List_Lazy.last(Data_List_Lazy.filter(isSample)(Data_List_Lazy.fromFoldable(Data_List_Types.foldableList)(v.value1))));
+                    var coords = fromPassageToCoord(v.value0)(t1)(ws1)(we1)(eval1)(v.value2);
+                    var lCoord = Data_Functor.map(Data_List_Lazy_Types.functorList)(Data_Tuple.snd)(Data_Map_Internal.toUnfoldable(Data_List_Lazy_Types.unfoldableList)(coords));
+                    var s = samplesWithPosix(samplesI)(lenRhyth(v.value0))(samples)(lCoord);
+                    return Data_Functor.map(Data_List_Lazy_Types.functorList)(toEvent)(s);
+                };
+            };
+        };
+    };
+};
 export {
-    passagePosition
+    passageToEvents,
+    evalToCountWrapper
 };

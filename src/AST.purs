@@ -1,4 +1,4 @@
-module AST(TimekNot(..),Passage(..),Rhythmic(..),Euclidean(..),Index(..),Aural(..),Coordenada(..),Event(..)) where
+module AST(TimekNot(..),Passage(..),Convergence(..),Rhythmic(..),Euclidean(..),Index(..),Aural(..),Coordenada(..),Event(..)) where
 
 import Prelude
 import Effect.Ref
@@ -13,10 +13,27 @@ type TimekNot = {
   eval :: Ref DateTime
   }
 
-data Passage = Passage Rhythmic (List Aural)
+data Passage = Passage Rhythmic (List Aural) Convergence
 
 instance passageShowInstance :: Show Passage where
-  show (Passage rhy aur) = "rhy "<>show rhy<>" aur "<>show aur
+  show (Passage rhy aur conv) = "rhy "<>show rhy<>" aur "<>show aur<>" conv "<>show conv
+
+instance passageEqInstance :: Eq Passage where
+    eq (Passage x y c) (Passage x' y' c') = (x == x') && (y == y') && (c == c')
+    eq _ _ = false
+
+data Convergence = Origin | Eval | Prospective Int Number
+
+instance convergenceShowInstance :: Show Convergence where
+  show Origin = "|origin|"
+  show Eval = "|eval|"
+  show (Prospective index offset) = "|Prospective "<>show index<>" "<>show offset
+
+instance convergenceEqInstance :: Eq Convergence where
+    eq Origin Origin = true
+    eq Eval Eval = true
+    eq (Prospective i o) (Prospective i' o') = (i == i') && (o == o')
+    eq _ _ = false
 
 data Rhythmic = 
   Onsets (List Boolean) |
@@ -31,6 +48,10 @@ instance rhythmicShowInstance :: Show Rhythmic where
   show (Subdivision ons) = "subdivision: " <> show ons
   show (Euclidean eu k n off) = show eu <> " euclidean " <> (show k) <> "," <> (show n) <> "," <> (show off)
   show (Repetition on n) = show on <> " times " <> (show n)
+
+instance rhythmicEqInstance :: Eq Rhythmic where
+    eq (Onsets x) (Onsets y) = x == y
+    eq _ _ = false
 
 -- --data EuclideanType = Full | K | InverseK
 
@@ -48,17 +69,28 @@ instance indexShowInstance :: Show Index where
   show MetreI = "Metre"
   show PassageI = "Passage"
 
+instance indexEqInstance :: Eq Index where
+    eq EventI EventI = true
+    eq MetreI MetreI = true
+    eq PassageI PassageI = true
+    eq _ _ = false
+
 data Aural = Sample (List String) Index | N (List Int) Index
 
 instance auralShowInstance :: Show Aural where
   show (Sample xs i) = "sample "<>show xs <>" i: "<>show i
   show (N xs i) = "n "<>show xs<>" i:"<>show i
 
+instance auralEqInstance :: Eq Aural where
+    eq (Sample x i) (Sample y i') = (x == y) && (i == i')
+    eq (N x i) (N y i') = (x == y) && (i == i')
+    eq _ _ = false
 
 data Coordenada = Coord Number Int Int 
 
 instance coordenadaShowInstance :: Show Coordenada where
   show (Coord x y z) = "time: "<>show x<>", iPassage: "<>show y<>", iEvent: "<>show z
+
 
 type Event =
   { 

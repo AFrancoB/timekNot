@@ -9,7 +9,6 @@ import * as Data_Functor from "../Data.Functor/index.js";
 import * as Data_List from "../Data.List/index.js";
 import * as Data_List_Lazy from "../Data.List.Lazy/index.js";
 import * as Data_List_Lazy_Types from "../Data.List.Lazy.Types/index.js";
-import * as Data_List_Types from "../Data.List.Types/index.js";
 import * as Data_Maybe from "../Data.Maybe/index.js";
 import * as Data_Ord from "../Data.Ord/index.js";
 import * as Data_Ratio from "../Data.Ratio/index.js";
@@ -21,6 +20,7 @@ import * as Effect_Console from "../Effect.Console/index.js";
 import * as Effect_Now from "../Effect.Now/index.js";
 import * as Effect_Ref from "../Effect.Ref/index.js";
 import * as Foreign from "../Foreign/index.js";
+import * as Motor from "../Motor/index.js";
 import * as Parsing from "../Parsing/index.js";
 import * as Rhythmic from "../Rhythmic/index.js";
 var withoutMaybe = function (v) {
@@ -34,7 +34,7 @@ var withoutMaybe = function (v) {
             n: 0
         };
     };
-    throw new Error("Failed pattern match at Main (line 129, column 1 - line 129, column 36): " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at Main (line 115, column 1 - line 115, column 36): " + [ v.constructor.name ]);
 };
 var unsafeMaybeMilliseconds = function ($copy_v) {
     var $tco_done = false;
@@ -48,7 +48,7 @@ var unsafeMaybeMilliseconds = function ($copy_v) {
             $copy_v = Data_DateTime_Instant.instant(0.0);
             return;
         };
-        throw new Error("Failed pattern match at Main (line 98, column 1 - line 98, column 51): " + [ v.constructor.name ]);
+        throw new Error("Failed pattern match at Main (line 84, column 1 - line 84, column 51): " + [ v.constructor.name ]);
     };
     while (!$tco_done) {
         $tco_result = $tco_loop($copy_v);
@@ -70,7 +70,7 @@ var pErrorToString = function (v) {
     if (v instanceof Data_Either.Right) {
         return new Data_Either.Right(v.value0);
     };
-    throw new Error("Failed pattern match at Main (line 75, column 1 - line 75, column 68): " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at Main (line 66, column 1 - line 66, column 68): " + [ v.constructor.name ]);
 };
 var numToDateTime = function (x) {
     var asMaybeInstant = Data_DateTime_Instant.instant(x);
@@ -79,7 +79,7 @@ var numToDateTime = function (x) {
 };
 var launch = function __do() {
     Effect_Console.log("timekNot-CU: launch")();
-    var ast = Effect_Ref["new"](new AST.Passage(new AST.Onsets(Data_List.fromFoldable(Data_Foldable.foldableArray)([  ])), Data_List.fromFoldable(Data_Foldable.foldableArray)([  ])))();
+    var ast = Effect_Ref["new"](new AST.Passage(new AST.Onsets(Data_List.fromFoldable(Data_Foldable.foldableArray)([  ])), Data_List.fromFoldable(Data_Foldable.foldableArray)([  ]), AST.Origin.value))();
     var tempo = Control_Bind.bind(Effect.bindEffect)(Data_Tempo.newTempo(Data_Ratio.reduce(Data_Ord.ordInt)(Data_EuclideanRing.euclideanRingInt)(1)(1)))(Effect_Ref["new"])();
     var $$eval = Control_Bind.bind(Effect.bindEffect)(Effect_Now.nowDateTime)(Effect_Ref["new"])();
     return {
@@ -95,17 +95,17 @@ var justJust = function (v) {
     if (v instanceof Data_Maybe.Nothing) {
         return false;
     };
-    throw new Error("Failed pattern match at Main (line 133, column 1 - line 133, column 34): " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at Main (line 119, column 1 - line 119, column 34): " + [ v.constructor.name ]);
 };
 var filterMaybe = function (x) {
     return Data_Functor.map(Data_List_Lazy_Types.functorList)(withoutMaybe)(Data_List_Lazy.filter(justJust)(x));
 };
-var fromPassageToArray = function (v) {
+var fromPassageToArray = function (pass) {
     return function (t) {
         return function (ws) {
             return function (we) {
                 return function ($$eval) {
-                    var events$prime = Rhythmic.passageToEvents(v.value0)(Data_List_Lazy.fromFoldable(Data_List_Types.foldableList)(v.value1))(t)(ws)(we)($$eval);
+                    var events$prime = Motor.passageToEvents(pass)(t)(ws)(we)($$eval);
                     var events = Data_List_Lazy.toUnfoldable(Data_Unfoldable.unfoldableArray)(filterMaybe(events$prime));
                     return events;
                 };
@@ -172,7 +172,7 @@ var evaluate = function (timekNot) {
                     error: ""
                 };
             };
-            throw new Error("Failed pattern match at Main (line 68, column 3 - line 73, column 42): " + [ pr.constructor.name ]);
+            throw new Error("Failed pattern match at Main (line 59, column 3 - line 64, column 42): " + [ pr.constructor.name ]);
         };
     };
 };

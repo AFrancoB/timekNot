@@ -37,25 +37,16 @@ import Parsing
 
 import AST
 import Rhythmic
-
-
--- type AST = Boolean
-
--- instance timekNotShowInstance :: Show TimekNot where
---   show x = show $ read x.ast
-
+import Motor
 
 
 launch :: Effect TimekNot
 launch = do
   log "timekNot-CU: launch"
-  ast <- new $ Passage (Onsets $ L.fromFoldable []) (L.fromFoldable [])
+  ast <- new $ Passage (Onsets $ L.fromFoldable []) (L.fromFoldable []) $ Origin
   tempo <- newTempo (1 % 1) >>= new 
   eval <- nowDateTime >>= new
   pure { ast, tempo, eval}  
-
---parseProgram:: String -> Either ParseError (M.Map Int Coordenada)
-
 
 evaluate :: TimekNot -> String -> Effect { success :: Boolean, error :: String }
 evaluate timekNot str = do
@@ -82,11 +73,6 @@ setTempo timekNot t = write (fromForeignTempo t) timekNot.tempo
 -- here a func that goes from rhythmicInto (passing through map) Event
 scheduleNoteEvents :: TimekNot -> Number -> Number -> forall opts. Effect (Array Foreign)
 scheduleNoteEvents tk ws we = timekNotToForeigns tk ws we
-
-
--- pure $ map unsafeToForeign events
---       where events = [{s: "cp", n: 0}]
-
 
 -- make unsafe function and correct with david's advice later
 numToDateTime:: Number -> DateTime 
@@ -115,8 +101,8 @@ timekNotToForeigns tk ws we = do
     pure $ map unsafeToForeign events
 
 fromPassageToArray:: Passage -> Tempo -> DateTime -> DateTime -> DateTime -> Array {whenPosix:: Number, s:: String, n:: Int}
-fromPassageToArray (Passage rhy aus) t ws we eval = 
-    let events' = passageToEvents rhy (fromFoldable aus) t ws we eval -- List (Maybe Event)
+fromPassageToArray pass t ws we eval = 
+    let events' = passageToEvents pass t ws we eval -- List (Maybe Event)
 --        coordsfromMapToArray = L.toUnfoldable $ M.values coords -- Array
 --        events = map coordToEvent coordsfromMapToArray
         events = toUnfoldable $ filterMaybe events' -- Array
@@ -139,55 +125,3 @@ coordToEvent (Coord num iEv iPas) = {whenPosix: num, s: "cp", n: 0 }
 
 testMaybeInstant:: Number -> Maybe Instant
 testMaybeInstant x = instant $ Milliseconds x -- Maybe Instant
-
------------------------------test-------------------
--- makeDate :: Int -> Month -> Int -> Date
--- makeDate y m d = 
---     unsafePartial $ fromJust $ 
---        canonicalDate <$> toEnum y <@> m <*> toEnum d
-
--- makeTime :: Int -> Int -> Int -> Int -> Time
--- makeTime h min sec milisec = 
---     unsafePartial $ fromJust $ Time <$> toEnum h <*> toEnum min <*> toEnum sec <*> toEnum milisec
-
--- t:: Tempo
--- t = {freq: (2%1),time: (DateTime (makeDate 2022 June 3) (makeTime 19 11 25 100)), count: fromInt 0 }
-
--- ws:: Int -> Int -> DateTime
--- ws x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
-
--- we:: Int -> Int -> DateTime
--- we x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
-
--- ws':: Number
--- ws' = unwrap $ unInstant $ fromDateTime $ ws 0 0
-
--- we':: Number
--- we' = unwrap $ unInstant $ fromDateTime $ we 1 0
-
--- eval:: DateTime
--- eval = (DateTime (makeDate 2022 June 3) (makeTime 19 13 5 150))
-
--- -- this needs to be sorted as soon as possible!!!!!
--- test :: forall opts. Effect (Array {whenPosix:: Number, s:: String, n:: Int})
--- test = do
---   log "timekNot-CU: launch"
---   ast <- new $ Onsets $ fromFoldable [true,true,false,true]
---   tempo <- newTempo (4 % 1) >>= new 
---   eval <- nowDateTime >>= new
---   x <- timekNotToEvents' {ast,tempo,eval} ws' we'
---   log $ show x
---   pure x
-
--- timekNotToEvents':: TimekNot -> Number -> Number -> forall opts. Effect (Array {whenPosix:: Number, s:: String, n:: Int})
--- timekNotToEvents' tk ws we = do
---     rhy <- read tk.ast
---     t <- read tk.tempo
---     eval <- read tk.eval
---     let events = fromCoordenateToArray rhy t (numToDateTime ws) (numToDateTime we) eval
---     pure events
-
-
--- ws'' = 1655673873.207149
-
--- whenPosix = 1655673873452000.0

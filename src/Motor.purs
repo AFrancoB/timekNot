@@ -1,4 +1,4 @@
-module Motor (passagePosition) where
+module Motor (passageToEvents,evalToCountWrapper) where
 
 import Prelude
 import Prim.Boolean
@@ -31,54 +31,100 @@ import Data.Newtype
 
 import Data.DateTime
 import Data.DateTime.Instant
+import Data.Time.Duration
 import Data.Tempo
 import Data.Enum
 import Data.Map as M
 import Partial.Unsafe
 
 import AST
+import Rhythmic
+import Aural
 
----- testing stuff ---------------
-makeDate :: Int -> Month -> Int -> Date
-makeDate y m d = 
-    unsafePartial $ fromJust $ 
-       canonicalDate <$> toEnum y <@> m <*> toEnum d
+-----
 
-makeTime :: Int -> Int -> Int -> Int -> Time
-makeTime h min sec milisec = 
-    unsafePartial $ fromJust $ Time <$> toEnum h <*> toEnum min <*> toEnum sec <*> toEnum milisec
+passageToEvents:: Passage -> Tempo -> DateTime -> DateTime -> DateTime -> List (Maybe Event)
+passageToEvents (Passage rhy aus conv) t ws we eval = 
+    let coords = fromPassageToCoord rhy t ws we eval conv -- Map Int Coord
+        lCoord = snd <$> (M.toUnfoldable coords) -- List Coord, es decir: Nu In In
+        samples = sampleWithIndex $ last $ filter isSample $ fromFoldable aus --Maybe Aural
+        samplesI = auralIndex $ last $ filter isSample $ fromFoldable aus
+        -- aqui va una funcion con tupletes de samples y coords con el mismo indice!!
+        s = samplesWithPosix samplesI (lenRhyth rhy) samples lCoord
+ --       n = last $ filter isN $ au  -- Maybe Aural 
+    in map toEvent s
 
+lenRhyth:: Rhythmic -> Int
+lenRhyth (Onsets x) = length $ filter (\x -> x==true) $ fromFoldable x
+lenRhyth _ = 0 -- esto se debera hacer pronto en el futuro
 
-t:: Tempo
-t = {freq: (2%1),time: (DateTime (makeDate 2022 June 3) (makeTime 19 11 25 100)), count: fromInt 0 }
+toEvent:: Maybe (Tuple Number String) -> Maybe Event
+toEvent (Just (Tuple posix sample)) = Just {whenPosix: posix, s: sample, n: 0}
+toEvent Nothing = Nothing
 
-ws:: Int -> Int -> DateTime
-ws x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
+auralIndex:: Maybe Aural -> Index
+auralIndex (Just (Sample _ i)) = i
+auralIndex (Just (N _ i)) = i
+auralIndex Nothing = EventI -- this feels very wrong...
 
-we:: Int -> Int -> DateTime
-we x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
+isSample:: Aural -> Boolean
+isSample (Sample _ _) = true
+isSample _ = false
 
-eval:: DateTime
-eval = (DateTime (makeDate 2022 June 3) (makeTime 19 13 5 150))
+isN:: Aural -> Boolean
+isN (N _ _) = true
+isN _ = false
 
-oDur:: Rational  -- transposition value 2
-oDur = (1%2)
+-- samplesWithCoordinates:: List (Tuple String Int) -> List Coordenada -> List Event
+samplesWithPosix:: Index -> Int -> List (Tuple String Int) -> List Coordenada -> List (Maybe (Tuple Number String))
+samplesWithPosix index len samples coords = map (eventForSample index len samples) coords
 
-o:: List Number
-o = fromFoldable [0.0,0.2,0.5] -- at this level a metric unit should be added. For testing: 0,0.1 (metre 1), 0.2,0.3 (metre 2), 0.4,0.5 (metre 3), 0.6,0.7 (metre 4), etc...
+eventForSample:: Index -> Int -> List (Tuple String Int) -> Coordenada -> Maybe (Tuple Number String)
+eventForSample EventI len samples (Coord posix p e) = attachPosixWithSample posix $ head $ filter (\s -> (mod (getEventIndex p len e) (length samples)) == (snd s)) samples
+eventForSample PassageI len samples (Coord posix p e) = attachPosixWithSample posix $ head $ filter (\s -> (mod p len) == (snd s)) samples
+eventForSample MetreI len samples (Coord posix p e) = attachPosixWithSample posix $ head $ fromFoldable []
 
-countToStart:: Int
-countToStart = 327
--------------
+-- make a test for this stupid ass function
+getEventIndex:: Int -> Int -> Int -> Int
+getEventIndex p' len' e' = (I.round $ ((p*len) + e))
+            where p = I.toNumber p'
+                  len = I.toNumber len'
+                  e = I.toNumber e'
 
+attachPosixWithSample:: Number -> Maybe (Tuple String Int) -> Maybe (Tuple Number String)
+attachPosixWithSample x (Just (Tuple st int)) = Just $ Tuple x st
+attachPosixWithSample x Nothing = Nothing
 
-passagePosition:: List Number -> Rational -> Tempo -> DateTime -> DateTime -> DateTime -> M.Map Int Coordenada -- change to MMap Instant Int
-passagePosition o lenPasaje t ws we eval = 
-    let countAtStart = timeToCountNumber t ws --rational
+sampleWithIndex:: Maybe Aural -> List (Tuple String Int)
+sampleWithIndex (Just (Sample au' i)) = zip au (0..(length au))
+        where au = fromFoldable au'
+sampleWithIndex _ = fromFoldable []
+sampleWithIndex Nothing = fromFoldable []
+
+fromPassageToCoord:: Rhythmic -> Tempo -> DateTime -> DateTime -> DateTime -> Convergence -> M.Map Int Coordenada
+fromPassageToCoord rhy t ws we eval convergence = 
+    let x = fromRhythmicToList rhy
+        passageLength = fromInt $ length x   -- oDur
+        onsets = (fromInt <<< snd) <$> (filter (\x -> fst x == true) $ zip x (0..(length x)))
+        oPercen = map (toNumber <<< (_/passageLength)) onsets
+    in passagePosition oPercen passageLength t ws we eval convergence
+
+fromRhythmicToList:: Rhythmic -> List Boolean
+fromRhythmicToList (Onsets x) = fromFoldable x
+fromRhythmicToList (Patron x) = concat $ map fromPatternToList $ fromFoldable x
+fromRhythmicToList _ = fromFoldable [false]
+
+fromPatternToList:: Rhythmic -> List Boolean
+fromPatternToList (Onsets x) = fromFoldable x 
+fromPatternToList _ = fromFoldable [false] -- placeholder
+
+passagePosition:: List Number -> Rational -> Tempo -> DateTime -> DateTime -> DateTime -> Convergence -> M.Map Int Coordenada -- change to MMap Instant Int
+passagePosition o lenPasaje t ws we eval convergence = 
+    let countAtStart = evalToCountWrapper convergence t eval ws -- $ timeToCountNumber t ws --Number
         passageAtStart =  countAtStart/ (toNumber lenPasaje)
         percentAtStart = passageAtStart - (iToN $ floor $ passageAtStart)
 
-        countAtEnd = timeToCountNumber t we
+        countAtEnd = evalToCountWrapper convergence t eval we -- $ timeToCountNumber t we
         passageAtEnd = countAtEnd/ (toNumber lenPasaje)
         percentAtEnd = passageAtEnd - (iToN $ floor $ passageAtEnd)
 
@@ -88,6 +134,16 @@ passagePosition o lenPasaje t ws we eval =
         posToTime = map (\x -> positionToTime t lenPasaje x) filtrado
       in M.fromFoldableWithIndex posToTime
 
+evalToCountWrapper:: Convergence -> Tempo -> DateTime -> DateTime -> Number
+evalToCountWrapper Origin t eval tp = timeToCountNumber t tp
+evalToCountWrapper Eval t eval tp = evalToCountNumber t eval tp
+evalToCountWrapper (Prospective _ _) _ _ tp = timeToCountNumber t tp
+
+
+evalToCountNumber :: Tempo -> DateTime -> DateTime -> Number
+evalToCountNumber t eval tp = 
+    let x = unwrap (diff tp eval :: Milliseconds)
+    in (x * toNumber t.freq) / 1000.0
 
 -- crear instancias de coordenada y en la funcion de abajo debe de ser:
 -- :: Tempo -> Rational -> Tuple Number Int -> Coord TimeStamp IPassage IEvent
@@ -175,6 +231,38 @@ justFractional:: Number -> Number
 justFractional x = x - (iToN $ floor x)
 
 
+---- testing stuff ---------------
+makeDate :: Int -> Month -> Int -> Date
+makeDate y m d = 
+    unsafePartial $ fromJust $ 
+       canonicalDate <$> toEnum y <@> m <*> toEnum d
+
+makeTime :: Int -> Int -> Int -> Int -> Time
+makeTime h min sec milisec = 
+    unsafePartial $ fromJust $ Time <$> toEnum h <*> toEnum min <*> toEnum sec <*> toEnum milisec
+
+
+t:: Tempo
+t = {freq: (2%1),time: (DateTime (makeDate 2022 June 3) (makeTime 19 11 25 100)), count: fromInt 0 }
+
+ws:: Int -> Int -> DateTime
+ws x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
+
+we:: Int -> Int -> DateTime
+we x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
+
+eval:: DateTime
+eval = (DateTime (makeDate 2022 June 3) (makeTime 19 14 59 500))
+
+oDur:: Rational  -- transposition value 2
+oDur = (1%2)
+
+o:: List Number
+o = fromFoldable [0.0,0.2,0.5] -- at this level a metric unit should be added. For testing: 0,0.1 (metre 1), 0.2,0.3 (metre 2), 0.4,0.5 (metre 3), 0.6,0.7 (metre 4), etc...
+
+countToStart:: Int
+countToStart = 327
+-------------
 
 
 
