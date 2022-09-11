@@ -3,12 +3,11 @@ import Prim.Boolean
 
 import Data.Either
 import Data.Identity
-import Data.Array as Arr
-import Data.List.Lazy as L
-import Data.Typelevel.Bool
 import Data.Int
 import Data.Tuple
-import Data.Tuple.Nested
+import Data.List
+
+import Data.Foldable
 
 import Data.Functor
 
@@ -34,3 +33,5 @@ import WebDirt
 import Main
 import Rhythmic
 import Motor
+
+import ParserExperiments

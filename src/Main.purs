@@ -43,7 +43,7 @@ import Motor
 launch :: Effect TimekNot
 launch = do
   log "timekNot-CU: launch"
-  ast <- new $ Passage (Onsets $ L.fromFoldable []) (L.fromFoldable []) $ Origin
+  ast <- new $ Passage (Onsets $ L.fromFoldable []) (L.fromFoldable []) Origin true
   tempo <- newTempo (1 % 1) >>= new 
   eval <- nowDateTime >>= new
   pure { ast, tempo, eval}  
@@ -103,8 +103,6 @@ timekNotToForeigns tk ws we = do
 fromPassageToArray:: Passage -> Tempo -> DateTime -> DateTime -> DateTime -> Array {whenPosix:: Number, s:: String, n:: Int}
 fromPassageToArray pass t ws we eval = 
     let events' = passageToEvents pass t ws we eval -- List (Maybe Event)
---        coordsfromMapToArray = L.toUnfoldable $ M.values coords -- Array
---        events = map coordToEvent coordsfromMapToArray
         events = toUnfoldable $ filterMaybe events' -- Array
       in events
 

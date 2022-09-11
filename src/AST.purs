@@ -1,11 +1,11 @@
-module AST(TimekNot(..),Passage(..),Convergence(..),Rhythmic(..),Euclidean(..),Index(..),Aural(..),Coordenada(..),Event(..)) where
+module AST(TimekNot(..),Passage(..),Nose(..),Rhythmic(..),Euclidean(..),Index(..),Aural(..),Coordenada(..),Event(..),Aurals(..)) where
 
 import Prelude
 import Effect.Ref
 import Data.List
 import Data.Tempo
 import Data.DateTime
-
+import Data.Maybe
 
 type TimekNot = {
   ast :: Ref Passage,
@@ -13,23 +13,23 @@ type TimekNot = {
   eval :: Ref DateTime
   }
 
-data Passage = Passage Rhythmic (List Aural) Convergence
+data Passage = Passage Rhythmic (List Aural) Nose Boolean
 
 instance passageShowInstance :: Show Passage where
-  show (Passage rhy aur conv) = "rhy "<>show rhy<>" aur "<>show aur<>" conv "<>show conv
+  show (Passage rhy aur nose repeat) = "rhy "<>show rhy<>" aur "<>show aur<>" nose "<>show nose<>show repeat
 
 instance passageEqInstance :: Eq Passage where
-    eq (Passage x y c) (Passage x' y' c') = (x == x') && (y == y') && (c == c')
+    eq (Passage x y no rep) (Passage x' y' no' rep') = (x == x') && (y == y') && (no == no') 
     eq _ _ = false
 
-data Convergence = Origin | Eval | Prospective Int Number
+data Nose = Origin | Eval | Prospective Int Number
 
-instance convergenceShowInstance :: Show Convergence where
+instance noseShowInstance :: Show Nose where
   show Origin = "|origin|"
   show Eval = "|eval|"
-  show (Prospective index offset) = "|Prospective "<>show index<>" "<>show offset
+  show (Prospective index offset) = "|prospective "<>show index<>" "<>show offset
 
-instance convergenceEqInstance :: Eq Convergence where
+instance noseEqInstance :: Eq Nose where
     eq Origin Origin = true
     eq Eval Eval = true
     eq (Prospective i o) (Prospective i' o') = (i == i') && (o == o')
@@ -102,3 +102,8 @@ type Event =
 --   overgain :: Number, -- additional gain added to gain to go past clamp at 2
 --   pan :: Number
   }
+
+type Aurals = {
+  s :: Maybe Aural,
+  n :: Maybe Aural
+}

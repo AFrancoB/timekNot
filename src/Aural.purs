@@ -100,7 +100,7 @@ sampleParser = do
     sampleNames <- stringLit
     pure $ stringToSamples sampleNames
 
-stringToSamples:: String -> List String
+stringToSamples:: String -> List String -- what to do with commas??
 stringToSamples s = fromFoldable $ Str.split (Str.Pattern " ") $ Str.trim s
 
 -- get the repetition pattern (which si the length of the array of first value of) so if the array is 4 samples long, seSamples [bd bd cp bd] entonces cada 4 (eventos, metros o pasajes empieza una serie nueva de samples. Luego sumarle a ese numero la posicion del inicio del ciclo, es decir: 0,4,8,12,16 es el inicio de cada ciclo entonces: 0+3,4+3,8+3,12+3 es la posicion del clap

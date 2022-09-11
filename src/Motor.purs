@@ -1,4 +1,4 @@
-module Motor (passageToEvents,evalToCountWrapper) where
+module Motor (passageToEvents,test,getEventIndex) where
 
 import Prelude
 import Prim.Boolean
@@ -11,6 +11,8 @@ import Data.Typelevel.Bool
 import Data.Int as I
 import Data.Tuple
 import Data.Tuple.Nested
+
+import Data.List as L
 
 import Data.Functor
 
@@ -41,18 +43,47 @@ import AST
 import Rhythmic
 import Aural
 
------
+test = passageToEvents' (Passage (Onsets $ L.fromFoldable [true,true,true,true,true]) (L.fromFoldable [Sample (L.fromFoldable ["bd","cp","808"]) EventI]) Eval true) t (ws 0 0) (we 2 0) eval
+
+-- passageToEvents':: Passage -> Tempo -> DateTime -> DateTime -> DateTime -> List (Maybe Event)
+passageToEvents' (Passage rhy aus nose rep) t ws we eval = 
+    let coords = fromPassageToCoord rhy t ws we eval nose -- Map Int Coord
+        lCoord' = snd <$> (M.toUnfoldable coords) -- List Coord, es decir: Nu In In
+        lCoord = nonRepeat rep lCoord'
+        aurals = arrangeAurals $ fromFoldable aus
+--        s = last $ filter isSample $ fromFoldable aus
+        s = samplesWithPosix (auralIndex aurals.s) (lenRhyth rhy) (sampleWithIndex aurals.s) lCoord
+ 
+ --       n = last $ filter isN $ au  -- Maybe Aural 
+    in s
+
 
 passageToEvents:: Passage -> Tempo -> DateTime -> DateTime -> DateTime -> List (Maybe Event)
-passageToEvents (Passage rhy aus conv) t ws we eval = 
-    let coords = fromPassageToCoord rhy t ws we eval conv -- Map Int Coord
-        lCoord = snd <$> (M.toUnfoldable coords) -- List Coord, es decir: Nu In In
-        samples = sampleWithIndex $ last $ filter isSample $ fromFoldable aus --Maybe Aural
-        samplesI = auralIndex $ last $ filter isSample $ fromFoldable aus
-        -- aqui va una funcion con tupletes de samples y coords con el mismo indice!!
-        s = samplesWithPosix samplesI (lenRhyth rhy) samples lCoord
+passageToEvents (Passage rhy aus nose rep) t ws we eval = 
+    let coords = fromPassageToCoord rhy t ws we eval nose -- Map Int Coord
+        lCoord' = snd <$> (M.toUnfoldable coords) -- List Coord, es decir: Nu In In
+        lCoord = nonRepeat rep lCoord'
+        aurals = arrangeAurals $ fromFoldable aus
+--        s = last $ filter isSample $ fromFoldable aus
+        s = samplesWithPosix (auralIndex aurals.s) (lenRhyth rhy) (sampleWithIndex aurals.s) lCoord
+ 
  --       n = last $ filter isN $ au  -- Maybe Aural 
     in map toEvent s
+
+arrangeAurals:: List Aural -> Aurals
+arrangeAurals aus = 
+    let samples = last $ filter isSample $ fromFoldable aus
+        n = last $ filter isN $ fromFoldable aus
+    in {s: samples, n: n}
+
+
+nonRepeat:: Boolean -> List Coordenada -> List Coordenada
+nonRepeat false x = filter nonRepeat' x
+nonRepeat true x = x
+
+nonRepeat':: Coordenada -> Boolean
+nonRepeat' (Coord _ 0 _) = true
+nonRepeat' (Coord _ _ _) = false
 
 lenRhyth:: Rhythmic -> Int
 lenRhyth (Onsets x) = length $ filter (\x -> x==true) $ fromFoldable x
@@ -75,7 +106,16 @@ isN:: Aural -> Boolean
 isN (N _ _) = true
 isN _ = false
 
--- samplesWithCoordinates:: List (Tuple String Int) -> List Coordenada -> List Event
+--
+getEventIndex:: Int -> Int -> Int -> Int
+getEventIndex p' len' e' = (I.round $ ((p*len) + e))
+            where p = I.toNumber p'
+                  len = I.toNumber len'
+                  e = I.toNumber e'
+--
+
+-- auralsWithPosix:: Index -> Int -> ???? -> List Coordenada -> List (Maybe (Tuple Number ????))
+
 samplesWithPosix:: Index -> Int -> List (Tuple String Int) -> List Coordenada -> List (Maybe (Tuple Number String))
 samplesWithPosix index len samples coords = map (eventForSample index len samples) coords
 
@@ -83,13 +123,6 @@ eventForSample:: Index -> Int -> List (Tuple String Int) -> Coordenada -> Maybe 
 eventForSample EventI len samples (Coord posix p e) = attachPosixWithSample posix $ head $ filter (\s -> (mod (getEventIndex p len e) (length samples)) == (snd s)) samples
 eventForSample PassageI len samples (Coord posix p e) = attachPosixWithSample posix $ head $ filter (\s -> (mod p len) == (snd s)) samples
 eventForSample MetreI len samples (Coord posix p e) = attachPosixWithSample posix $ head $ fromFoldable []
-
--- make a test for this stupid ass function
-getEventIndex:: Int -> Int -> Int -> Int
-getEventIndex p' len' e' = (I.round $ ((p*len) + e))
-            where p = I.toNumber p'
-                  len = I.toNumber len'
-                  e = I.toNumber e'
 
 attachPosixWithSample:: Number -> Maybe (Tuple String Int) -> Maybe (Tuple Number String)
 attachPosixWithSample x (Just (Tuple st int)) = Just $ Tuple x st
@@ -101,13 +134,13 @@ sampleWithIndex (Just (Sample au' i)) = zip au (0..(length au))
 sampleWithIndex _ = fromFoldable []
 sampleWithIndex Nothing = fromFoldable []
 
-fromPassageToCoord:: Rhythmic -> Tempo -> DateTime -> DateTime -> DateTime -> Convergence -> M.Map Int Coordenada
-fromPassageToCoord rhy t ws we eval convergence = 
+fromPassageToCoord:: Rhythmic -> Tempo -> DateTime -> DateTime -> DateTime -> Nose -> M.Map Int Coordenada
+fromPassageToCoord rhy t ws we eval nose = 
     let x = fromRhythmicToList rhy
         passageLength = fromInt $ length x   -- oDur
         onsets = (fromInt <<< snd) <$> (filter (\x -> fst x == true) $ zip x (0..(length x)))
         oPercen = map (toNumber <<< (_/passageLength)) onsets
-    in passagePosition oPercen passageLength t ws we eval convergence
+    in passagePosition oPercen passageLength t ws we eval nose
 
 fromRhythmicToList:: Rhythmic -> List Boolean
 fromRhythmicToList (Onsets x) = fromFoldable x
@@ -118,13 +151,13 @@ fromPatternToList:: Rhythmic -> List Boolean
 fromPatternToList (Onsets x) = fromFoldable x 
 fromPatternToList _ = fromFoldable [false] -- placeholder
 
-passagePosition:: List Number -> Rational -> Tempo -> DateTime -> DateTime -> DateTime -> Convergence -> M.Map Int Coordenada -- change to MMap Instant Int
-passagePosition o lenPasaje t ws we eval convergence = 
-    let countAtStart = evalToCountWrapper convergence t eval ws -- $ timeToCountNumber t ws --Number
+passagePosition:: List Number -> Rational -> Tempo -> DateTime -> DateTime -> DateTime -> Nose -> M.Map Int Coordenada -- change to MMap Instant Int
+passagePosition o lenPasaje t ws we eval nose = 
+    let countAtStart = evalToCountWrapper nose t eval ws -- $ timeToCountNumber t ws --Number
         passageAtStart =  countAtStart/ (toNumber lenPasaje)
         percentAtStart = passageAtStart - (iToN $ floor $ passageAtStart)
 
-        countAtEnd = evalToCountWrapper convergence t eval we -- $ timeToCountNumber t we
+        countAtEnd = evalToCountWrapper nose t eval we -- $ timeToCountNumber t we
         passageAtEnd = countAtEnd/ (toNumber lenPasaje)
         percentAtEnd = passageAtEnd - (iToN $ floor $ passageAtEnd)
 
@@ -134,7 +167,7 @@ passagePosition o lenPasaje t ws we eval convergence =
         posToTime = map (\x -> positionToTime t lenPasaje x) filtrado
       in M.fromFoldableWithIndex posToTime
 
-evalToCountWrapper:: Convergence -> Tempo -> DateTime -> DateTime -> Number
+evalToCountWrapper:: Nose -> Tempo -> DateTime -> DateTime -> Number
 evalToCountWrapper Origin t eval tp = timeToCountNumber t tp
 evalToCountWrapper Eval t eval tp = evalToCountNumber t eval tp
 evalToCountWrapper (Prospective _ _) _ _ tp = timeToCountNumber t tp
@@ -245,6 +278,9 @@ makeTime h min sec milisec =
 t:: Tempo
 t = {freq: (2%1),time: (DateTime (makeDate 2022 June 3) (makeTime 19 11 25 100)), count: fromInt 0 }
 
+tAncient:: Tempo
+tAncient = {freq: (2%1),time: (DateTime (makeDate 2012 June 3) (makeTime 19 11 25 100)), count: fromInt 0 }
+
 ws:: Int -> Int -> DateTime
 ws x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
 
@@ -252,7 +288,7 @@ we:: Int -> Int -> DateTime
 we x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
 
 eval:: DateTime
-eval = (DateTime (makeDate 2022 June 3) (makeTime 19 14 59 500))
+eval = (DateTime (makeDate 2022 June 3) (makeTime 19 15 0 0))
 
 oDur:: Rational  -- transposition value 2
 oDur = (1%2)
@@ -263,11 +299,6 @@ o = fromFoldable [0.0,0.2,0.5] -- at this level a metric unit should be added. F
 countToStart:: Int
 countToStart = 327
 -------------
-
-
-
--- coordinatesToEvents:: Coordinates -> Events
-
 
 
 

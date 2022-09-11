@@ -1,4 +1,4 @@
-module Rhythmic (topPassageParser) where
+module Rhythmic (topPassageParser,endOfRhythmic) where
 
 import Prelude
 import Prim.Boolean
@@ -52,15 +52,16 @@ topPassageParser = do
     whitespace
     aur <- samples
     whitespace 
-    conv <- convergenceParser
+    nose <- noseParser
     _ <- pure 1 
     eof
-    pure $ Passage rhy (L.fromFoldable [aur]) $ Origin
+    pure $ Passage (fst rhy) (L.fromFoldable [aur]) nose $ snd rhy
 
 
-convergenceParser:: P Convergence
-convergenceParser = do
-    x <- choice [(string "eval") *> (pure $ Eval),(string "origin") *> (pure $ Origin)] <|> (pure $ Origin)
+noseParser:: P Nose
+noseParser = do
+    x <- choice [(try $ (string "eval")) *> (pure $ Eval),(try $ (string "origin")) *> (pure $ Origin)] <|> (pure $ Origin)
+    _ <- pure 1
     pure x
 
 -- topRhythmic:: P Rhythmic
@@ -96,14 +97,19 @@ convergenceParser = do
 -- from complex to simple parsers
 
 
-topRhythmic:: P Rhythmic
+topRhythmic:: P (Tuple Rhythmic Boolean)
 topRhythmic = do
   r <- choice [onsets]
   whitespace
-  _ <- string ":||"
+  end <- endOfRhythmic
   _ <- pure 1 
-  pure r
+  pure $ Tuple r end
 
+
+endOfRhythmic:: P Boolean
+endOfRhythmic = do
+    x <- choice [(string ":||") *> (pure $ true),(string "||") *> (pure $ false)]
+    pure x
 
 -- esto no sirve!!!
 -- patterns:: P Rhythmic 
