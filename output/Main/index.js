@@ -84,12 +84,12 @@ var launch = function __do() {
         "eval": $$eval
     };
 };
-var fromPassageToArray = function (prog) {
+var fromProgramToArray = function (prog) {
     return function (t) {
         return function (ws) {
             return function (we) {
                 return function ($$eval) {
-                    return [ Unleash.actualise(prog)(t)($$eval) ];
+                    return [ Unleash.actualise(prog)(t)($$eval)(ws)(we) ];
                 };
             };
         };
@@ -107,7 +107,7 @@ var unleashToForeigns = function (un) {
                 Effect_Console.log(show(program))();
                 Effect_Console.log(show1(ws))();
                 Effect_Console.log(show1(we))();
-                var events = fromPassageToArray(program)(t)(ws$prime)(we$prime)($$eval);
+                var events = fromProgramToArray(program)(t)(ws$prime)(we$prime)($$eval);
                 Effect_Console.log(show2(events))();
                 return map(Foreign.unsafeToForeign)(events);
             };
@@ -155,5 +155,5 @@ export {
     numToDateTime,
     unsafeMaybeMilliseconds,
     unleashToForeigns,
-    fromPassageToArray
+    fromProgramToArray
 };

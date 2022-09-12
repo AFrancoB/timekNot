@@ -171,11 +171,11 @@ var bottomNumber = Number.NEGATIVE_INFINITY;
 
 // output/Data.Ord/foreign.js
 var unsafeCompareImpl = function(lt) {
-  return function(eq5) {
+  return function(eq7) {
     return function(gt) {
       return function(x) {
         return function(y) {
-          return x < y ? lt : x === y ? eq5 : gt;
+          return x < y ? lt : x === y ? eq7 : gt;
         };
       };
     };
@@ -330,10 +330,10 @@ var compare = function(dict) {
   return dict.compare;
 };
 var greaterThan = function(dictOrd) {
-  var compare32 = compare(dictOrd);
+  var compare33 = compare(dictOrd);
   return function(a1) {
     return function(a2) {
-      var v = compare32(a1)(a2);
+      var v = compare33(a1)(a2);
       if (v instanceof GT) {
         return true;
       }
@@ -343,10 +343,10 @@ var greaterThan = function(dictOrd) {
   };
 };
 var greaterThanOrEq = function(dictOrd) {
-  var compare32 = compare(dictOrd);
+  var compare33 = compare(dictOrd);
   return function(a1) {
     return function(a2) {
-      var v = compare32(a1)(a2);
+      var v = compare33(a1)(a2);
       if (v instanceof LT) {
         return false;
       }
@@ -356,10 +356,10 @@ var greaterThanOrEq = function(dictOrd) {
   };
 };
 var lessThan = function(dictOrd) {
-  var compare32 = compare(dictOrd);
+  var compare33 = compare(dictOrd);
   return function(a1) {
     return function(a2) {
-      var v = compare32(a1)(a2);
+      var v = compare33(a1)(a2);
       if (v instanceof LT) {
         return true;
       }
@@ -815,13 +815,13 @@ var mod = function(dict) {
   return dict.mod;
 };
 var gcd = function(dictEq) {
-  var eq5 = eq(dictEq);
+  var eq7 = eq(dictEq);
   return function(dictEuclideanRing) {
     var zero2 = zero(dictEuclideanRing.CommutativeRing0().Ring0().Semiring0());
     var mod1 = mod(dictEuclideanRing);
     return function(a) {
       return function(b) {
-        var $24 = eq5(b)(zero2);
+        var $24 = eq7(b)(zero2);
         if ($24) {
           return a;
         }
@@ -1872,6 +1872,9 @@ var fromJust4 = /* @__PURE__ */ fromJust();
 var eq12 = /* @__PURE__ */ eq(eqYear);
 var eq2 = /* @__PURE__ */ eq(eqMonth);
 var eq3 = /* @__PURE__ */ eq(eqDay);
+var compare2 = /* @__PURE__ */ compare(ordYear);
+var compare12 = /* @__PURE__ */ compare(ordMonth);
+var compare22 = /* @__PURE__ */ compare(ordDay);
 var toEnum2 = /* @__PURE__ */ toEnum(boundedEnumMonth);
 var $$Date = /* @__PURE__ */ function() {
   function $$Date2(value0, value1, value2) {
@@ -1903,6 +1906,34 @@ var eqDate = {
   }
 };
 var eq4 = /* @__PURE__ */ eq(eqDate);
+var ordDate = {
+  compare: function(x) {
+    return function(y) {
+      var v = compare2(x.value0)(y.value0);
+      if (v instanceof LT) {
+        return LT.value;
+      }
+      ;
+      if (v instanceof GT) {
+        return GT.value;
+      }
+      ;
+      var v1 = compare12(x.value1)(y.value1);
+      if (v1 instanceof LT) {
+        return LT.value;
+      }
+      ;
+      if (v1 instanceof GT) {
+        return GT.value;
+      }
+      ;
+      return compare22(x.value2)(y.value2);
+    };
+  },
+  Eq0: function() {
+    return eqDate;
+  }
+};
 var day = function(v) {
   return v.value2;
 };
@@ -1986,6 +2017,10 @@ var ordSecond = ordInt;
 var ordMinute = ordInt;
 var ordMillisecond = ordInt;
 var ordHour = ordInt;
+var eqSecond = eqInt;
+var eqMinute = eqInt;
+var eqMillisecond = eqInt;
+var eqHour = eqInt;
 var boundedSecond = {
   bottom: 0,
   top: 59,
@@ -2208,6 +2243,14 @@ var $lazy_enumHour = /* @__PURE__ */ $runtime_lazy3("enumHour", "Data.Time.Compo
 });
 
 // output/Data.Time/index.js
+var eq5 = /* @__PURE__ */ eq(eqHour);
+var eq13 = /* @__PURE__ */ eq(eqMinute);
+var eq22 = /* @__PURE__ */ eq(eqSecond);
+var eq32 = /* @__PURE__ */ eq(eqMillisecond);
+var compare3 = /* @__PURE__ */ compare(ordHour);
+var compare13 = /* @__PURE__ */ compare(ordMinute);
+var compare23 = /* @__PURE__ */ compare(ordSecond);
+var compare32 = /* @__PURE__ */ compare(ordMillisecond);
 var Time = /* @__PURE__ */ function() {
   function Time2(value0, value1, value2, value3) {
     this.value0 = value0;
@@ -2239,6 +2282,50 @@ var millisecond = function(v) {
 var hour = function(v) {
   return v.value0;
 };
+var eqTime = {
+  eq: function(x) {
+    return function(y) {
+      return eq5(x.value0)(y.value0) && eq13(x.value1)(y.value1) && eq22(x.value2)(y.value2) && eq32(x.value3)(y.value3);
+    };
+  }
+};
+var ordTime = {
+  compare: function(x) {
+    return function(y) {
+      var v = compare3(x.value0)(y.value0);
+      if (v instanceof LT) {
+        return LT.value;
+      }
+      ;
+      if (v instanceof GT) {
+        return GT.value;
+      }
+      ;
+      var v1 = compare13(x.value1)(y.value1);
+      if (v1 instanceof LT) {
+        return LT.value;
+      }
+      ;
+      if (v1 instanceof GT) {
+        return GT.value;
+      }
+      ;
+      var v2 = compare23(x.value2)(y.value2);
+      if (v2 instanceof LT) {
+        return LT.value;
+      }
+      ;
+      if (v2 instanceof GT) {
+        return GT.value;
+      }
+      ;
+      return compare32(x.value3)(y.value3);
+    };
+  },
+  Eq0: function() {
+    return eqTime;
+  }
+};
 
 // output/Data.DateTime/index.js
 var fromEnum3 = /* @__PURE__ */ fromEnum(boundedEnumYear);
@@ -2248,6 +2335,10 @@ var fromEnum32 = /* @__PURE__ */ fromEnum(boundedEnumHour);
 var fromEnum4 = /* @__PURE__ */ fromEnum(boundedEnumMinute);
 var fromEnum5 = /* @__PURE__ */ fromEnum(boundedEnumSecond);
 var fromEnum6 = /* @__PURE__ */ fromEnum(boundedEnumMillisecond);
+var eq6 = /* @__PURE__ */ eq(eqDate);
+var eq14 = /* @__PURE__ */ eq(eqTime);
+var compare4 = /* @__PURE__ */ compare(ordDate);
+var compare14 = /* @__PURE__ */ compare(ordTime);
 var bind2 = /* @__PURE__ */ bind(bindMaybe);
 var apply2 = /* @__PURE__ */ apply(applyMaybe);
 var map3 = /* @__PURE__ */ map(functorMaybe);
@@ -2282,6 +2373,32 @@ var toRecord = function(v) {
     second: fromEnum5(second(v.value1)),
     millisecond: fromEnum6(millisecond(v.value1))
   };
+};
+var eqDateTime = {
+  eq: function(x) {
+    return function(y) {
+      return eq6(x.value0)(y.value0) && eq14(x.value1)(y.value1);
+    };
+  }
+};
+var ordDateTime = {
+  compare: function(x) {
+    return function(y) {
+      var v = compare4(x.value0)(y.value0);
+      if (v instanceof LT) {
+        return LT.value;
+      }
+      ;
+      if (v instanceof GT) {
+        return GT.value;
+      }
+      ;
+      return compare14(x.value1)(y.value1);
+    };
+  },
+  Eq0: function() {
+    return eqDateTime;
+  }
 };
 var diff = function(dictDuration) {
   var toDuration2 = toDuration(dictDuration);
@@ -3498,7 +3615,7 @@ var findIndexImpl = function(just) {
   };
 };
 var sortByImpl = function() {
-  function mergeFromTo(compare4, fromOrdering, xs1, xs2, from2, to) {
+  function mergeFromTo(compare7, fromOrdering, xs1, xs2, from2, to) {
     var mid;
     var i;
     var j;
@@ -3508,16 +3625,16 @@ var sortByImpl = function() {
     var c;
     mid = from2 + (to - from2 >> 1);
     if (mid - from2 > 1)
-      mergeFromTo(compare4, fromOrdering, xs2, xs1, from2, mid);
+      mergeFromTo(compare7, fromOrdering, xs2, xs1, from2, mid);
     if (to - mid > 1)
-      mergeFromTo(compare4, fromOrdering, xs2, xs1, mid, to);
+      mergeFromTo(compare7, fromOrdering, xs2, xs1, mid, to);
     i = from2;
     j = mid;
     k = from2;
     while (i < mid && j < to) {
       x = xs2[i];
       y = xs2[j];
-      c = fromOrdering(compare4(x)(y));
+      c = fromOrdering(compare7(x)(y));
       if (c > 0) {
         xs1[k++] = y;
         ++j;
@@ -3533,14 +3650,14 @@ var sortByImpl = function() {
       xs1[k++] = xs2[j++];
     }
   }
-  return function(compare4) {
+  return function(compare7) {
     return function(fromOrdering) {
       return function(xs) {
         var out;
         if (xs.length < 2)
           return xs;
         out = xs.slice(0);
-        mergeFromTo(compare4, fromOrdering, out, xs.slice(0), 0, xs.length);
+        mergeFromTo(compare7, fromOrdering, out, xs.slice(0), 0, xs.length);
         return out;
       };
     };
@@ -3566,7 +3683,7 @@ var unsafeIndexImpl = function(xs) {
 
 // output/Data.Array.ST/foreign.js
 var sortByImpl2 = function() {
-  function mergeFromTo(compare4, fromOrdering, xs1, xs2, from2, to) {
+  function mergeFromTo(compare7, fromOrdering, xs1, xs2, from2, to) {
     var mid;
     var i;
     var j;
@@ -3576,16 +3693,16 @@ var sortByImpl2 = function() {
     var c;
     mid = from2 + (to - from2 >> 1);
     if (mid - from2 > 1)
-      mergeFromTo(compare4, fromOrdering, xs2, xs1, from2, mid);
+      mergeFromTo(compare7, fromOrdering, xs2, xs1, from2, mid);
     if (to - mid > 1)
-      mergeFromTo(compare4, fromOrdering, xs2, xs1, mid, to);
+      mergeFromTo(compare7, fromOrdering, xs2, xs1, mid, to);
     i = from2;
     j = mid;
     k = from2;
     while (i < mid && j < to) {
       x = xs2[i];
       y = xs2[j];
-      c = fromOrdering(compare4(x)(y));
+      c = fromOrdering(compare7(x)(y));
       if (c > 0) {
         xs1[k++] = y;
         ++j;
@@ -3601,13 +3718,13 @@ var sortByImpl2 = function() {
       xs1[k++] = xs2[j++];
     }
   }
-  return function(compare4) {
+  return function(compare7) {
     return function(fromOrdering) {
       return function(xs) {
         return function() {
           if (xs.length < 2)
             return xs;
-          mergeFromTo(compare4, fromOrdering, xs, xs.slice(0), 0, xs.length);
+          mergeFromTo(compare7, fromOrdering, xs, xs.slice(0), 0, xs.length);
           return xs;
         };
       };
@@ -3651,19 +3768,19 @@ var sortBy2 = function(comp) {
   });
 };
 var sort = function(dictOrd) {
-  var compare4 = compare(dictOrd);
+  var compare7 = compare(dictOrd);
   return function(xs) {
-    return sortBy2(compare4)(xs);
+    return sortBy2(compare7)(xs);
   };
 };
 var findIndex2 = /* @__PURE__ */ function() {
   return findIndexImpl(Just.create)(Nothing.value);
 }();
 var elemIndex = function(dictEq) {
-  var eq22 = eq(dictEq);
+  var eq23 = eq(dictEq);
   return function(x) {
     return findIndex2(function(v) {
-      return eq22(v)(x);
+      return eq23(v)(x);
     });
   };
 };
@@ -3851,7 +3968,7 @@ var map6 = /* @__PURE__ */ map(functorMaybe);
 var unfoldr2 = /* @__PURE__ */ unfoldr(unfoldableArray);
 var div2 = /* @__PURE__ */ div(euclideanRingInt);
 var mod2 = /* @__PURE__ */ mod(euclideanRingInt);
-var compare2 = /* @__PURE__ */ compare(ordInt);
+var compare5 = /* @__PURE__ */ compare(ordInt);
 var CodePoint = function(x) {
   return x;
 };
@@ -3945,7 +4062,7 @@ var eqCodePoint = {
 var ordCodePoint = {
   compare: function(x) {
     return function(y) {
-      return compare2(x)(y);
+      return compare5(x)(y);
     };
   },
   Eq0: function() {
@@ -12020,7 +12137,7 @@ var convchars = [{
 var bsearch = function(a) {
   return function(array) {
     return function(size) {
-      return function(compare4) {
+      return function(compare7) {
         var go = function($copy_i) {
           return function($copy_k) {
             var $tco_var_i = $copy_i;
@@ -12035,7 +12152,7 @@ var bsearch = function(a) {
               if (otherwise) {
                 var j = floor2(toNumber(i + k | 0) / 2);
                 var b = unsafeIndex2(array)(j);
-                var v = compare4(a)(b);
+                var v = compare7(a)(b);
                 if (v instanceof EQ) {
                   $tco_done = true;
                   return new Just(b);
@@ -25861,7 +25978,7 @@ var pure3 = /* @__PURE__ */ pure(applicativeParserT);
 var sort2 = /* @__PURE__ */ sort(ordString);
 var map9 = /* @__PURE__ */ map(functorArray);
 var applySecond3 = /* @__PURE__ */ applySecond(applyParserT);
-var compare3 = /* @__PURE__ */ compare(ordString);
+var compare6 = /* @__PURE__ */ compare(ordString);
 var append3 = /* @__PURE__ */ append(semigroupArray);
 var fix2 = /* @__PURE__ */ fix(lazyParserT);
 var alt3 = /* @__PURE__ */ alt(altParserT);
@@ -25915,7 +26032,7 @@ var isReserved = function($copy_names) {
       }
       ;
       if (v instanceof Just) {
-        var v1 = compare3(v.value0.head)(name2);
+        var v1 = compare6(v.value0.head)(name2);
         if (v1 instanceof LT) {
           $tco_var_names = v.value0.tail;
           $copy_name = name2;
@@ -26407,6 +26524,8 @@ var bind12 = /* @__PURE__ */ bind(bindParserT);
 var pure12 = /* @__PURE__ */ pure(applicativeParserT);
 var discard2 = /* @__PURE__ */ discard(discardUnit)(bindParserT);
 var unwrap4 = /* @__PURE__ */ unwrap();
+var greaterThan2 = /* @__PURE__ */ greaterThan(ordDateTime);
+var lessThan2 = /* @__PURE__ */ lessThan(ordDateTime);
 var alt5 = /* @__PURE__ */ alt(altParserT);
 var Q = /* @__PURE__ */ function() {
   function Q2(value0, value1) {
@@ -26486,25 +26605,49 @@ var sampler = /* @__PURE__ */ bind12(/* @__PURE__ */ pure12(1))(function() {
     });
   });
 });
-var fromDateTimeToPosix = function(x) {
-  return unwrap4(unInstant(fromDateTime(x))) / 1e3;
+var fromDateTimeToPosix = function(v) {
+  if (v instanceof Just) {
+    return new Just(unwrap4(unInstant(fromDateTime(v.value0))) / 1e3);
+  }
+  ;
+  if (v instanceof Nothing) {
+    return Nothing.value;
+  }
+  ;
+  throw new Error("Failed pattern match at Unleash (line 107, column 1 - line 107, column 53): " + [v.constructor.name]);
+};
+var filterSpan = function(x) {
+  return function(ws1) {
+    return function(we1) {
+      var $56 = greaterThan2(x)(ws1) && lessThan2(x)(we1);
+      if ($56) {
+        return new Just(x);
+      }
+      ;
+      return Nothing.value;
+    };
+  };
 };
 var evalTimeandQuantToPsx = function(t1) {
   return function(eval1) {
-    return function(q) {
-      var cuenta = timeToCountNumber(t1)(eval1);
-      var cuentaInGrid = toNumber(ceil2(cuenta));
-      var cuentaQ = cuentaInGrid + q;
-      var posInTempo = toRat(cuentaQ);
-      var calibrated = function() {
-        var $50 = justFractional(cuenta) <= 0.85;
-        if ($50) {
-          return cuenta;
-        }
-        ;
-        return cuenta + 5;
-      }();
-      return countToTime(t1)(posInTempo);
+    return function(ws1) {
+      return function(we1) {
+        return function(q) {
+          var cuenta = timeToCountNumber(t1)(eval1);
+          var cuentaInGrid = toNumber(ceil2(cuenta));
+          var cuentaQ = cuentaInGrid + q;
+          var posInTempo = toRat(cuentaQ);
+          var calibrated = function() {
+            var $57 = justFractional(cuenta) <= 0.85;
+            if ($57) {
+              return cuenta;
+            }
+            ;
+            return cuenta + 5;
+          }();
+          return filterSpan(countToTime(t1)(posInTempo))(ws1)(we1);
+        };
+      };
     };
   };
 };
@@ -26512,11 +26655,15 @@ var singleVirtualToActual = function(v) {
   return function(v1) {
     return function(t1) {
       return function(eval1) {
-        var psx = fromDateTimeToPosix(evalTimeandQuantToPsx(t1)(eval1)(v1.value0));
-        return {
-          whenPosix: psx,
-          s: v.value0,
-          n: v.value1
+        return function(ws1) {
+          return function(we1) {
+            var psx = fromMaybe(0)(fromDateTimeToPosix(evalTimeandQuantToPsx(t1)(eval1)(ws1)(we1)(v1.value0)));
+            return {
+              whenPosix: psx,
+              s: v.value0,
+              n: v.value1
+            };
+          };
         };
       };
     };
@@ -26560,7 +26707,11 @@ var parseSample = /* @__PURE__ */ bind12(/* @__PURE__ */ pure12(1))(function() {
 var actualise = function(v) {
   return function(t1) {
     return function(eval1) {
-      return singleVirtualToActual(v.value0)(v.value1)(t1)(eval1);
+      return function(ws1) {
+        return function(we1) {
+          return singleVirtualToActual(v.value0)(v.value1)(t1)(eval1)(ws1)(we1);
+        };
+      };
     };
   };
 };
@@ -26639,12 +26790,12 @@ var launch = function __do() {
     "eval": $$eval
   };
 };
-var fromPassageToArray = function(prog) {
+var fromProgramToArray = function(prog) {
   return function(t) {
     return function(ws) {
       return function(we) {
         return function($$eval) {
-          return [actualise(prog)(t)($$eval)];
+          return [actualise(prog)(t)($$eval)(ws)(we)];
         };
       };
     };
@@ -26662,7 +26813,7 @@ var unleashToForeigns = function(un) {
         log2(show5(program))();
         log2(show13(ws))();
         log2(show13(we))();
-        var events = fromPassageToArray(program)(t)(ws$prime)(we$prime)($$eval);
+        var events = fromProgramToArray(program)(t)(ws$prime)(we$prime)($$eval);
         log2(show24(events))();
         return map10(unsafeToForeign)(events);
       };
@@ -26705,7 +26856,7 @@ var evaluate = function(unleash) {
 };
 export {
   evaluate,
-  fromPassageToArray,
+  fromProgramToArray,
   launch,
   numToDateTime,
   pErrorToString,

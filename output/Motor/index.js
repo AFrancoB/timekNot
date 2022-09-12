@@ -215,7 +215,7 @@ var getIndexSimple = function (start) {
     return function (end) {
         return function (o1) {
             var between = Data_List_Lazy.filter(function (x) {
-                return x > start && end >= x;
+                return x > start && end > x;
             })(o1);
             var before = Data_List_Lazy.length(Data_List_Lazy.filter(function (x) {
                 return x < start;

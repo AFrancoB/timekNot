@@ -95,11 +95,11 @@ unleashToForeigns un ws we = do
     log $ show ws
     log $ show we
 
-    let events = fromPassageToArray program t ws' we' eval
+    let events = fromProgramToArray program t ws' we' eval
     log $ show events
     pure $ map unsafeToForeign events
 
-fromPassageToArray:: Program -> Tempo -> DateTime -> DateTime -> DateTime -> Array {whenPosix:: Number, s:: String, n:: Int}
-fromPassageToArray prog t ws we eval = [actualise prog t eval ws we]
+fromProgramToArray:: Program -> Tempo -> DateTime -> DateTime -> DateTime -> Array {whenPosix:: Number, s:: String, n:: Int}
+fromProgramToArray prog t ws we eval = [actualise prog t eval ws we]
 
 
