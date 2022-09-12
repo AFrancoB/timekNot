@@ -100,6 +100,6 @@ unleashToForeigns un ws we = do
     pure $ map unsafeToForeign events
 
 fromPassageToArray:: Program -> Tempo -> DateTime -> DateTime -> DateTime -> Array {whenPosix:: Number, s:: String, n:: Int}
-fromPassageToArray prog t ws we eval = [actualise prog t eval]
+fromPassageToArray prog t ws we eval = [actualise prog t eval ws we]
 
 

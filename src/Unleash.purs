@@ -84,24 +84,29 @@ asNumber (Right x) = x
 
 
 ---
-actualise:: Program -> Tempo -> DateTime -> {whenPosix:: Number, s:: String, n:: Int}
-actualise (P sn q) t eval = singleVirtualToActual sn q t eval
+actualise:: Program -> Tempo -> DateTime -> DateTime -> DateTime -> {whenPosix:: Number, s:: String, n:: Int}
+actualise (P sn q) t eval ws we = singleVirtualToActual sn q t eval ws we
 
-singleVirtualToActual:: (Tuple String Int) -> Quant -> Tempo -> DateTime -> {whenPosix:: Number, s:: String, n:: Int}
-singleVirtualToActual (Tuple sample ene) (Q quant calibrate) t eval = {whenPosix: psx, s: sample, n: ene}
-    where psx = fromDateTimeToPosix $ evalTimeandQuantToPsx t eval quant
 
-evalTimeandQuantToPsx:: Tempo -> DateTime -> Number -> DateTime
-evalTimeandQuantToPsx t eval q = 
+singleVirtualToActual:: (Tuple String Int) -> Quant -> Tempo -> DateTime -> DateTime -> DateTime -> {whenPosix:: Number, s:: String, n:: Int}
+singleVirtualToActual (Tuple sample ene) (Q quant calibrate) t eval ws we = {whenPosix: psx, s: sample, n: ene}
+    where psx = fromMaybe 0.0 $ fromDateTimeToPosix $ evalTimeandQuantToPsx t eval ws we quant
+
+filterSpan:: DateTime -> DateTime -> DateTime -> Maybe DateTime
+filterSpan x ws we = if (x > ws && x < we) then (Just x) else Nothing
+
+evalTimeandQuantToPsx:: Tempo -> DateTime -> DateTime -> DateTime -> Number -> Maybe DateTime
+evalTimeandQuantToPsx t eval ws we q = 
     let cuenta = timeToCountNumber t eval
         calibrated = if (justFractional cuenta) <= 0.85 then cuenta else (cuenta + 5.0)
         cuentaInGrid = toNumber $ ceil cuenta
         cuentaQ = cuentaInGrid + q 
         posInTempo = (toRat cuentaQ)
-    in countToTime t posInTempo
+    in filterSpan (countToTime t posInTempo) ws we
 
-fromDateTimeToPosix:: DateTime -> Number
-fromDateTimeToPosix x = (unwrap $ unInstant $ fromDateTime x)/1000.0000
+fromDateTimeToPosix:: Maybe DateTime -> Maybe Number
+fromDateTimeToPosix (Just x) = Just $ (unwrap $ unInstant $ fromDateTime x)/1000.0000
+fromDateTimeToPosix Nothing = Nothing
 
 toRat:: Number -> Rational
 toRat x = 
