@@ -26633,19 +26633,21 @@ var evalTimeandQuantToPsx = function(t1) {
     return function(ws1) {
       return function(we1) {
         return function(q) {
-          var cuenta = timeToCountNumber(t1)(eval1);
-          var cuentaInGrid = toNumber(ceil2(cuenta));
-          var cuentaQ = cuentaInGrid + q;
-          var posInTempo = toRat(cuentaQ);
-          var calibrated = function() {
-            var $57 = justFractional(cuenta) <= 0.85;
-            if ($57) {
-              return cuenta;
-            }
-            ;
-            return cuenta + 5;
-          }();
-          return filterSpan(countToTime(t1)(posInTempo))(ws1)(we1);
+          return function(c) {
+            var cuenta = timeToCountNumber(t1)(eval1);
+            var cuentaInGrid = toNumber(ceil2(cuenta));
+            var cuentaQ = cuentaInGrid + q;
+            var posInTempo = toRat(cuentaQ);
+            var calibrated = function() {
+              var $57 = justFractional(cuenta) <= c;
+              if ($57) {
+                return cuenta;
+              }
+              ;
+              return cuenta + 1;
+            }();
+            return filterSpan(countToTime(t1)(posInTempo))(ws1)(we1);
+          };
         };
       };
     };
@@ -26657,7 +26659,7 @@ var singleVirtualToActual = function(v) {
       return function(eval1) {
         return function(ws1) {
           return function(we1) {
-            var psx = fromMaybe(0)(fromDateTimeToPosix(evalTimeandQuantToPsx(t1)(eval1)(ws1)(we1)(v1.value0)));
+            var psx = fromMaybe(0)(fromDateTimeToPosix(evalTimeandQuantToPsx(t1)(eval1)(ws1)(we1)(v1.value0)(v1.value1)));
             return {
               whenPosix: psx,
               s: v.value0,

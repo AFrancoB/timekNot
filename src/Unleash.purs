@@ -90,15 +90,15 @@ actualise (P sn q) t eval ws we = singleVirtualToActual sn q t eval ws we
 
 singleVirtualToActual:: (Tuple String Int) -> Quant -> Tempo -> DateTime -> DateTime -> DateTime -> {whenPosix:: Number, s:: String, n:: Int}
 singleVirtualToActual (Tuple sample ene) (Q quant calibrate) t eval ws we = {whenPosix: psx, s: sample, n: ene}
-    where psx = fromMaybe 0.0 $ fromDateTimeToPosix $ evalTimeandQuantToPsx t eval ws we quant
+    where psx = fromMaybe 0.0 $ fromDateTimeToPosix $ evalTimeandQuantToPsx t eval ws we quant calibrate
 
 filterSpan:: DateTime -> DateTime -> DateTime -> Maybe DateTime
 filterSpan x ws we = if (x > ws && x < we) then (Just x) else Nothing
 
-evalTimeandQuantToPsx:: Tempo -> DateTime -> DateTime -> DateTime -> Number -> Maybe DateTime
-evalTimeandQuantToPsx t eval ws we q = 
+evalTimeandQuantToPsx:: Tempo -> DateTime -> DateTime -> DateTime -> Number -> Number -> Maybe DateTime
+evalTimeandQuantToPsx t eval ws we q c = 
     let cuenta = timeToCountNumber t eval
-        calibrated = if (justFractional cuenta) <= 0.85 then cuenta else (cuenta + 5.0)
+        calibrated = if (justFractional cuenta) <= c then cuenta else (cuenta + 1.0)
         cuentaInGrid = toNumber $ ceil cuenta
         cuentaQ = cuentaInGrid + q 
         posInTempo = (toRat cuentaQ)
