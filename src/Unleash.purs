@@ -177,7 +177,7 @@ tempoChanger (Tuple sample ene) mark t eval ws we =
 simpleEventsOnTempo:: Tempo -> DateTime -> DateTime -> DateTime -> Maybe DateTime
 simpleEventsOnTempo t eval ws we =
     let countAtStart = timeToCountNumber t ws -- $ timeToCountNumber t ws --Number
-        index = if countAtStart > 0.8 then countAtStart + 1.0 else countAtStart
+        index = if countAtStart > 0.8 then countAtStart else countAtStart
         start = getPercent countAtStart
         end = getPercent $ timeToCountNumber t we
         onset = 0.0 -- the percent of the moment in which an onset happens in the refrain

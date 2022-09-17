@@ -26909,7 +26909,7 @@ var simpleEventsOnTempo = function(t1) {
         var index3 = function() {
           var $93 = countAtStart > 0.8;
           if ($93) {
-            return countAtStart + 1;
+            return countAtStart;
           }
           ;
           return countAtStart;
