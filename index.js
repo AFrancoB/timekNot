@@ -26860,7 +26860,7 @@ var onsetForWindow = function(o) {
       return function(end) {
         if (start > end) {
           var onset = function() {
-            var $91 = o >= start && o < end + 1;
+            var $91 = o === start && o < end + 1;
             if ($91) {
               return new Just(o);
             }
@@ -26874,7 +26874,7 @@ var onsetForWindow = function(o) {
         ;
         if (otherwise) {
           var onset = function() {
-            var $92 = o >= start && o < end;
+            var $92 = o === start && o < end;
             if ($92) {
               return new Just(o);
             }
@@ -27152,7 +27152,7 @@ var unsafeMaybeMilliseconds = function($copy_v) {
       return;
     }
     ;
-    throw new Error("Failed pattern match at Main (line 82, column 1 - line 82, column 51): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 80, column 1 - line 80, column 51): " + [v.constructor.name]);
   }
   ;
   while (!$tco_done) {
@@ -27175,7 +27175,7 @@ var pErrorToString = function(v) {
     return new Right(v.value0);
   }
   ;
-  throw new Error("Failed pattern match at Main (line 64, column 1 - line 64, column 68): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Main (line 62, column 1 - line 62, column 68): " + [v.constructor.name]);
 };
 var numToDateTime = function(x) {
   var asMaybeInstant = instant(x);
@@ -27253,7 +27253,7 @@ var evaluate = function(unleash) {
         };
       }
       ;
-      throw new Error("Failed pattern match at Main (line 57, column 3 - line 62, column 42): " + [pr.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 55, column 3 - line 60, column 42): " + [pr.constructor.name]);
     };
   };
 };

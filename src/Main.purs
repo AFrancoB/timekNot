@@ -50,16 +50,14 @@ evaluate :: Unleash -> String -> Effect { success :: Boolean, error :: String }
 evaluate unleash str = do
   log "Unleash-Windsor: evaluate"
   program <- read unleash.ast
- -- log $ show passage
-  -- placeholder: assume any evaluation yields the valid program
   eval <- nowDateTime
-  let pr = pErrorToString $ runParser str parseProgram -- :: Either String AST 
+  let pr = pErrorToString $ runParser str parseProgram 
   case pr of
     Left error -> pure $ { success: false, error }
     Right p -> do
-      write eval unleash.eval --- esto!!!!
+      write eval unleash.eval 
       write p unleash.ast 
-      pure $ { success: true, error: "" }    --- here you might add the eval time with purescript. 
+      pure $ { success: true, error: "" }
 
 pErrorToString:: Either ParseError Program -> Either String Program
 pErrorToString (Left x) = Left $ parseErrorMessage x

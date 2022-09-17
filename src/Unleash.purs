@@ -188,11 +188,11 @@ simpleEventsOnTempo t eval ws we =
 
 onsetForWindow:: Number -> Number -> Number -> Number -> Maybe Number
 onsetForWindow o countAtStart start end 
-    | (start > end) = ((toNumber $ floor countAtStart) + _) <$> onset
-        where onset = if (o >= start) && (o < (end+1.0)) then (Just o) else Nothing 
+    | (start > end) = ((toNumber $ floor countAtStart) + _) <$> onset -- in case: 0.9 > 0.0
+        where onset = if (o == start) && (o < (end+1.0)) then (Just o) else Nothing 
         -- 0.9 >= 0.9 && 0.9 < 1.0
     | otherwise = ((toNumber $ floor countAtStart) + _) <$> onset
-        where onset = if (o >= start) && (o < end) then (Just o) else Nothing 
+        where onset = if (o == start) && (o < end) then (Just o) else Nothing -- 0.0 >= 0.0 && 0.0 < 0.1
 
 getDecimalPart:: Number -> Number
 getDecimalPart x = x - (toNumber $ floor x)
