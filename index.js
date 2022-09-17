@@ -26806,7 +26806,7 @@ var showExpression = {
       return show12(v.value0.value0) + (" " + (show23(v.value0.value1) + (" " + show32(v.value1))));
     }
     ;
-    throw new Error("Failed pattern match at Unleash (line 225, column 1 - line 227, column 70): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Unleash (line 226, column 1 - line 228, column 70): " + [v.constructor.name]);
   }
 };
 var show5 = /* @__PURE__ */ show(/* @__PURE__ */ showList(showExpression));
@@ -26860,7 +26860,7 @@ var onsetForWindow = function(o) {
       return function(end) {
         if (start > end) {
           var onset = function() {
-            var $91 = o + 1 >= start && o + 1 < end + 1;
+            var $91 = o >= start && o < end + 1;
             if ($91) {
               return new Just(o);
             }
@@ -26897,24 +26897,16 @@ var naturalOrFloat = /* @__PURE__ */ function() {
 var justFractional = function(x) {
   return x - toNumber(floor2(x));
 };
-var getPercent = function(x) {
+var getDecimalPart = function(x) {
   return x - toNumber(floor2(x));
 };
 var simpleEventsOnTempo = function(t1) {
   return function(eval1) {
     return function(ws1) {
       return function(we1) {
-        var end = getPercent(timeToCountNumber(t1)(we1));
+        var end = getDecimalPart(timeToCountNumber(t1)(we1));
         var countAtStart = timeToCountNumber(t1)(ws1);
-        var index3 = function() {
-          var $93 = countAtStart > 0.8;
-          if ($93) {
-            return countAtStart;
-          }
-          ;
-          return countAtStart;
-        }();
-        var start = getPercent(countAtStart);
+        var start = getDecimalPart(countAtStart);
         var window = onsetForWindow(0)(countAtStart)(start)(end);
         var ratW = map11(toRat)(window);
         return map11(countToTime(t1))(ratW);
@@ -26953,7 +26945,7 @@ var fromDateTimeToPosix = function(v) {
     return Nothing.value;
   }
   ;
-  throw new Error("Failed pattern match at Unleash (line 201, column 1 - line 201, column 53): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Unleash (line 202, column 1 - line 202, column 53): " + [v.constructor.name]);
 };
 var tempoChanger = function(v) {
   return function(mark) {
@@ -26977,8 +26969,8 @@ var tempoChanger = function(v) {
 var filterSpan = function(x) {
   return function(ws1) {
     return function(we1) {
-      var $104 = greaterThan1(x)(ws1) && lessThan1(x)(we1);
-      if ($104) {
+      var $103 = greaterThan1(x)(ws1) && lessThan1(x)(we1);
+      if ($103) {
         return new Just(x);
       }
       ;
@@ -26997,8 +26989,8 @@ var evalTimeandQuantToPsx = function(t1) {
             var cuentaQ = cuentaInGrid + q;
             var posInTempo = toRat(cuentaQ);
             var calibrated = function() {
-              var $105 = justFractional(cuenta) <= c;
-              if ($105) {
+              var $104 = justFractional(cuenta) <= c;
+              if ($104) {
                 return cuenta;
               }
               ;

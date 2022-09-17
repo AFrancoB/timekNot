@@ -177,9 +177,9 @@ tempoChanger (Tuple sample ene) mark t eval ws we =
 simpleEventsOnTempo:: Tempo -> DateTime -> DateTime -> DateTime -> Maybe DateTime
 simpleEventsOnTempo t eval ws we =
     let countAtStart = timeToCountNumber t ws -- $ timeToCountNumber t ws --Number
-        index = if countAtStart > 0.8 then countAtStart else countAtStart
-        start = getPercent countAtStart
-        end = getPercent $ timeToCountNumber t we
+      --  index = if countAtStart > 0.8 then countAtStart else countAtStart
+        start = getDecimalPart countAtStart
+        end = getDecimalPart $ timeToCountNumber t we
         onset = 0.0 -- the percent of the moment in which an onset happens in the refrain
         window = onsetForWindow onset countAtStart start end
         ratW = toRat <$> window
@@ -189,12 +189,13 @@ simpleEventsOnTempo t eval ws we =
 onsetForWindow:: Number -> Number -> Number -> Number -> Maybe Number
 onsetForWindow o countAtStart start end 
     | (start > end) = ((toNumber $ floor countAtStart) + _) <$> onset
-        where onset = if ((o+1.0) >= start) && ((o+1.0) < (end+1.0)) then (Just o) else Nothing
+        where onset = if (o >= start) && (o < (end+1.0)) then (Just o) else Nothing 
+        -- 0.9 >= 0.9 && 0.9 < 1.0
     | otherwise = ((toNumber $ floor countAtStart) + _) <$> onset
         where onset = if (o >= start) && (o < end) then (Just o) else Nothing 
 
-getPercent:: Number -> Number
-getPercent x = x - (toNumber $ floor x)
+getDecimalPart:: Number -> Number
+getDecimalPart x = x - (toNumber $ floor x)
 
 ----
 
