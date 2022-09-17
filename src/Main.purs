@@ -40,8 +40,8 @@ import Parsing
 
 launch :: Effect Unleash
 launch = do
-  log "timekNot-CU: launch"
-  ast <- new $ P (Tuple "" 0) $ Q 0.0 0.0
+  log "Unleash-Windsor: launch"
+  ast <- new $ Program $ L.fromFoldable [S (Tuple "" 0) $ Q 0.0 0.0]
   tempo <- newTempo (1 % 1) >>= new 
   eval <- nowDateTime >>= new
   pure { ast, tempo, eval}  
@@ -53,7 +53,7 @@ evaluate unleash str = do
  -- log $ show passage
   -- placeholder: assume any evaluation yields the valid program
   eval <- nowDateTime
-  let pr = pErrorToString $ runParser str parseSample -- :: Either String AST 
+  let pr = pErrorToString $ runParser str parseProgram -- :: Either String AST 
   case pr of
     Left error -> pure $ { success: false, error }
     Right p -> do
@@ -100,6 +100,6 @@ unleashToForeigns un ws we = do
     pure $ map unsafeToForeign events
 
 fromProgramToArray:: Program -> Tempo -> DateTime -> DateTime -> DateTime -> Array {whenPosix:: Number, s:: String, n:: Int}
-fromProgramToArray prog t ws we eval = [actualise prog t eval ws we]
+fromProgramToArray prog t ws we eval = A.fromFoldable $ actualise prog t eval ws we
 
 
