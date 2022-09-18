@@ -26806,7 +26806,7 @@ var showExpression = {
       return show12(v.value0.value0) + (" " + (show23(v.value0.value1) + (" " + show32(v.value1))));
     }
     ;
-    throw new Error("Failed pattern match at Unleash (line 226, column 1 - line 228, column 70): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Unleash (line 236, column 1 - line 238, column 70): " + [v.constructor.name]);
   }
 };
 var show5 = /* @__PURE__ */ show(/* @__PURE__ */ showList(showExpression));
@@ -26814,6 +26814,9 @@ var showProgram = {
   show: function(v) {
     return show5(v.value0);
   }
+};
+var wholePart = function(x) {
+  return toNumber(floor2(x));
 };
 var tokenParser = /* @__PURE__ */ makeTokenParser(haskellStyle);
 var whitespace = /* @__PURE__ */ function() {
@@ -26854,65 +26857,11 @@ var stringLit = /* @__PURE__ */ function() {
 var semi = /* @__PURE__ */ function() {
   return tokenParser.semi;
 }();
-var onsetForWindow = function(o) {
-  return function(countAtStart) {
-    return function(start) {
-      return function(end) {
-        if (start > end) {
-          var onset = function() {
-            var $91 = o === start && o < end + 1;
-            if ($91) {
-              return new Just(o);
-            }
-            ;
-            return Nothing.value;
-          }();
-          return map11(function(v) {
-            return toNumber(floor2(countAtStart)) + v;
-          })(onset);
-        }
-        ;
-        if (otherwise) {
-          var onset = function() {
-            var $92 = o === start && o < end;
-            if ($92) {
-              return new Just(o);
-            }
-            ;
-            return Nothing.value;
-          }();
-          return map11(function(v) {
-            return toNumber(floor2(countAtStart)) + v;
-          })(onset);
-        }
-        ;
-        throw new Error("Failed pattern match at Unleash (line 189, column 1 - line 189, column 70): " + [o.constructor.name, countAtStart.constructor.name, start.constructor.name, end.constructor.name]);
-      };
-    };
-  };
-};
 var naturalOrFloat = /* @__PURE__ */ function() {
   return tokenParser.naturalOrFloat;
 }();
 var justFractional = function(x) {
   return x - toNumber(floor2(x));
-};
-var getDecimalPart = function(x) {
-  return x - toNumber(floor2(x));
-};
-var simpleEventsOnTempo = function(t1) {
-  return function(eval1) {
-    return function(ws1) {
-      return function(we1) {
-        var end = getDecimalPart(timeToCountNumber(t1)(we1));
-        var countAtStart = timeToCountNumber(t1)(ws1);
-        var start = getDecimalPart(countAtStart);
-        var window = onsetForWindow(0)(countAtStart)(start)(end);
-        var ratW = map11(toRat)(window);
-        return map11(countToTime(t1))(ratW);
-      };
-    };
-  };
 };
 var fromTailToMaybeInt = function(strs) {
   return bind5(tail(strs))(function(a) {
@@ -26945,32 +26894,13 @@ var fromDateTimeToPosix = function(v) {
     return Nothing.value;
   }
   ;
-  throw new Error("Failed pattern match at Unleash (line 202, column 1 - line 202, column 53): " + [v.constructor.name]);
-};
-var tempoChanger = function(v) {
-  return function(mark) {
-    return function(t1) {
-      return function(eval1) {
-        return function(ws1) {
-          return function(we1) {
-            var newTempo2 = tempoChangeWithSameCount$prime(t1)(mark)(eval1);
-            var psx = fromMaybe(0)(fromDateTimeToPosix(simpleEventsOnTempo(newTempo2)(eval1)(ws1)(we1)));
-            return {
-              whenPosix: psx,
-              s: v.value0,
-              n: v.value1
-            };
-          };
-        };
-      };
-    };
-  };
+  throw new Error("Failed pattern match at Unleash (line 212, column 1 - line 212, column 53): " + [v.constructor.name]);
 };
 var filterSpan = function(x) {
   return function(ws1) {
     return function(we1) {
-      var $103 = greaterThan1(x)(ws1) && lessThan1(x)(we1);
-      if ($103) {
+      var $95 = greaterThan1(x)(ws1) && lessThan1(x)(we1);
+      if ($95) {
         return new Just(x);
       }
       ;
@@ -26989,8 +26919,8 @@ var evalTimeandQuantToPsx = function(t1) {
             var cuentaQ = cuentaInGrid + q;
             var posInTempo = toRat(cuentaQ);
             var calibrated = function() {
-              var $104 = justFractional(cuenta) <= c;
-              if ($104) {
+              var $96 = justFractional(cuenta) <= c;
+              if ($96) {
                 return cuenta;
               }
               ;
@@ -27010,6 +26940,47 @@ var singleVirtualToActual = function(v) {
         return function(ws1) {
           return function(we1) {
             var psx = fromMaybe(0)(fromDateTimeToPosix(evalTimeandQuantToPsx(t1)(eval1)(ws1)(we1)(v1.value0)(v1.value1)));
+            return {
+              whenPosix: psx,
+              s: v.value0,
+              n: v.value1
+            };
+          };
+        };
+      };
+    };
+  };
+};
+var decimalPart = function(x) {
+  return x - wholePart(x);
+};
+var simpleEventsOnTempo = function(t1) {
+  return function(eval1) {
+    return function(ws1) {
+      return function(we1) {
+        var countStart = timeToCountNumber(t1)(ws1);
+        var countEnd = timeToCountNumber(t1)(we1);
+        var filterCount = function() {
+          var $107 = decimalPart(countStart) <= 0 && decimalPart(countEnd) > 0;
+          if ($107) {
+            return new Just(wholePart(countStart) + 0);
+          }
+          ;
+          return Nothing.value;
+        }();
+        return map11(countToTime(t1))(map11(toRat)(filterCount));
+      };
+    };
+  };
+};
+var tempoChanger = function(v) {
+  return function(mark) {
+    return function(t1) {
+      return function(eval1) {
+        return function(ws1) {
+          return function(we1) {
+            var newTempo2 = tempoChangeWithSameCount$prime(t1)(mark)(eval1);
+            var psx = fromMaybe(0)(fromDateTimeToPosix(simpleEventsOnTempo(newTempo2)(eval1)(ws1)(we1)));
             return {
               whenPosix: psx,
               s: v.value0,
