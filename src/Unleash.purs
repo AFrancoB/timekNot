@@ -174,16 +174,16 @@ tempoChanger (Tuple sample ene) mark t eval ws we =
         psx = fromMaybe 0.0 $ fromDateTimeToPosix $ simpleEventsOnTempo newTempo eval ws we
     in {whenPosix: psx, s: sample, n: ene}
 
-simpleEventsOnTempo:: Tempo -> DateTime -> DateTime -> DateTime -> Maybe DateTime
-simpleEventsOnTempo t eval ws we =
+simpleEventsOnTempo':: Tempo -> DateTime -> DateTime -> DateTime -> Maybe DateTime
+simpleEventsOnTempo' t eval ws we =
     let countStart = timeToCountNumber t ws
         countEnd = timeToCountNumber t we
         onset = 0.0
         filterCount = if (decimalPart countStart <= onset) && (decimalPart countEnd > onset) then Just (wholePart countStart + onset) else Nothing
     in countToTime t <$> (toRat <$> filterCount)
     
-simpleEventsOnTempo':: Tempo -> DateTime -> DateTime -> DateTime -> Maybe DateTime
-simpleEventsOnTempo' t eval ws we =
+simpleEventsOnTempo:: Tempo -> DateTime -> DateTime -> DateTime -> Maybe DateTime
+simpleEventsOnTempo t eval ws we =
     let countAtStart = timeToCountNumber t ws -- $ timeToCountNumber t ws --Number
       --  index = if countAtStart > 0.8 then countAtStart else countAtStart
         start = decimalPart countAtStart

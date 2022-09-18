@@ -26857,6 +26857,43 @@ var stringLit = /* @__PURE__ */ function() {
 var semi = /* @__PURE__ */ function() {
   return tokenParser.semi;
 }();
+var onsetForWindow = function(o) {
+  return function(countAtStart) {
+    return function(start) {
+      return function(end) {
+        if (start > end) {
+          var onset = function() {
+            var $91 = o + 1 >= start && o + 1 < end + 1;
+            if ($91) {
+              return new Just(o + 1);
+            }
+            ;
+            return Nothing.value;
+          }();
+          return map11(function(v) {
+            return wholePart(countAtStart) + v;
+          })(onset);
+        }
+        ;
+        if (otherwise) {
+          var onset = function() {
+            var $92 = o >= start && o < end;
+            if ($92) {
+              return new Just(o);
+            }
+            ;
+            return Nothing.value;
+          }();
+          return map11(function(v) {
+            return wholePart(countAtStart) + v;
+          })(onset);
+        }
+        ;
+        throw new Error("Failed pattern match at Unleash (line 196, column 1 - line 196, column 70): " + [o.constructor.name, countAtStart.constructor.name, start.constructor.name, end.constructor.name]);
+      };
+    };
+  };
+};
 var naturalOrFloat = /* @__PURE__ */ function() {
   return tokenParser.naturalOrFloat;
 }();
@@ -26958,17 +26995,12 @@ var simpleEventsOnTempo = function(t1) {
   return function(eval1) {
     return function(ws1) {
       return function(we1) {
-        var countStart = timeToCountNumber(t1)(ws1);
-        var countEnd = timeToCountNumber(t1)(we1);
-        var filterCount = function() {
-          var $107 = decimalPart(countStart) <= 0 && decimalPart(countEnd) > 0;
-          if ($107) {
-            return new Just(wholePart(countStart) + 0);
-          }
-          ;
-          return Nothing.value;
-        }();
-        return map11(countToTime(t1))(map11(toRat)(filterCount));
+        var end = decimalPart(timeToCountNumber(t1)(we1));
+        var countAtStart = timeToCountNumber(t1)(ws1);
+        var start = decimalPart(countAtStart);
+        var window = onsetForWindow(0)(countAtStart)(start)(end);
+        var ratW = map11(toRat)(window);
+        return map11(countToTime(t1))(ratW);
       };
     };
   };
