@@ -1,4 +1,4 @@
-module Unleash (parseProgram,actualise,Program(..),Expression(..),Quant(..),TempoMark(..),Unleash(..),simpleEventsOnTempo',tempoMarkToTempo,onsetForWindow,t,eval,ws,we) where
+module Unleash (parseProgram,actualise,Program(..),Expression(..),Quant(..),TempoMark(..),Unleash(..),simpleEventsOnTempo,tempoChanger,tempoMarkToTempo,nextBeat,findBeats',t,eval,ws,we) where
 
 import Prelude
 
@@ -69,7 +69,9 @@ parseTempoChange = do
 --    y <- naturalOrFloat
     pure $ TempoMark $ asNumber x
 
+-- parameters are map key 
 
+-- Map Text Thing -> forall opts. Record opts
 
 --- solve this later
 -- parseRhythmFigure:: P Rational
@@ -128,15 +130,16 @@ asNumber (Right x) = x
 ---
 
 actualise:: Program -> Tempo -> DateTime -> DateTime -> DateTime -> List {whenPosix:: Number, s:: String, n:: Int}
-actualise (Program exp) t eval ws we = map (\x -> actualiseExps x t eval ws we) exp
+actualise (Program exp) t eval ws we = concat events
+    where events = map (\x -> actualiseExps x t eval ws we) exp -- List of Lists
 
-actualiseExps:: Expression -> Tempo -> DateTime -> DateTime -> DateTime -> {whenPosix:: Number, s:: String, n:: Int}
-actualiseExps (S sn q) t eval ws we = singleVirtualToActual sn q t eval ws we
+actualiseExps:: Expression -> Tempo -> DateTime -> DateTime -> DateTime -> List {whenPosix:: Number, s:: String, n:: Int}
+actualiseExps (S sn q) t eval ws we = fromFoldable $ [singleVirtualToActual sn q t eval ws we]
 actualiseExps (T sn newt) t eval ws we = tempoChanger sn newt t eval ws we
 
 singleVirtualToActual:: (Tuple String Int) -> Quant -> Tempo -> DateTime -> DateTime -> DateTime -> {whenPosix:: Number, s:: String, n:: Int}
 singleVirtualToActual (Tuple sample ene) (Q quant calibrate) t eval ws we = {whenPosix: psx, s: sample, n: ene}
-    where psx = fromMaybe 0.0 $ fromDateTimeToPosix $ evalTimeandQuantToPsx t eval ws we quant calibrate
+    where psx = fromMaybe 0.0 $ fromDateTimeToPosixMaybe $ evalTimeandQuantToPsx t eval ws we quant calibrate
 
 filterSpan:: DateTime -> DateTime -> DateTime -> Maybe DateTime
 filterSpan x ws we = if (x > ws && x < we) then (Just x) else Nothing
@@ -168,38 +171,40 @@ tempoChangeWithSameCount' oldT (TempoMark mark) moment = {freq: newT.freq, time:
     where newT = tempoMarkToTempo oldT mark
           newCount = (timeToCountNumber oldT moment) - (timeToCountNumber newT moment)
 
-tempoChanger:: (Tuple String Int) -> TempoMark -> Tempo -> DateTime -> DateTime -> DateTime -> {whenPosix:: Number, s:: String, n:: Int}
+tempoChanger:: (Tuple String Int) -> TempoMark -> Tempo -> DateTime -> DateTime -> DateTime -> List {whenPosix:: Number, s:: String, n:: Int}
 tempoChanger (Tuple sample ene) mark t eval ws we = 
     let newTempo = tempoChangeWithSameCount' t mark eval
-        psx = fromMaybe 0.0 $ fromDateTimeToPosix $ simpleEventsOnTempo newTempo eval ws we
-    in {whenPosix: psx, s: sample, n: ene}
-
-simpleEventsOnTempo':: Tempo -> DateTime -> DateTime -> DateTime -> Maybe DateTime
-simpleEventsOnTempo' t eval ws we =
-    let countStart = timeToCountNumber t ws
-        countEnd = timeToCountNumber t we
-        onset = 0.0
-        filterCount = if (decimalPart countStart <= onset) && (decimalPart countEnd > onset) then Just (wholePart countStart + onset) else Nothing
-    in countToTime t <$> (toRat <$> filterCount)
+        psxs = map fromDateTimeToPosix $ simpleEventsOnTempo newTempo eval ws we -- List Number
+    in map (\x -> {whenPosix: x, s: sample, n: ene}) psxs
     
-simpleEventsOnTempo:: Tempo -> DateTime -> DateTime -> DateTime -> Maybe DateTime
+simpleEventsOnTempo:: Tempo -> DateTime -> DateTime -> DateTime -> List DateTime
 simpleEventsOnTempo t eval ws we =
-    let countAtStart = timeToCountNumber t ws -- $ timeToCountNumber t ws --Number
-      --  index = if countAtStart > 0.8 then countAtStart else countAtStart
-        start = decimalPart countAtStart
-        end = decimalPart $ timeToCountNumber t we
-        onset = 0.0 -- the percent of the moment in which an onset happens in the refrain
-        window = onsetForWindow onset countAtStart start end
-        ratW = toRat <$> window
-    in countToTime t <$> ratW
+    let onset = 0.0
+        window = findBeats t ws we 1.0 onset 
+        ratW = map toRat window
+    in map (\x -> countToTime t x) ratW
 
-onsetForWindow:: Number -> Number -> Number -> Number -> Maybe Number
-onsetForWindow o countAtStart start end 
-    | (start > end) = ((wholePart countAtStart) + _) <$> onset
-        where onset = if ((o+1.0) >= start) && ((o+1.0) < (end+1.0)) then (Just (o+1.0)) else Nothing 
-        -- 0.9 >= 0.9 && 0.9 < 1.0
-    | otherwise = ((wholePart countAtStart) + _) <$> onset
-        where onset = if (o >= start) && (o < end) then (Just o) else Nothing
+-- findBeats and nextBeat were adapted from the tempi library. 
+-- what is understood as metr here is what I understand as proportion. 1:2:3 where 1 is the tempo 2 is twice as fast, 3 is three times as fast, etc. So, metre is the reciprocal of proportion*****
+findBeats:: Tempo -> DateTime -> DateTime -> Number -> Number -> List Number
+findBeats t ws' we' metre offset = findBeats' metre offset ws we
+    where ws = timeToCountNumber t ws'
+          we = timeToCountNumber t we'
+
+findBeats':: Number -> Number -> Number -> Number -> List Number
+findBeats' metre offset ws we
+    | nextBeat metre offset ws >= we = fromFoldable []
+    | otherwise = nextBeat metre offset ws : findBeats' metre offset (ws+metre) we
+
+nextBeat:: Number -> Number -> Number -> Number
+nextBeat metre offset ws
+    | metre == 0.0 = 0.0
+    | otherwise =
+        let wsInMetre = ws/metre
+            offsetInMetre = decimalPart $ offset/metre
+            nextBeatInMetre | offsetInMetre >= (decimalPart wsInMetre) = (toNumber $ floor wsInMetre)  + offsetInMetre
+                            | otherwise = (toNumber $ ceil wsInMetre) + offsetInMetre
+        in nextBeatInMetre * metre
 
 decimalPart:: Number -> Number
 decimalPart x = x - (wholePart x)
@@ -209,9 +214,12 @@ wholePart x = toNumber $ floor x
 
 ----
 
-fromDateTimeToPosix:: Maybe DateTime -> Maybe Number
-fromDateTimeToPosix (Just x) = Just $ (unwrap $ unInstant $ fromDateTime x)/1000.0000
-fromDateTimeToPosix Nothing = Nothing
+fromDateTimeToPosix:: DateTime -> Number
+fromDateTimeToPosix x = (unwrap $ unInstant $ fromDateTime x)/1000.0000
+
+fromDateTimeToPosixMaybe:: Maybe DateTime -> Maybe Number
+fromDateTimeToPosixMaybe (Just x) = Just $ (unwrap $ unInstant $ fromDateTime x)/1000.0000
+fromDateTimeToPosixMaybe Nothing = Nothing
 
 toRat:: Number -> Rational
 toRat x = 
