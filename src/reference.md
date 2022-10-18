@@ -8,13 +8,13 @@ The X/O notation has some advantages:
 
 - Makes the rhythmic idea very explicit and visible.
 - Separates the sound parameters from the temporal ones.
-- The position of the 'x' and 'o' keys in many keyboards can allow the performer to tap the rhythm desired using body gestures. No, there is no computational trick involved here, just a way to tap your rhythms (aka, feeling them in your body) rather than xxxxxx them with your reason.
+- The position of the 'x' and 'o' keys in many keyboards can allow the performer to tap the rhythm desired using body gestures. No, there is no computational trick involved here, just a way to tap your rhythms (aka, feeling them in your body rather than rationalising them with your head).
 
 This is the most basic rhythm notation program:
 
 `x` 
 
-This will produce a single event with a duration of 1 tempo unit. If the tempo is 120 bpm the 1/4, each x will trigger an event with such duration. The `o` indicates an event that is silent. So the following program indicates a pattern of silent and sounding events:
+This will produce a single event with a frequency of 1 tempo unit. If the tempo is 120 bpm, each x will trigger an event with a duration of 0.5 seconds. The `o` indicates an event that is silent. So the following program indicates a pattern of silent and sounding events:
 
 `xoxo`
 
@@ -32,13 +32,13 @@ The x/o binary notation at the top level is additive. This means that any new on
 
 `[xxoxo]`
 
-Anything between brackets will have a total duration of 1 tempo unit. Each event of the program example above will have a duration of 1/5 of one tempo unit. 
+Anything between brackets will have a total duration of 1 tempo unit. Each event of the program example above will have a duration of 1/5 of one tempo unit, if the tempo is 120 bpms each X/O will have a duration of 0.5/5 (0.1 seconds per XO). 
 
 The subdivision can be recursive:
 
 `[xxx[ox]]`
 
-The total duration of this program is 1 tempo unit. The duration of the three `xxx` is 1/4 and the total duration of the events in the second bracket ar 1/4 as well. The duration of each event in the inner bracket is of 1/8 each.
+The frequency of this program is 1 tempo unit. The frequency of the three `xxx` is 1/4 and the frequency of the events in the second bracket ar 1/4 as well. The frequency of each event in the inner bracket is of 1/8 each.
 
 As can be observed in the previous example, this notation can be combined with simple X/O notation:
 
@@ -96,6 +96,8 @@ To mark the end of the rhythmic notation from the rest of the program I am using
 and
 
 `||` Which will produce the rhythmic idea once. Normally this separator has to be used with the `eval` mode in order for the output to be predictable. If it is used in `origin` mode, the program will have happened at the point in time where the time-keeping engine being used marks the start of the beat count. 
+
+/////////////////////////  UNDER THIS LINE IS A WORK IN PROGRESS STILL ////////////////////////////////////
 
 ## Polytemporal functions
 
