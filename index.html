@@ -1,5 +1,87 @@
 <html>
-    <body>
-        <script src="./timekNot.js" type="module"></script>
+    <style>
+        html {
+            height: 100%;
+            width: 100%;
+            font-family: 'monoidnormal', Courier, Arial, Helvetica, sans-serif;
+            background-color: black;
+            position: relative;
+            min-height: 100%;
+        }
+        .whole-page {
+            background-color: black;
+            width: 100%;
+            height: 100%;
+            color: white;
+        }
+        .header {
+            display: flex;
+            position: absolute;
+            left: 0%;
+            top: 0%;
+            margin: 10px;
+        }
+        .code {
+            color: white;
+            background-color: black;
+            position: absolute;
+            left: 0%;
+            top: 10%;
+            margin: 10px
+        }
+        .visualisation {
+            position: absolute;
+            position: absolute;
+            left: 0%;
+            top: 10%;
+            margin: 10px
+        }
+
+    </style>
+
+    <script src="./src/WebDirt/WebDirt-packed.js"></script> <!-- import WebDirt JS library -->
+    
+    <body onload="launchPage()">
+        <script src="./index.js" type="module"> // perhaps here we need the timeknot.js file... not sure...
+            import {launch, launchDirt , main, renderStandalone } from './index.js'
+
+            function launchPage(){
+	            window._tkRecord = launch();
+	            window._dirt = launchDirt();
+	            render();
+            }
+            
+            function doEvaluate() {
+                var tx = document.getElementById("code").value;
+                var rc = evaluate(_.tkRecord)(tx)()
+                document.getElementById('status').textContent = rc;
+            }
+
+            function render(){
+                renderStandalone(_tkRecord)(_dirt)();
+                setTimeout(render,100); // evaluate each 100 miliseconds
+            }
+            
+            window.launchPage = launchPage;
+            window.doEvaluate = doEvaluate;
+            window.render = render;
+        </script>
+
+            <svg class="visualisation"></svg>
+            <div class="whole-page">
+            <div  class="header">
+                <div>ICON HERE</div> 
+                <div>timekNot - a live coding cognitive territory for poly-temporal explorations</div>
+            </div>
+            <div>
+                <textarea id="code" rows="20" cols="69" onkeydown="if(event.keyCode===9){var v=this.value}">cody code
+                </textarea>
+            </div>
+            <div id=buttonPlace>
+                <button onclick="doEvaluate()"> EVAL </button> 
+                
+                <div id="status"> </div>
+                </div>
+        </div>
     </body>
 </html>

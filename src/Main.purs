@@ -33,20 +33,65 @@ import Data.Enum
 
 import Data.Newtype
 
+import WebDirt
+
 import Parsing
 
 import AST
 import Rhythmic
 import Motor
 
+main :: Effect Unit 
+main = pure unit
+
+--launched from js end. provides a wd instance
+launchDirt :: Effect WebDirt
+launchDirt = do
+  dirt <- newWebDirt { sampleMapUrl: "samples/sampleMap.json", sampleFolder: "samples" } -- make this the proper sampleMap!!!!!
+  initializeWebAudio dirt
+  pure dirt
 
 launch :: Effect TimekNot
 launch = do
   log "timekNot-CU: launch"
+  launchTime <- nowDateTime
   ast <- new $ Passage (Onsets $ L.fromFoldable []) (L.fromFoldable []) Origin true
-  tempo <- newTempo (1 % 1) >>= new 
-  eval <- nowDateTime >>= new
-  pure { ast, tempo, eval}  
+  tempo <- newTempo (1 % 1) >>= new -- why the bind? --- break into two lines
+  eval <- new launchTime
+  wS <- new launchTime
+  wE <- new launchTime
+  pure { ast, tempo, eval, wS, wE}  
+
+renderStandalone :: TimekNot -> WebDirt -> Effect Unit
+renderStandalone tk dirt = do 
+  now <- nowDateTime  -- what is this?
+  prevWE <- read $ tk.wE 
+  let future = fromMaybe now $ adjust (Milliseconds 100.00) now -- :: Milliseconds
+  if prevWE <= future then do
+    let wS = prevWE
+    let wE = fromMaybe now $ adjust (Milliseconds 100.0) wS 
+    write wS tk.wS
+    write wE tk.wE
+    t <- read $ tk.tempo -- is this usefull??
+    
+    playDirts dirt tk
+  else
+    log $ show "sleep"
+
+playDirts:: WebDirt -> TimekNot -> Effect Unit
+playDirts dirt tk = do
+  events <- scheduleEventsStandAlone tk
+  x <- traverse_ (\x -> playSample dirt x) events  -- type of this??
+  pure x
+
+scheduleEventsStandAlone:: TimekNot -> Effect (Array {whenPosix:: Number, s:: String, n:: Int})
+scheduleEventsStandAlone tk = do
+    ast <- read tk.ast
+    t <- read tk.tempo
+    eval <- read tk.eval
+    ws <- read tk.wS
+    we <- read tk.wE
+    pure $ fromPassageToArray ast t ws we eval
 
 evaluate :: TimekNot -> String -> Effect { success :: Boolean, error :: String }
 evaluate timekNot str = do
@@ -71,7 +116,7 @@ setTempo :: TimekNot -> ForeignTempo -> Effect Unit
 setTempo timekNot t = write (fromForeignTempo t) timekNot.tempo
 
 -- here a func that goes from rhythmicInto (passing through map) Event
-scheduleNoteEvents :: TimekNot -> Number -> Number -> forall opts. Effect (Array Foreign)
+scheduleNoteEvents :: TimekNot -> DateTime -> DateTime -> forall opts. Effect (Array Foreign)
 scheduleNoteEvents tk ws we = timekNotToForeigns tk ws we
 
 -- make unsafe function and correct with david's advice later
@@ -85,10 +130,10 @@ unsafeMaybeMilliseconds:: Maybe Instant -> Instant
 unsafeMaybeMilliseconds (Just x) = x
 unsafeMaybeMilliseconds Nothing = unsafeMaybeMilliseconds $ instant $ Milliseconds 0.0
 
-timekNotToForeigns:: TimekNot -> Number -> Number -> forall opts. Effect (Array Foreign)
+timekNotToForeigns:: TimekNot -> DateTime -> DateTime -> forall opts. Effect (Array Foreign)
 timekNotToForeigns tk ws we = do
-    let ws' = numToDateTime (ws * 1000.0000)
-    let we' = numToDateTime (we * 1000.0000)
+--    let ws' = numToDateTime (ws * 1000.0000)
+--    let we' = numToDateTime (we * 1000.0000)
     passage <- read tk.ast
     t <- read tk.tempo
     eval <- read tk.eval
@@ -96,7 +141,7 @@ timekNotToForeigns tk ws we = do
     log $ show passage
     log $ show ws
     log $ show we
-    let events = fromPassageToArray passage t ws' we' eval
+    let events = fromPassageToArray passage t ws we eval
     log $ show events
     pure $ map unsafeToForeign events
 

@@ -10,7 +10,9 @@ import Data.Maybe
 type TimekNot = {
   ast :: Ref Passage,
   tempo :: Ref Tempo,
-  eval :: Ref DateTime
+  eval :: Ref DateTime,
+  wS :: Ref DateTime,
+  wE :: Ref DateTime
   }
 
 data Passage = Passage Rhythmic (List Aural) Nose Boolean

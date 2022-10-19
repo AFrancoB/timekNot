@@ -26,7 +26,7 @@ import Parsing.Language (haskellStyle)
 import Parsing.Token (makeTokenParser)
 
 
--- 19th 3:30 next meeting
+-- 26th at 3:00 next meeting (rework the calendar so it becomes more linear)
 
 type P = ParserT String Identity 
 
