@@ -1,30 +1,18 @@
-module Motor (passageToEvents,test,getEventIndex) where
+module Motor (eventProcess,programToWaste) where
 
 import Prelude
-import Prim.Boolean
-
-import Data.Either
-import Data.Identity
-import Data.Array as Arr
-import Data.List.Lazy hiding (Pattern(..))
-import Data.Typelevel.Bool
-import Data.Int as I
+import Data.Int
+import Data.List
+import Data.List.Lazy (replicate,cycle) --  import both lists as qualified....
+import Data.List.Lazy as Lz
+import Data.List.NonEmpty (toList)
 import Data.Tuple
-import Data.Tuple.Nested
-
-import Data.List as L
-
-import Data.Functor
-
-import Data.Maybe hiding (optional)
-
-import Control.Monad
-
-import Effect (Effect)
-import Effect.Console (log)
-
-import Data.Rational
-import Data.Ratio
+import Data.Rational as R
+import Data.Rational (Rational,(%),fromInt)
+import Data.Maybe
+import Data.Bifunctor
+-- import Data.String (take)
+import Data.String as Str
 
 import Effect (Effect)
 import Effect.Now (nowDateTime)
@@ -36,279 +24,265 @@ import Data.DateTime.Instant
 import Data.Time.Duration
 import Data.Tempo
 import Data.Enum
-import Data.Map as M
 import Partial.Unsafe
 
+import Debug
+import QuickTestAndDebug
+
 import AST
-import Rhythmic
-import Aural
+import Helpers
+import QuickTestAndDebug
+-- xx[ox]x 
 
-test = passageToEvents' (Passage (Onsets $ L.fromFoldable [true,true,true,true,true]) (L.fromFoldable [Sample (L.fromFoldable ["bd","cp","808"]) EventI]) Eval true) t (ws 0 0) (we 2 0) eval
+-- xx[ox 1]x 1| xx[ox 2]x 2| xx[ox 3]x 3| xx[ox 4]x4  
+-- 12  3   4    12  3   4    12  3   4    12  3   4
 
--- passageToEvents':: Passage -> Tempo -> DateTime -> DateTime -> DateTime -> List (Maybe Event)
-passageToEvents' (Passage rhy aus nose rep) t ws we eval = 
-    let coords = fromPassageToCoord rhy t ws we eval nose -- Map Int Coord
-        lCoord' = snd <$> (M.toUnfoldable coords) -- List Coord, es decir: Nu In In
-        lCoord = nonRepeat rep lCoord'
-        aurals = arrangeAurals $ fromFoldable aus
---        s = last $ filter isSample $ fromFoldable aus
-        s = samplesWithPosix (auralIndex aurals.s) (lenRhyth rhy) (sampleWithIndex aurals.s) lCoord
+-- 1-2 3   4    56  7   8    9-10 11  12 13-14 15  16
+
+-- 2%4.0~~3%4.2.1 ☭ note "0 3 7"
+
+-- ☭ 🐚 samples "bd cp cp"
+
+-- ☭ 🐚 note "0 3 7"
+
+-- estribillo
+
+programToWaste:: Tempo -> DateTime -> DateTime -> DateTime -> Program -> List Waste
+programToWaste t ws we eval (Program rhy finitude aurals) = allAurals process aurals
+    where process = eventProcess t ws we rhy 
  
- --       n = last $ filter isN $ au  -- Maybe Aural 
-    in s
+allAurals:: Process -> List Aural -> List Waste 
+allAurals process aurals = concat $ map (\x -> auraliseMap process x) aurals
+
+auraliseMap:: Process -> Aural -> List Waste
+auraliseMap (Events xs) au = map (\x -> auralise x au) xs
+auraliseMap _ au = {s:"", whenPosix: 0.0} : Nil
+
+auralise:: Tuple Number (Tuple Boolean Int) -> Aural -> Waste
+auralise (Tuple psx (Tuple bool i)) (S xs seqType) 
+    | seqType == ByEvent = {s: s, whenPosix: psx}
+        where s = fromMaybe "" $ xs !! (i `mod` (length xs))
+    | otherwise = {s: "", whenPosix: 0.0}
+
+auralise (Tuple psx (Tuple bool i)) (N xs seqType) = {s: "", whenPosix: 0.0}
+
+testy t ws we = auraliseMap process $ S ("bd" : "cp" : "808" : Nil) ByEvent
+    where process = eventProcess t ws we (Rhythmics (x:x:x:x:Nil))
+
+eventProcess:: Tempo -> DateTime -> DateTime -> Rhythmic -> Process
+eventProcess t ws we (Rhythmics xs) = Events $ map (\x -> indexedOnsetToEvent x t) $ eventProcessXS t ws we (Rhythmics xs)
+eventProcess t ws we rhy =  
+    let xs = refrainWithIntraIndexes t ws we rhy -- list (Onset , Num) 
+        firstLocation = fromMaybe (Tuple (Onset false 0.0) 0.0) $ head $ xs
+        lastLocation = fromMaybe (Tuple (Onset false 0.0) 0.0) $ last $ xs
+        eventsLen = toNumber $ (length $ rhythmicToEventsDuration rhy)
+        refrainDur = rhythmicToRefrainDuration rhy
+        dbg3 = trace ("refrainTotalDur " <> show refrainDur) \_ -> refrainDur
+        dbg2 = trace ("eventsPerRefr " <> show eventsLen) \_ -> eventsLen
+        dbg1 = trace ("firstLocation " <> show firstLocation) \_ -> firstLocation
+        dbg7 = trace ("lastLocation " <> show lastLocation) \_ -> lastLocation
+        elapsedRefrains = fst (lmap (\(Onset bool beat)-> beat) firstLocation) / refrainDur
+        dbg4 = trace ("elapsedRefrains " <> show elapsedRefrains) \_ -> elapsedRefrains
+        offset = (toNumber $ floor elapsedRefrains) * eventsLen -- <- aqui esta el error
+        dbg5 = trace ("offset " <> show offset) \_ -> offset
+        is = sort $ concat $ map (manyCycles eventsLen) $ map toList $ groupAll $ map (\x -> offset + x) $ map snd xs
+        dbg6 = trace ("indices " <> show is) \_ -> is
+    in Events $ map (\x -> indexedOnsetToEvent x t) $ zipWith (\x i -> Tuple (fst x) i) xs is
+
+eventProcessXS:: Tempo -> DateTime -> DateTime -> Rhythmic -> List (Tuple Onset Number)
+eventProcessXS t ws we rhy = 
+    let xs = refrainWithIntraIndexes t ws we rhy
+        firstLocation = fromMaybe (Tuple (Onset false 0.0) 0.0) $ head $ xs
+        lastLocation = fromMaybe (Tuple (Onset false 0.0) 0.0) $ last $ xs
+        amountOfEvents = (length $ rhythmicToEventsDuration rhy)
+        refrainDur = rhythmicToRefrainDuration rhy
+        elapsedRefrains = fst (lmap (\(Onset bool beat)-> beat) firstLocation) / refrainDur
+        dbg0 = trace ("indices " <> show xs) \_ -> xs
+        dbg1 = trace ("firstLocation " <> show firstLocation) \_ -> firstLocation
+        dbg2 = trace ("lastLocation " <> show lastLocation) \_ -> lastLocation
+        dbg3 = trace ("refrainDur " <> show refrainDur) \_ -> refrainDur
+        dbg4 = trace ("elapsedRefrains " <> show elapsedRefrains) \_ -> elapsedRefrains
+        firstEvent = floor $ snd firstLocation
+        lastEvent = floor $ snd lastLocation
+        firstBeat = floor $ (\(Onset bool beat) -> beat/refrainDur) $ fst firstLocation -- this should be refrains not Cycles!!
+        lastBeat = floor $ (\(Onset bool beat) -> beat/refrainDur) $ fst lastLocation
+        dbg5 = trace ("firstBeat " <> show firstBeat) \_ -> firstBeat
+        dbg6 = trace ("lastBeat " <> show lastBeat) \_ -> lastBeat
+        offset = (floor elapsedRefrains) * amountOfEvents -- <- aqui esta el error
+        i = map (\x -> offset + x) $ amountOfRefrainsPerW firstBeat lastBeat firstEvent lastEvent amountOfEvents
+    in zipWith (\x y -> Tuple (fst x) $ toNumber y) xs i
+
+amountOfRefrainsPerW:: Int -> Int -> Int -> Int -> Int -> List Int
+amountOfRefrainsPerW firstR lastR firstE lastE lenE
+    | firstR == lastR = firstE .. lastE
+    | (firstR + 1) == (lastR) = concat $ fromFoldable [firstE..(lenE-1),lastEvents]
+        where lastEvents = map (\x -> x + lenE) $ 0..lastE
+    | otherwise = concat $ fromFoldable [firstE..(lenE -1),zpd,realLast]
+    where xs = fromFoldable $ replicate (lastR - firstR - 1) $ 0..(lenE - 1) 
+          scl = scanl (+) 0 $ fromFoldable $ replicate (length xs) lenE
+          zpd = concat $ zipWith (\x y -> map (\x -> x + y) x) xs scl
+          realLast = map (\x -> x + (floor $ (toNumber lenE) * (toNumber lastR))) $ 0..lastE 
 
 
-passageToEvents:: Passage -> Tempo -> DateTime -> DateTime -> DateTime -> List (Maybe Event)
-passageToEvents (Passage rhy aus nose rep) t ws we eval = 
-    let coords = fromPassageToCoord rhy t ws we eval nose -- Map Int Coord
-        lCoord' = snd <$> (M.toUnfoldable coords) -- List Coord, es decir: Nu In In
-        lCoord = nonRepeat rep lCoord'
-        aurals = arrangeAurals $ fromFoldable aus
---        s = last $ filter isSample $ fromFoldable aus
-        s = samplesWithPosix (auralIndex aurals.s) (lenRhyth rhy) (sampleWithIndex aurals.s) lCoord
- 
- --       n = last $ filter isN $ au  -- Maybe Aural 
-    in map toEvent s
+manyCycles:: Number -> List Number -> List Number
+manyCycles len grupo = (fromMaybe 0.0 $ head grupo) : (fromMaybe Nil $ init n)
+    where n = map (\x -> (fromMaybe 0.0 $ head grupo) + x) $ scanl (+) 0.0 $ fromFoldable (replicate (length grupo) len) 
 
-arrangeAurals:: List Aural -> Aurals
-arrangeAurals aus = 
-    let samples = last $ filter isSample $ fromFoldable aus
-        n = last $ filter isN $ fromFoldable aus
-    in {s: samples, n: n}
+---
+indexedOnsetToEvent:: Tuple Onset Number -> Tempo -> (Tuple Number (Tuple Boolean Int))
+indexedOnsetToEvent (Tuple (Onset bool beat) i) t = Tuple posix $ Tuple bool $ floor i 
+    where countInTime = countToTime t (toRat beat)
+          posix = ((unwrap $ unInstant $ fromDateTime countInTime)/1000.0000)
 
+---
 
-nonRepeat:: Boolean -> List Coordenada -> List Coordenada
-nonRepeat false x = filter nonRepeat' x
-nonRepeat true x = x
-
-nonRepeat':: Coordenada -> Boolean
-nonRepeat' (Coord _ 0 _) = true
-nonRepeat' (Coord _ _ _) = false
-
-lenRhyth:: Rhythmic -> Int
-lenRhyth (Onsets x) = length $ filter (\x -> x==true) $ fromFoldable x
-lenRhyth _ = 0 -- esto se debera hacer pronto en el futuro
-
-toEvent:: Maybe (Tuple Number String) -> Maybe Event
-toEvent (Just (Tuple posix sample)) = Just {whenPosix: posix, s: sample, n: 0}
-toEvent Nothing = Nothing
-
-auralIndex:: Maybe Aural -> Index
-auralIndex (Just (Sample _ i)) = i
-auralIndex (Just (N _ i)) = i
-auralIndex Nothing = EventI -- this feels very wrong...
-
-isSample:: Aural -> Boolean
-isSample (Sample _ _) = true
-isSample _ = false
-
-isN:: Aural -> Boolean
-isN (N _ _) = true
-isN _ = false
-
---
-getEventIndex:: Int -> Int -> Int -> Int
-getEventIndex p' len' e' = (I.round $ ((p*len) + e))
-            where p = I.toNumber p'
-                  len = I.toNumber len'
-                  e = I.toNumber e'
---
-
--- auralsWithPosix:: Index -> Int -> ???? -> List Coordenada -> List (Maybe (Tuple Number ????))
-
-samplesWithPosix:: Index -> Int -> List (Tuple String Int) -> List Coordenada -> List (Maybe (Tuple Number String))
-samplesWithPosix index len samples coords = map (eventForSample index len samples) coords
-
-eventForSample:: Index -> Int -> List (Tuple String Int) -> Coordenada -> Maybe (Tuple Number String)
-eventForSample EventI len samples (Coord posix p e) = attachPosixWithSample posix $ head $ filter (\s -> (mod (getEventIndex p len e) (length samples)) == (snd s)) samples
-eventForSample PassageI len samples (Coord posix p e) = attachPosixWithSample posix $ head $ filter (\s -> (mod p len) == (snd s)) samples
-eventForSample MetreI len samples (Coord posix p e) = attachPosixWithSample posix $ head $ fromFoldable []
-
-attachPosixWithSample:: Number -> Maybe (Tuple String Int) -> Maybe (Tuple Number String)
-attachPosixWithSample x (Just (Tuple st int)) = Just $ Tuple x st
-attachPosixWithSample x Nothing = Nothing
-
-sampleWithIndex:: Maybe Aural -> List (Tuple String Int)
-sampleWithIndex (Just (Sample au' i)) = zip au (0..(length au))
-        where au = fromFoldable au'
-sampleWithIndex _ = fromFoldable []
-sampleWithIndex Nothing = fromFoldable []
-
-fromPassageToCoord:: Rhythmic -> Tempo -> DateTime -> DateTime -> DateTime -> Nose -> M.Map Int Coordenada
-fromPassageToCoord rhy t ws we eval nose = 
-    let x = fromRhythmicToList rhy
-        passageLength = fromInt $ length x   -- oDur
-        onsets = (fromInt <<< snd) <$> (filter (\x -> fst x == true) $ zip x (0..(length x)))
-        oPercen = map (toNumber <<< (_/passageLength)) onsets
-    in passagePosition oPercen passageLength t ws we eval nose
-
-fromRhythmicToList:: Rhythmic -> List Boolean
-fromRhythmicToList (Onsets x) = fromFoldable x
-fromRhythmicToList (Patron x) = concat $ map fromPatternToList $ fromFoldable x
-fromRhythmicToList _ = fromFoldable [false]
-
-fromPatternToList:: Rhythmic -> List Boolean
-fromPatternToList (Onsets x) = fromFoldable x 
-fromPatternToList _ = fromFoldable [false] -- placeholder
-
-passagePosition:: List Number -> Rational -> Tempo -> DateTime -> DateTime -> DateTime -> Nose -> M.Map Int Coordenada -- change to MMap Instant Int
-passagePosition o lenPasaje t ws we eval nose = 
-    let countAtStart = evalToCountWrapper nose t eval ws -- $ timeToCountNumber t ws --Number
-        passageAtStart =  countAtStart/ (toNumber lenPasaje)
-        percentAtStart = passageAtStart - (iToN $ floor $ passageAtStart)
-
-        countAtEnd = evalToCountWrapper nose t eval we -- $ timeToCountNumber t we
-        passageAtEnd = countAtEnd/ (toNumber lenPasaje)
-        percentAtEnd = passageAtEnd - (iToN $ floor $ passageAtEnd)
-
-        nPassages = (floor $ passageAtEnd) - (floor $ passageAtStart)
-
-        filtrado = filterEvents nPassages percentAtStart percentAtEnd passageAtStart o
-        posToTime = map (\x -> positionToTime t lenPasaje x) filtrado
-      in M.fromFoldableWithIndex posToTime
-
-evalToCountWrapper:: Nose -> Tempo -> DateTime -> DateTime -> Number
-evalToCountWrapper Origin t eval tp = timeToCountNumber t tp
-evalToCountWrapper Eval t eval tp = evalToCountNumber t eval tp
-evalToCountWrapper (Prospective _ _) _ _ tp = timeToCountNumber t tp
+durationOfRefrain:: Rhythmic -> Number
+durationOfRefrain X = 1.0
+durationOfRefrain O = 1.0
+durationOfRefrain (Sd x) = 1.0
+durationOfRefrain (Rhythmics xs) =  toNumber $ length xs
+durationOfRefrain _ = 2.666
+-- durationOfRefrain (Repeat xs n) = (toNumber $ length xs) * (toNumber n)
 
 
-evalToCountNumber :: Tempo -> DateTime -> DateTime -> Number
-evalToCountNumber t eval tp = 
-    let x = unwrap (diff tp eval :: Milliseconds)
-    in (x * toNumber t.freq) / 1000.0
+--- this down here is trash       
+    --     eventsLen = toNumber $ (length $ rhythmicToEventsDuration rhy)
+    -- in map (f eventsLen) xs
 
--- crear instancias de coordenada y en la funcion de abajo debe de ser:
--- :: Tempo -> Rational -> Tuple Number Int -> Coord TimeStamp IPassage IEvent
-positionToTime:: Tempo -> Rational -> Tuple Number Int -> Coordenada
-positionToTime t lenPasaje (Tuple pos iEvent) = 
-    let posInTempo = (toRat pos) * lenPasaje 
-        countInTime = countToTime t posInTempo
-    in Coord ((unwrap $ unInstant $ fromDateTime countInTime)/1000.0000) (floor pos) iEvent
-    
+    --     firstEventofRefrain = map (\x -> (\(Onset bool beat) -> (toNumber $ floor beat)*eventsLen) $ fst x) xs
+    --     indexesInWindows = zipWith (+) (snd <$> xs) firstEventofRefrain
+    -- in zipWith onsetAndIndexEvent xs indexesInWindows
 
-filterEvents:: Int ->  Number -> Number -> Number -> List Number -> List (Tuple Number Int) -- posicion e indiceEvento falta pattern
-filterEvents nPassages start end passageAtStart o 
-    | nPassages == 0 = zip x $ getIndexSimple start end o
-        where x = map (_ + (iToN $ floor passageAtStart)) $ filter (\x -> (x >= start) && (x < end)) o
-    | nPassages == 1 =
-        let firstList = filter (\x -> (x >= start) && (x < 1.0)) o
-            indexFst = getIndexOfFirstList firstList o
-            lastList = filter (\x -> (x >= 0.0) && (x < end)) o
-            indexLast = getIndexOfLastList lastList o
-            listOfEvents = twoPatternW (floor passageAtStart) firstList lastList
-            listOfIndexes = concat $ toL [indexFst,indexLast]
-        in zip listOfEvents listOfIndexes
+-- 
+--  :: Number -> Tuple Onset Number -> Tuple Onset Number
+-- f offset (Tuple (Onset bool beat) n) = Tuple (Onset bool beat) 
+--   where n' = offset + (toNumber (floor beat) * eventsLen)
+
+onsetAndIndexEvent:: (Tuple Onset Number) -> Number -> Tuple Onset Number    
+onsetAndIndexEvent x index = Tuple (fst x) index
+-- *** I have added the index of the event but I have lost the intraIndex of the event. Info I have: onset kind, position in beats and the index of the event
+
+
+-- this tuple is XO and index of event
+toEventIndex:: Number -> Number ->  Number
+toEventIndex refrainindex intraindex = (refrainindex + intraindex)
+
+
+-- ((Tuple (X dur->beats:860.0) 0.0) : (Tuple (X dur->beats:860.25) 1.0) : (Tuple (O dur->beats:860.5) 2.0) : (Tuple (X dur->beats:860.75) 3.0) : (Tuple (X dur->beats:861.0) 0.0) : (Tuple (X dur->beats:861.25) 1.0) : (Tuple (O dur->beats:861.5) 2.0) : (Tuple (X dur->beats:861.75) 3.0) : Nil)
+
+-- ** this has the info for onset or offset, beatPosition and intra-index. It has to be transformed into an Events. Which is a list of tuplets where fst is whenPosix and snd is the index in the event process.
+
+-- structuredProcess:: Tempo -> DateTime -> DateTime -> Rhythmic -> Process
+
+
+
+-- create a function that: a) takes the total duration of a refrain, takes the position of the events in the refrain
+-- do we can have an indexed count of the events
+
+---   *** this funca is broken changed the List Number to List Onset in line 92, lines 95 and 97 need to change: make a funca that processes things inside the Onset data structure.
+refrainWithIntraIndexes:: Tempo -> DateTime -> DateTime -> Rhythmic -> List (Tuple Onset Number)
+refrainWithIntraIndexes t ws we rhy = 
+    let indexAtWS = fst $ indexOfRefrain t ws rhy
+        eventsPerRefrain = rhythmicToEventsDuration rhy -- List Onset , which has: Bool Number
+        eventsPerRefrainandIndex = zip eventsPerRefrain $ 0.. (length eventsPerRefrain - 1) -- [(Onset,Int)]
+        refrainDur = rhythmicToRefrainDuration rhy
+        processedWsWe = map (\x -> Tuple (findBeatsWithOnset t ws we refrainDur $ fst x) $ snd x) $ map (\x -> Tuple ((\(Onset bool dur) -> Onset bool (dur*refrainDur)) $ fst x) $ snd x) eventsPerRefrainandIndex 
+        processTuple tup = zip (fst tup) $ fromFoldable $ replicate (length $ fst tup) $ snd tup 
+        toEventProcess = map (\x -> Tuple ((\(Onset bool beatPos)-> (Onset bool (beatPos))) $ fst x) (toNumber $ snd x)) $ concat $ map (\x -> processTuple x) processedWsWe
+    in sort toEventProcess
+
+-- Onset is weird, its number represents two things throughout this function duration first and beat position later
+findBeatsWithOnset:: Tempo -> DateTime -> DateTime -> Number -> Onset -> List Onset
+findBeatsWithOnset t ws we refrainDur (Onset bool dur) = map (\b -> Onset bool b) beats 
+    where beats = findBeats t ws we refrainDur dur -- List Number
+
+-- need to attach an index to the onsets found by the findBeats function
+-- recipe: zip eventsPerRefrain with a Int representing the number of event in the refrain, use zip but experiment with zipWith. access each event via map, grap the position intrarefrain and produce the operation needed then get back the findBeats operation with the int as a tuplet.
+
+-- findBeats and nextBeat were adapted from the tempi library. 
+-- what is understood as metr here is what I understand as proportion. 1:2:3 where 1 is the tempo 2 is twice as fast, 3 is three times as fast, etc. So, metre is the reciprocal of proportion*****
+findBeats:: Tempo -> DateTime -> DateTime -> Number -> Number -> List Number
+findBeats t ws' we' metre offset = findBeats' metre offset ws we
+    where ws = timeToCountNumber t ws'
+          we = timeToCountNumber t we'
+
+findBeats':: Number -> Number -> Number -> Number -> List Number
+findBeats' metre offset ws we
+    | nextBeat metre offset ws >= we = fromFoldable []
+    | otherwise = nextBeat metre offset ws : findBeats' metre offset (ws+metre) we
+
+nextBeat:: Number -> Number -> Number -> Number
+nextBeat metre offset ws
+    | metre == 0.0 = 0.0
     | otherwise =
-        let firstList = filter (\x -> (x >= start) && (x < 1.0)) o
-            fstIndex = getIndexOfFirstList firstList o
-            middleList = take (floor ((iToN (length o))*((iToN nPassages) - 1.0))) $ cycle o
-            middleIndex = getIndexOfMiddleList (length middleList) o 
-            lastList = filter (\x -> (x >= 0.0) && (x < end)) o
-            lastIndex = getIndexOfLastList lastList o
-            listOfEvents = multiplePatternW (floor passageAtStart) nPassages firstList o lastList
-            listOfIndexes =  concat $ toL [fstIndex,middleIndex,lastIndex]
-        in zip listOfEvents listOfIndexes
+        let wsInMetre = ws/metre
+            offsetInMetre = decimalPart $ offset/metre
+            nextBeatInMetre | offsetInMetre >= (decimalPart wsInMetre) = (toNumber $ floor wsInMetre)  + offsetInMetre
+                            | otherwise = (toNumber $ ceil wsInMetre) + offsetInMetre
+        in nextBeatInMetre * metre
 
-getIndexSimple:: Number -> Number -> List Number -> List Int
-getIndexSimple start end o =   
-    let before = (length $ filter (\x -> x < start) o) -1
-        between = filter (\x -> (x > start)&&(end>=x)) o
-    in if before == 0 then (0..((length between)-1)) else (before..((length between)-1))
+decimalPart:: Number -> Number
+decimalPart x = x - (wholePart x)
 
-getIndexOfFirstList:: List Number -> List Number -> List Int
-getIndexOfFirstList x o 
-    | x == (toL []) = toL []
-    | otherwise = range ((length o) - (length x)) ((length o) - 1)
+wholePart:: Number -> Number 
+wholePart x = toNumber $ floor x
 
-getIndexOfMiddleList:: Int -> List Number -> List Int
-getIndexOfMiddleList middleLen o = take middleLen $ cycle x
-    where x = toL (0..((length o)-1))
+indexOfRefrain:: Tempo -> DateTime -> Rhythmic -> Tuple Number Number
+indexOfRefrain t wp rhy = 
+    let 
+    wpCount = timeToCountNumber t wp -- Number
+    refrainDur = rhythmicToRefrainDuration rhy -- it is working
+    indexAsNum = wpCount / refrainDur
+    in Tuple (toNumber $ floor indexAsNum) (rightOfpoint indexAsNum)
 
-getIndexOfLastList:: List Number -> List Number -> List Int
-getIndexOfLastList x o 
-    | x == (toL []) = toL []
-    | otherwise = range 0 ((length x)-1)
+rhythmicToRefrainDuration:: Rhythmic -> Number -- does not need Tempo...?
+rhythmicToRefrainDuration X = 1.0
+rhythmicToRefrainDuration O = 1.0
+rhythmicToRefrainDuration (Sd xs) = 1.0
+rhythmicToRefrainDuration (Repeat xs n) = foldl (+) 0.0 x
+    where x = replicate n $ rhythmicToRefrainDuration xs
+rhythmicToRefrainDuration (Rhythmics xs) = foldl (+) 0.0 x
+    where x = map (\x -> rhythmicToRefrainDuration x) xs
 
--- trabajar en esta funcion!!!!!!!!
-twoPatternW:: Int -> List Number -> List Number -> List Number
-twoPatternW indexPhrase first last' = map (_ + iToN indexPhrase) $ concat $ toL [first,last] 
-    where last = if last' == (toL []) then (toL []) else map (_ + 1.0) $ toL last'
+-- rhythmicToEventsDuration:: Rhythmic -> List Number
+-- rhythmicToEventsDuration rhy = 
+--     let refrainDur = rhythmicToRefrainDuration rhy
+--         rhythmicSegments = eventsDurations 1.0 rhy
+--         durInPercentOfEvents = 0.0 : (fromMaybe (0.0:Nil) $  init $ scanl (+) 0.0 $ map (\x -> x/refrainDur) $ getDur <$> rhythmicSegments) -- List Number
+--     in durInPercentOfEvents -- we need to keep the XO
 
-multiplePatternW:: Int -> Int -> List Number -> List Number -> List Number -> List Number
-multiplePatternW indexAtPhrase mo first o last' = 
-    let lenO = length o
-        o' = concat $ replicate (mo-1) o
-        middle = map (\x -> (fst x) + (snd x)) $ zip o' (iToN <$> (concat $ toL $ map (\x -> replicate lenO x) $ toL (1..(mo-1))))
-        last = if last' == (toL []) then (toL []) else map (_ + (iToN mo)) $ last' 
-    in map (_ + iToN indexAtPhrase) $ concat $ toL [first,middle,last] 
+rhythmicToEventsDuration:: Rhythmic -> List Onset
+rhythmicToEventsDuration rhy = 
+    let refrainDur = rhythmicToRefrainDuration rhy
+        rhythmicSegments = eventsDurations 1.0 rhy
+        durInPercentOfEvents = 0.0 : (fromMaybe (0.0:Nil) $  init $ scanl (+) 0.0 $ map (\x -> x/refrainDur) $ getDur <$> rhythmicSegments) -- List Number
+    in zipWith (\x y -> Onset x y) (getBool <$> rhythmicSegments) durInPercentOfEvents -- we need to keep the XO
 
+-- the refrain has only a total duration and can be indexed. The inner life of the refrain is only described by metres and events
 
-toL x = fromFoldable x
+getDur:: Onset -> Number
+getDur (Onset _ x) = x
 
-iToN x = I.toNumber x
+getBool:: Onset -> Boolean 
+getBool (Onset x _) = x
 
-floor x = I.floor x
-
-
-toRat:: Number -> Rational
-toRat x = 
-    let pFact = 1000000
-        floored = floor x -- 12
-        fract = x - (iToN floored) -- 12.5 - 12.0 = 0.5
-        fract' = I.round $ fract * (iToN pFact) -- 500000
-    in (floored%1) + (fract'%pFact) -- 12 + (500000%1000000)
-
-
-justFractional:: Number -> Number
-justFractional x = x - (iToN $ floor x)
+eventsDurations:: Number -> Rhythmic -> List Onset
+eventsDurations dur X = fromFoldable [Onset true dur]
+eventsDurations dur O = fromFoldable [Onset false dur]
+eventsDurations dur (Sd xs) = eventsDurations' dur xs
+eventsDurations dur (Repeat xs n) = concat $ map (\x -> eventsDurations dur x) $ fromFoldable $ replicate n xs
+eventsDurations dur (Rhythmics xs) = concat $ map (\x-> eventsDurations dur x) xs
 
 
----- testing stuff ---------------
-makeDate :: Int -> Month -> Int -> Date
-makeDate y m d = 
-    unsafePartial $ fromJust $ 
-       canonicalDate <$> toEnum y <@> m <*> toEnum d
-
-makeTime :: Int -> Int -> Int -> Int -> Time
-makeTime h min sec milisec = 
-    unsafePartial $ fromJust $ Time <$> toEnum h <*> toEnum min <*> toEnum sec <*> toEnum milisec
-
-
-t:: Tempo
-t = {freq: (2%1),time: (DateTime (makeDate 2022 June 3) (makeTime 19 11 25 100)), count: fromInt 0 }
-
-tAncient:: Tempo
-tAncient = {freq: (2%1),time: (DateTime (makeDate 2012 June 3) (makeTime 19 11 25 100)), count: fromInt 0 }
-
-ws:: Int -> Int -> DateTime
-ws x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
-
-we:: Int -> Int -> DateTime
-we x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
-
-eval:: DateTime
-eval = (DateTime (makeDate 2022 June 3) (makeTime 19 15 0 0))
-
-oDur:: Rational  -- transposition value 2
-oDur = (1%2)
-
-o:: List Number
-o = fromFoldable [0.0,0.2,0.5] -- at this level a metric unit should be added. For testing: 0,0.1 (metre 1), 0.2,0.3 (metre 2), 0.4,0.5 (metre 3), 0.6,0.7 (metre 4), etc...
-
-countToStart:: Int
-countToStart = 327
--------------
+-- data Refrain = Refrain Int Number MetricStructure EventCount
+eventsDurations':: Number -> Rhythmic -> List Onset
+eventsDurations' dur X = fromFoldable [Onset true dur]
+eventsDurations' dur O = fromFoldable [Onset false dur]
+eventsDurations' dur (Sd xs) = eventsDurations' dur xs
+eventsDurations' dur (Repeat xs n) = concat $ map (\x -> eventsDurations' newDur x) $ fromFoldable $ replicate n xs
+    where newDur = dur / (toNumber n)
+eventsDurations' dur (Rhythmics xs) = concat $ map (\x-> eventsDurations' newDur x) xs
+    where newDur = dur / (toNumber $ length xs)
 
 
 
---- create the option to use eval instead of origin time. This will require diff or something similar.
---- use the non fractional of the number (the floored onset) to give an index to each new onset event
---- create the index within the phrase!!
---- so: first index is a general index of the onset in the general onset scheme
---- the second onset is the onset within the musical idea
-
-
-
---- ojo aqui::::
---Coordinada = Posicion IndiceFrase IndiceMetro IndiceEvento

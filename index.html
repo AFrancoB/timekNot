@@ -29,21 +29,30 @@
             top: 10%;
             margin: 10px
         }
-        .visualisation {
+        .botoncillo {
+            color: white;
+            background-color: black;
             position: absolute;
+            left: 1%;
+            top: 42%;
+            margin: 10px;
+            size: 20px;
+        }
+        .visualisation {
             position: absolute;
             left: 0%;
             top: 10%;
             margin: 10px
         }
+        
 
     </style>
 
-    <script src="./src/WebDirt/WebDirt-packed.js"></script> <!-- import WebDirt JS library -->
+    <script src="./src/WebDirt/WebDirt-packed.js" type="module"></script> <!-- import WebDirt JS library -->
     
-    <body onload="launchPage()">
-        <script src="./index.js" type="module"> // perhaps here we need the timeknot.js file... not sure...
-            import {launch, launchDirt , main, renderStandalone } from './index.js'
+    <body onload="window.launchPage()">
+        <script type="module"> // perhaps here we need the timeknot.js file... not sure...
+            import {launch, launchDirt , main, renderStandalone, evaluate} from './index.js'
 
             function launchPage(){
 	            window._tkRecord = launch();
@@ -53,12 +62,12 @@
             
             function doEvaluate() {
                 var tx = document.getElementById("code").value;
-                var rc = evaluate(_.tkRecord)(tx)()
+                var rc = evaluate(window._tkRecord)(tx)()
                 document.getElementById('status').textContent = rc;
             }
 
             function render(){
-                renderStandalone(_tkRecord)(_dirt)();
+                renderStandalone(window._tkRecord)(window._dirt)();
                 setTimeout(render,100); // evaluate each 100 miliseconds
             }
             
@@ -67,21 +76,25 @@
             window.render = render;
         </script>
 
-            <svg class="visualisation"></svg>
+            <!-- <svg class="visualisation"></svg> -->
             <div class="whole-page">
             <div  class="header">
                 <div>ICON HERE</div> 
                 <div>timekNot - a live coding cognitive territory for poly-temporal explorations</div>
             </div>
             <div>
-                <textarea id="code" rows="20" cols="69" onkeydown="if(event.keyCode===9){var v=this.value}">cody code
+                <textarea class="code" id="code" rows="20" cols="69" onkeydown="if(event.keyCode===9){var v=this.value}">cody code
                 </textarea>
             </div>
-            <div id=buttonPlace>
-                <button onclick="doEvaluate()"> EVAL </button> 
+            <div class="botoncillo" id=buttonPlace>
+                <button onclick="window.doEvaluate()"> EVAL </button> 
                 
                 <div id="status"> </div>
                 </div>
+            
         </div>
     </body>
 </html>
+
+
+<!-- npx http-server -->

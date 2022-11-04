@@ -1,4 +1,4 @@
-module ParseIdeas where
+module Parser(parseTop) where
 
 import Prelude
 
@@ -14,6 +14,8 @@ import Data.Maybe hiding (optional)
 import Data.Functor
 import Control.Monad
 import Data.List.NonEmpty (toList)
+import Data.Map as M
+import Data.String as Str
 
 import Effect (Effect)
 import Effect.Console (log)
@@ -25,33 +27,47 @@ import Parsing.Combinators
 import Parsing.Language (haskellStyle)
 import Parsing.Token (makeTokenParser)
 
+import AST
+import Motor 
 
--- 26th at 3:00 next meeting (rework the calendar so it becomes more linear)
+
+-- 23th of November at 3:00 next meeting (make phd long calendar)
 
 type P = ParserT String Identity 
 
-data Rhythmic = 
-  X | -- x
-  O |
-  Sd Rhythmic | -- [x]
-  Repeat Rhythmic Int |
-  Rhythmics (List Rhythmic) -- xoxo
--- Bjorklund
-
-instance Show Rhythmic where
-  show X = "x"
-  show O = "o"
-  show (Sd xs) = "[" <> show xs <> "]"
-  show (Repeat xs n) = "!" <> show xs <> "#" <> show n
-  show (Rhythmics xs) = show xs
-
-parseTop:: P Rhythmic
+parseTop:: P Program 
 parseTop = do
   _ <- pure 1
   whitespace
-  x <- choice [try parseRhythmList, try parseSD, try parseRepeat, parseXO]
+  x <- parseTopRhythmic
+  y <- parseTopAural <|> (pure $ S ("bd" : Nil) ByEvent : Nil) 
   eof
-  pure x
+  pure $ Program (fst x) (snd x) y
+
+--
+parseTopAural:: P (List Aural)
+parseTopAural = do
+  _ <- pure 1
+  x <- choice [try parseSound]
+  pure $ x : Nil
+
+parseSound:: P Aural
+parseSound = do
+  _ <- pure 1
+  x <- choice [(strWS "sXe" *> pure ByEvent), (strWS "sXr" *> pure ByRefrain)]
+  samples <- stringLit
+  pure $ S (stringToSamples samples) x
+
+stringToSamples:: String -> List String -- what to do with commas??
+stringToSamples s = fromFoldable $ Str.split (Str.Pattern " ") $ Str.trim s
+--
+
+parseTopRhythmic:: P (Tuple Rhythmic Boolean)
+parseTopRhythmic = do
+  _ <- pure 1
+  x <- choice [try parseRhythmList, try parseSD, try parseRepeat, parseXO]
+  y <- choice [(strWS "||" *> pure false), (strWS ":|" *> pure true)]
+  pure $ Tuple x y
 
 parseRhythms:: P Rhythmic
 parseRhythms = do
@@ -101,12 +117,14 @@ charWS x = do
   whitespace
   pure x
 
-toNumber':: Either Int Number -> Number
-toNumber' (Left x) = toNumber x 
-toNumber' (Right x) = x
+strWS:: String -> P String
+strWS x = do
+  _ <- pure 1
+  x <- string x 
+  whitespace
+  pure x
 
-attachLast::forall a. a -> List a -> List a 
-attachLast a xs = reverse (a :reverse xs)
+
 
 
 tokenParser = makeTokenParser haskellStyle

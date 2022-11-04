@@ -9,8 +9,7 @@ import * as Data_EuclideanRing from "../Data.EuclideanRing/index.js";
 import * as Data_Foldable from "../Data.Foldable/index.js";
 import * as Data_Functor from "../Data.Functor/index.js";
 import * as Data_List from "../Data.List/index.js";
-import * as Data_List_Lazy from "../Data.List.Lazy/index.js";
-import * as Data_List_Lazy_Types from "../Data.List.Lazy.Types/index.js";
+import * as Data_List_Types from "../Data.List.Types/index.js";
 import * as Data_Maybe from "../Data.Maybe/index.js";
 import * as Data_Ord from "../Data.Ord/index.js";
 import * as Data_Ratio from "../Data.Ratio/index.js";
@@ -25,26 +24,20 @@ import * as Effect_Now from "../Effect.Now/index.js";
 import * as Effect_Ref from "../Effect.Ref/index.js";
 import * as Foreign from "../Foreign/index.js";
 import * as Motor from "../Motor/index.js";
+import * as Parser from "../Parser/index.js";
 import * as Parsing from "../Parsing/index.js";
-import * as Rhythmic from "../Rhythmic/index.js";
 import * as WebDirt from "../WebDirt/index.js";
 var pure = /* #__PURE__ */ Control_Applicative.pure(Effect.applicativeEffect);
 var bind = /* #__PURE__ */ Control_Bind.bind(Effect.bindEffect);
-var fromFoldable = /* #__PURE__ */ Data_List.fromFoldable(Data_Foldable.foldableArray);
 var reduce = /* #__PURE__ */ Data_Ratio.reduce(Data_Ord.ordInt)(Data_EuclideanRing.euclideanRingInt);
-var map = /* #__PURE__ */ Data_Functor.map(Data_List_Lazy_Types.functorList);
-var toUnfoldable = /* #__PURE__ */ Data_List_Lazy.toUnfoldable(Data_Unfoldable.unfoldableArray);
+var toUnfoldable = /* #__PURE__ */ Data_List.toUnfoldable(Data_Unfoldable.unfoldableArray);
 var traverse_ = /* #__PURE__ */ Data_Foldable.traverse_(Effect.applicativeEffect)(Data_Foldable.foldableArray);
 var adjust = /* #__PURE__ */ Data_DateTime.adjust(Data_Time_Duration.durationMilliseconds);
 var lessThanOrEq = /* #__PURE__ */ Data_Ord.lessThanOrEq(Data_DateTime.ordDateTime);
 var show = /* #__PURE__ */ Data_Show.show(Data_Show.showString);
-var show1 = /* #__PURE__ */ Data_Show.show(AST.passageShowInstance);
+var show1 = /* #__PURE__ */ Data_Show.show(AST.showProgram);
 var show2 = /* #__PURE__ */ Data_Show.show(Data_DateTime.showDateTime);
 var show3 = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_Show.showArray(/* #__PURE__ */ Data_Show.showRecord()()(/* #__PURE__ */ Data_Show.showRecordFieldsCons({
-    reflectSymbol: function () {
-        return "n";
-    }
-})(/* #__PURE__ */ Data_Show.showRecordFieldsCons({
     reflectSymbol: function () {
         return "s";
     }
@@ -52,8 +45,9 @@ var show3 = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_Show.showArray(/
     reflectSymbol: function () {
         return "whenPosix";
     }
-})(Data_Show.showRecordFieldsNil)(Data_Show.showNumber))(Data_Show.showString))(Data_Show.showInt))));
-var map1 = /* #__PURE__ */ Data_Functor.map(Data_Functor.functorArray);
+})(Data_Show.showRecordFieldsNil)(Data_Show.showNumber))(Data_Show.showString))));
+var map = /* #__PURE__ */ Data_Functor.map(Data_Functor.functorArray);
+var map1 = /* #__PURE__ */ Data_Functor.map(Data_List_Types.functorList);
 var withoutMaybe = function (v) {
     if (v instanceof Data_Maybe.Just) {
         return v.value0;
@@ -61,11 +55,10 @@ var withoutMaybe = function (v) {
     if (v instanceof Data_Maybe.Nothing) {
         return {
             whenPosix: 0.0,
-            s: "",
-            n: 0
+            s: ""
         };
     };
-    throw new Error("Failed pattern match at Main (line 158, column 1 - line 158, column 36): " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at Main (line 157, column 1 - line 157, column 36): " + [ v.constructor.name ]);
 };
 var unsafeMaybeMilliseconds = function ($copy_v) {
     var $tco_done = false;
@@ -94,6 +87,17 @@ var setTempo = function (timekNot) {
         return Effect_Ref.write(Data_Tempo.fromForeignTempo(t))(timekNot.tempo);
     };
 };
+var passageToWaste = function (p) {
+    return function (t) {
+        return function (ws) {
+            return function (we) {
+                return function ($$eval) {
+                    return Motor.programToWaste(t)(ws)(we)($$eval)(p);
+                };
+            };
+        };
+    };
+};
 var pErrorToString = function (v) {
     if (v instanceof Data_Either.Left) {
         return new Data_Either.Left(Parsing.parseErrorMessage(v.value0));
@@ -120,7 +124,7 @@ var launchDirt = function __do() {
 var launch = function __do() {
     Effect_Console.log("timekNot-CU: launch")();
     var launchTime = Effect_Now.nowDateTime();
-    var ast = Effect_Ref["new"](new AST.Passage(new AST.Onsets(fromFoldable([  ])), fromFoldable([  ]), AST.Origin.value, true))();
+    var ast = Effect_Ref["new"](new AST.Program(AST.O.value, false, new Data_List_Types.Cons(new AST.S(new Data_List_Types.Cons("", Data_List_Types.Nil.value), AST.ByEvent.value), Data_List_Types.Nil.value)))();
     var tempo = bind(Data_Tempo.newTempo(reduce(1)(1)))(Effect_Ref["new"])();
     var $$eval = Effect_Ref["new"](launchTime)();
     var wS = Effect_Ref["new"](launchTime)();
@@ -140,19 +144,14 @@ var justJust = function (v) {
     if (v instanceof Data_Maybe.Nothing) {
         return false;
     };
-    throw new Error("Failed pattern match at Main (line 162, column 1 - line 162, column 34): " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at Main (line 161, column 1 - line 161, column 34): " + [ v.constructor.name ]);
 };
-var filterMaybe = function (x) {
-    return map(withoutMaybe)(Data_List_Lazy.filter(justJust)(x));
-};
-var fromPassageToArray = function (pass) {
+var fromProgramToArray = function (program) {
     return function (t) {
         return function (ws) {
             return function (we) {
                 return function ($$eval) {
-                    var events$prime = Motor.passageToEvents(pass)(t)(ws)(we)($$eval);
-                    var events = toUnfoldable(filterMaybe(events$prime));
-                    return events;
+                    return toUnfoldable(passageToWaste(program)(t)(ws)(we)($$eval));
                 };
             };
         };
@@ -165,7 +164,7 @@ var scheduleEventsStandAlone = function (tk) {
         var $$eval = Effect_Ref.read(tk["eval"])();
         var ws = Effect_Ref.read(tk.wS)();
         var we = Effect_Ref.read(tk.wE)();
-        return fromPassageToArray(ast)(t)(ws)(we)($$eval);
+        return fromProgramToArray(ast)(t)(ws)(we)($$eval);
     };
 };
 var playDirts = function (dirt) {
@@ -185,8 +184,8 @@ var renderStandalone = function (tk) {
             var now = Effect_Now.nowDateTime();
             var prevWE = Effect_Ref.read(tk.wE)();
             var future = Data_Maybe.fromMaybe(now)(adjust(100.0)(now));
-            var $48 = lessThanOrEq(prevWE)(future);
-            if ($48) {
+            var $42 = lessThanOrEq(prevWE)(future);
+            if ($42) {
                 var wE = Data_Maybe.fromMaybe(now)(adjust(100.0)(prevWE));
                 Effect_Ref.write(prevWE)(tk.wS)();
                 Effect_Ref.write(wE)(tk.wE)();
@@ -201,15 +200,15 @@ var timekNotToForeigns = function (tk) {
     return function (ws) {
         return function (we) {
             return function __do() {
-                var passage = Effect_Ref.read(tk.ast)();
+                var program = Effect_Ref.read(tk.ast)();
                 var t = Effect_Ref.read(tk.tempo)();
                 var $$eval = Effect_Ref.read(tk["eval"])();
-                Effect_Console.log(show1(passage))();
+                Effect_Console.log(show1(program))();
                 Effect_Console.log(show2(ws))();
                 Effect_Console.log(show2(we))();
-                var events = fromPassageToArray(passage)(t)(ws)(we)($$eval);
+                var events = fromProgramToArray(program)(t)(ws)(we)($$eval);
                 Effect_Console.log(show3(events))();
-                return map1(Foreign.unsafeToForeign)(events);
+                return map(Foreign.unsafeToForeign)(events);
             };
         };
     };
@@ -221,13 +220,16 @@ var scheduleNoteEvents = function (tk) {
         };
     };
 };
+var filterMaybe = function (x) {
+    return map1(withoutMaybe)(Data_List.filter(justJust)(x));
+};
 var evaluate = function (timekNot) {
     return function (str) {
         return function __do() {
             Effect_Console.log("timekNot-CU: evaluate")();
             var passage = Effect_Ref.read(timekNot.ast)();
             var $$eval = Effect_Now.nowDateTime();
-            var pr = pErrorToString(Parsing.runParser(str)(Rhythmic.topPassageParser));
+            var pr = pErrorToString(Parsing.runParser(str)(Parser.parseTop));
             if (pr instanceof Data_Either.Left) {
                 return {
                     success: false,
@@ -246,13 +248,6 @@ var evaluate = function (timekNot) {
         };
     };
 };
-var coordToEvent = function (v) {
-    return {
-        whenPosix: v.value0,
-        s: "cp",
-        n: 0
-    };
-};
 export {
     main,
     launchDirt,
@@ -267,10 +262,10 @@ export {
     numToDateTime,
     unsafeMaybeMilliseconds,
     timekNotToForeigns,
-    fromPassageToArray,
+    fromProgramToArray,
+    passageToWaste,
     filterMaybe,
     withoutMaybe,
     justJust,
-    coordToEvent,
     testMaybeInstant
 };

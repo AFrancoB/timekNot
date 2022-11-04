@@ -1,4 +1,4 @@
-module AST(TimekNot(..),Passage(..),Nose(..),Rhythmic(..),Euclidean(..),Index(..),Aural(..),Coordenada(..),Event(..),Aurals(..)) where
+module AST (TimekNot(..),Program(..),Rhythmic(..),Aural(..),SeqType(..),Process(..),Waste(..),Onset(..)) where
 
 import Prelude
 import Effect.Ref
@@ -6,106 +6,96 @@ import Data.List
 import Data.Tempo
 import Data.DateTime
 import Data.Maybe
+import Data.Tuple
+import Data.String as Str
 
 type TimekNot = {
-  ast :: Ref Passage,
+  ast :: Ref Program,
   tempo :: Ref Tempo,
   eval :: Ref DateTime,
   wS :: Ref DateTime,
   wE :: Ref DateTime
   }
 
-data Passage = Passage Rhythmic (List Aural) Nose Boolean
+data Program = Program Rhythmic Boolean (List Aural) 
 
-instance passageShowInstance :: Show Passage where
-  show (Passage rhy aur nose repeat) = "rhy "<>show rhy<>" aur "<>show aur<>" nose "<>show nose<>show repeat
+instance Show Program where
+  show (Program rhy fin au) = show rhy <> show fin <> " " <> show au
 
-instance passageEqInstance :: Eq Passage where
-    eq (Passage x y no rep) (Passage x' y' no' rep') = (x == x') && (y == y') && (no == no') 
-    eq _ _ = false
+data Rhythmic =  -- whenPosix, thats it
+  X | -- x
+  O |
+  Sd Rhythmic | -- [x]
+  Repeat Rhythmic Int |
+  Rhythmics (List Rhythmic) -- xoxo
+-- Bjorklund
 
-data Nose = Origin | Eval | Prospective Int Number
+instance Show Rhythmic where
+  show X = "x"
+  show O = "o"
+  show (Sd xs) = "[" <> show xs <> "]"
+  show (Repeat xs n) = "!" <> show xs <> "#" <> show n
+  show (Rhythmics xs) = show xs
 
-instance noseShowInstance :: Show Nose where
-  show Origin = "|origin|"
-  show Eval = "|eval|"
-  show (Prospective index offset) = "|prospective "<>show index<>" "<>show offset
+data SeqType = ByEvent | ByIntraEvent | ByRefrain | Structured
 
-instance noseEqInstance :: Eq Nose where
-    eq Origin Origin = true
-    eq Eval Eval = true
-    eq (Prospective i o) (Prospective i' o') = (i == i') && (o == o')
-    eq _ _ = false
+instance Show SeqType where
+  show ByEvent = show "byEvent"
+  show ByIntraEvent = show "byIntraEvent"
+  show ByRefrain = show "byRefrain"
+  show Structured = show "structured"
 
-data Rhythmic = 
-  Onsets (List Boolean) |
-  Patron (List Rhythmic) | -- piling adjacent things no white space
-  Subdivision (List Rhythmic) | -- list separated by spaces -- space as operator
-  Euclidean Euclidean Int Int Int | 
-  Repetition Rhythmic Int  
+instance Eq SeqType where
+  eq ByEvent ByEvent = true
+  eq ByIntraEvent ByIntraEvent = true
+  eq ByRefrain ByRefrain = true
+  eq Structured Structured = true
+  eq _ _ = false
 
-instance rhythmicShowInstance :: Show Rhythmic where
-  show (Onsets on) = "onsets " <> show on
-  show (Patron ons) = "Patron " <> show ons
-  show (Subdivision ons) = "subdivision: " <> show ons
-  show (Euclidean eu k n off) = show eu <> " euclidean " <> (show k) <> "," <> (show n) <> "," <> (show off)
-  show (Repetition on n) = show on <> " times " <> (show n)
+-- instance Num a => Num (Value a) where
+--     x + y = \t dur renderTime evalTime anchTime -> (x t dur renderTime evalTime anchTime) + (y t dur renderTime evalTime anchTime)
 
-instance rhythmicEqInstance :: Eq Rhythmic where
-    eq (Onsets x) (Onsets y) = x == y
-    eq _ _ = false
-
--- --data EuclideanType = Full | K | InverseK
-
-data Euclidean = Full Rhythmic Rhythmic | K Rhythmic | InverseK Rhythmic
-
-instance euclideanShowInstance :: Show Euclidean where
-  show (Full x y) = (show x) <>"on ks and not on ks " <> (show y)
-  show (K x) = show x
-  show (InverseK x) = show x
-
-data Index = EventI | MetreI | PassageI
-
-instance indexShowInstance :: Show Index where
-  show EventI = "Event"
-  show MetreI = "Metre"
-  show PassageI = "Passage"
-
-instance indexEqInstance :: Eq Index where
-    eq EventI EventI = true
-    eq MetreI MetreI = true
-    eq PassageI PassageI = true
-    eq _ _ = false
-
-data Aural = Sample (List String) Index | N (List Int) Index
-
-instance auralShowInstance :: Show Aural where
-  show (Sample xs i) = "sample "<>show xs <>" i: "<>show i
-  show (N xs i) = "n "<>show xs<>" i:"<>show i
-
-instance auralEqInstance :: Eq Aural where
-    eq (Sample x i) (Sample y i') = (x == y) && (i == i')
-    eq (N x i) (N y i') = (x == y) && (i == i')
-    eq _ _ = false
-
-data Coordenada = Coord Number Int Int 
-
-instance coordenadaShowInstance :: Show Coordenada where
-  show (Coord x y z) = "time: "<>show x<>", iPassage: "<>show y<>", iEvent: "<>show z
+-- Create a Map with a key as string and 'a' as value.
 
 
-type Event =
+data Aural = S (List String) SeqType | N (List Int) SeqType
+
+instance Show Aural where
+  show (S xs st) = show xs <> " " <> show st
+  show (N ns st) = show ns <> " " <> show st
+
+
+type Waste =
   { 
   whenPosix :: Number, -- when to play the sample, in POSIX/epoch-1970 time
-  s :: String, -- name of sample bank (ie. old-style with sampleMap)
-  n :: Int -- number of sample within a bank (ie. old-style with sampleMap)
+  s :: String --, -- name of sample bank (ie. old-style with sampleMap)
+--  n :: Int -- number of sample within a bank (ie. old-style with sampleMap)
 --   when :: Number, -- when to play the sample, in audio context time
 --   gain :: Number, -- clamped from 0 to 2; 1 is default and full-scale
 --   overgain :: Number, -- additional gain added to gain to go past clamp at 2
 --   pan :: Number
   }
 
-type Aurals = {
-  s :: Maybe Aural,
-  n :: Maybe Aural
-}
+-- process are what I used to call coordinates but now reflect the recursive possibilities embedded in the software
+data Process = Structure (Tuple Number Int) (List (Tuple Number Int)) | Events (List (Tuple Number (Tuple Boolean Int)))
+-- here Number is the whenPosix value of the event/structure and the Int and list of ints is the coordinate that will
+
+-- fix this instance, it suck a bit....
+instance Show Process where
+    show (Structure estribillo xs) = show (snd estribillo) <>"."<> events
+        where events = Str.joinWith "." $ toUnfoldable $ map (snd >>> show) xs
+    show (Events indices) = pox
+        where pox = Str.joinWith " - " $ toUnfoldable $ map (fst >>> show) indices
+              bool = Str.joinWith "-" $ toUnfoldable $ map (\x -> if x == true then "x" else "o") $ map (snd >>> fst) indices
+
+data Onset = Onset Boolean Number 
+
+instance Show Onset where
+    show (Onset true n) =  "(X" <> " dur->beatPos:" <> (Str.take 8 $ show n) <> ")"
+    show (Onset false n) = "(O" <> " dur->beatPos:" <> (Str.take 8 $ show n) <> ")"
+
+instance Ord Onset where
+    compare (Onset bool1 pos1) (Onset bool2 pos2) = pos1 `compare` pos2  
+
+instance Eq Onset where 
+    eq (Onset bool1 pos1) (Onset bool2 pos2) = pos1 == pos2

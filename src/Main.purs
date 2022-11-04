@@ -14,10 +14,10 @@ import Effect.Ref (new,write)
 import Data.Traversable
 
 import Data.Rational
-import Data.List.Lazy hiding (many,Pattern)
+--import Data.List.Lazy hiding (many,Pattern)
 import Data.Array as A
 
-import Data.List as L
+import Data.List
 
 import Data.Map as M
 import Data.Tuple
@@ -38,7 +38,7 @@ import WebDirt
 import Parsing
 
 import AST
-import Rhythmic
+import Parser 
 import Motor
 
 main :: Effect Unit 
@@ -47,7 +47,7 @@ main = pure unit
 --launched from js end. provides a wd instance
 launchDirt :: Effect WebDirt
 launchDirt = do
-  dirt <- newWebDirt { sampleMapUrl: "samples/sampleMap.json", sampleFolder: "samples" } -- make this the proper sampleMap!!!!!
+  dirt <- newWebDirt { sampleMapUrl: "./src/samples/sampleMap.json", sampleFolder: "./src/samples" } -- make this the proper sampleMap!!!!!
   initializeWebAudio dirt
   pure dirt
 
@@ -55,7 +55,7 @@ launch :: Effect TimekNot
 launch = do
   log "timekNot-CU: launch"
   launchTime <- nowDateTime
-  ast <- new $ Passage (Onsets $ L.fromFoldable []) (L.fromFoldable []) Origin true
+  ast <- new $ Program O false $ (S ("":Nil) ByEvent : Nil)
   tempo <- newTempo (1 % 1) >>= new -- why the bind? --- break into two lines
   eval <- new launchTime
   wS <- new launchTime
@@ -73,7 +73,6 @@ renderStandalone tk dirt = do
     write wS tk.wS
     write wE tk.wE
     t <- read $ tk.tempo -- is this usefull??
-    
     playDirts dirt tk
   else
     log $ show "sleep"
@@ -84,23 +83,21 @@ playDirts dirt tk = do
   x <- traverse_ (\x -> playSample dirt x) events  -- type of this??
   pure x
 
-scheduleEventsStandAlone:: TimekNot -> Effect (Array {whenPosix:: Number, s:: String, n:: Int})
+scheduleEventsStandAlone:: TimekNot -> Effect (Array {whenPosix:: Number, s:: String})
 scheduleEventsStandAlone tk = do
     ast <- read tk.ast
     t <- read tk.tempo
     eval <- read tk.eval
     ws <- read tk.wS
     we <- read tk.wE
-    pure $ fromPassageToArray ast t ws we eval
+    pure $ fromProgramToArray ast t ws we eval
 
 evaluate :: TimekNot -> String -> Effect { success :: Boolean, error :: String }
 evaluate timekNot str = do
   log "timekNot-CU: evaluate"
-  passage <- read timekNot.ast
- -- log $ show passage
-  -- placeholder: assume any evaluation yields the valid program
+  program <- read timekNot.ast
   eval <- nowDateTime
-  let pr = pErrorToString $ runParser str topPassageParser -- :: Either String AST 
+  let pr = pErrorToString $ runParser str parseTop -- :: Either String AST 
   case pr of
     Left error -> pure $ { success: false, error }
     Right p -> do
@@ -108,7 +105,7 @@ evaluate timekNot str = do
       write p timekNot.ast 
       pure $ { success: true, error: "" }    --- here you might add the eval time with purescript. 
 
-pErrorToString:: Either ParseError Passage -> Either String Passage
+pErrorToString:: Either ParseError Program -> Either String Program
 pErrorToString (Left x) = Left $ parseErrorMessage x
 pErrorToString (Right x) = Right x
 
@@ -134,37 +131,33 @@ timekNotToForeigns:: TimekNot -> DateTime -> DateTime -> forall opts. Effect (Ar
 timekNotToForeigns tk ws we = do
 --    let ws' = numToDateTime (ws * 1000.0000)
 --    let we' = numToDateTime (we * 1000.0000)
-    passage <- read tk.ast
+    program <- read tk.ast
     t <- read tk.tempo
     eval <- read tk.eval
 
-    log $ show passage
+    log $ show program
     log $ show ws
     log $ show we
-    let events = fromPassageToArray passage t ws we eval
+    let events = fromProgramToArray program t ws we eval
     log $ show events
     pure $ map unsafeToForeign events
 
-fromPassageToArray:: Passage -> Tempo -> DateTime -> DateTime -> DateTime -> Array {whenPosix:: Number, s:: String, n:: Int}
-fromPassageToArray pass t ws we eval = 
-    let events' = passageToEvents pass t ws we eval -- List (Maybe Event)
-        events = toUnfoldable $ filterMaybe events' -- Array
-      in events
+fromProgramToArray:: Program -> Tempo -> DateTime -> DateTime -> DateTime -> Array {whenPosix:: Number, s:: String}
+fromProgramToArray program t ws we eval = toUnfoldable $ passageToWaste program t ws we eval
 
+passageToWaste:: Program -> Tempo -> DateTime -> DateTime -> DateTime -> List Waste
+passageToWaste p t ws we eval = programToWaste t ws we eval p 
 
-filterMaybe:: List (Maybe Event) -> List Event
+filterMaybe:: List (Maybe Waste) -> List Waste
 filterMaybe x = map withoutMaybe $ filter justJust x
 
-withoutMaybe:: Maybe Event -> Event
+withoutMaybe:: Maybe Waste -> Waste
 withoutMaybe (Just x) = x
-withoutMaybe Nothing = {whenPosix: 0.0, s: "", n: 0}
+withoutMaybe Nothing = {whenPosix: 0.0, s: ""}
 
-justJust:: Maybe Event -> Boolean
+justJust:: Maybe Waste -> Boolean
 justJust (Just _) = true
 justJust Nothing = false
-
-coordToEvent:: Coordenada -> {whenPosix:: Number, s:: String, n:: Int}
-coordToEvent (Coord num iEv iPas) = {whenPosix: num, s: "cp", n: 0 }
 
 testMaybeInstant:: Number -> Maybe Instant
 testMaybeInstant x = instant $ Milliseconds x -- Maybe Instant
