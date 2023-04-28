@@ -31,7 +31,7 @@ import AST
 import Motor 
 
 
--- 23th of November at 3:00 next meeting (make phd long calendar)
+-- Tuesday 3:30 next meeting (make phd long calendar, temazcal writing)
 
 type P = ParserT String Identity 
 
@@ -39,8 +39,8 @@ parseTop:: P Program
 parseTop = do
   _ <- pure 1
   whitespace
-  x <- parseTopRhythmic
-  y <- parseTopAural <|> (pure $ S ("bd" : Nil) ByEvent : Nil) 
+  x <- parseTopRhythmic <|> (pure $ Tuple O false)
+  y <- parseTopAural <|> (pure $ S ("" : Nil) ByEvent : Nil) 
   eof
   pure $ Program (fst x) (snd x) y
 

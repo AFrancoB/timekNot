@@ -1,4 +1,4 @@
-module Motor (eventProcess,programToWaste) where
+module Motor (programToWaste, testy) where
 
 import Prelude
 import Data.Int
@@ -31,7 +31,6 @@ import QuickTestAndDebug
 
 import AST
 import Helpers
-import QuickTestAndDebug
 -- xx[ox]x 
 
 -- xx[ox 1]x 1| xx[ox 2]x 2| xx[ox 3]x 3| xx[ox 4]x4  
@@ -77,16 +76,16 @@ eventProcess t ws we rhy =
         lastLocation = fromMaybe (Tuple (Onset false 0.0) 0.0) $ last $ xs
         eventsLen = toNumber $ (length $ rhythmicToEventsDuration rhy)
         refrainDur = rhythmicToRefrainDuration rhy
-        dbg3 = trace ("refrainTotalDur " <> show refrainDur) \_ -> refrainDur
-        dbg2 = trace ("eventsPerRefr " <> show eventsLen) \_ -> eventsLen
-        dbg1 = trace ("firstLocation " <> show firstLocation) \_ -> firstLocation
-        dbg7 = trace ("lastLocation " <> show lastLocation) \_ -> lastLocation
+        -- dbg3 = trace ("refrainTotalDur " <> show refrainDur) \_ -> refrainDur
+        -- dbg2 = trace ("eventsPerRefr " <> show eventsLen) \_ -> eventsLen
+        -- dbg1 = trace ("firstLocation " <> show firstLocation) \_ -> firstLocation
+        -- dbg7 = trace ("lastLocation " <> show lastLocation) \_ -> lastLocation
         elapsedRefrains = fst (lmap (\(Onset bool beat)-> beat) firstLocation) / refrainDur
-        dbg4 = trace ("elapsedRefrains " <> show elapsedRefrains) \_ -> elapsedRefrains
+        -- dbg4 = trace ("elapsedRefrains " <> show elapsedRefrains) \_ -> elapsedRefrains
         offset = (toNumber $ floor elapsedRefrains) * eventsLen -- <- aqui esta el error
-        dbg5 = trace ("offset " <> show offset) \_ -> offset
+        -- dbg5 = trace ("offset " <> show offset) \_ -> offset
         is = sort $ concat $ map (manyCycles eventsLen) $ map toList $ groupAll $ map (\x -> offset + x) $ map snd xs
-        dbg6 = trace ("indices " <> show is) \_ -> is
+        -- dbg6 = trace ("indices " <> show is) \_ -> is
     in Events $ map (\x -> indexedOnsetToEvent x t) $ zipWith (\x i -> Tuple (fst x) i) xs is
 
 eventProcessXS:: Tempo -> DateTime -> DateTime -> Rhythmic -> List (Tuple Onset Number)
@@ -196,9 +195,6 @@ findBeatsWithOnset:: Tempo -> DateTime -> DateTime -> Number -> Onset -> List On
 findBeatsWithOnset t ws we refrainDur (Onset bool dur) = map (\b -> Onset bool b) beats 
     where beats = findBeats t ws we refrainDur dur -- List Number
 
--- need to attach an index to the onsets found by the findBeats function
--- recipe: zip eventsPerRefrain with a Int representing the number of event in the refrain, use zip but experiment with zipWith. access each event via map, grap the position intrarefrain and produce the operation needed then get back the findBeats operation with the int as a tuplet.
-
 -- findBeats and nextBeat were adapted from the tempi library. 
 -- what is understood as metr here is what I understand as proportion. 1:2:3 where 1 is the tempo 2 is twice as fast, 3 is three times as fast, etc. So, metre is the reciprocal of proportion*****
 findBeats:: Tempo -> DateTime -> DateTime -> Number -> Number -> List Number
@@ -244,13 +240,6 @@ rhythmicToRefrainDuration (Repeat xs n) = foldl (+) 0.0 x
 rhythmicToRefrainDuration (Rhythmics xs) = foldl (+) 0.0 x
     where x = map (\x -> rhythmicToRefrainDuration x) xs
 
--- rhythmicToEventsDuration:: Rhythmic -> List Number
--- rhythmicToEventsDuration rhy = 
---     let refrainDur = rhythmicToRefrainDuration rhy
---         rhythmicSegments = eventsDurations 1.0 rhy
---         durInPercentOfEvents = 0.0 : (fromMaybe (0.0:Nil) $  init $ scanl (+) 0.0 $ map (\x -> x/refrainDur) $ getDur <$> rhythmicSegments) -- List Number
---     in durInPercentOfEvents -- we need to keep the XO
-
 rhythmicToEventsDuration:: Rhythmic -> List Onset
 rhythmicToEventsDuration rhy = 
     let refrainDur = rhythmicToRefrainDuration rhy
@@ -286,3 +275,10 @@ eventsDurations' dur (Rhythmics xs) = concat $ map (\x-> eventsDurations' newDur
 
 
 
+---- abstractions to discard x or o
+------- these abstractions need a new dur: xooxo would become (x, dur:3) (x. dur:2)
+-- eventXFilter:: List Onset -> List Onset
+
+-- eventOFilter:: List Onset -> List Onset
+
+-- eventPartition:: List Onset -> Tuple (List Onset) (List Onset)

@@ -18,85 +18,57 @@ import Data.Enum
 import Partial.Unsafe
 import Data.Rational
 import Data.Ratio
-import Data.List as L
-import Data.List.Lazy
+import Data.List
+import Data.List.Lazy as Lz
 import Data.Maybe
 import Parsing
 
--- main :: Effect Unit
--- main = do
---   _ <- traverse quickCheck [
+import Parser
 
---     runParser ("xxxxx :|| sampleSeq \"bd cp 808\"") topPassageParser == (Right $ Passage (Onsets $ L.fromFoldable [true,true,true,true,true]) (L.fromFoldable [Sample (L.fromFoldable ["bd","cp","808"]) EventI]) Origin true) <?> "rhythmic and sampleSeq (the event per sample parser) do not parse properly"
---     ,
---     runParser ("xxxxx :|| sampleSeq\' \"bd cp 808\"") topPassageParser == (Right $ Passage (Onsets $ L.fromFoldable [true,true,true,true,true]) (L.fromFoldable [Sample (L.fromFoldable ["bd","cp","808"]) PassageI]) Origin true) <?> "rhythmic and sampleSeq\' (the passage per sample parser) do not parse properly"
+main :: Effect Unit
+main = do
+  _ <- traverse quickCheck [
+      runParser "" parseTop == (Right $ Program defR nonRep defAu) <?> "empty program",
 
---     ]
---   pure unit
+      runParser "x :|" parseTop == (Right $ Program X repeat defAu) <?> "simple x with repetition program, no waste produced",
 
--- ------ extracting data from functions
+      runParser "o :|" parseTop == (Right $ Program O repeat defAu) <?> "simple o with repetition program, no waste produced",
 
--- extractPosix:: Maybe Event -> String
--- extractPosix (Just evento) = show evento.whenPosix
--- extractPosix Nothing = "nada"
+      runParser "xxox :|" parseTop == (Right $ Program xxox repeat defAu) <?> "a list of rhythmics: xxox, no waste produced",
 
--- extractSample:: Maybe Event -> String
--- extractSample (Just evento) = evento.s
--- extractSample Nothing = "nada"
+      runParser "xxo xxx oox :|" parseTop == (Right $ Program xxoxxxoox repeat defAu) <?> "a list of rhythmics with spaces should generate same structure than a program withoutn spaces, no waste produced",
 
+      runParser "[xxox] :|" parseTop == (Right $ Program (Sd xxox) repeat defAu) <?> "a subdivision with a list of rhythmics: xxox, no waste produced",
 
--- extractEventCoord:: Coordenada -> Int
--- extractEventCoord (Coord n p e) = e
+      runParser "xx[ox]x :|" parseTop == (Right $ Program xxOXx repeat defAu) <?> "a list of rhythmics and a subdivision within: xx[ox]x, no waste produced",
 
--- extractPassageCoord:: Coordenada -> Int
--- extractPassageCoord (Coord n p e) = p
+      runParser "[xx[ox]x] :|" parseTop == (Right $ Program (Sd xxOXx) repeat defAu) <?> "a subdivision with a list of rhythmics and a subdivision within: xx[ox]x, no waste produced",
 
+      runParser "[xxxx] [ooox] :|" parseTop == (Right $ Program (Rhythmics (Sd xxxx : Sd ooox : Nil)) repeat defAu) <?> "two parallel subdivision patterns",
 
---   ---- testing stuff ---------------
--- makeDate :: Int -> Month -> Int -> Date
--- makeDate y m d = 
---     unsafePartial $ fromJust $ 
---        canonicalDate <$> toEnum y <@> m <*> toEnum d
+      runParser "!xxox#2 :|" parseTop == (Right $ Program (Repeat xxox 2) repeat defAu) <?> "testing repetition parser",
 
--- makeTime :: Int -> Int -> Int -> Int -> Time
--- makeTime h min sec milisec = 
---     unsafePartial $ fromJust $ Time <$> toEnum h <*> toEnum min <*> toEnum sec <*> toEnum milisec
+      runParser "[!xxox#2] :|" parseTop == (Right $ Program (Sd $ Repeat xxox 2) repeat defAu) <?> "testing repetition parser",
 
+      runParser "!xxox#2 xx[ox]x :|" parseTop == (Right $ Program (Rhythmics (Repeat xxox 2 : xxOXx : Nil)) repeat defAu) <?> "testing repetition parser",
 
--- t:: Tempo
--- t = {freq: (2%1),time: (DateTime (makeDate 2022 June 3) (makeTime 19 11 25 100)), count: fromInt 0 }
+      runParser "!xx[ox]x#2 ooox :|" parseTop == (Right $ Program (Rhythmics (Repeat xxOXx 2 : ooox : Nil)) repeat defAu) <?> "testing repetition parser"
+    
+    ]
+  pure unit
 
--- ws:: Int -> Int -> DateTime
--- ws x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
+-- synonyms
+xxox = Rhythmics (X:X:O:X:Nil)
+xxOXx = Rhythmics (X:X:(Sd (Rhythmics (O:X:Nil))):X:Nil)
+xxxx = Rhythmics (X:X:X:X:Nil)
+ooox = Rhythmics (O:O:O:X:Nil)
+xxoxxxoox = Rhythmics (X:X:O:X:X:X:O:O:X:Nil)
 
--- we:: Int -> Int -> DateTime
--- we x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
+repeat = true
+nonRep = false
 
--- eval:: DateTime
--- eval = (DateTime (makeDate 2022 June 3) (makeTime 19 14 59 500))
+defAu:: List Aural
+defAu = ((S ("":Nil) ByEvent): Nil)
 
--- oDur:: Rational  -- transposition value 2
--- oDur = (1%2)
-
--- o:: List Number
--- o = fromFoldable [0.0,0.2,0.5] -- at this level a metric unit should be added. For testing: 0,0.1 (metre 1), 0.2,0.3 (metre 2), 0.4,0.5 (metre 3), 0.6,0.7 (metre 4), etc...
-
--- countToStart:: Int
--- countToStart = 327
-
-
--- turn this into tests
-
--- test = passageToEvents' (Passage (Onsets (L.fromFoldable [true,true,true,true,true])) (L.fromFoldable [Sample (L.fromFoldable ["bd","cp","808"]) EventI]) Eval false) t (ws 0 0) (we 59 0) eval
-
--- --passageToEvents':: Passage -> Tempo -> DateTime -> DateTime -> DateTime -> List (Maybe Event)
--- passageToEvents' (Passage rhy aus nose rep) t ws we eval = 
---     let coords = fromPassageToCoord rhy t ws we eval nose -- Map Int Coord
---         lCoord = snd <$> (M.toUnfoldable coords) -- List Coord, es decir: Nu In In
---         lCoordRep = repeat rep lCoord
---         samples = sampleWithIndex $ last $ filter isSample $ fromFoldable aus --Maybe Aural
---         samplesI = auralIndex $ last $ filter isSample $ fromFoldable aus
---         -- aqui va una funcion con tupletes de samples y coords con el mismo indice!!
---         s = samplesWithPosix samplesI (lenRhyth rhy) samples lCoord
---  --       n = last $ filter isN $ au  -- Maybe Aural 
---     in lCoordRep
+defR:: Rhythmic
+defR = O

@@ -39,3 +39,5 @@ import Motor
 import Helpers
 import QuickTestAndDebug
 
+import Test.Main as Test
+

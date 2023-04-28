@@ -3369,7 +3369,7 @@ var showSeqType = {
       return show2("structured");
     }
     ;
-    throw new Error("Failed pattern match at AST (line 42, column 1 - line 46, column 38): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at AST (line 46, column 1 - line 50, column 38): " + [v.constructor.name]);
   }
 };
 var show6 = /* @__PURE__ */ show(showSeqType);
@@ -3395,7 +3395,7 @@ var showRhythmic = {
       return show(showList(showRhythmic))(v.value0);
     }
     ;
-    throw new Error("Failed pattern match at AST (line 33, column 1 - line 38, column 32): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at AST (line 37, column 1 - line 42, column 32): " + [v.constructor.name]);
   }
 };
 var show7 = /* @__PURE__ */ show(showRhythmic);
@@ -3409,7 +3409,7 @@ var showOnset = {
       return "(O" + (" dur->beatPos:" + (take2(8)(show22(v.value1)) + ")"));
     }
     ;
-    throw new Error("Failed pattern match at AST (line 93, column 1 - line 95, column 84): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at AST (line 97, column 1 - line 99, column 84): " + [v.constructor.name]);
   }
 };
 var showAural = {
@@ -3422,13 +3422,13 @@ var showAural = {
       return show4(v.value0) + (" " + show6(v.value1));
     }
     ;
-    throw new Error("Failed pattern match at AST (line 63, column 1 - line 65, column 45): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at AST (line 67, column 1 - line 69, column 45): " + [v.constructor.name]);
   }
 };
 var show8 = /* @__PURE__ */ show(/* @__PURE__ */ showList(showAural));
 var showProgram = {
   show: function(v) {
-    return show7(v.value0) + (show5(v.value1) + (" " + show8(v.value2)));
+    return show7(v.value0) + (" " + (show5(v.value1) + (" " + show8(v.value2))));
   }
 };
 var eqSeqType = {
@@ -5263,7 +5263,6 @@ var show25 = /* @__PURE__ */ show(showTuple2);
 var show33 = /* @__PURE__ */ show(/* @__PURE__ */ showList(showTuple2));
 var sort1 = /* @__PURE__ */ sort(ordNumber);
 var groupAll2 = /* @__PURE__ */ groupAll(ordNumber);
-var show42 = /* @__PURE__ */ show(/* @__PURE__ */ showList(showNumber));
 var wholePart = function(x2) {
   return toNumber(floor2(x2));
 };
@@ -5292,7 +5291,7 @@ var rhythmicToRefrainDuration = function(v) {
     return foldl12(add3)(0)(x2);
   }
   ;
-  throw new Error("Failed pattern match at Motor (line 238, column 1 - line 238, column 47): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Motor (line 234, column 1 - line 234, column 47): " + [v.constructor.name]);
 };
 var manyCycles = function(len) {
   return function(grupo) {
@@ -5353,7 +5352,7 @@ var eventsDurations$prime = function(dur) {
       })(v.value0));
     }
     ;
-    throw new Error("Failed pattern match at Motor (line 278, column 1 - line 278, column 52): " + [dur.constructor.name, v.constructor.name]);
+    throw new Error("Failed pattern match at Motor (line 267, column 1 - line 267, column 52): " + [dur.constructor.name, v.constructor.name]);
   };
 };
 var eventsDurations = function(dur) {
@@ -5382,7 +5381,7 @@ var eventsDurations = function(dur) {
       })(v.value0));
     }
     ;
-    throw new Error("Failed pattern match at Motor (line 269, column 1 - line 269, column 51): " + [dur.constructor.name, v.constructor.name]);
+    throw new Error("Failed pattern match at Motor (line 258, column 1 - line 258, column 51): " + [dur.constructor.name, v.constructor.name]);
   };
 };
 var rhythmicToEventsDuration = function(rhy) {
@@ -5419,12 +5418,12 @@ var nextBeat = function(metre) {
             return toNumber(ceil2(wsInMetre)) + offsetInMetre;
           }
           ;
-          throw new Error("Failed pattern match at Motor (line 220, column 13 - line 221, column 86): " + []);
+          throw new Error("Failed pattern match at Motor (line 216, column 13 - line 217, column 86): " + []);
         }();
         return nextBeatInMetre * metre;
       }
       ;
-      throw new Error("Failed pattern match at Motor (line 214, column 1 - line 214, column 48): " + [metre.constructor.name, offset.constructor.name, ws.constructor.name]);
+      throw new Error("Failed pattern match at Motor (line 210, column 1 - line 210, column 48): " + [metre.constructor.name, offset.constructor.name, ws.constructor.name]);
     };
   };
 };
@@ -5440,7 +5439,7 @@ var findBeats$prime = function(metre) {
           return new Cons(nextBeat(metre)(offset)(ws), findBeats$prime(metre)(offset)(ws + metre)(we));
         }
         ;
-        throw new Error("Failed pattern match at Motor (line 209, column 1 - line 209, column 65): " + [metre.constructor.name, offset.constructor.name, ws.constructor.name, we.constructor.name]);
+        throw new Error("Failed pattern match at Motor (line 205, column 1 - line 205, column 65): " + [metre.constructor.name, offset.constructor.name, ws.constructor.name, we.constructor.name]);
       };
     };
   };
@@ -5529,7 +5528,7 @@ var auralise = function(v) {
       };
     }
     ;
-    throw new Error("Failed pattern match at Motor (line 61, column 1 - line 61, column 62): " + [v.constructor.name, v1.constructor.name]);
+    throw new Error("Failed pattern match at Motor (line 60, column 1 - line 60, column 62): " + [v.constructor.name, v1.constructor.name]);
   };
 };
 var auraliseMap = function(v) {
@@ -5578,7 +5577,7 @@ var amountOfRefrainsPerW = function(firstR) {
             return concat(fromFoldable1([range2(firstE)(lenE - 1 | 0), zpd, realLast]));
           }
           ;
-          throw new Error("Failed pattern match at Motor (line 115, column 1 - line 115, column 67): " + [firstR.constructor.name, lastR.constructor.name, firstE.constructor.name, lastE.constructor.name, lenE.constructor.name]);
+          throw new Error("Failed pattern match at Motor (line 114, column 1 - line 114, column 67): " + [firstR.constructor.name, lastR.constructor.name, firstE.constructor.name, lastE.constructor.name, lenE.constructor.name]);
         };
       };
     };
@@ -5660,27 +5659,6 @@ var eventProcess = function(t) {
         var is = sort1(concat(map9(manyCycles(eventsLen))(map9(toList)(groupAll2(map9(function(x2) {
           return offset + x2;
         })(map9(snd)(xs)))))));
-        var dbg7 = trace2("lastLocation " + show25(lastLocation))(function(v1) {
-          return lastLocation;
-        });
-        var dbg6 = trace2("indices " + show42(is))(function(v1) {
-          return is;
-        });
-        var dbg5 = trace2("offset " + show18(offset))(function(v1) {
-          return offset;
-        });
-        var dbg4 = trace2("elapsedRefrains " + show18(elapsedRefrains))(function(v1) {
-          return elapsedRefrains;
-        });
-        var dbg3 = trace2("refrainTotalDur " + show18(refrainDur))(function(v1) {
-          return refrainDur;
-        });
-        var dbg2 = trace2("eventsPerRefr " + show18(eventsLen))(function(v1) {
-          return eventsLen;
-        });
-        var dbg1 = trace2("firstLocation " + show25(firstLocation))(function(v1) {
-          return firstLocation;
-        });
         return new Events(map9(function(x2) {
           return indexedOnsetToEvent(x2)(t);
         })(zipWith(function(x2) {
@@ -28583,8 +28561,8 @@ var parseTopRhythmic = /* @__PURE__ */ bind6(/* @__PURE__ */ pure4(1))(function(
 });
 var parseTop = /* @__PURE__ */ bind6(/* @__PURE__ */ pure4(1))(function() {
   return discard2(whitespace)(function() {
-    return bind6(parseTopRhythmic)(function(x2) {
-      return bind6(alt5(parseTopAural)(pure4(new Cons(new S(new Cons("bd", Nil.value), ByEvent.value), Nil.value))))(function(y) {
+    return bind6(alt5(parseTopRhythmic)(pure4(new Tuple(O.value, false))))(function(x2) {
+      return bind6(alt5(parseTopAural)(pure4(new Cons(new S(new Cons("", Nil.value), ByEvent.value), Nil.value))))(function(y) {
         return discard2(eof)(function() {
           return pure4(new Program(fst(x2), snd(x2), y));
         });
@@ -28632,7 +28610,7 @@ var withoutMaybe = function(v) {
     };
   }
   ;
-  throw new Error("Failed pattern match at Main (line 157, column 1 - line 157, column 36): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Main (line 162, column 1 - line 162, column 36): " + [v.constructor.name]);
 };
 var unsafeMaybeMilliseconds = function($copy_v) {
   var $tco_done = false;
@@ -28648,7 +28626,7 @@ var unsafeMaybeMilliseconds = function($copy_v) {
       return;
     }
     ;
-    throw new Error("Failed pattern match at Main (line 129, column 1 - line 129, column 51): " + [v.constructor.name]);
+    throw new Error("Failed pattern match at Main (line 137, column 1 - line 137, column 51): " + [v.constructor.name]);
   }
   ;
   while (!$tco_done) {
@@ -28665,17 +28643,6 @@ var setTempo = function(timekNot) {
     return write(fromForeignTempo(t))(timekNot.tempo);
   };
 };
-var passageToWaste = function(p) {
-  return function(t) {
-    return function(ws) {
-      return function(we) {
-        return function($$eval) {
-          return programToWaste(t)(ws)(we)($$eval)(p);
-        };
-      };
-    };
-  };
-};
 var pErrorToString = function(v) {
   if (v instanceof Left) {
     return new Left(parseErrorMessage(v.value0));
@@ -28685,7 +28652,7 @@ var pErrorToString = function(v) {
     return new Right(v.value0);
   }
   ;
-  throw new Error("Failed pattern match at Main (line 111, column 1 - line 111, column 68): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Main (line 119, column 1 - line 119, column 68): " + [v.constructor.name]);
 };
 var numToDateTime = function(x2) {
   var asMaybeInstant = instant(x2);
@@ -28695,14 +28662,15 @@ var numToDateTime = function(x2) {
 var main = /* @__PURE__ */ pure5(unit);
 var launchDirt = function __do() {
   var dirt = newWebDirt({
-    sampleMapUrl: "samples/sampleMap.json",
-    sampleFolder: "samples"
+    sampleMapUrl: "./src/samples/sampleMap.json",
+    sampleFolder: "./src/samples"
   })();
   initializeWebAudio(dirt)();
   return dirt;
 };
 var launch = function __do2() {
-  log2("timekNot-CU: launch")();
+  log2("timekNot-CU: my small change")();
+  log2("prueba otra vez")();
   var launchTime = nowDateTime();
   var ast = $$new(new Program(O.value, false, new Cons(new S(new Cons("", Nil.value), ByEvent.value), Nil.value)))();
   var tempo = bind7(newTempo(reduce5(1)(1)))($$new)();
@@ -28726,14 +28694,14 @@ var justJust = function(v) {
     return false;
   }
   ;
-  throw new Error("Failed pattern match at Main (line 161, column 1 - line 161, column 34): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Main (line 166, column 1 - line 166, column 34): " + [v.constructor.name]);
 };
-var fromProgramToArray = function(program) {
+var fromProgramToArray = function(p) {
   return function(t) {
     return function(ws) {
       return function(we) {
         return function($$eval) {
-          return toUnfoldable4(passageToWaste(program)(t)(ws)(we)($$eval));
+          return toUnfoldable4(programToWaste(t)(ws)(we)($$eval)(p));
         };
       };
     };
@@ -28810,7 +28778,7 @@ var evaluate = function(timekNot) {
   return function(str) {
     return function __do3() {
       log2("timekNot-CU: evaluate")();
-      var passage = read(timekNot.ast)();
+      var program = read(timekNot.ast)();
       var $$eval = nowDateTime();
       var pr = pErrorToString(runParser(str)(parseTop));
       if (pr instanceof Left) {
@@ -28821,6 +28789,7 @@ var evaluate = function(timekNot) {
       }
       ;
       if (pr instanceof Right) {
+        log2(show111(pr.value0))();
         write($$eval)(timekNot["eval"])();
         write(pr.value0)(timekNot.ast)();
         return {
@@ -28829,7 +28798,7 @@ var evaluate = function(timekNot) {
         };
       }
       ;
-      throw new Error("Failed pattern match at Main (line 104, column 3 - line 109, column 42): " + [pr.constructor.name]);
+      throw new Error("Failed pattern match at Main (line 110, column 3 - line 117, column 42): " + [pr.constructor.name]);
     };
   };
 };
@@ -28843,7 +28812,6 @@ export {
   main,
   numToDateTime,
   pErrorToString,
-  passageToWaste,
   playDirts,
   renderStandalone,
   scheduleEventsStandAlone,

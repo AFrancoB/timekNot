@@ -44,7 +44,6 @@ var show2 = /* #__PURE__ */ Data_Show.show(showTuple);
 var show3 = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_List_Types.showList(showTuple));
 var sort1 = /* #__PURE__ */ Data_List.sort(Data_Ord.ordNumber);
 var groupAll = /* #__PURE__ */ Data_List.groupAll(Data_Ord.ordNumber);
-var show4 = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_List_Types.showList(Data_Show.showNumber));
 var wholePart = function (x) {
     return Data_Int.toNumber(Data_Int.floor(x));
 };
@@ -73,7 +72,7 @@ var rhythmicToRefrainDuration = function (v) {
         })(v.value0);
         return foldl1(add)(0.0)(x);
     };
-    throw new Error("Failed pattern match at Motor (line 238, column 1 - line 238, column 47): " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at Motor (line 234, column 1 - line 234, column 47): " + [ v.constructor.name ]);
 };
 var onsetAndIndexEvent = function (x) {
     return function (index) {
@@ -134,7 +133,7 @@ var eventsDurations$prime = function (dur) {
                 return eventsDurations$prime(newDur)(x);
             })(v.value0));
         };
-        throw new Error("Failed pattern match at Motor (line 278, column 1 - line 278, column 52): " + [ dur.constructor.name, v.constructor.name ]);
+        throw new Error("Failed pattern match at Motor (line 267, column 1 - line 267, column 52): " + [ dur.constructor.name, v.constructor.name ]);
     };
 };
 var eventsDurations = function (dur) {
@@ -158,7 +157,7 @@ var eventsDurations = function (dur) {
                 return eventsDurations(dur)(x);
             })(v.value0));
         };
-        throw new Error("Failed pattern match at Motor (line 269, column 1 - line 269, column 51): " + [ dur.constructor.name, v.constructor.name ]);
+        throw new Error("Failed pattern match at Motor (line 258, column 1 - line 258, column 51): " + [ dur.constructor.name, v.constructor.name ]);
     };
 };
 var rhythmicToEventsDuration = function (rhy) {
@@ -207,11 +206,11 @@ var nextBeat = function (metre) {
                     if (Data_Boolean.otherwise) {
                         return Data_Int.toNumber(Data_Int.ceil(wsInMetre)) + offsetInMetre;
                     };
-                    throw new Error("Failed pattern match at Motor (line 220, column 13 - line 221, column 86): " + [  ]);
+                    throw new Error("Failed pattern match at Motor (line 216, column 13 - line 217, column 86): " + [  ]);
                 })();
                 return nextBeatInMetre * metre;
             };
-            throw new Error("Failed pattern match at Motor (line 214, column 1 - line 214, column 48): " + [ metre.constructor.name, offset.constructor.name, ws.constructor.name ]);
+            throw new Error("Failed pattern match at Motor (line 210, column 1 - line 210, column 48): " + [ metre.constructor.name, offset.constructor.name, ws.constructor.name ]);
         };
     };
 };
@@ -225,7 +224,7 @@ var findBeats$prime = function (metre) {
                 if (Data_Boolean.otherwise) {
                     return new Data_List_Types.Cons(nextBeat(metre)(offset)(ws), findBeats$prime(metre)(offset)(ws + metre)(we));
                 };
-                throw new Error("Failed pattern match at Motor (line 209, column 1 - line 209, column 65): " + [ metre.constructor.name, offset.constructor.name, ws.constructor.name, we.constructor.name ]);
+                throw new Error("Failed pattern match at Motor (line 205, column 1 - line 205, column 65): " + [ metre.constructor.name, offset.constructor.name, ws.constructor.name, we.constructor.name ]);
             };
         };
     };
@@ -310,7 +309,7 @@ var auralise = function (v) {
                 whenPosix: 0.0
             };
         };
-        throw new Error("Failed pattern match at Motor (line 61, column 1 - line 61, column 62): " + [ v.constructor.name, v1.constructor.name ]);
+        throw new Error("Failed pattern match at Motor (line 60, column 1 - line 60, column 62): " + [ v.constructor.name, v1.constructor.name ]);
     };
 };
 var auraliseMap = function (v) {
@@ -355,7 +354,7 @@ var amountOfRefrainsPerW = function (firstR) {
                         })(Data_List.range(0)(lastE));
                         return Data_List.concat(fromFoldable1([ Data_List.range(firstE)(lenE - 1 | 0), zpd, realLast ]));
                     };
-                    throw new Error("Failed pattern match at Motor (line 115, column 1 - line 115, column 67): " + [ firstR.constructor.name, lastR.constructor.name, firstE.constructor.name, lastE.constructor.name, lenE.constructor.name ]);
+                    throw new Error("Failed pattern match at Motor (line 114, column 1 - line 114, column 67): " + [ firstR.constructor.name, lastR.constructor.name, firstE.constructor.name, lastE.constructor.name, lenE.constructor.name ]);
                 };
             };
         };
@@ -436,27 +435,6 @@ var eventProcess = function (t) {
                 var is = sort1(Data_List.concat(map(manyCycles(eventsLen))(map(Data_List_NonEmpty.toList)(groupAll(map(function (x) {
                     return offset + x;
                 })(map(Data_Tuple.snd)(xs)))))));
-                var dbg7 = trace("lastLocation " + show2(lastLocation))(function (v1) {
-                    return lastLocation;
-                });
-                var dbg6 = trace("indices " + show4(is))(function (v1) {
-                    return is;
-                });
-                var dbg5 = trace("offset " + show1(offset))(function (v1) {
-                    return offset;
-                });
-                var dbg4 = trace("elapsedRefrains " + show1(elapsedRefrains))(function (v1) {
-                    return elapsedRefrains;
-                });
-                var dbg3 = trace("refrainTotalDur " + show1(refrainDur))(function (v1) {
-                    return refrainDur;
-                });
-                var dbg2 = trace("eventsPerRefr " + show1(eventsLen))(function (v1) {
-                    return eventsLen;
-                });
-                var dbg1 = trace("firstLocation " + show2(firstLocation))(function (v1) {
-                    return firstLocation;
-                });
                 return new AST.Events(map(function (x) {
                     return indexedOnsetToEvent(x)(t);
                 })(Data_List.zipWith(function (x) {
@@ -496,6 +474,6 @@ var programToWaste = function (t) {
     };
 };
 export {
-    eventProcess,
-    programToWaste
+    programToWaste,
+    testy
 };

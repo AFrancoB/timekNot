@@ -32,6 +32,7 @@ import Partial.Unsafe
 import Data.Enum
 
 import Data.Newtype
+import Debug
 
 import WebDirt
 
@@ -44,16 +45,19 @@ import Motor
 main :: Effect Unit 
 main = pure unit
 
+-- february the 8th 2:30
+
 --launched from js end. provides a wd instance
 launchDirt :: Effect WebDirt
 launchDirt = do
-  dirt <- newWebDirt { sampleMapUrl: "./src/samples/sampleMap.json", sampleFolder: "./src/samples" } -- make this the proper sampleMap!!!!!
+  dirt <- newWebDirt { sampleMapUrl: "./src/samples/sampleMap.json", sampleFolder: "./src/samples" }
   initializeWebAudio dirt
   pure dirt
 
 launch :: Effect TimekNot
 launch = do
-  log "timekNot-CU: launch"
+  log "timekNot-CU: my small change"
+  log "prueba otra vez"
   launchTime <- nowDateTime
   ast <- new $ Program O false $ (S ("":Nil) ByEvent : Nil)
   tempo <- newTempo (1 % 1) >>= new -- why the bind? --- break into two lines
@@ -62,20 +66,27 @@ launch = do
   wE <- new launchTime
   pure { ast, tempo, eval, wS, wE}  
 
+-- handle the case where the previous window end is too much in the past. So: calculates events already past.
+-- render all the way until caught up
+-- way behind: jump forward <-  ***
 renderStandalone :: TimekNot -> WebDirt -> Effect Unit
 renderStandalone tk dirt = do 
   now <- nowDateTime  -- what is this?
+  -- x <- log $ "now: " <> show now
   prevWE <- read $ tk.wE 
   let future = fromMaybe now $ adjust (Milliseconds 100.00) now -- :: Milliseconds
   if prevWE <= future then do
     let wS = prevWE
     let wE = fromMaybe now $ adjust (Milliseconds 100.0) wS 
+    -- y <- log $ "ws: " <> show wS
+    -- z <- log $ "we: " <> show wE
     write wS tk.wS
     write wE tk.wE
     t <- read $ tk.tempo -- is this usefull??
     playDirts dirt tk
   else
     log $ show "sleep"
+
 
 playDirts:: WebDirt -> TimekNot -> Effect Unit
 playDirts dirt tk = do
@@ -101,9 +112,11 @@ evaluate timekNot str = do
   case pr of
     Left error -> pure $ { success: false, error }
     Right p -> do
+--      trace ("program: " <> show p) \_ -> p
+      log $ show p
       write eval timekNot.eval --- esto!!!!
       write p timekNot.ast 
-      pure $ { success: true, error: "" }    --- here you might add the eval time with purescript. 
+      pure $ { success: true, error: "" }
 
 pErrorToString:: Either ParseError Program -> Either String Program
 pErrorToString (Left x) = Left $ parseErrorMessage x
@@ -143,10 +156,7 @@ timekNotToForeigns tk ws we = do
     pure $ map unsafeToForeign events
 
 fromProgramToArray:: Program -> Tempo -> DateTime -> DateTime -> DateTime -> Array {whenPosix:: Number, s:: String}
-fromProgramToArray program t ws we eval = toUnfoldable $ passageToWaste program t ws we eval
-
-passageToWaste:: Program -> Tempo -> DateTime -> DateTime -> DateTime -> List Waste
-passageToWaste p t ws we eval = programToWaste t ws we eval p 
+fromProgramToArray p t ws we eval = toUnfoldable $ programToWaste t ws we eval p 
 
 filterMaybe:: List (Maybe Waste) -> List Waste
 filterMaybe x = map withoutMaybe $ filter justJust x

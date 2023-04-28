@@ -1,4 +1,4 @@
-module AST (TimekNot(..),Program(..),Rhythmic(..),Aural(..),SeqType(..),Process(..),Waste(..),Onset(..)) where
+module AST (TimekNot(..),Program(..),Rhythmic(..),Aural(..),SeqType(..),Process(..),Onset(..),Waste(..)) where
 
 import Prelude
 import Effect.Ref
@@ -20,7 +20,11 @@ type TimekNot = {
 data Program = Program Rhythmic Boolean (List Aural) 
 
 instance Show Program where
-  show (Program rhy fin au) = show rhy <> show fin <> " " <> show au
+  show (Program rhy fin au) = show rhy <> " " <> show fin <> " " <> show au
+
+instance Eq Program where
+  eq (Program _ _ _) (Program _ _ _) = true
+  eq _ _ = false
 
 data Rhythmic =  -- whenPosix, thats it
   X | -- x

@@ -58,7 +58,7 @@ var withoutMaybe = function (v) {
             s: ""
         };
     };
-    throw new Error("Failed pattern match at Main (line 157, column 1 - line 157, column 36): " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at Main (line 162, column 1 - line 162, column 36): " + [ v.constructor.name ]);
 };
 var unsafeMaybeMilliseconds = function ($copy_v) {
     var $tco_done = false;
@@ -72,7 +72,7 @@ var unsafeMaybeMilliseconds = function ($copy_v) {
             $copy_v = Data_DateTime_Instant.instant(0.0);
             return;
         };
-        throw new Error("Failed pattern match at Main (line 129, column 1 - line 129, column 51): " + [ v.constructor.name ]);
+        throw new Error("Failed pattern match at Main (line 137, column 1 - line 137, column 51): " + [ v.constructor.name ]);
     };
     while (!$tco_done) {
         $tco_result = $tco_loop($copy_v);
@@ -87,17 +87,6 @@ var setTempo = function (timekNot) {
         return Effect_Ref.write(Data_Tempo.fromForeignTempo(t))(timekNot.tempo);
     };
 };
-var passageToWaste = function (p) {
-    return function (t) {
-        return function (ws) {
-            return function (we) {
-                return function ($$eval) {
-                    return Motor.programToWaste(t)(ws)(we)($$eval)(p);
-                };
-            };
-        };
-    };
-};
 var pErrorToString = function (v) {
     if (v instanceof Data_Either.Left) {
         return new Data_Either.Left(Parsing.parseErrorMessage(v.value0));
@@ -105,7 +94,7 @@ var pErrorToString = function (v) {
     if (v instanceof Data_Either.Right) {
         return new Data_Either.Right(v.value0);
     };
-    throw new Error("Failed pattern match at Main (line 111, column 1 - line 111, column 68): " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at Main (line 119, column 1 - line 119, column 68): " + [ v.constructor.name ]);
 };
 var numToDateTime = function (x) {
     var asMaybeInstant = Data_DateTime_Instant.instant(x);
@@ -115,14 +104,15 @@ var numToDateTime = function (x) {
 var main = /* #__PURE__ */ pure(Data_Unit.unit);
 var launchDirt = function __do() {
     var dirt = WebDirt.newWebDirt({
-        sampleMapUrl: "samples/sampleMap.json",
-        sampleFolder: "samples"
+        sampleMapUrl: "./src/samples/sampleMap.json",
+        sampleFolder: "./src/samples"
     })();
     WebDirt.initializeWebAudio(dirt)();
     return dirt;
 };
 var launch = function __do() {
-    Effect_Console.log("timekNot-CU: launch")();
+    Effect_Console.log("timekNot-CU: my small change")();
+    Effect_Console.log("prueba otra vez")();
     var launchTime = Effect_Now.nowDateTime();
     var ast = Effect_Ref["new"](new AST.Program(AST.O.value, false, new Data_List_Types.Cons(new AST.S(new Data_List_Types.Cons("", Data_List_Types.Nil.value), AST.ByEvent.value), Data_List_Types.Nil.value)))();
     var tempo = bind(Data_Tempo.newTempo(reduce(1)(1)))(Effect_Ref["new"])();
@@ -144,14 +134,14 @@ var justJust = function (v) {
     if (v instanceof Data_Maybe.Nothing) {
         return false;
     };
-    throw new Error("Failed pattern match at Main (line 161, column 1 - line 161, column 34): " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at Main (line 166, column 1 - line 166, column 34): " + [ v.constructor.name ]);
 };
-var fromProgramToArray = function (program) {
+var fromProgramToArray = function (p) {
     return function (t) {
         return function (ws) {
             return function (we) {
                 return function ($$eval) {
-                    return toUnfoldable(passageToWaste(program)(t)(ws)(we)($$eval));
+                    return toUnfoldable(Motor.programToWaste(t)(ws)(we)($$eval)(p));
                 };
             };
         };
@@ -227,7 +217,7 @@ var evaluate = function (timekNot) {
     return function (str) {
         return function __do() {
             Effect_Console.log("timekNot-CU: evaluate")();
-            var passage = Effect_Ref.read(timekNot.ast)();
+            var program = Effect_Ref.read(timekNot.ast)();
             var $$eval = Effect_Now.nowDateTime();
             var pr = pErrorToString(Parsing.runParser(str)(Parser.parseTop));
             if (pr instanceof Data_Either.Left) {
@@ -237,6 +227,7 @@ var evaluate = function (timekNot) {
                 };
             };
             if (pr instanceof Data_Either.Right) {
+                Effect_Console.log(show1(pr.value0))();
                 Effect_Ref.write($$eval)(timekNot["eval"])();
                 Effect_Ref.write(pr.value0)(timekNot.ast)();
                 return {
@@ -244,7 +235,7 @@ var evaluate = function (timekNot) {
                     error: ""
                 };
             };
-            throw new Error("Failed pattern match at Main (line 104, column 3 - line 109, column 42): " + [ pr.constructor.name ]);
+            throw new Error("Failed pattern match at Main (line 110, column 3 - line 117, column 42): " + [ pr.constructor.name ]);
         };
     };
 };
@@ -263,7 +254,6 @@ export {
     unsafeMaybeMilliseconds,
     timekNotToForeigns,
     fromProgramToArray,
-    passageToWaste,
     filterMaybe,
     withoutMaybe,
     justJust,
