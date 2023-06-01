@@ -34,7 +34,7 @@ toNumber' (Left x) = toNumber x
 toNumber' (Right x) = x
 
 attachLast::forall a. a -> List a -> List a 
-attachLast a xs = reverse (a :reverse xs)
+attachLast a xs = reverse (a :reverse xs) -- use (++) operator instead, it performs better
 
 x:: Rhythmic
 x = X

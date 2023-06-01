@@ -29,9 +29,7 @@ import Parsing.Token (makeTokenParser)
 
 import AST
 import Motor 
-
-
--- Tuesday 3:30 next meeting (make phd long calendar, temazcal writing)
+import Helpers
 
 type P = ParserT String Identity 
 
@@ -39,6 +37,7 @@ parseTop:: P Program
 parseTop = do
   _ <- pure 1
   whitespace
+--  w <- parsePolyTemporality <|> (pure "hola")
   x <- parseTopRhythmic <|> (pure $ Tuple O false)
   y <- parseTopAural <|> (pure $ S ("" : Nil) ByEvent : Nil) 
   eof
@@ -94,12 +93,6 @@ parseSD = do
   _ <- charWS ']'
   pure $ Sd x
 
-parseXO:: P Rhythmic
-parseXO = do
-  _ <- pure 1
-  x <- choice [charWS 'x' *> pure X, charWS 'o' *> pure O]
-  pure x
-
 parseRepeat:: P Rhythmic
 parseRepeat = do
   _ <- pure 1
@@ -108,6 +101,12 @@ parseRepeat = do
   _ <- charWS '#'
   y <- integer
   pure $ Repeat x y
+
+parseXO:: P Rhythmic
+parseXO = do
+  _ <- pure 1
+  x <- choice [charWS 'x' *> pure X, charWS 'o' *> pure O]
+  pure x
 
 
 charWS:: Char -> P Char

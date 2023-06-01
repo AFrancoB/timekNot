@@ -45,8 +45,6 @@ import Motor
 main :: Effect Unit 
 main = pure unit
 
--- february the 8th 2:30
-
 --launched from js end. provides a wd instance
 launchDirt :: Effect WebDirt
 launchDirt = do

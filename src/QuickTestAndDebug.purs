@@ -1,4 +1,4 @@
-module QuickTestAndDebug (tEval,t,tAncient,ws,we,eval) where
+module QuickTestAndDebug (tEval,t,tAncient,ws,we,eval,te,w,evalTi) where
 
 import Prelude
 import Data.Int
@@ -56,3 +56,16 @@ we x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
 
 eval:: DateTime
 eval = (DateTime (makeDate 2022 June 3) (makeTime 19 15 0 100))
+
+---
+dia = makeDate 2023 May 27
+hra = (makeTime 19 43 10 100)
+
+te:: Tempo
+te = {freq: (2%1),time: (DateTime dia hra), count: fromInt 0 }
+
+w:: Int -> Int -> DateTime
+w x y = (DateTime dia (makeTime 19 43 x y))
+
+evalTi:: Int -> Int -> DateTime
+evalTi x y = w x y
