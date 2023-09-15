@@ -99,11 +99,12 @@ in  upstream
 -------------------------------
 -}
 let upstream =
-      https://github.com/purescript/package-sets/releases/download/psc-0.15.0-20220527/packages.dhall sha256:15dd8041480502850e4043ea2977ed22d6ab3fc24d565211acde6f8c5152a799
+      https://github.com/purescript/package-sets/releases/download/psc-0.15.4-20230105/packages.dhall
+        sha256:3e9fbc9ba03e9a1fcfd895f65e2d50ee2f5e86c4cd273f3d5c841b655a0e1bda
 
 in  upstream
   with purescript-webdirt =
-    { dependencies = [ "prelude" , "effect" ]
+    { dependencies = [ "prelude", "effect" ]
     , repo = "https://github.com/dktr0/WebDirt.git"
     , version = "6fc66e5f1b60a49c2326a1bcd79756bd68115e2a"
     }

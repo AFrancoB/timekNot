@@ -248,6 +248,9 @@ var boundedEither = function (dictBounded) {
         };
     };
 };
+var blush = /* #__PURE__ */ (function () {
+    return either(Data_Maybe.Just.create)(Data_Function["const"](Data_Maybe.Nothing.value));
+})();
 var applyEither = {
     apply: function (v) {
         return function (v1) {
@@ -332,6 +335,7 @@ export {
     note,
     note$prime,
     hush,
+    blush,
     functorEither,
     genericEither,
     invariantEither,

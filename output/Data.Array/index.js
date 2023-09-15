@@ -91,15 +91,15 @@ var toUnfoldable = function (dictUnfoldable) {
             if (Data_Boolean.otherwise) {
                 return Data_Maybe.Nothing.value;
             };
-            throw new Error("Failed pattern match at Data.Array (line 156, column 3 - line 158, column 26): " + [ i.constructor.name ]);
+            throw new Error("Failed pattern match at Data.Array (line 157, column 3 - line 159, column 26): " + [ i.constructor.name ]);
         };
         return unfoldr(f)(0);
     };
 };
 var take = function (n) {
     return function (xs) {
-        var $145 = n < 1;
-        if ($145) {
+        var $146 = n < 1;
+        if ($146) {
             return [  ];
         };
         return $foreign.slice(0)(n)(xs);
@@ -137,7 +137,7 @@ var sortBy = function (comp) {
         if (v instanceof Data_Ordering.LT) {
             return -1 | 0;
         };
-        throw new Error("Failed pattern match at Data.Array (line 829, column 31 - line 832, column 11): " + [ v.constructor.name ]);
+        throw new Error("Failed pattern match at Data.Array (line 870, column 31 - line 873, column 11): " + [ v.constructor.name ]);
     });
 };
 var sortWith = function (dictOrd) {
@@ -171,11 +171,11 @@ var nubByEq = function (eq2) {
             Control_Monad_ST_Internal.foreach(xs)(function (x) {
                 return function __do() {
                     var e = map((function () {
-                        var $177 = $foreign.any(function (v) {
+                        var $180 = $foreign.any(function (v) {
                             return eq2(v)(x);
                         });
-                        return function ($178) {
-                            return !$177($178);
+                        return function ($181) {
+                            return !$180($181);
                         };
                     })())(Data_Array_ST.unsafeFreeze(arr))();
                     return when(e)($$void(Data_Array_ST.push(x)(arr)))();
@@ -231,7 +231,7 @@ var intersperse = function (a) {
                 };
             })());
         };
-        throw new Error("Failed pattern match at Data.Array (line 611, column 21 - line 620, column 19): " + [ v.constructor.name ]);
+        throw new Error("Failed pattern match at Data.Array (line 612, column 21 - line 621, column 19): " + [ v.constructor.name ]);
     };
 };
 var intercalate = function (dictMonoid) {
@@ -247,7 +247,7 @@ var init = function (xs) {
     if (Data_Boolean.otherwise) {
         return new Data_Maybe.Just($foreign.slice(0)($foreign.length(xs) - 1 | 0)(xs));
     };
-    throw new Error("Failed pattern match at Data.Array (line 338, column 1 - line 338, column 45): " + [ xs.constructor.name ]);
+    throw new Error("Failed pattern match at Data.Array (line 339, column 1 - line 339, column 45): " + [ xs.constructor.name ]);
 };
 var index = /* #__PURE__ */ (function () {
     return $foreign.indexImpl(Data_Maybe.Just.create)(Data_Maybe.Nothing.value);
@@ -283,8 +283,8 @@ var span = function (p) {
             function $tco_loop(i) {
                 var v = index(arr)(i);
                 if (v instanceof Data_Maybe.Just) {
-                    var $152 = p(v.value0);
-                    if ($152) {
+                    var $153 = p(v.value0);
+                    if ($153) {
                         $copy_i = i + 1 | 0;
                         return;
                     };
@@ -295,7 +295,7 @@ var span = function (p) {
                     $tco_done = true;
                     return Data_Maybe.Nothing.value;
                 };
-                throw new Error("Failed pattern match at Data.Array (line 964, column 5 - line 966, column 25): " + [ v.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Array (line 1005, column 5 - line 1007, column 25): " + [ v.constructor.name ]);
             };
             while (!$tco_done) {
                 $tco_result = $tco_loop($copy_i);
@@ -321,7 +321,7 @@ var span = function (p) {
                 rest: [  ]
             };
         };
-        throw new Error("Failed pattern match at Data.Array (line 951, column 3 - line 957, column 30): " + [ breakIndex.constructor.name ]);
+        throw new Error("Failed pattern match at Data.Array (line 992, column 3 - line 998, column 30): " + [ breakIndex.constructor.name ]);
     };
 };
 var takeWhile = function (p) {
@@ -367,11 +367,11 @@ var nubBy = function (comp) {
                 Control_Monad_ST_Internal.foreach(indexedAndSorted)(function (v1) {
                     return function __do() {
                         var lst = map((function () {
-                            var $179 = function ($181) {
-                                return fromJust(last($181));
+                            var $182 = function ($184) {
+                                return fromJust(last($184));
                             };
-                            return function ($180) {
-                                return Data_Tuple.snd($179($180));
+                            return function ($183) {
+                                return Data_Tuple.snd($182($183));
                             };
                         })())(Data_Array_ST.unsafeFreeze(result))();
                         return when(notEq(comp(lst)(v1.value1))(Data_Ordering.EQ.value))($$void(Data_Array_ST.push(v1)(result)))();
@@ -380,7 +380,7 @@ var nubBy = function (comp) {
                 return Data_Array_ST.unsafeFreeze(result)();
             })()));
         };
-        throw new Error("Failed pattern match at Data.Array (line 1044, column 17 - line 1052, column 29): " + [ v.constructor.name ]);
+        throw new Error("Failed pattern match at Data.Array (line 1085, column 17 - line 1093, column 29): " + [ v.constructor.name ]);
     };
 };
 var nub = function (dictOrd) {
@@ -407,14 +407,14 @@ var groupBy = function (op) {
     };
 };
 var groupAllBy = function (cmp) {
-    var $182 = groupBy(function (x) {
+    var $185 = groupBy(function (x) {
         return function (y) {
             return eq1(cmp(x)(y))(Data_Ordering.EQ.value);
         };
     });
-    var $183 = sortBy(cmp);
-    return function ($184) {
-        return $182($183($184));
+    var $186 = sortBy(cmp);
+    return function ($187) {
+        return $185($186($187));
     };
 };
 var groupAll = function (dictOrd) {
@@ -431,6 +431,42 @@ var fromFoldable = function (dictFoldable) {
 };
 var foldr = /* #__PURE__ */ Data_Foldable.foldr(Data_Foldable.foldableArray);
 var foldl = /* #__PURE__ */ Data_Foldable.foldl(Data_Foldable.foldableArray);
+var transpose = function (xs) {
+    var buildNext = function (idx) {
+        return Data_Function.flip(foldl)(Data_Maybe.Nothing.value)(function (acc) {
+            return function (nextArr) {
+                return Data_Maybe.maybe(acc)(function (el) {
+                    return new Data_Maybe.Just(Data_Maybe.maybe([ el ])(Data_Function.flip(snoc)(el))(acc));
+                })(index(nextArr)(idx));
+            };
+        })(xs);
+    };
+    var go = function ($copy_idx) {
+        return function ($copy_allArrays) {
+            var $tco_var_idx = $copy_idx;
+            var $tco_done = false;
+            var $tco_result;
+            function $tco_loop(idx, allArrays) {
+                var v = buildNext(idx);
+                if (v instanceof Data_Maybe.Nothing) {
+                    $tco_done = true;
+                    return allArrays;
+                };
+                if (v instanceof Data_Maybe.Just) {
+                    $tco_var_idx = idx + 1 | 0;
+                    $copy_allArrays = snoc(allArrays)(v.value0);
+                    return;
+                };
+                throw new Error("Failed pattern match at Data.Array (line 816, column 22 - line 818, column 52): " + [ v.constructor.name ]);
+            };
+            while (!$tco_done) {
+                $tco_result = $tco_loop($tco_var_idx, $copy_allArrays);
+            };
+            return $tco_result;
+        };
+    };
+    return go(0)([  ]);
+};
 var foldRecM = function (dictMonadRec) {
     var Monad0 = dictMonadRec.Monad0();
     var pure1 = Control_Applicative.pure(Monad0.Applicative0());
@@ -452,7 +488,7 @@ var foldRecM = function (dictMonadRec) {
                                 }));
                             });
                         };
-                        throw new Error("Failed pattern match at Data.Array (line 1263, column 3 - line 1267, column 42): " + [ res.constructor.name, i.constructor.name ]);
+                        throw new Error("Failed pattern match at Data.Array (line 1304, column 3 - line 1308, column 42): " + [ res.constructor.name, i.constructor.name ]);
                     };
                 };
                 return tailRecM2(go)(b)(0);
@@ -568,8 +604,8 @@ var dropEnd = function (n) {
 };
 var drop = function (n) {
     return function (xs) {
-        var $167 = n < 1;
-        if ($167) {
+        var $170 = n < 1;
+        if ($170) {
             return xs;
         };
         return $foreign.slice(n)($foreign.length(xs))(xs);
@@ -640,9 +676,9 @@ var many = function (dictAlternative) {
 var concatMap = /* #__PURE__ */ Data_Function.flip(/* #__PURE__ */ Control_Bind.bind(Control_Bind.bindArray));
 var mapMaybe = function (f) {
     return concatMap((function () {
-        var $185 = Data_Maybe.maybe([  ])(singleton);
-        return function ($186) {
-            return $185(f($186));
+        var $188 = Data_Maybe.maybe([  ])(singleton);
+        return function ($189) {
+            return $188(f($189));
         };
     })());
 };
@@ -650,17 +686,17 @@ var filterA = function (dictApplicative) {
     var traverse1 = traverse(dictApplicative);
     var map3 = Data_Functor.map((dictApplicative.Apply0()).Functor0());
     return function (p) {
-        var $187 = map3(mapMaybe(function (v) {
+        var $190 = map3(mapMaybe(function (v) {
             if (v.value1) {
                 return new Data_Maybe.Just(v.value0);
             };
             return Data_Maybe.Nothing.value;
         }));
-        var $188 = traverse1(function (x) {
+        var $191 = traverse1(function (x) {
             return map3(Data_Tuple.Tuple.create(x))(p(x));
         });
-        return function ($189) {
-            return $187($188($189));
+        return function ($192) {
+            return $190($191($192));
         };
     };
 };
@@ -676,7 +712,7 @@ var alterAt = function (i) {
                 if (v instanceof Data_Maybe.Just) {
                     return updateAt(i)(v.value0)(xs);
                 };
-                throw new Error("Failed pattern match at Data.Array (line 589, column 10 - line 591, column 32): " + [ v.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Array (line 590, column 10 - line 592, column 32): " + [ v.constructor.name ]);
             };
             return Data_Maybe.maybe(Data_Maybe.Nothing.value)(go)(index(xs)(i));
         };
@@ -742,6 +778,7 @@ export {
     foldMap,
     fold,
     intercalate,
+    transpose,
     sort,
     sortBy,
     sortWith,

@@ -6,7 +6,7 @@ module Data.Tempo where
 
 import Prelude
 import Data.DateTime
-import Data.DateTime.Instant
+import Data.DateTime.Instant hiding (diff)
 import Data.Time.Duration
 import Data.Rational
 import Data.Maybe

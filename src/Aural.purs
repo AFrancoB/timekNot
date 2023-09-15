@@ -1,99 +1,108 @@
-module Aural(samples, aural) where
+module Aural(aural) where
 
-import Prelude hiding (between)
-import Prim.Boolean
+import Prelude
 
-import Data.Either
 import Data.Identity
-import Data.Array as Arr
-import Data.List.Lazy as Lz
-import Data.List hiding (many)
-import Data.Typelevel.Bool
+import Data.List (List(..), head, tail, elem, (:), filter, fromFoldable)
+import Data.Array (fromFoldable) as A
+import Data.Either
 import Data.Int
-import Data.Tuple
-import Data.Tuple.Nested
+import Data.Tuple (Tuple(..), fst, snd)
+import Data.Map (Map(..), lookup, keys, singleton, toUnfoldable, member)
+import Data.Map (fromFoldable) as M
+import Data.Maybe (Maybe(..), fromMaybe)
+import Data.Set as Set
 import Data.String as Str
 
-import Data.Functor
+import Data.FunctorWithIndex (mapWithIndex)
 
-import Data.Maybe hiding (optional)
-
-import Control.Monad
-
-import Effect (Effect)
-import Effect.Console (log)
-
-import Data.Rational
-import Data.Ratio
-
-import Data.NonEmpty as N
+import Data.String.CodeUnits (fromCharArray)
 
 import Parsing
 import Parsing.String
 import Parsing.String.Basic
 import Parsing.Combinators
+import Parsing.Combinators.Array (many)
 import Parsing.Language (haskellStyle)
 import Parsing.Token (makeTokenParser)
 
-import Data.DateTime
-import Data.DateTime.Instant
-import Data.Tempo
-import Data.Enum
-import Data.Map as M
-import Partial.Unsafe
-
 import AST
+import Rhythm
 
 type P = ParserT String Identity
 
+aural:: P Expression
+aural = do 
+    _ <- pure 1
+    x <- values
+    _ <- reserved ";"
+    pure $ AuralExpression x -- (Map Strg Aural)
 
-aural:: P (List Aural)
-aural = do
-    x <- many $ choice [nums, samples]
-    pure $ fromFoldable x
+values:: P (Map String Aural)
+values = do
+    _ <- pure 1
+    id <- voiceId
+    xs <- many value
+    pure $ singleton id (fromFoldable xs)
 
-nums:: P Aural 
-nums = do
-    x <- choice [try nSeq,try nSeq']
+value:: P Value
+value = do
+    _ <- pure 1
+    _ <- reservedOp "."
+    valType <- choice [try sound,n]
+    pure valType
+
+n:: P Value
+n = do
+    _ <- pure 1
+    _ <- choice [reserved "n"]
+    _ <- reservedOp "="
+    n <- choice [try makeN, transposeN]
+    pure n
+
+sound:: P Value
+sound = do
+    _ <- pure 1
+    _ <- choice [try $ reserved "sound",reserved "s"]
+    _ <- reservedOp "="
+    sound <- choice [try makeSound, transposeSound]
+    pure sound
+
+transposeN:: P Value
+transposeN = do
+    id <- voiceId
+    pure $ TransposedN id
+
+makeN:: P Value
+makeN = do
+    _ <- pure 1
+    sp <- parseSpan
+    strList <- many natural 
+    pure $ N sp $ fromFoldable strList
+
+
+transposeSound:: P Value
+transposeSound = do
+    id <- voiceId
+    pure $ TransposedSound id
+
+makeSound:: P Value
+makeSound = do
+    _ <- pure 1
+    sp <- parseSpan
+    strList <- sampleParser 
+    pure $ Sound sp strList
+
+parseSpan:: P Span
+parseSpan = do
+    _ <- pure 1
+    x <- choice [
+                   reserved "-_" *>  pure CycleInBlock
+                 , try $ reserved "_-" *>  pure CycleBlock
+                 , try $ reserved "_-_" *> pure SpreadBlock
+                 , reserved "_" *>   pure  CycleEvent
+                ]
     pure x
-
-nSeq:: P Aural
-nSeq = do 
-    _ <- string "nSeq"
-    whitespace
-    x <- nParser
-    pure $ N x EventI
-
-nSeq':: P Aural
-nSeq' = do 
-    _ <- string "nSeq\'"
-    whitespace
-    x <- nParser
-    pure $ N x PassageI
-
-nParser:: P (List Int)
-nParser = do
-    x <- brackets $ many integer
-    pure $ fromFoldable x
-
-samples:: P Aural
-samples = do
-    x <- choice [sampleSeq',sampleSeq]
-    pure x
-
-sampleSeq':: P Aural
-sampleSeq' = do
-    _ <- string "sampleSeq\'"
-    whitespace
-    x <- sampleParser
-    pure $ Sample x PassageI
-
-sampleSeq:: P Aural
-sampleSeq = do
-    _ <- string "sampleSeq"
-    whitespace
-    x <- sampleParser
-    pure $ Sample x EventI
 
 sampleParser:: P (List String)
 sampleParser = do
@@ -103,18 +112,11 @@ sampleParser = do
 stringToSamples:: String -> List String -- what to do with commas??
 stringToSamples s = fromFoldable $ Str.split (Str.Pattern " ") $ Str.trim s
 
--- get the repetition pattern (which si the length of the array of first value of) so if the array is 4 samples long, seSamples [bd bd cp bd] entonces cada 4 (eventos, metros o pasajes empieza una serie nueva de samples. Luego sumarle a ese numero la posicion del inicio del ciclo, es decir: 0,4,8,12,16 es el inicio de cada ciclo entonces: 0+3,4+3,8+3,12+3 es la posicion del clap
-
-
-
-
-
-
-
-
-
-
-
+voiceId:: P String 
+voiceId = do
+    _ <- pure 1
+    x <- identifier
+    pure x
 
 
 tokenParser = makeTokenParser haskellStyle
@@ -123,6 +125,7 @@ braces      = tokenParser.braces
 identifier  = tokenParser.identifier
 reserved    = tokenParser.reserved
 naturalOrFloat = tokenParser.naturalOrFloat
+natural = tokenParser.natural
 float = tokenParser.float
 whitespace = tokenParser.whiteSpace
 colon = tokenParser.colon
@@ -130,4 +133,26 @@ brackets = tokenParser.brackets
 comma = tokenParser.comma
 semi = tokenParser.semi
 integer = tokenParser.integer
+stringLiteral = tokenParser.stringLiteral
+reservedOp = tokenParser.reservedOp
 stringLit = tokenParser.stringLiteral
+
+
+toNumber':: Either Int Number -> Number
+toNumber' (Left x) = toNumber x 
+toNumber' (Right x) = x
+
+
+charWS:: Char -> P Char
+charWS x = do
+  _ <- pure 1
+  x <- char x 
+  whitespace
+  pure x
+
+strWS:: String -> P String
+strWS x = do
+  _ <- pure 1
+  x <- string x 
+  whitespace
+  pure x

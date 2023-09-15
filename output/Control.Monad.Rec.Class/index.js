@@ -78,7 +78,7 @@ var untilJust = function (dictMonadRec) {
                 if (v1 instanceof Data_Maybe.Just) {
                     return new Done(v1.value0);
                 };
-                throw new Error("Failed pattern match at Control.Monad.Rec.Class (line 155, column 43 - line 157, column 19): " + [ v1.constructor.name ]);
+                throw new Error("Failed pattern match at Control.Monad.Rec.Class (line 179, column 43 - line 181, column 19): " + [ v1.constructor.name ]);
             });
         })(Data_Unit.unit);
     };
@@ -98,7 +98,7 @@ var whileJust = function (dictMonoid) {
                     if (v1 instanceof Data_Maybe.Just) {
                         return new Loop(append(v)(v1.value0));
                     };
-                    throw new Error("Failed pattern match at Control.Monad.Rec.Class (line 148, column 45 - line 150, column 26): " + [ v1.constructor.name ]);
+                    throw new Error("Failed pattern match at Control.Monad.Rec.Class (line 172, column 45 - line 174, column 26): " + [ v1.constructor.name ]);
                 });
             })(mempty);
         };
@@ -117,7 +117,7 @@ var tailRec = function (f) {
                 $tco_done = true;
                 return v.value0;
             };
-            throw new Error("Failed pattern match at Control.Monad.Rec.Class (line 93, column 3 - line 93, column 25): " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Control.Monad.Rec.Class (line 103, column 3 - line 103, column 25): " + [ v.constructor.name ]);
         };
         while (!$tco_done) {
             $tco_result = $tco_loop($copy_v);
@@ -126,6 +126,33 @@ var tailRec = function (f) {
     };
     return function ($85) {
         return go(f($85));
+    };
+};
+var tailRec2 = function (f) {
+    return function (a) {
+        return function (b) {
+            return tailRec(function (o) {
+                return f(o.a)(o.b);
+            })({
+                a: a,
+                b: b
+            });
+        };
+    };
+};
+var tailRec3 = function (f) {
+    return function (a) {
+        return function (b) {
+            return function (c) {
+                return tailRec(function (o) {
+                    return f(o.a)(o.b)(o.c);
+                })({
+                    a: a,
+                    b: b,
+                    c: c
+                });
+            };
+        };
     };
 };
 var monadRecMaybe = {
@@ -141,7 +168,7 @@ var monadRecMaybe = {
                 if (v instanceof Data_Maybe.Just && v.value0 instanceof Done) {
                     return new Done(new Data_Maybe.Just(v.value0.value0));
                 };
-                throw new Error("Failed pattern match at Control.Monad.Rec.Class (line 129, column 7 - line 129, column 31): " + [ v.constructor.name ]);
+                throw new Error("Failed pattern match at Control.Monad.Rec.Class (line 153, column 7 - line 153, column 31): " + [ v.constructor.name ]);
             };
             return tailRec(g)(f(a0));
         };
@@ -193,7 +220,7 @@ var monadRecEither = {
                 if (v instanceof Data_Either.Right && v.value0 instanceof Done) {
                     return new Done(new Data_Either.Right(v.value0.value0));
                 };
-                throw new Error("Failed pattern match at Control.Monad.Rec.Class (line 121, column 7 - line 121, column 33): " + [ v.constructor.name ]);
+                throw new Error("Failed pattern match at Control.Monad.Rec.Class (line 145, column 7 - line 145, column 33): " + [ v.constructor.name ]);
             };
             return tailRec(g)(f(a0));
         };
@@ -209,7 +236,7 @@ var monadRecEffect = {
                 if (v instanceof Done) {
                     return v.value0;
                 };
-                throw new Error("Failed pattern match at Control.Monad.Rec.Class (line 113, column 30 - line 113, column 44): " + [ v.constructor.name ]);
+                throw new Error("Failed pattern match at Control.Monad.Rec.Class (line 137, column 30 - line 137, column 44): " + [ v.constructor.name ]);
             };
             return function __do() {
                 var r = bindFlipped(Effect_Ref["new"])(f(a))();
@@ -224,7 +251,7 @@ var monadRecEffect = {
                         if (v instanceof Done) {
                             return true;
                         };
-                        throw new Error("Failed pattern match at Control.Monad.Rec.Class (line 104, column 22 - line 109, column 28): " + [ v.constructor.name ]);
+                        throw new Error("Failed pattern match at Control.Monad.Rec.Class (line 128, column 22 - line 133, column 28): " + [ v.constructor.name ]);
                     })()) {
 
                     };
@@ -237,6 +264,25 @@ var monadRecEffect = {
     Monad0: function () {
         return Effect.monadEffect;
     }
+};
+var loop3 = function (a) {
+    return function (b) {
+        return function (c) {
+            return new Loop({
+                a: a,
+                b: b,
+                c: c
+            });
+        };
+    };
+};
+var loop2 = function (a) {
+    return function (b) {
+        return new Loop({
+            a: a,
+            b: b
+        });
+    };
 };
 var functorStep = {
     map: function (f) {
@@ -270,7 +316,7 @@ var bifunctorStep = {
                 if (v2 instanceof Done) {
                     return new Done(v1(v2.value0));
                 };
-                throw new Error("Failed pattern match at Control.Monad.Rec.Class (line 29, column 1 - line 31, column 34): " + [ v.constructor.name, v1.constructor.name, v2.constructor.name ]);
+                throw new Error("Failed pattern match at Control.Monad.Rec.Class (line 33, column 1 - line 35, column 34): " + [ v.constructor.name, v1.constructor.name, v2.constructor.name ]);
             };
         };
     }
@@ -279,12 +325,16 @@ export {
     Loop,
     Done,
     tailRec,
+    tailRec2,
+    tailRec3,
     tailRecM,
     tailRecM2,
     tailRecM3,
     forever,
     whileJust,
     untilJust,
+    loop2,
+    loop3,
     functorStep,
     bifunctorStep,
     monadRecIdentity,

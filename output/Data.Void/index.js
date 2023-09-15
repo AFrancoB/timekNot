@@ -16,10 +16,6 @@ var absurd = function (a) {
     };
     return spin(a);
 };
-var showVoid = {
-    show: absurd
-};
 export {
-    absurd,
-    showVoid
+    absurd
 };

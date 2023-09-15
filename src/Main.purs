@@ -9,7 +9,6 @@ import Effect.Ref
 import Effect.Class
 import Effect.Console (log)
 import Data.Tempo
-import Data.DateTime
 import Effect.Ref (new,write)
 import Data.Traversable
 
@@ -33,42 +32,56 @@ import Data.Enum
 
 import Data.Newtype
 
-import Unleash
+import AST
+import Parser
+import Calculations
 
 import Parsing
 
 
-launch :: Effect Unleash
+-- command for copying into estuary devstaging: cp -Rf ~/Documents/repos/tk/timekNot /home/alejandro/Documents/repos/estuary/dev-staging/Estuary.jsexe
+
+-- Expression = TimeExpression (Map String Temporal)
+launch :: Effect TimekNot
 launch = do
-  log "Unleash-Windsor: launch"
-  ast <- new $ Program $ L.fromFoldable [S (Tuple "" 0) $ Q 0.0 0.0]
+  log "timekNot: launch"
+  ast <- new $ L.fromFoldable [TimeExpression  M.empty]
   tempo <- newTempo (1 % 1) >>= new 
   eval <- nowDateTime >>= new
   pure { ast, tempo, eval}  
 
-evaluate :: Unleash -> String -> Effect { success :: Boolean, error :: String }
-evaluate unleash str = do
-  log "Unleash-Windsor: evaluate"
-  program <- read unleash.ast
+evaluate :: TimekNot -> String -> Effect { success :: Boolean, error :: String }
+evaluate tk str = do
+  log "timekNot: evaluate"
+  program <- read tk.ast
   eval <- nowDateTime
-  let pr = pErrorToString $ runParser str parseProgram 
+  let pr = check' $ runParser str parseProgram
   case pr of
     Left error -> pure $ { success: false, error }
     Right p -> do
-      write eval unleash.eval 
-      write p unleash.ast 
-      pure $ { success: true, error: "" }
+      write eval tk.eval 
+      write p tk.ast 
+      pure $ { success: true, error: "bad syntax" }
 
-pErrorToString:: Either ParseError Program -> Either String Program
-pErrorToString (Left x) = Left $ parseErrorMessage x
-pErrorToString (Right x) = Right x
+check':: Either ParseError Program -> Either String Program
+check' (Left error) = Left $ parseErrorMessage error
+check' (Right aProgram) = case check (getTemporalMap aProgram) of
+                              true -> Right aProgram
+                              false -> Left "failed the check, time bites it's own tail"
 
-setTempo :: Unleash -> ForeignTempo -> Effect Unit
-setTempo unleash t = write (fromForeignTempo t) unleash.tempo
+setTempo :: TimekNot -> ForeignTempo -> Effect Unit
+setTempo tk t = do
+  log $ "setTempo is called" <> show (fromForeignTempo t)
+  write (fromForeignTempo t) tk.tempo
 
--- here a func that goes from rhythmicInto (passing through map) Event
-scheduleNoteEvents :: Unleash -> Number -> Number -> forall opts. Effect (Array Foreign)
-scheduleNoteEvents tk ws we = unleashToForeigns tk ws we
+-- setTempo :: RE.RenderEngine -> ForeignTempo -> Effect Unit
+-- setTempo re t = do
+--   rEnv <- read re.renderEnvironment
+--   write (rEnv { tempo = fromForeignTempo t } ) re.renderEnvironment
+
+
+scheduleNoteEvents :: TimekNot -> Number -> Number -> forall opts. Effect (Array Foreign)
+scheduleNoteEvents tk ws we = timekNotToForeigns tk ws we
 
 -- make unsafe function and correct with david's advice later
 numToDateTime:: Number -> DateTime 
@@ -81,23 +94,19 @@ unsafeMaybeMilliseconds:: Maybe Instant -> Instant
 unsafeMaybeMilliseconds (Just x) = x
 unsafeMaybeMilliseconds Nothing = unsafeMaybeMilliseconds $ instant $ Milliseconds 0.0
 
-unleashToForeigns:: Unleash -> Number -> Number -> forall opts. Effect (Array Foreign)
-unleashToForeigns un ws we = do
-    let ws' = numToDateTime (ws * 1000.0000)
+timekNotToForeigns:: TimekNot -> Number -> Number -> forall opts. Effect (Array Foreign)
+timekNotToForeigns tk ws we = do
+    let ws' = numToDateTime (ws * 1000.0000) -- haskell comes in milliseconds, purescript needs seconds
     let we' = numToDateTime (we * 1000.0000)
-    program <- read un.ast
-    t <- read un.tempo
-    eval <- read un.eval
+    program <- read tk.ast
+    t <- read tk.tempo
+    eval <- read tk.eval
 
     log $ show program
     log $ show ws
     log $ show we
+    log $ show t
 
-    let events = fromProgramToArray program t ws' we' eval
+    let events = mapToWaste program ws' we' eval t
     log $ show events
     pure $ map unsafeToForeign events
-
-fromProgramToArray:: Program -> Tempo -> DateTime -> DateTime -> DateTime -> Array {whenPosix:: Number, s:: String, n:: Int}
-fromProgramToArray prog t ws we eval = A.fromFoldable $ actualise prog t eval ws we
-
-

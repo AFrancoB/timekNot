@@ -19,8 +19,6 @@ import * as Data_Show from "../Data.Show/index.js";
 import * as Data_String_CodePoints from "../Data.String.CodePoints/index.js";
 import * as Data_String_CodeUnits from "../Data.String.CodeUnits/index.js";
 import * as Data_String_Regex_Flags from "../Data.String.Regex.Flags/index.js";
-import * as Data_Tuple from "../Data.Tuple/index.js";
-import * as Data_Unit from "../Data.Unit/index.js";
 import * as Parsing from "../Parsing/index.js";
 import * as Parsing_Combinators from "../Parsing.Combinators/index.js";
 import * as Parsing_String from "../Parsing.String/index.js";
@@ -38,19 +36,36 @@ var pure = /* #__PURE__ */ Control_Applicative.pure(Parsing.applicativeParserT);
 var bind = /* #__PURE__ */ Control_Bind.bind(Parsing.bindParserT);
 var notElem = /* #__PURE__ */ Data_Array.notElem(Data_String_CodePoints.eqCodePoint);
 var notElem1 = /* #__PURE__ */ Data_Array.notElem(Data_Eq.eqChar);
-var skipSpaces = /* #__PURE__ */ Parsing_String.consumeWith(function (input) {
-    var consumed = Data_String_CodePoints.takeWhile(Data_CodePoint_Unicode.isSpace)(input);
-    var remainder = Data_String_CodeUnits.drop(Data_String_CodeUnits.length(consumed))(input);
-    return new Data_Either.Right({
-        value: Data_Unit.unit,
-        consumed: consumed,
-        remainder: remainder
+var takeWhile1 = function (predicate) {
+    return Parsing_String.consumeWith(function (s) {
+        var value = Data_String_CodePoints.takeWhile(predicate)(s);
+        var len = Data_String_CodeUnits.length(value);
+        var $27 = len > 0;
+        if ($27) {
+            return new Data_Either.Right({
+                consumed: value,
+                remainder: Data_String_CodeUnits.drop(Data_String_CodeUnits.length(value))(s),
+                value: value
+            });
+        };
+        return new Data_Either.Left("Expected character satisfying predicate");
     });
-});
-var whiteSpace = /* #__PURE__ */ Data_Functor.map(Parsing.functorParserT)(Data_Tuple.fst)(/* #__PURE__ */ Parsing_String.match(skipSpaces));
+};
+var takeWhile = function (predicate) {
+    return Parsing_String.consumeWith(function (s) {
+        var value = Data_String_CodePoints.takeWhile(predicate)(s);
+        return new Data_Either.Right({
+            consumed: value,
+            remainder: Data_String_CodeUnits.drop(Data_String_CodeUnits.length(value))(s),
+            value: value
+        });
+    });
+};
+var whiteSpace = /* #__PURE__ */ takeWhile(Data_CodePoint_Unicode.isSpace);
+var skipSpaces = /* #__PURE__ */ Data_Functor["void"](Parsing.functorParserT)(whiteSpace);
 var satisfyCP = function (p) {
-    return Parsing_String.satisfy(function ($30) {
-        return p(Data_String_CodePoints.codePointFromChar($30));
+    return Parsing_String.satisfy(function ($32) {
+        return p(Data_String_CodePoints.codePointFromChar($32));
     });
 };
 var space = /* #__PURE__ */ Parsing_Combinators.withErrorMessage(/* #__PURE__ */ satisfyCP(Data_CodePoint_Unicode.isSpace))("space");
@@ -66,17 +81,17 @@ var oneOf = function (ss) {
     });
 };
 var octDigit = /* #__PURE__ */ Parsing_Combinators.withErrorMessage(/* #__PURE__ */ satisfyCP(Data_CodePoint_Unicode.isOctDigit))("oct digit");
-var numberRegex = /* #__PURE__ */ Data_Either.either(Partial_Unsafe.unsafeCrashWith)(identity)(/* #__PURE__ */ Parsing_String.regex("[+-]?[0-9]*(\\.[0-9]*)?([eE][+-]?[0-9]*(\\.[0-9]*))?")(mempty));
+var numberRegex = /* #__PURE__ */ Data_Either.either(Partial_Unsafe.unsafeCrashWith)(identity)(/* #__PURE__ */ Parsing_String.regex("[+-]?[0-9]*(\\.[0-9]*)?([eE][+-]?[0-9]*(\\.[0-9]*)?)?")(mempty));
 var number = /* #__PURE__ */ (function () {
     return alt(Parsing_Combinators.choice(Data_Foldable.foldableArray)([ applySecond(Parsing_String.string("Infinity"))(pure(Data_Number.infinity)), applySecond(Parsing_String.string("+Infinity"))(pure(Data_Number.infinity)), applySecond(Parsing_String.string("-Infinity"))(pure(-Data_Number.infinity)), applySecond(Parsing_String.string("NaN"))(pure(Data_Number.nan)), Parsing_Combinators.tryRethrow(bind(numberRegex)(function (section) {
         var v = Data_Number.fromString(section);
         if (v instanceof Data_Maybe.Nothing) {
-            return Parsing.fail("Number.fromString failed");
+            return Parsing.fail("Expected Number");
         };
         if (v instanceof Data_Maybe.Just) {
             return pure(v.value0);
         };
-        throw new Error("Failed pattern match at Parsing.String.Basic (line 96, column 9 - line 101, column 27): " + [ v.constructor.name ]);
+        throw new Error("Failed pattern match at Parsing.String.Basic (line 118, column 9 - line 120, column 27): " + [ v.constructor.name ]);
     })) ]))(Parsing.fail("Expected Number"));
 })();
 var noneOfCodePoints = function (ss) {
@@ -91,16 +106,16 @@ var noneOf = function (ss) {
 };
 var lower = /* #__PURE__ */ Parsing_Combinators.withErrorMessage(/* #__PURE__ */ satisfyCP(Data_CodePoint_Unicode.isLower))("lowercase letter");
 var letter = /* #__PURE__ */ Parsing_Combinators.withErrorMessage(/* #__PURE__ */ satisfyCP(Data_CodePoint_Unicode.isAlpha))("letter");
-var intDecimalRegex = /* #__PURE__ */ Data_Either.either(Partial_Unsafe.unsafeCrashWith)(identity)(/* #__PURE__ */ Parsing_String.regex("[+-]?[0-9]*")(mempty));
+var intDecimalRegex = /* #__PURE__ */ Data_Either.either(Partial_Unsafe.unsafeCrashWith)(identity)(/* #__PURE__ */ Parsing_String.regex("[+-]?[0-9]+")(mempty));
 var intDecimal = /* #__PURE__ */ Parsing_Combinators.tryRethrow(/* #__PURE__ */ bind(/* #__PURE__ */ alt(intDecimalRegex)(/* #__PURE__ */ Parsing.fail("Expected Int")))(function (section) {
     var v = Data_Int.fromString(section);
     if (v instanceof Data_Maybe.Nothing) {
-        return Parsing.fail("Int.fromString failed");
+        return Parsing.fail("Expected Int");
     };
     if (v instanceof Data_Maybe.Just) {
         return pure(v.value0);
     };
-    throw new Error("Failed pattern match at Parsing.String.Basic (line 120, column 3 - line 122, column 21): " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at Parsing.String.Basic (line 140, column 3 - line 142, column 21): " + [ v.constructor.name ]);
 }));
 var hexDigit = /* #__PURE__ */ Parsing_Combinators.withErrorMessage(/* #__PURE__ */ satisfyCP(Data_CodePoint_Unicode.isHexDigit))("hex digit");
 var digit = /* #__PURE__ */ Parsing_Combinators.withErrorMessage(/* #__PURE__ */ satisfyCP(Data_CodePoint_Unicode.isDecDigit))("digit");
@@ -116,6 +131,8 @@ export {
     alphaNum,
     intDecimal,
     number,
+    takeWhile,
+    takeWhile1,
     whiteSpace,
     skipSpaces,
     oneOf,
