@@ -16,7 +16,7 @@ import Data.Tempo
 import Data.Enum
 import Partial.Unsafe
 import Data.Rational
-import Data.Ratio
+-- import Data.Ratio
 import Data.Int (floor, round, toNumber) as I
 import Data.List as L
 import Data.List.Lazy

@@ -13,6 +13,7 @@ import Data.Map (Map(..), lookup, keys, singleton, fromFoldable, toUnfoldable, m
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Set as Set
 import Data.Maybe
+import Data.Rational (Rational(..), toRational, fromInt, (%))
 
 import Data.FunctorWithIndex (mapWithIndex)
 
@@ -271,31 +272,39 @@ voiceId = do
 tempoMark:: P TempoMark
 tempoMark = do
   _ <- pure 1
-  x <- choice [bpm, bpm', cps, ratio]
+  x <- choice [try cpm, try bpm, try cps, ratio]
   pure x
+
+cpm:: P TempoMark 
+cpm = do
+  _ <- pure 1
+  x <- toNumber' <$> naturalOrFloat
+  _ <- reserved "cpm"
+  pure $ CPM (toRat x)
 
 bpm:: P TempoMark 
 bpm = do
   _ <- pure 1
   x <- toNumber' <$> naturalOrFloat
-  _ <- reserved "bpm"
-  pure $ BPM x
-
-bpm':: P TempoMark 
-bpm' = do
-  _ <- pure 1
-  x <- toNumber' <$> naturalOrFloat
   _ <- reserved "bpm the"
+  fig <- figure <|> (pure $ fromInt 1)
+  pure $ BPM (toRat x) fig
+
+figure:: P Rational
+figure = do
+  _ <- charWS '('
   n <- natural
-  d <- natural <|> pure 1
-  pure $ BPM' x n d
+  _ <- charWS '/'
+  d <- natural 
+  _ <- charWS ')'
+  pure $ toRational n d
 
 cps:: P TempoMark
 cps = do
   _ <- pure 1
   x <- toNumber' <$> naturalOrFloat
   _ <- reserved "cps"
-  pure $ CPS x
+  pure $ CPS (toRat x)
 
 ratio:: P TempoMark
 ratio = do
@@ -373,6 +382,19 @@ isTempoRefd:: TempoMark -> Maybe String
 isTempoRefd (Prop id _ _) = Just id
 isTempoRefd _ = Nothing
 
+--- negative Numbers
+parseNumber:: P Number
+parseNumber = choice [
+  try $ parens (toNumber' <$> naturalOrFloat),
+  try (toNumber' <$> naturalOrFloat),
+  negNum
+]
+
+negNum:: P Number
+negNum = do
+  _ <- charWS '-'
+  x <- naturalOrFloat
+  pure ((-1.0) * toNumber' x)
 
 tokenParser = makeTokenParser haskellStyle
 parens      = tokenParser.parens
@@ -410,3 +432,11 @@ strWS x = do
   x <- string x 
   whitespace
   pure x
+
+toRat:: Number -> Rational
+toRat x = 
+    let pFact = 1000000
+        floored = floor x -- 12
+        fract = x - (toNumber floored) -- 12.5 - 12.0 = 0.5
+        fract' = round $ fract * (toNumber pFact) -- 500000
+    in (floored%1) + (fract'%pFact) -- 12 + (500000%1000000)

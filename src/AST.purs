@@ -1,4 +1,4 @@
-module AST(TimekNot(..), Voices, Voice(..),Program(..),Expression(..),Aural(..),Value(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), Triplet(..), Waste(..), fst3, snd3, thrd, showEventIndex, showStructureIndex) where
+module AST(TimekNot(..),Waste(..),AlmostWaste(..), Voices, Voice(..),Program(..),Expression(..),Aural(..),Value(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), Waste(..),showEventIndex, showStructureIndex) where
 
 import Prelude
 import Effect.Ref
@@ -10,10 +10,28 @@ import Data.Rational
 import Data.Map
 import Data.Tuple
 
+
+
 type Waste = {
   whenPosix:: Number, 
   s:: String, 
-  n:: Int
+  n:: Int,
+  gain:: Number,
+  pan:: Number,
+  speed:: Number,
+  begin:: Number,
+  end:: Number
+  }
+
+type AlmostWaste = {
+  event:: Event, 
+  s:: String, 
+  n:: Int,
+  gain:: Number,
+  pan:: Number,
+  speed:: Number,
+  begin:: Number,
+  end:: Number
   }
 
 type TimekNot = {
@@ -37,7 +55,7 @@ type Program = List Expression
 -- instance programShow :: Show Program where
 --   show (Program xs) = show xs
 
-data Expression = TimeExpression (Map String Temporal) | AuralExpression (Map String Aural) -- here add a convergence expression when the trascendental convergence points are properly imagined
+data Expression = TimeExpression (Map String Temporal) | AuralExpression (Map String Aural) -- here add a convergence expression when the non-ephemeral convergence points are properly imagined
 
 instance expressionShow :: Show Expression where
   show (TimeExpression x) = show x
@@ -48,19 +66,41 @@ type AudioAttributes = {
   n:: List Value
 }
 
-type Aural = (List Value)
-
+type Aural = List Value
 
 -- future additions to Value: OSound | OTransposedSound | Full Sound OSound
 -- for now only X generates sounds, O should be allowed to invoke sound as well. Full will allow to invoke sound for X and O as pairs
 
-data Value = Sound Span (List String) | TransposedSound String | N Span (List Int) | TransposedN String 
+data Value = 
+  Sound Span (List String) | TransposedSound String | 
+  N Span (List Int) | TransposedN String |
+  Gain Span (List Number) | TransposedGain String |
+  Pan Span (List Number) | TransposedPan String |
+  Speed Span (List Number) | TransposedSpeed String |
+  Begin Span (List Number) | TransposedBegin String | 
+  End Span (List Number) | TransposedEnd String |
+  CutOff Span (List Number) | TransposedCutOff String |
+  Vowel Span (List Number) | TransposedVowel String
 
 instance valueShow :: Show Value where
-  show (Sound sp l) = show sp <> " " <> show l
+  show (Sound x l) = show x <> " " <> show l
   show (TransposedSound voice) = "s transposed from " <> voice
-  show (N sp l) = show sp <> " " <> show l
+  show (N x l) = show x <> " " <> show l
   show (TransposedN voice) = "n transposed from " <> voice
+  show (Gain x l) = show x <> " " <> show l
+  show (TransposedGain voice) = "gain transposed from " <> voice
+  show (Pan x l) = show x <> " " <> show l
+  show (TransposedPan voice) = "pan transposed from " <> voice
+  show (Speed x l) = show x <> " " <> show l
+  show (TransposedSpeed voice) = "speed transposed from " <> voice
+  show (Begin x l) = show x <> " " <> show l
+  show (TransposedBegin voice) = "begin transposed from " <> voice
+  show (End x l) = show x <> " " <> show l
+  show (TransposedEnd voice) = "end transposed from " <> voice
+  show (CutOff x l) = show x <> " " <> show l
+  show (TransposedCutOff voice) = "cutoff transposed from " <> voice
+  show (Vowel x l) = show x <> " " <> show l
+  show (TransposedVowel voice) = "vowel transposed from " <> voice
 
 data Span = CycleEvent | CycleBlock | CycleInBlock | SpreadBlock
 
@@ -83,9 +123,9 @@ data Polytemporal =
   -- Converge starts a program in relationship with another voice
 
 instance polytemporalShowInstance :: Show Polytemporal where
-  show (Kairos timemark t) = "kairos: " <> show timemark <> " tempo: " <> show t
-  show (Metric cTo cFrom t) = "voice aligns with metric at "<>show cTo<>" from "<>show cFrom <> " tempo: " <> show t
-  show (Converge voice cTo cFrom t) = "voice aligns with "<>show voice<>" at "<>show cTo<>" from "<>show cFrom <> " tempo: " <> show t
+  show (Kairos asap t) = "kairos: " <> show asap <> " tempo mark: " <> show t
+  show (Metric cTo cFrom t) = "(converges to "<>show cTo<>") (from "<>show cFrom <> ") (tempo mark: " <> show t <> ")"
+  show (Converge voice cTo cFrom t) = "voice "<>show voice<>" (converges to "<>show cTo<>") (from "<>show cFrom <> ") (tempo mark: " <> show t <> ")"
 
 
 data Rhythmic =  -- whenPosix, thats it
@@ -93,15 +133,24 @@ data Rhythmic =  -- whenPosix, thats it
   O |
   Sd Rhythmic | -- [x]
   Repeat Rhythmic Int |
+  Bjorklund Euclidean Int Int Int | 
   Rhythmics (List Rhythmic) -- xoxo
--- Bjorklund
 
 instance Show Rhythmic where
   show X = "x"
   show O = "o"
   show (Sd xs) = "[" <> show xs <> "]"
   show (Repeat xs n) = "!" <> show xs <> "#" <> show n
+  show (Bjorklund eu k n r) = "bjorklund"
   show (Rhythmics xs) = show xs
+
+data Euclidean = Full Rhythmic Rhythmic | K Rhythmic | InvK Rhythmic | Simple -- add simple inverse
+
+instance euclideanShowInstance :: Show Euclidean where
+  show (Full x y) = "full: " <> (show x) <> " " <> (show y)
+  show (K x) = show x
+  show (InvK x) = show x
+  show (Simple) = "simple"
 
 -- CPAlign will provide a convergence point in relation to a part of the program.
 -- mod 4 will align a cp with the next voice start multiple of 4. The convergenceTo value with 'mod 4' will converge to the other voice at the next voice muliplte of 4. If this would be the convergenceFrom, the voice will align to the other voice from its next voice multiple of 4.
@@ -139,12 +188,17 @@ instance Show ConvergeTo where
   show (ProcessTo e a) = show e <> " " <> show a
   show (PercenTo p a) = show p <> "% " <> show a
 
-data TempoMark = XTempo | BPM Number | BPM' Number Int Int | CPS Number | Prop String Int Int
+-- perhaps this is the output of processTempoMark, this will allow users to declare a total duration of a block (reverting more or less the additive logic to divisive)
+type Duration = Rational
+type MetricUnit = Rational
+data TimeSignature = Either Duration MetricUnit
+
+data TempoMark = XTempo | CPM Rational | BPM Rational Rational | CPS Rational | Prop String Int Int
 
 instance Show TempoMark where
-  show XTempo = "external tempo"
-  show (BPM bpm) = show bpm <> "bpm"
-  show (BPM' bpm n d) = show bpm <> "bpm the " <> show n <> "/" <> show d
+  show XTempo = "external"
+  show (CPM cpm) = show cpm <> "cpm"
+  show (BPM bpm figure) = show bpm <> "bpm the " <> show figure
   show (CPS cps) = show cps <> "cps"
   show (Prop id x y) = "from voice: " <> id <> " " <> show x <> ":" <> show y 
 
@@ -170,8 +224,8 @@ showStructureIndex (Index x xs _) = show x <>"-"<> result
 data Onset = Onset Boolean Number
 
 instance Show Onset where
-    show (Onset true n) =  "(X" <> " psx:" <> " ..." <>(Str.drop 7 $ show n) <>")"
-    show (Onset false n) = "(O" <> " psx:" <> " ..." <>(Str.drop 7 $ show n) <>")"
+    show (Onset true n) =  "(X" <> " psx:" <> " ..." <>(Str.drop 0 $ show n) <>")"
+    show (Onset false n) = "(O" <> " psx:" <> " ..." <>(Str.drop 0 $ show n) <>")"
 
 instance Ord Onset where
     compare (Onset bool1 pos1) (Onset bool2 pos2) = pos1 `compare` pos2  
@@ -185,21 +239,3 @@ instance indexShow :: Show Index where
     show (Index x xs n) = show x <>"-"<> result <> " (" <> (Str.take 8 $ show n) <> ")"
       where subdivisions = foldl (<>) "" $ map (\x -> show x <> ".") xs
             result = Str.take (Str.length subdivisions - 1) subdivisions
-
-
-
-
--- helpers
-data Triplet = Triplet Number Number Number
-
-instance tripletShow :: Show Triplet where
-    show (Triplet x y z) = "triplet " <> show x <> " " <> show y <> " " <> show z
-
-fst3:: Triplet -> Number
-fst3 (Triplet x _ _) = x
-
-snd3:: Triplet -> Number
-snd3 (Triplet _ y _) = y
-
-thrd:: Triplet -> Number
-thrd (Triplet _ _ z) = z

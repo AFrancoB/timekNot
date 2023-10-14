@@ -38,6 +38,8 @@ import Calculations
 
 import Parsing
 
+-- test editor view
+-- grid 2 1 [[label 1,code 2 0 []],[[label 5,code 3 0 []],[metre 2666]]]
 
 -- command for copying into estuary devstaging: cp -Rf ~/Documents/repos/tk/timekNot /home/alejandro/Documents/repos/estuary/dev-staging/Estuary.jsexe
 
@@ -71,7 +73,7 @@ check' (Right aProgram) = case check (getTemporalMap aProgram) of
 
 setTempo :: TimekNot -> ForeignTempo -> Effect Unit
 setTempo tk t = do
-  log $ "setTempo is called" <> show (fromForeignTempo t)
+  -- log $ "setTempo is called" <> show (fromForeignTempo t)
   write (fromForeignTempo t) tk.tempo
 
 -- setTempo :: RE.RenderEngine -> ForeignTempo -> Effect Unit
@@ -102,11 +104,12 @@ timekNotToForeigns tk ws we = do
     t <- read tk.tempo
     eval <- read tk.eval
 
-    log $ show program
-    log $ show ws
-    log $ show we
-    log $ show t
 
-    let events = mapToWaste program ws' we' eval t
-    log $ show events
+    -- log $ show program
+    -- log $ show ws
+    -- log $ show we
+    -- log $ show t
+
+    events <- programToWaste program ws' we' eval t
+    -- log $ show events
     pure $ map unsafeToForeign events

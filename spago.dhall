@@ -25,7 +25,6 @@ to generate this file without the comments in this block.
   , "lists"
   , "maybe"
   , "newtype"
-  , "nonempty"
   , "now"
   , "ordered-collections"
   , "parsing"
@@ -39,6 +38,8 @@ to generate this file without the comments in this block.
   , "strings"
   , "tuples"
   , "typelevel"
+  , "record"
+  , "erv"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]

@@ -36,25 +36,25 @@ type P = ParserT String Identity
 rhythmic:: P Rhythmic
 rhythmic = do
   _ <- pure 1
-  x <- choice [try parseRhythmList, try parseSD, try parseRepeat, parseXO]
+  x <- choice [try parseRhythmList, try parseSD, try parseRepeat, try parseBjorklund, parseXO]
   pure x
 
 parseRhythms:: P Rhythmic
 parseRhythms = do
   _ <- pure 1
-  choice [try parseRepeat, try parseRhythmList, try parseSD, try parseRepeat, parseXO]
+  choice [try parseRhythmList, try parseSD, try parseBjorklund, try parseRepeat, parseXO]
 
 parseRhythmList:: P Rhythmic
 parseRhythmList = do
   _ <- pure 1
-  x <- parseXOorSDorRep
-  xs <- toList <$> many1 parseXOorSDorRep
+  x <- parseXOorSDorReporBjork
+  xs <- toList <$> many1 parseXOorSDorReporBjork
   pure $ Rhythmics $ x:xs
 
-parseXOorSDorRep:: P Rhythmic
-parseXOorSDorRep = do
+parseXOorSDorReporBjork:: P Rhythmic
+parseXOorSDorReporBjork = do
   _ <- pure 1
-  choice [try parseSD, try parseRepeat, parseXO]
+  choice [try parseSD, try parseRepeat, try parseBjorklund, parseXO]
 
 parseSD:: P Rhythmic
 parseSD = do
@@ -72,6 +72,62 @@ parseRepeat = do
   _ <- charWS '#'
   y <- integer
   pure $ Repeat x y
+
+parseBjorklund:: P Rhythmic
+parseBjorklund = do
+    _ <- pure 1
+    x <- choice [try $ parens parseFull, try $ parens parseK, try $ parens parseSimpleBl, parseInv]
+    pure x
+
+parseFull:: P Rhythmic
+parseFull = do
+  _ <- pure 1
+  kPatt <- parseRhythms
+  _ <- comma
+  invPatt <- parseRhythms
+  _ <- comma
+  k <- natural
+  _ <- comma
+  n <- natural
+  _ <- optional comma
+  o <- natural <|> pure 0
+  pure $ Bjorklund (Full kPatt invPatt) k n o
+
+parseSimpleBl:: P Rhythmic
+parseSimpleBl = do
+  _ <- pure 1
+  k <- natural
+  _ <- comma
+  n <- natural
+  _ <- optional comma
+  o <- natural <|> pure 0
+  pure $ Bjorklund Simple k n o
+
+parseK:: P Rhythmic
+parseK = do
+  _ <- pure 1
+  p <- bPattern 
+  pure $ Bjorklund (K p.patt) p.k p.n p.rotate
+
+parseInv:: P Rhythmic
+parseInv = do
+  _ <- pure 1
+  _ <- string "'("
+  p <- bPattern 
+  _ <- string ")"
+  pure $ Bjorklund (InvK p.patt) p.k p.n p.rotate
+
+bPattern:: P {patt:: Rhythmic, k:: Int, n:: Int, rotate:: Int}
+bPattern = do 
+  _ <- pure 1
+  patt <- parseRhythms
+  _ <- comma
+  k <- natural
+  _ <- comma
+  n <- natural
+  _ <- optional comma
+  o <- natural <|> pure 0
+  pure {patt: patt, k: k, n: n, rotate: o}
 
 parseXO:: P Rhythmic
 parseXO = do
@@ -101,6 +157,7 @@ braces      = tokenParser.braces
 identifier  = tokenParser.identifier
 reserved    = tokenParser.reserved
 naturalOrFloat = tokenParser.naturalOrFloat
+natural = tokenParser.natural
 float = tokenParser.float
 whitespace = tokenParser.whiteSpace
 colon = tokenParser.colon
