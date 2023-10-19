@@ -1,0 +1,10 @@
+{
+  "name": "timeknot",
+  "version": "0.0.1",
+  "description": "timeknot",
+  "private": true,
+  "dependencies": {
+    "esbuild": "^0.15.18",
+    "erv": "0.0.3"
+  }
+}

@@ -30,8 +30,9 @@ import Parsing.Token (makeTokenParser)
 
 import WebDirt
 
+import AST
+import Rhythm
+import Parser
 import Main
-import Rhythmic
-import Motor
 
-import ParserExperiments
+-- import ParserExperiments

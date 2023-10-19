@@ -11,7 +11,7 @@ window.timekNot.evaluate = function(timekNot,txt) {
 }
 
 window.timekNot.setTempo = function(timekNot,foreignTempo) {
-    T.setTempo(timekNot,foreignTempo);
+    T.setTempo(timekNot)(foreignTempo)();
 }
 
 window.timekNot.scheduleNoteEvents = function(timekNot,wStartPosix,wEndPosix) {

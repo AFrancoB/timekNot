@@ -99,11 +99,19 @@ in  upstream
 -------------------------------
 -}
 let upstream =
-      https://github.com/purescript/package-sets/releases/download/psc-0.15.0-20220527/packages.dhall sha256:15dd8041480502850e4043ea2977ed22d6ab3fc24d565211acde6f8c5152a799
+      https://github.com/purescript/package-sets/releases/download/psc-0.15.10-20231003/packages.dhall
+        sha256:dccca0d661a634bfe39ad7abcb52fbd938d5b2e28322d2954964cbb7c145aa81
 
 in  upstream
   with purescript-webdirt =
-    { dependencies = [ "prelude" , "effect" ]
+    { dependencies = [ "prelude", "effect" ]
     , repo = "https://github.com/dktr0/WebDirt.git"
     , version = "6fc66e5f1b60a49c2326a1bcd79756bd68115e2a"
     }
+  with rationals.version = "v6.0.0"
+  with erv =
+    { dependencies = [ "prelude" ]
+    , repo = "https://github.com/diegovdc/erv.git"
+    , version = "6d9e76b"
+    }  
+
