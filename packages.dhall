@@ -109,9 +109,5 @@ in  upstream
     , version = "6fc66e5f1b60a49c2326a1bcd79756bd68115e2a"
     }
   with rationals.version = "v6.0.0"
-  with erv =
-    { dependencies = [ "prelude" ]
-    , repo = "https://github.com/diegovdc/erv.git"
-    , version = "6d9e76b"
-    }  
+
 

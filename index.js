@@ -534,6 +534,9 @@ var bottom = function(dict) {
 };
 
 // output/Data.Show/foreign.js
+var showIntImpl = function(n2) {
+  return n2.toString();
+};
 var showNumberImpl = function(n2) {
   var str = n2.toString();
   return isNaN(str + ".0") ? str : str + ".0";
@@ -605,6 +608,9 @@ var showString = {
 var showNumber = {
   show: showNumberImpl
 };
+var showInt = {
+  show: showIntImpl
+};
 var showChar = {
   show: showCharImpl
 };
@@ -636,22 +642,6 @@ var Just = /* @__PURE__ */ function() {
   };
   return Just2;
 }();
-var showMaybe = function(dictShow) {
-  var show5 = show(dictShow);
-  return {
-    show: function(v) {
-      if (v instanceof Just) {
-        return "(Just " + (show5(v.value0) + ")");
-      }
-      ;
-      if (v instanceof Nothing) {
-        return "Nothing";
-      }
-      ;
-      throw new Error("Failed pattern match at Data.Maybe (line 223, column 1 - line 225, column 28): " + [v.constructor.name]);
-    }
-  };
-};
 var maybe = function(v) {
   return function(v1) {
     return function(v2) {
@@ -825,8 +815,14 @@ var boolNot = function(b) {
 };
 
 // output/Data.HeytingAlgebra/index.js
+var tt = function(dict) {
+  return dict.tt;
+};
 var not = function(dict) {
   return dict.not;
+};
+var implies = function(dict) {
+  return dict.implies;
 };
 var ff = function(dict) {
   return dict.ff;
@@ -845,6 +841,51 @@ var heytingAlgebraBoolean = {
   conj: boolConj,
   disj: boolDisj,
   not: boolNot
+};
+var conj = function(dict) {
+  return dict.conj;
+};
+var heytingAlgebraFunction = function(dictHeytingAlgebra) {
+  var ff1 = ff(dictHeytingAlgebra);
+  var tt1 = tt(dictHeytingAlgebra);
+  var implies1 = implies(dictHeytingAlgebra);
+  var conj1 = conj(dictHeytingAlgebra);
+  var disj1 = disj(dictHeytingAlgebra);
+  var not12 = not(dictHeytingAlgebra);
+  return {
+    ff: function(v) {
+      return ff1;
+    },
+    tt: function(v) {
+      return tt1;
+    },
+    implies: function(f) {
+      return function(g) {
+        return function(a) {
+          return implies1(f(a))(g(a));
+        };
+      };
+    },
+    conj: function(f) {
+      return function(g) {
+        return function(a) {
+          return conj1(f(a))(g(a));
+        };
+      };
+    },
+    disj: function(f) {
+      return function(g) {
+        return function(a) {
+          return disj1(f(a))(g(a));
+        };
+      };
+    },
+    not: function(f) {
+      return function(a) {
+        return not12(f(a));
+      };
+    }
+  };
 };
 
 // output/Data.EuclideanRing/foreign.js
@@ -934,17 +975,6 @@ var Tuple = /* @__PURE__ */ function() {
 }();
 var snd = function(v) {
   return v.value1;
-};
-var showTuple = function(dictShow) {
-  var show5 = show(dictShow);
-  return function(dictShow1) {
-    var show14 = show(dictShow1);
-    return {
-      show: function(v) {
-        return "(Tuple " + (show5(v.value0) + (" " + (show14(v.value1) + ")")));
-      }
-    };
-  };
 };
 var fst = function(v) {
   return v.value0;
@@ -1577,14 +1607,14 @@ var semigroupList = {
 };
 var append1 = /* @__PURE__ */ append(semigroupList);
 var showList = function(dictShow) {
-  var show5 = show(dictShow);
+  var show10 = show(dictShow);
   return {
     show: function(v) {
       if (v instanceof Nil) {
         return "Nil";
       }
       ;
-      return "(" + (intercalate2(" : ")(map3(show5)(v)) + " : Nil)");
+      return "(" + (intercalate2(" : ")(map3(show10)(v)) + " : Nil)");
     }
   };
 };
@@ -2254,6 +2284,35 @@ var traversableWithIndexMap = {
 var values = /* @__PURE__ */ function() {
   return foldr(foldableMap)(Cons.create)(Nil.value);
 }();
+var filterWithKey = function(dictOrd) {
+  return function(f) {
+    var go = function(v) {
+      if (v instanceof Leaf) {
+        return Leaf.value;
+      }
+      ;
+      if (v instanceof Node) {
+        if (f(v.value2)(v.value3)) {
+          return unsafeBalancedNode(v.value2, v.value3, go(v.value4), go(v.value5));
+        }
+        ;
+        if (otherwise) {
+          return unsafeJoinNodes(go(v.value4), go(v.value5));
+        }
+        ;
+      }
+      ;
+      throw new Error("Failed pattern match at Data.Map.Internal (line 625, column 8 - line 631, column 47): " + [v.constructor.name]);
+    };
+    return go;
+  };
+};
+var filter = function(dictOrd) {
+  var $769 = filterWithKey(dictOrd);
+  return function($770) {
+    return $769($$const($770));
+  };
+};
 var empty2 = /* @__PURE__ */ function() {
   return Leaf.value;
 }();
@@ -2305,7 +2364,7 @@ var semiringRatio = function(dictOrd) {
     var one2 = one(Semiring0);
     var reduce22 = reduce1(dictEuclideanRing);
     var mul2 = mul(Semiring0);
-    var add4 = add(Semiring0);
+    var add3 = add(Semiring0);
     return {
       one: new Ratio(one2, one2),
       mul: function(v) {
@@ -2316,7 +2375,7 @@ var semiringRatio = function(dictOrd) {
       zero: new Ratio(zero(Semiring0), one2),
       add: function(v) {
         return function(v1) {
-          return reduce22(add4(mul2(v.value0)(v1.value1))(mul2(v.value1)(v1.value0)))(mul2(v.value1)(v1.value1));
+          return reduce22(add3(mul2(v.value0)(v1.value1))(mul2(v.value1)(v1.value0)))(mul2(v.value1)(v1.value1));
         };
       }
     };
@@ -2608,11 +2667,11 @@ var _toCodePointArray = function(fallback) {
 };
 
 // output/Data.Array/foreign.js
-var rangeImpl = function(start, end) {
-  var step2 = start > end ? -1 : 1;
-  var result = new Array(step2 * (end - start) + 1);
+var rangeImpl = function(start, end2) {
+  var step2 = start > end2 ? -1 : 1;
+  var result = new Array(step2 * (end2 - start) + 1);
   var i = start, n2 = 0;
-  while (i !== end) {
+  while (i !== end2) {
     result[n2++] = i;
     i += step2;
   }
@@ -2761,9 +2820,9 @@ var ap = function(dictMonad) {
   var pure9 = pure(dictMonad.Applicative0());
   return function(f) {
     return function(a) {
-      return bind12(f)(function(f$prime) {
+      return bind12(f)(function(f$prime2) {
         return bind12(a)(function(a$prime) {
-          return pure9(f$prime(a$prime));
+          return pure9(f$prime2(a$prime));
         });
       });
     };
@@ -3143,7 +3202,7 @@ var fromFoldable = function(dictFoldable) {
 var findIndex = /* @__PURE__ */ function() {
   return runFn4(findIndexImpl)(Just.create)(Nothing.value);
 }();
-var filter = /* @__PURE__ */ runFn2(filterImpl);
+var filter2 = /* @__PURE__ */ runFn2(filterImpl);
 var elemIndex = function(dictEq) {
   var eq23 = eq(dictEq);
   return function(x) {
@@ -3578,6 +3637,11 @@ var $lazy_enumCodePoint = /* @__PURE__ */ $runtime_lazy4("enumCodePoint", "Data.
 });
 
 // output/AST/index.js
+var show2 = /* @__PURE__ */ show(showInt);
+var show3 = /* @__PURE__ */ show(showNumber);
+var show4 = /* @__PURE__ */ show(/* @__PURE__ */ showList(showString));
+var show5 = /* @__PURE__ */ show(/* @__PURE__ */ showList(showInt));
+var show6 = /* @__PURE__ */ show(/* @__PURE__ */ showList(showNumber));
 var XTempo = /* @__PURE__ */ function() {
   function XTempo2() {
   }
@@ -3662,6 +3726,46 @@ var SpreadBlock = /* @__PURE__ */ function() {
   SpreadBlock2.value = new SpreadBlock2();
   return SpreadBlock2;
 }();
+var AddInt = /* @__PURE__ */ function() {
+  function AddInt2(value0) {
+    this.value0 = value0;
+  }
+  ;
+  AddInt2.create = function(value0) {
+    return new AddInt2(value0);
+  };
+  return AddInt2;
+}();
+var AddNum = /* @__PURE__ */ function() {
+  function AddNum2(value0) {
+    this.value0 = value0;
+  }
+  ;
+  AddNum2.create = function(value0) {
+    return new AddNum2(value0);
+  };
+  return AddNum2;
+}();
+var MultInt = /* @__PURE__ */ function() {
+  function MultInt2(value0) {
+    this.value0 = value0;
+  }
+  ;
+  MultInt2.create = function(value0) {
+    return new MultInt2(value0);
+  };
+  return MultInt2;
+}();
+var MultNum = /* @__PURE__ */ function() {
+  function MultNum2(value0) {
+    this.value0 = value0;
+  }
+  ;
+  MultNum2.create = function(value0) {
+    return new MultNum2(value0);
+  };
+  return MultNum2;
+}();
 var Sound = /* @__PURE__ */ function() {
   function Sound2(value0, value1) {
     this.value0 = value0;
@@ -3708,6 +3812,19 @@ var TransposedN = /* @__PURE__ */ function() {
   };
   return TransposedN2;
 }();
+var TransposedNWith = /* @__PURE__ */ function() {
+  function TransposedNWith2(value0, value1) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+  ;
+  TransposedNWith2.create = function(value0) {
+    return function(value1) {
+      return new TransposedNWith2(value0, value1);
+    };
+  };
+  return TransposedNWith2;
+}();
 var Gain = /* @__PURE__ */ function() {
   function Gain2(value0, value1) {
     this.value0 = value0;
@@ -3730,6 +3847,19 @@ var TransposedGain = /* @__PURE__ */ function() {
     return new TransposedGain2(value0);
   };
   return TransposedGain2;
+}();
+var TransposedGainWith = /* @__PURE__ */ function() {
+  function TransposedGainWith2(value0, value1) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+  ;
+  TransposedGainWith2.create = function(value0) {
+    return function(value1) {
+      return new TransposedGainWith2(value0, value1);
+    };
+  };
+  return TransposedGainWith2;
 }();
 var Pan = /* @__PURE__ */ function() {
   function Pan2(value0, value1) {
@@ -3754,6 +3884,19 @@ var TransposedPan = /* @__PURE__ */ function() {
   };
   return TransposedPan2;
 }();
+var TransposedPanWith = /* @__PURE__ */ function() {
+  function TransposedPanWith2(value0, value1) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+  ;
+  TransposedPanWith2.create = function(value0) {
+    return function(value1) {
+      return new TransposedPanWith2(value0, value1);
+    };
+  };
+  return TransposedPanWith2;
+}();
 var Speed = /* @__PURE__ */ function() {
   function Speed2(value0, value1) {
     this.value0 = value0;
@@ -3776,6 +3919,19 @@ var TransposedSpeed = /* @__PURE__ */ function() {
     return new TransposedSpeed2(value0);
   };
   return TransposedSpeed2;
+}();
+var TransposedSpeedWith = /* @__PURE__ */ function() {
+  function TransposedSpeedWith2(value0, value1) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+  ;
+  TransposedSpeedWith2.create = function(value0) {
+    return function(value1) {
+      return new TransposedSpeedWith2(value0, value1);
+    };
+  };
+  return TransposedSpeedWith2;
 }();
 var Begin = /* @__PURE__ */ function() {
   function Begin2(value0, value1) {
@@ -3800,6 +3956,19 @@ var TransposedBegin = /* @__PURE__ */ function() {
   };
   return TransposedBegin2;
 }();
+var TransposedBeginWith = /* @__PURE__ */ function() {
+  function TransposedBeginWith2(value0, value1) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+  ;
+  TransposedBeginWith2.create = function(value0) {
+    return function(value1) {
+      return new TransposedBeginWith2(value0, value1);
+    };
+  };
+  return TransposedBeginWith2;
+}();
 var End = /* @__PURE__ */ function() {
   function End2(value0, value1) {
     this.value0 = value0;
@@ -3822,6 +3991,88 @@ var TransposedEnd = /* @__PURE__ */ function() {
     return new TransposedEnd2(value0);
   };
   return TransposedEnd2;
+}();
+var TransposedEndWith = /* @__PURE__ */ function() {
+  function TransposedEndWith2(value0, value1) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+  ;
+  TransposedEndWith2.create = function(value0) {
+    return function(value1) {
+      return new TransposedEndWith2(value0, value1);
+    };
+  };
+  return TransposedEndWith2;
+}();
+var CutOff = /* @__PURE__ */ function() {
+  function CutOff2(value0, value1) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+  ;
+  CutOff2.create = function(value0) {
+    return function(value1) {
+      return new CutOff2(value0, value1);
+    };
+  };
+  return CutOff2;
+}();
+var TransposedCutOff = /* @__PURE__ */ function() {
+  function TransposedCutOff2(value0) {
+    this.value0 = value0;
+  }
+  ;
+  TransposedCutOff2.create = function(value0) {
+    return new TransposedCutOff2(value0);
+  };
+  return TransposedCutOff2;
+}();
+var Vowel = /* @__PURE__ */ function() {
+  function Vowel2(value0, value1) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+  ;
+  Vowel2.create = function(value0) {
+    return function(value1) {
+      return new Vowel2(value0, value1);
+    };
+  };
+  return Vowel2;
+}();
+var TransposedVowel = /* @__PURE__ */ function() {
+  function TransposedVowel2(value0) {
+    this.value0 = value0;
+  }
+  ;
+  TransposedVowel2.create = function(value0) {
+    return new TransposedVowel2(value0);
+  };
+  return TransposedVowel2;
+}();
+var Chord = /* @__PURE__ */ function() {
+  function Chord2(value0, value1) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+  ;
+  Chord2.create = function(value0) {
+    return function(value1) {
+      return new Chord2(value0, value1);
+    };
+  };
+  return Chord2;
+}();
+var TransposedChord = /* @__PURE__ */ function() {
+  function TransposedChord2(value0) {
+    this.value0 = value0;
+  }
+  ;
+  TransposedChord2.create = function(value0) {
+    return new TransposedChord2(value0);
+  };
+  return TransposedChord2;
 }();
 var Onset = /* @__PURE__ */ function() {
   function Onset2(value0, value1) {
@@ -4004,6 +4255,13 @@ var Percen = /* @__PURE__ */ function() {
   };
   return Percen2;
 }();
+var Last2 = /* @__PURE__ */ function() {
+  function Last3() {
+  }
+  ;
+  Last3.value = new Last3();
+  return Last3;
+}();
 var Mod = /* @__PURE__ */ function() {
   function Mod2(value0) {
     this.value0 = value0;
@@ -4070,6 +4328,16 @@ var PercenTo = /* @__PURE__ */ function() {
   };
   return PercenTo2;
 }();
+var LastTo = /* @__PURE__ */ function() {
+  function LastTo2(value0) {
+    this.value0 = value0;
+  }
+  ;
+  LastTo2.create = function(value0) {
+    return new LastTo2(value0);
+  };
+  return LastTo2;
+}();
 var Kairos = /* @__PURE__ */ function() {
   function Kairos2(value0, value1) {
     this.value0 = value0;
@@ -4134,6 +4402,16 @@ var Temporal = /* @__PURE__ */ function() {
   };
   return Temporal2;
 }();
+var Replica = /* @__PURE__ */ function() {
+  function Replica2(value0) {
+    this.value0 = value0;
+  }
+  ;
+  Replica2.create = function(value0) {
+    return new Replica2(value0);
+  };
+  return Replica2;
+}();
 var TimeExpression = /* @__PURE__ */ function() {
   function TimeExpression2(value0) {
     this.value0 = value0;
@@ -4167,6 +4445,159 @@ var Voice = /* @__PURE__ */ function() {
   };
   return Voice2;
 }();
+var spanShow = {
+  show: function(v) {
+    if (v instanceof CycleEvent) {
+      return "_";
+    }
+    ;
+    if (v instanceof CycleBlock) {
+      return "_-";
+    }
+    ;
+    if (v instanceof CycleInBlock) {
+      return "-_";
+    }
+    ;
+    if (v instanceof SpreadBlock) {
+      return "_-_";
+    }
+    ;
+    throw new Error("Failed pattern match at AST (line 123, column 1 - line 127, column 29): " + [v.constructor.name]);
+  }
+};
+var show13 = /* @__PURE__ */ show(spanShow);
+var show7 = {
+  show: function(v) {
+    if (v instanceof AddInt) {
+      return "_+" + show2(v.value0);
+    }
+    ;
+    if (v instanceof AddNum) {
+      return "_+" + show3(v.value0);
+    }
+    ;
+    if (v instanceof MultInt) {
+      return "_*" + show2(v.value0);
+    }
+    ;
+    if (v instanceof MultNum) {
+      return "_*" + show3(v.value0);
+    }
+    ;
+    throw new Error("Failed pattern match at AST (line 87, column 1 - line 91, column 36): " + [v.constructor.name]);
+  }
+};
+var show14 = /* @__PURE__ */ show(/* @__PURE__ */ showList(show7));
+var valueShow = {
+  show: function(v) {
+    if (v instanceof Sound) {
+      return show13(v.value0) + (" " + show4(v.value1));
+    }
+    ;
+    if (v instanceof TransposedSound) {
+      return "s transposed from " + v.value0;
+    }
+    ;
+    if (v instanceof N) {
+      return show13(v.value0) + (" " + show5(v.value1));
+    }
+    ;
+    if (v instanceof TransposedN) {
+      return "n transposed from " + v.value0;
+    }
+    ;
+    if (v instanceof TransposedNWith) {
+      return show14(v.value1) + ("n transposedWith from " + v.value0);
+    }
+    ;
+    if (v instanceof Gain) {
+      return show13(v.value0) + (" " + show6(v.value1));
+    }
+    ;
+    if (v instanceof TransposedGain) {
+      return "gain transposed from " + v.value0;
+    }
+    ;
+    if (v instanceof TransposedGainWith) {
+      return "gain transposedWith from " + v.value0;
+    }
+    ;
+    if (v instanceof Pan) {
+      return show13(v.value0) + (" " + show6(v.value1));
+    }
+    ;
+    if (v instanceof TransposedPan) {
+      return "pan transposed from " + v.value0;
+    }
+    ;
+    if (v instanceof TransposedPanWith) {
+      return "pan transposedWith from " + v.value0;
+    }
+    ;
+    if (v instanceof Speed) {
+      return show13(v.value0) + (" " + show6(v.value1));
+    }
+    ;
+    if (v instanceof TransposedSpeed) {
+      return "speed transposed from " + v.value0;
+    }
+    ;
+    if (v instanceof TransposedSpeedWith) {
+      return "speed transposedWith from " + v.value0;
+    }
+    ;
+    if (v instanceof Begin) {
+      return show13(v.value0) + (" " + show6(v.value1));
+    }
+    ;
+    if (v instanceof TransposedBegin) {
+      return "begin transposed from " + v.value0;
+    }
+    ;
+    if (v instanceof TransposedBeginWith) {
+      return "begin transposedWith from " + v.value0;
+    }
+    ;
+    if (v instanceof End) {
+      return show13(v.value0) + (" " + show6(v.value1));
+    }
+    ;
+    if (v instanceof TransposedEnd) {
+      return "end transposed from " + v.value0;
+    }
+    ;
+    if (v instanceof TransposedEndWith) {
+      return "end transposedWith from " + v.value0;
+    }
+    ;
+    if (v instanceof CutOff) {
+      return show13(v.value0) + (" " + show6(v.value1));
+    }
+    ;
+    if (v instanceof TransposedCutOff) {
+      return "cutoff transposed from " + v.value0;
+    }
+    ;
+    if (v instanceof Vowel) {
+      return show13(v.value0) + (" " + show6(v.value1));
+    }
+    ;
+    if (v instanceof TransposedVowel) {
+      return "vowel transposed from " + v.value0;
+    }
+    ;
+    if (v instanceof Chord) {
+      return show13(v.value0) + (" " + show6(v.value1));
+    }
+    ;
+    if (v instanceof TransposedChord) {
+      return "chord transposed from " + v.value0;
+    }
+    ;
+    throw new Error("Failed pattern match at AST (line 93, column 1 - line 119, column 67): " + [v.constructor.name]);
+  }
+};
 
 // output/Data.List/index.js
 var map5 = /* @__PURE__ */ map(functorMaybe);
@@ -4315,8 +4746,8 @@ var zipWith2 = function(f) {
   };
 };
 var range3 = function(start) {
-  return function(end) {
-    if (start === end) {
+  return function(end2) {
+    if (start === end2) {
       return singleton5(start);
     }
     ;
@@ -4356,8 +4787,8 @@ var range3 = function(start) {
           };
         };
       };
-      return go(end)(start)(function() {
-        var $325 = start > end;
+      return go(end2)(start)(function() {
+        var $325 = start > end2;
         if ($325) {
           return 1;
         }
@@ -4366,7 +4797,7 @@ var range3 = function(start) {
       }())(Nil.value);
     }
     ;
-    throw new Error("Failed pattern match at Data.List (line 144, column 1 - line 144, column 32): " + [start.constructor.name, end.constructor.name]);
+    throw new Error("Failed pattern match at Data.List (line 144, column 1 - line 144, column 32): " + [start.constructor.name, end2.constructor.name]);
   };
 };
 var manyRec = function(dictMonadRec) {
@@ -4425,7 +4856,7 @@ var init = function(lst) {
 var fromFoldable2 = function(dictFoldable) {
   return foldr(dictFoldable)(Cons.create)(Nil.value);
 };
-var filter2 = function(p) {
+var filter3 = function(p) {
   var go = function($copy_v) {
     return function($copy_v1) {
       var $tco_var_v = $copy_v;
@@ -5030,14 +5461,14 @@ var fromFoldable4 = /* @__PURE__ */ fromFoldable(foldableList);
 var mod3 = /* @__PURE__ */ mod(euclideanRingInt);
 var map12 = /* @__PURE__ */ map(functorList);
 var scanl3 = /* @__PURE__ */ scanl(traversableArray);
-var add2 = /* @__PURE__ */ add(semiringNumber);
+var add12 = /* @__PURE__ */ add(semiringNumber);
 var lookup2 = /* @__PURE__ */ lookup(ordString);
 var bind3 = /* @__PURE__ */ bind(bindMaybe);
 var map22 = /* @__PURE__ */ map(functorMaybe);
 var spreadSpeed = function(percenPos) {
   return function(v) {
-    var $111 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
-    if ($111) {
+    var $116 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
+    if ($116) {
       return new Just(v.value0);
     }
     ;
@@ -5053,8 +5484,8 @@ var spreadSpeeds = function(percenPos) {
 };
 var spreadSound = function(percenPos) {
   return function(v) {
-    var $116 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
-    if ($116) {
+    var $121 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
+    if ($121) {
       return new Just(v.value0);
     }
     ;
@@ -5070,8 +5501,8 @@ var spreadSounds = function(percenPos) {
 };
 var spreadPan = function(percenPos) {
   return function(v) {
-    var $121 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
-    if ($121) {
+    var $126 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
+    if ($126) {
       return new Just(v.value0);
     }
     ;
@@ -5087,8 +5518,8 @@ var spreadPans = function(percenPos) {
 };
 var spreadN = function(percenPos) {
   return function(v) {
-    var $126 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
-    if ($126) {
+    var $131 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
+    if ($131) {
       return new Just(v.value0);
     }
     ;
@@ -5104,8 +5535,8 @@ var spreadNs = function(percenPos) {
 };
 var spreadG = function(percenPos) {
   return function(v) {
-    var $131 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
-    if ($131) {
+    var $136 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
+    if ($136) {
       return new Just(v.value0);
     }
     ;
@@ -5121,8 +5552,8 @@ var spreadGains = function(percenPos) {
 };
 var spreadEnd = function(percenPos) {
   return function(v) {
-    var $136 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
-    if ($136) {
+    var $141 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
+    if ($141) {
       return new Just(v.value0);
     }
     ;
@@ -5138,8 +5569,8 @@ var spreadEnds = function(percenPos) {
 };
 var spreadBegin = function(percenPos) {
   return function(v) {
-    var $141 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
-    if ($141) {
+    var $146 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
+    if ($146) {
       return new Just(v.value0);
     }
     ;
@@ -5195,6 +5626,10 @@ var isN = function(v) {
     return true;
   }
   ;
+  if (v instanceof TransposedNWith) {
+    return true;
+  }
+  ;
   return false;
 };
 var isGain = function(v) {
@@ -5234,25 +5669,25 @@ var getStructureIndex = function(v) {
   return fromMaybe(0)(head(v.value1.value1));
 };
 var getSpeed = function(aural2) {
-  return head(filter(isSpeed)(fromFoldable4(aural2)));
+  return head(filter2(isSpeed)(fromFoldable4(aural2)));
 };
 var getSound = function(aural2) {
-  return head(filter(isSound)(fromFoldable4(aural2)));
+  return head(filter2(isSound)(fromFoldable4(aural2)));
 };
 var getPan = function(aural2) {
-  return head(filter(isPan)(fromFoldable4(aural2)));
+  return head(filter2(isPan)(fromFoldable4(aural2)));
 };
 var getN = function(aural2) {
-  return head(filter(isN)(fromFoldable4(aural2)));
+  return head(filter2(isN)(fromFoldable4(aural2)));
 };
 var getGain = function(aural2) {
-  return head(filter(isGain)(fromFoldable4(aural2)));
+  return head(filter2(isGain)(fromFoldable4(aural2)));
 };
 var getEventIndex = function(v) {
   return v.value1.value2;
 };
 var getEnd = function(aural2) {
-  return head(filter(isEnd)(fromFoldable4(aural2)));
+  return head(filter2(isEnd)(fromFoldable4(aural2)));
 };
 var getBlockIndex = function(v) {
   return v.value1.value0;
@@ -5324,8 +5759,8 @@ var spanBegin = function(v) {
               })(rhythmicToOnsets(v3));
               var modIndex = mod3(getEventIndex(w.event))(length(fromFoldable4(percenPositions)));
               var percenPos = fromMaybe(0)(index(fromFoldable4(percenPositions))(modIndex));
-              var limitsSnd = snoc(scanl3(add2)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
-              var limitsFst = cons(0)(scanl3(add2)(0)(replicate(length(xs1) - 1 | 0)(segment)));
+              var limitsSnd = snoc(scanl3(add12)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
+              var limitsFst = cons(0)(scanl3(add12)(0)(replicate(length(xs1) - 1 | 0)(segment)));
               var limits = zip(limitsFst)(limitsSnd);
               var bnLimits = zip(xs1)(limits);
               var bn = function() {
@@ -5338,9 +5773,9 @@ var spanBegin = function(v) {
                     return 0.0666;
                   }
                   ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 198, column 31 - line 198, column 45): " + [v4.constructor.name]);
+                  throw new Error("Failed pattern match at AuralSpecs (line 183, column 31 - line 183, column 45): " + [v4.constructor.name]);
                 };
-                return fromMaybe(0.0666)(head(map7(f)(filter(isJust)(spreadBegins(percenPos)(bnLimits)))));
+                return fromMaybe(0.0666)(head(map7(f)(filter2(isJust)(spreadBegins(percenPos)(bnLimits)))));
               }();
               return {
                 event: w.event,
@@ -5356,7 +5791,7 @@ var spanBegin = function(v) {
           return map7(processBn(v1))(v2);
         }
         ;
-        throw new Error("Failed pattern match at AuralSpecs (line 177, column 1 - line 177, column 243): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+        throw new Error("Failed pattern match at AuralSpecs (line 162, column 1 - line 162, column 243): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
       };
     };
   };
@@ -5368,7 +5803,7 @@ var spanEnd = function(v) {
         if (v instanceof CycleEvent) {
           var processEnd1 = function(xs1) {
             return function(w) {
-              var end = fromMaybe(0.9666)(index(xs1)(mod3(getEventIndex(w.event))(length(xs1))));
+              var end2 = fromMaybe(0.9666)(index(xs1)(mod3(getEventIndex(w.event))(length(xs1))));
               return {
                 event: w.event,
                 s: w.s,
@@ -5377,7 +5812,7 @@ var spanEnd = function(v) {
                 pan: w.pan,
                 speed: w.speed,
                 begin: w.begin,
-                end
+                end: end2
               };
             };
           };
@@ -5387,7 +5822,7 @@ var spanEnd = function(v) {
         if (v instanceof CycleBlock) {
           var processEnd1 = function(xs1) {
             return function(w) {
-              var end = fromMaybe(0.9666)(index(xs1)(mod3(getBlockIndex(w.event))(length(xs1))));
+              var end2 = fromMaybe(0.9666)(index(xs1)(mod3(getBlockIndex(w.event))(length(xs1))));
               return {
                 event: w.event,
                 s: w.s,
@@ -5396,7 +5831,7 @@ var spanEnd = function(v) {
                 pan: w.pan,
                 speed: w.speed,
                 begin: w.begin,
-                end
+                end: end2
               };
             };
           };
@@ -5406,7 +5841,7 @@ var spanEnd = function(v) {
         if (v instanceof CycleInBlock) {
           var processEnd1 = function(xs1) {
             return function(w) {
-              var end = fromMaybe(0.9666)(index(xs1)(mod3(getStructureIndex(w.event))(length(xs1))));
+              var end2 = fromMaybe(0.9666)(index(xs1)(mod3(getStructureIndex(w.event))(length(xs1))));
               return {
                 event: w.event,
                 s: w.s,
@@ -5415,7 +5850,7 @@ var spanEnd = function(v) {
                 pan: w.pan,
                 speed: w.speed,
                 begin: w.begin,
-                end
+                end: end2
               };
             };
           };
@@ -5431,11 +5866,11 @@ var spanEnd = function(v) {
               })(rhythmicToOnsets(v3));
               var modIndex = mod3(getEventIndex(w.event))(length(fromFoldable4(percenPositions)));
               var percenPos = fromMaybe(0)(index(fromFoldable4(percenPositions))(modIndex));
-              var limitsSnd = snoc(scanl3(add2)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
-              var limitsFst = cons(0)(scanl3(add2)(0)(replicate(length(xs1) - 1 | 0)(segment)));
+              var limitsSnd = snoc(scanl3(add12)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
+              var limitsFst = cons(0)(scanl3(add12)(0)(replicate(length(xs1) - 1 | 0)(segment)));
               var limits = zip(limitsFst)(limitsSnd);
               var endLimits = zip(xs1)(limits);
-              var end = function() {
+              var end2 = function() {
                 var f = function(v4) {
                   if (v4 instanceof Just) {
                     return v4.value0;
@@ -5445,9 +5880,9 @@ var spanEnd = function(v) {
                     return 0.9666;
                   }
                   ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 145, column 31 - line 145, column 45): " + [v4.constructor.name]);
+                  throw new Error("Failed pattern match at AuralSpecs (line 130, column 31 - line 130, column 45): " + [v4.constructor.name]);
                 };
-                return fromMaybe(0.9666)(head(map7(f)(filter(isJust)(spreadEnds(percenPos)(endLimits)))));
+                return fromMaybe(0.9666)(head(map7(f)(filter2(isJust)(spreadEnds(percenPos)(endLimits)))));
               }();
               return {
                 event: w.event,
@@ -5457,14 +5892,14 @@ var spanEnd = function(v) {
                 pan: w.pan,
                 speed: w.speed,
                 begin: w.begin,
-                end
+                end: end2
               };
             };
           };
           return map7(processEnd1(v1))(v2);
         }
         ;
-        throw new Error("Failed pattern match at AuralSpecs (line 124, column 1 - line 124, column 271): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+        throw new Error("Failed pattern match at AuralSpecs (line 109, column 1 - line 109, column 271): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
       };
     };
   };
@@ -5527,8 +5962,8 @@ var spanGain = function(v) {
               })(rhythmicToOnsets(v3));
               var modIndex = mod3(getEventIndex(w.event))(length(fromFoldable4(percenPositions)));
               var percenPos = fromMaybe(0)(index(fromFoldable4(percenPositions))(modIndex));
-              var limitsSnd = snoc(scanl3(add2)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
-              var limitsFst = cons(0)(scanl3(add2)(0)(replicate(length(xs1) - 1 | 0)(segment)));
+              var limitsSnd = snoc(scanl3(add12)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
+              var limitsFst = cons(0)(scanl3(add12)(0)(replicate(length(xs1) - 1 | 0)(segment)));
               var limits = zip(limitsFst)(limitsSnd);
               var gLimits = zip(xs1)(limits);
               var g = function() {
@@ -5541,9 +5976,9 @@ var spanGain = function(v) {
                     return 0.02666;
                   }
                   ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 353, column 31 - line 353, column 45): " + [v4.constructor.name]);
+                  throw new Error("Failed pattern match at AuralSpecs (line 338, column 31 - line 338, column 45): " + [v4.constructor.name]);
                 };
-                return fromMaybe(0.02666)(head(map7(f)(filter(isJust)(spreadGains(percenPos)(gLimits)))));
+                return fromMaybe(0.02666)(head(map7(f)(filter2(isJust)(spreadGains(percenPos)(gLimits)))));
               }();
               return {
                 event: w.event,
@@ -5556,7 +5991,7 @@ var spanGain = function(v) {
           return map7(processG(v1))(v2);
         }
         ;
-        throw new Error("Failed pattern match at AuralSpecs (line 332, column 1 - line 332, column 151): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+        throw new Error("Failed pattern match at AuralSpecs (line 317, column 1 - line 317, column 151): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
       };
     };
   };
@@ -5616,8 +6051,8 @@ var spanN = function(v) {
               })(rhythmicToOnsets(v3));
               var modIndex = mod3(getEventIndex(w.event))(length(fromFoldable4(percenPositions)));
               var percenPos = fromMaybe(0)(index(fromFoldable4(percenPositions))(modIndex));
-              var limitsSnd = snoc(scanl3(add2)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
-              var limitsFst = cons(0)(scanl3(add2)(0)(replicate(length(xs1) - 1 | 0)(segment)));
+              var limitsSnd = snoc(scanl3(add12)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
+              var limitsFst = cons(0)(scanl3(add12)(0)(replicate(length(xs1) - 1 | 0)(segment)));
               var limits = zip(limitsFst)(limitsSnd);
               var nLimits = zip(xs1)(limits);
               var n$prime = function() {
@@ -5630,9 +6065,9 @@ var spanN = function(v) {
                     return 2666;
                   }
                   ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 405, column 31 - line 405, column 45): " + [v4.constructor.name]);
+                  throw new Error("Failed pattern match at AuralSpecs (line 425, column 31 - line 425, column 45): " + [v4.constructor.name]);
                 };
-                return fromMaybe(2666)(head(map7(f)(filter(isJust)(spreadNs(percenPos)(nLimits)))));
+                return fromMaybe(2666)(head(map7(f)(filter2(isJust)(spreadNs(percenPos)(nLimits)))));
               }();
               return {
                 event: w.event,
@@ -5644,7 +6079,7 @@ var spanN = function(v) {
           return map7(processN1(v1))(v2);
         }
         ;
-        throw new Error("Failed pattern match at AuralSpecs (line 384, column 1 - line 384, column 121): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+        throw new Error("Failed pattern match at AuralSpecs (line 404, column 1 - line 404, column 121): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
       };
     };
   };
@@ -5710,8 +6145,8 @@ var spanPan = function(v) {
               })(rhythmicToOnsets(v3));
               var modIndex = mod3(getEventIndex(w.event))(length(fromFoldable4(percenPositions)));
               var percenPos = fromMaybe(0)(index(fromFoldable4(percenPositions))(modIndex));
-              var limitsSnd = snoc(scanl3(add2)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
-              var limitsFst = cons(0)(scanl3(add2)(0)(replicate(length(xs1) - 1 | 0)(segment)));
+              var limitsSnd = snoc(scanl3(add12)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
+              var limitsFst = cons(0)(scanl3(add12)(0)(replicate(length(xs1) - 1 | 0)(segment)));
               var limits = zip(limitsFst)(limitsSnd);
               var pLimits = zip(xs1)(limits);
               var p = function() {
@@ -5724,9 +6159,9 @@ var spanPan = function(v) {
                     return 0.5666;
                   }
                   ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 302, column 31 - line 302, column 45): " + [v4.constructor.name]);
+                  throw new Error("Failed pattern match at AuralSpecs (line 287, column 31 - line 287, column 45): " + [v4.constructor.name]);
                 };
-                return fromMaybe(0.5666)(head(map7(f)(filter(isJust)(spreadPans(percenPos)(pLimits)))));
+                return fromMaybe(0.5666)(head(map7(f)(filter2(isJust)(spreadPans(percenPos)(pLimits)))));
               }();
               return {
                 event: w.event,
@@ -5740,7 +6175,7 @@ var spanPan = function(v) {
           return map7(processP(v1))(v2);
         }
         ;
-        throw new Error("Failed pattern match at AuralSpecs (line 281, column 1 - line 281, column 179): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+        throw new Error("Failed pattern match at AuralSpecs (line 266, column 1 - line 266, column 179): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
       };
     };
   };
@@ -5797,8 +6232,8 @@ var spanSound = function(v) {
               })(rhythmicToOnsets(v3));
               var modIndex = mod3(getEventIndex(event$prime))(length(fromFoldable4(percenPositions)));
               var percenPos = fromMaybe(0)(index(fromFoldable4(percenPositions))(modIndex));
-              var limitsSnd = snoc(scanl3(add2)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
-              var limitsFst = cons(0)(scanl3(add2)(0)(replicate(length(xs1) - 1 | 0)(segment)));
+              var limitsSnd = snoc(scanl3(add12)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
+              var limitsFst = cons(0)(scanl3(add12)(0)(replicate(length(xs1) - 1 | 0)(segment)));
               var limits = zip(limitsFst)(limitsSnd);
               var soundLimits = zip(xs1)(limits);
               var sound$prime = function() {
@@ -5811,9 +6246,9 @@ var spanSound = function(v) {
                     return "error thingy";
                   }
                   ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 455, column 31 - line 455, column 45): " + [v4.constructor.name]);
+                  throw new Error("Failed pattern match at AuralSpecs (line 483, column 31 - line 483, column 45): " + [v4.constructor.name]);
                 };
-                return fromMaybe("error assigning sound SpreadBlock")(head(map7(f)(filter(isJust)(spreadSounds(percenPos)(soundLimits)))));
+                return fromMaybe("error assigning sound SpreadBlock")(head(map7(f)(filter2(isJust)(spreadSounds(percenPos)(soundLimits)))));
               }();
               return {
                 event: event$prime,
@@ -5824,7 +6259,7 @@ var spanSound = function(v) {
           return map7(processSound1(v1))(v2);
         }
         ;
-        throw new Error("Failed pattern match at AuralSpecs (line 434, column 1 - line 434, column 97): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+        throw new Error("Failed pattern match at AuralSpecs (line 462, column 1 - line 462, column 97): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
       };
     };
   };
@@ -5893,8 +6328,8 @@ var spanSpeed = function(v) {
               })(rhythmicToOnsets(v3));
               var modIndex = mod3(getEventIndex(w.event))(length(fromFoldable4(percenPositions)));
               var percenPos = fromMaybe(0)(index(fromFoldable4(percenPositions))(modIndex));
-              var limitsSnd = snoc(scanl3(add2)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
-              var limitsFst = cons(0)(scanl3(add2)(0)(replicate(length(xs1) - 1 | 0)(segment)));
+              var limitsSnd = snoc(scanl3(add12)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
+              var limitsFst = cons(0)(scanl3(add12)(0)(replicate(length(xs1) - 1 | 0)(segment)));
               var limits = zip(limitsFst)(limitsSnd);
               var spLimits = zip(xs1)(limits);
               var sp = function() {
@@ -5907,9 +6342,9 @@ var spanSpeed = function(v) {
                     return 1.0666;
                   }
                   ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 251, column 31 - line 251, column 45): " + [v4.constructor.name]);
+                  throw new Error("Failed pattern match at AuralSpecs (line 236, column 31 - line 236, column 45): " + [v4.constructor.name]);
                 };
-                return fromMaybe(1.0666)(head(map7(f)(filter(isJust)(spreadSpeeds(percenPos)(spLimits)))));
+                return fromMaybe(1.0666)(head(map7(f)(filter2(isJust)(spreadSpeeds(percenPos)(spLimits)))));
               }();
               return {
                 event: w.event,
@@ -5924,13 +6359,13 @@ var spanSpeed = function(v) {
           return map7(processSp(v1))(v2);
         }
         ;
-        throw new Error("Failed pattern match at AuralSpecs (line 230, column 1 - line 230, column 211): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+        throw new Error("Failed pattern match at AuralSpecs (line 215, column 1 - line 215, column 211): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
       };
     };
   };
 };
 var getBegin = function(aural2) {
-  return head(filter(isBegin)(fromFoldable4(aural2)));
+  return head(filter2(isBegin)(fromFoldable4(aural2)));
 };
 var processEnd = function(v) {
   return function(v1) {
@@ -6261,6 +6696,39 @@ var auralSpecs = function(m) {
     };
   };
 };
+
+// output/Data.DateTime/foreign.js
+var createUTC = function(y, mo, d, h, m, s, ms) {
+  var date2 = new Date(Date.UTC(y, mo, d, h, m, s, ms));
+  if (y >= 0 && y < 100) {
+    date2.setUTCFullYear(y);
+  }
+  return date2.getTime();
+};
+function calcDiff(rec1, rec2) {
+  var msUTC1 = createUTC(rec1.year, rec1.month - 1, rec1.day, rec1.hour, rec1.minute, rec1.second, rec1.millisecond);
+  var msUTC2 = createUTC(rec2.year, rec2.month - 1, rec2.day, rec2.hour, rec2.minute, rec2.second, rec2.millisecond);
+  return msUTC1 - msUTC2;
+}
+function adjustImpl(just) {
+  return function(nothing) {
+    return function(offset) {
+      return function(rec) {
+        var msUTC = createUTC(rec.year, rec.month - 1, rec.day, rec.hour, rec.minute, rec.second, rec.millisecond);
+        var dt = new Date(msUTC + offset);
+        return isNaN(dt.getTime()) ? nothing : just({
+          year: dt.getUTCFullYear(),
+          month: dt.getUTCMonth() + 1,
+          day: dt.getUTCDate(),
+          hour: dt.getUTCHours(),
+          minute: dt.getUTCMinutes(),
+          second: dt.getUTCSeconds(),
+          millisecond: dt.getUTCMilliseconds()
+        });
+      };
+    };
+  };
+}
 
 // output/Data.Date/foreign.js
 var createDate = function(y, m, d) {
@@ -6918,39 +7386,6 @@ var exactDate = function(y) {
   };
 };
 
-// output/Data.DateTime/foreign.js
-var createUTC = function(y, mo, d, h, m, s, ms) {
-  var date2 = new Date(Date.UTC(y, mo, d, h, m, s, ms));
-  if (y >= 0 && y < 100) {
-    date2.setUTCFullYear(y);
-  }
-  return date2.getTime();
-};
-function calcDiff2(rec1, rec2) {
-  var msUTC1 = createUTC(rec1.year, rec1.month - 1, rec1.day, rec1.hour, rec1.minute, rec1.second, rec1.millisecond);
-  var msUTC2 = createUTC(rec2.year, rec2.month - 1, rec2.day, rec2.hour, rec2.minute, rec2.second, rec2.millisecond);
-  return msUTC1 - msUTC2;
-}
-function adjustImpl(just) {
-  return function(nothing) {
-    return function(offset) {
-      return function(rec) {
-        var msUTC = createUTC(rec.year, rec.month - 1, rec.day, rec.hour, rec.minute, rec.second, rec.millisecond);
-        var dt = new Date(msUTC + offset);
-        return isNaN(dt.getTime()) ? nothing : just({
-          year: dt.getUTCFullYear(),
-          month: dt.getUTCMonth() + 1,
-          day: dt.getUTCDate(),
-          hour: dt.getUTCHours(),
-          minute: dt.getUTCMinutes(),
-          second: dt.getUTCSeconds(),
-          millisecond: dt.getUTCMilliseconds()
-        });
-      };
-    };
-  };
-}
-
 // output/Data.Time.Component/index.js
 var $runtime_lazy6 = function(name2, moduleName, init3) {
   var state2 = 0;
@@ -7271,7 +7706,7 @@ var diff = function(dictDuration) {
   var toDuration2 = toDuration(dictDuration);
   return function(dt1) {
     return function(dt2) {
-      return toDuration2(calcDiff2(toRecord(dt1), toRecord(dt2)));
+      return toDuration2(calcDiff(toRecord(dt1), toRecord(dt2)));
     };
   };
 };
@@ -7357,7 +7792,7 @@ var nowDateTime = /* @__PURE__ */ map9(toDateTime)(now);
 var unwrap2 = /* @__PURE__ */ unwrap();
 var diff2 = /* @__PURE__ */ diff(durationMilliseconds);
 var toRational2 = /* @__PURE__ */ toRational(toRationalInt);
-var add12 = /* @__PURE__ */ add(semiringRational);
+var add13 = /* @__PURE__ */ add(semiringRational);
 var mul1 = /* @__PURE__ */ mul(semiringRational);
 var div1 = /* @__PURE__ */ div(euclideanRingRational);
 var identity10 = /* @__PURE__ */ identity(categoryFn);
@@ -7367,7 +7802,7 @@ var timeToCount = function(x) {
   return function(t) {
     var d = unwrap2(diff2(t)(x.time));
     var d$prime = toRational2(floor2(d))(1e3);
-    return add12(mul1(d$prime)(x.freq))(x.count);
+    return add13(mul1(d$prime)(x.freq))(x.count);
   };
 };
 var origin = function(x) {
@@ -7940,7 +8375,7 @@ var mod4 = /* @__PURE__ */ mod(euclideanRingInt);
 var fromJust7 = /* @__PURE__ */ fromJust();
 var toEnum8 = /* @__PURE__ */ toEnum(boundedEnumChar);
 var show1 = /* @__PURE__ */ show(showString);
-var show2 = /* @__PURE__ */ show(showChar);
+var show22 = /* @__PURE__ */ show(showChar);
 var updatePosSingle = function(v) {
   return function(cp) {
     return function(after) {
@@ -8145,7 +8580,7 @@ var string = function(str) {
 var $$char = function(c) {
   return withErrorMessage(satisfy(function(v) {
     return v === c;
-  }))(show2(c));
+  }))(show22(c));
 };
 
 // output/Data.Char/index.js
@@ -29672,7 +30107,7 @@ var map14 = /* @__PURE__ */ map(functorMaybe);
 var some3 = /* @__PURE__ */ some(alternativeParserT)(lazyParserT);
 var foldl5 = /* @__PURE__ */ foldl(foldableArray);
 var applyFirst3 = /* @__PURE__ */ applyFirst(applyParserT);
-var show3 = /* @__PURE__ */ show(showString);
+var show8 = /* @__PURE__ */ show(showString);
 var bind1 = /* @__PURE__ */ bind(bindMaybe);
 var pure1 = /* @__PURE__ */ pure(applicativeMaybe);
 var foldr3 = /* @__PURE__ */ foldr(foldableArray);
@@ -29855,12 +30290,12 @@ var makeTokenParser = function(v) {
   var parens4 = function(p) {
     return between(symbol("("))(symbol(")"))(p);
   };
-  var semi = symbol(";");
+  var semi2 = symbol(";");
   var semiSep = function(p) {
-    return sepBy(p)(semi);
+    return sepBy(p)(semi2);
   };
   var semiSep1 = function(p) {
-    return sepBy1(p)(semi);
+    return sepBy1(p)(semi2);
   };
   var isReservedOp = function(name2) {
     return isReserved(sort2(v.reservedOpNames))(name2);
@@ -29888,7 +30323,7 @@ var makeTokenParser = function(v) {
     var go = bind7(ident)(function(name2) {
       var $115 = isReservedName(v)(name2);
       if ($115) {
-        return fail("reserved word " + show3(name2));
+        return fail("reserved word " + show8(name2));
       }
       ;
       return pure4(name2);
@@ -30028,7 +30463,7 @@ var makeTokenParser = function(v) {
     }
     ;
     if (otherwise) {
-      var msg = show3(name2);
+      var msg = show8(name2);
       var caseChar = function(c) {
         var v1 = function(v2) {
           if (otherwise) {
@@ -30146,7 +30581,7 @@ var makeTokenParser = function(v) {
     braces,
     angles,
     brackets,
-    semi,
+    semi: semi2,
     comma: comma2,
     colon,
     dot,
@@ -30219,7 +30654,7 @@ var toNumber$prime = function(v) {
     return v.value0;
   }
   ;
-  throw new Error("Failed pattern match at Aural (line 184, column 1 - line 184, column 40): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Aural (line 329, column 1 - line 329, column 40): " + [v.constructor.name]);
 };
 var stringToSamples = function(s) {
   return fromFoldable6(split(" ")(trim(s)));
@@ -30289,6 +30724,12 @@ var voiceId = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
     return pure5(x);
   });
 });
+var transposeBegin = /* @__PURE__ */ bind8(voiceId)(function(id) {
+  return pure5(new TransposedBegin(id));
+});
+var transposeEnd = /* @__PURE__ */ bind8(voiceId)(function(id) {
+  return pure5(new TransposedEnd(id));
+});
 var transposeGain = /* @__PURE__ */ bind8(voiceId)(function(id) {
   return pure5(new TransposedGain(id));
 });
@@ -30352,6 +30793,29 @@ var parseRangeNum = /* @__PURE__ */ bind8(parseSpecialNum)(function(x) {
     });
   });
 });
+var makeBegin = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
+  return bind8(parseSpan)(function(sp) {
+    return bind8(choice3([$$try(map16(fromFoldable12)(parseRangeNum)), many3(parseNumber)]))(function(panList) {
+      return pure5(new Begin(sp, fromFoldable6(panList)));
+    });
+  });
+});
+var makeEnd = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
+  return bind8(parseSpan)(function(sp) {
+    return bind8(choice3([$$try(map16(fromFoldable12)(parseRangeNum)), many3(parseNumber)]))(function(spdList) {
+      return pure5(new End(sp, fromFoldable6(spdList)));
+    });
+  });
+});
+var end = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
+  return bind8(choice3([reserved("end")]))(function() {
+    return bind8(reservedOp("="))(function() {
+      return bind8(choice3([$$try(makeEnd), transposeEnd]))(function(end1) {
+        return pure5(end1);
+      });
+    });
+  });
+});
 var makeGain = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
   return bind8(parseSpan)(function(sp) {
     return bind8(choice3([$$try(map16(fromFoldable12)(parseRangeNum)), many3(parseNumber)]))(function(gainList) {
@@ -30400,9 +30864,18 @@ var speed = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
     });
   });
 });
+var begin = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
+  return bind8(choice3([$$try(reserved("begin")), reserved("begin")]))(function() {
+    return bind8(reservedOp("="))(function() {
+      return bind8(choice3([$$try(makeBegin), transposeBegin]))(function(sound1) {
+        return pure5(sound1);
+      });
+    });
+  });
+});
 var value = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
   return bind8(reservedOp("."))(function() {
-    return bind8(choice3([$$try(sound), $$try(n), $$try(gain), $$try(pan), $$try(speed)]))(function(valType) {
+    return bind8(choice3([$$try(sound), $$try(n), $$try(gain), $$try(pan), $$try(speed), $$try(begin), end]))(function(valType) {
       return pure5(valType);
     });
   });
@@ -30489,7 +30962,7 @@ var parseXO = /* @__PURE__ */ bind9(/* @__PURE__ */ pure6(1))(function() {
 });
 var $lazy_bPattern = /* @__PURE__ */ $runtime_lazy8("bPattern", "Rhythm", function() {
   return bind9(pure6(1))(function() {
-    return bind9($lazy_parseRhythms(126))(function(patt) {
+    return bind9($lazy_parseRhythms(129))(function(patt) {
       return bind9(comma)(function() {
         return bind9(natural2)(function(k) {
           return bind9(comma)(function() {
@@ -30513,16 +30986,16 @@ var $lazy_bPattern = /* @__PURE__ */ $runtime_lazy8("bPattern", "Rhythm", functi
 });
 var $lazy_parseBjorklund = /* @__PURE__ */ $runtime_lazy8("parseBjorklund", "Rhythm", function() {
   return bind9(pure6(1))(function() {
-    return bind9(choice4([$$try(parens2($lazy_parseFull(82))), $$try(parens2($lazy_parseK(82))), $$try(parens2(parseSimpleBl)), $lazy_parseInv(82)]))(function(x) {
+    return bind9(choice4([$$try(parens2($lazy_parseFull(85))), $$try(parens2($lazy_parseK(85))), $$try(parens2(parseSimpleBl)), $lazy_parseInv(85)]))(function(x) {
       return pure6(x);
     });
   });
 });
 var $lazy_parseFull = /* @__PURE__ */ $runtime_lazy8("parseFull", "Rhythm", function() {
   return bind9(pure6(1))(function() {
-    return bind9($lazy_parseRhythms(88))(function(kPatt) {
+    return bind9($lazy_parseRhythms(91))(function(kPatt) {
       return bind9(comma)(function() {
-        return bind9($lazy_parseRhythms(90))(function(invPatt) {
+        return bind9($lazy_parseRhythms(93))(function(invPatt) {
           return bind9(comma)(function() {
             return bind9(natural2)(function(k) {
               return bind9(comma)(function() {
@@ -30544,7 +31017,7 @@ var $lazy_parseFull = /* @__PURE__ */ $runtime_lazy8("parseFull", "Rhythm", func
 var $lazy_parseInv = /* @__PURE__ */ $runtime_lazy8("parseInv", "Rhythm", function() {
   return bind9(pure6(1))(function() {
     return bind9(string("'("))(function() {
-      return bind9($lazy_bPattern(119))(function(p) {
+      return bind9($lazy_bPattern(122))(function(p) {
         return bind9(string(")"))(function() {
           return pure6(new Bjorklund(new InvK(p.patt), p.k, p.n, p.rotate));
         });
@@ -30554,7 +31027,7 @@ var $lazy_parseInv = /* @__PURE__ */ $runtime_lazy8("parseInv", "Rhythm", functi
 });
 var $lazy_parseK = /* @__PURE__ */ $runtime_lazy8("parseK", "Rhythm", function() {
   return bind9(pure6(1))(function() {
-    return bind9($lazy_bPattern(112))(function(p) {
+    return bind9($lazy_bPattern(115))(function(p) {
       return pure6(new Bjorklund(new K(p.patt), p.k, p.n, p.rotate));
     });
   });
@@ -30562,7 +31035,7 @@ var $lazy_parseK = /* @__PURE__ */ $runtime_lazy8("parseK", "Rhythm", function()
 var $lazy_parseRepeat = /* @__PURE__ */ $runtime_lazy8("parseRepeat", "Rhythm", function() {
   return bind9(pure6(1))(function() {
     return bind9(charWS2("!"))(function() {
-      return bind9($lazy_parseRhythms(71))(function(x) {
+      return bind9($lazy_parseRhythms(77))(function(x) {
         return bind9(charWS2("#"))(function() {
           return bind9(integer)(function(y) {
             return pure6(new Repeat(x, y));
@@ -30574,8 +31047,8 @@ var $lazy_parseRepeat = /* @__PURE__ */ $runtime_lazy8("parseRepeat", "Rhythm", 
 });
 var $lazy_parseRhythmList = /* @__PURE__ */ $runtime_lazy8("parseRhythmList", "Rhythm", function() {
   return bind9(pure6(1))(function() {
-    return bind9($lazy_parseXOorSDorReporBjork(50))(function(x) {
-      return bind9(map17(toList)(many1($lazy_parseXOorSDorReporBjork(51))))(function(xs) {
+    return bind9($lazy_parseXOorSDorReporBjork(56))(function(x) {
+      return bind9(map17(toList)(many1($lazy_parseXOorSDorReporBjork(57))))(function(xs) {
         return pure6(new Rhythmics(new Cons(x, xs)));
       });
     });
@@ -30583,13 +31056,13 @@ var $lazy_parseRhythmList = /* @__PURE__ */ $runtime_lazy8("parseRhythmList", "R
 });
 var $lazy_parseRhythms = /* @__PURE__ */ $runtime_lazy8("parseRhythms", "Rhythm", function() {
   return bind9(pure6(1))(function() {
-    return choice4([$$try($lazy_parseRhythmList(45)), $$try($lazy_parseSD(45)), $$try($lazy_parseBjorklund(45)), $$try($lazy_parseRepeat(45)), parseXO]);
+    return choice4([$$try($lazy_parseRhythmList(51)), $$try($lazy_parseSD(51)), $$try($lazy_parseBjorklund(51)), $$try($lazy_parseRepeat(51)), parseXO]);
   });
 });
 var $lazy_parseSD = /* @__PURE__ */ $runtime_lazy8("parseSD", "Rhythm", function() {
   return bind9(pure6(1))(function() {
     return bind9(charWS2("["))(function() {
-      return bind9($lazy_parseRhythms(63))(function(x) {
+      return bind9($lazy_parseRhythms(69))(function(x) {
         return bind9(charWS2("]"))(function() {
           return pure6(new Sd(x));
         });
@@ -30599,13 +31072,13 @@ var $lazy_parseSD = /* @__PURE__ */ $runtime_lazy8("parseSD", "Rhythm", function
 });
 var $lazy_parseXOorSDorReporBjork = /* @__PURE__ */ $runtime_lazy8("parseXOorSDorReporBjork", "Rhythm", function() {
   return bind9(pure6(1))(function() {
-    return choice4([$$try($lazy_parseSD(57)), $$try($lazy_parseRepeat(57)), $$try($lazy_parseBjorklund(57)), parseXO]);
+    return choice4([$$try($lazy_parseSD(63)), $$try($lazy_parseRepeat(63)), $$try($lazy_parseBjorklund(63)), parseXO]);
   });
 });
-var parseBjorklund = /* @__PURE__ */ $lazy_parseBjorklund(79);
-var parseRepeat = /* @__PURE__ */ $lazy_parseRepeat(67);
-var parseRhythmList = /* @__PURE__ */ $lazy_parseRhythmList(47);
-var parseSD = /* @__PURE__ */ $lazy_parseSD(59);
+var parseBjorklund = /* @__PURE__ */ $lazy_parseBjorklund(82);
+var parseRepeat = /* @__PURE__ */ $lazy_parseRepeat(73);
+var parseRhythmList = /* @__PURE__ */ $lazy_parseRhythmList(53);
+var parseSD = /* @__PURE__ */ $lazy_parseSD(65);
 var rhythmic = /* @__PURE__ */ bind9(/* @__PURE__ */ pure6(1))(function() {
   return bind9(choice4([$$try(parseRhythmList), $$try(parseSD), $$try(parseRepeat), $$try(parseBjorklund), parseXO]))(function(x) {
     return pure6(x);
@@ -30613,7 +31086,7 @@ var rhythmic = /* @__PURE__ */ bind9(/* @__PURE__ */ pure6(1))(function() {
 });
 
 // output/Parser/index.js
-var add3 = /* @__PURE__ */ add(semiringRational);
+var add2 = /* @__PURE__ */ add(semiringRational);
 var toRational3 = /* @__PURE__ */ toRational(toRationalInt);
 var bind10 = /* @__PURE__ */ bind(bindParserT);
 var pure7 = /* @__PURE__ */ pure(applicativeParserT);
@@ -30628,6 +31101,8 @@ var lookup3 = /* @__PURE__ */ lookup(ordString);
 var elem3 = /* @__PURE__ */ elem(foldableList)(eqString);
 var elem12 = /* @__PURE__ */ elem(foldableMap)(eqBoolean);
 var mapWithIndex3 = /* @__PURE__ */ mapWithIndex(functorWithIndexMap);
+var filter4 = /* @__PURE__ */ filter(ordString);
+var not1 = /* @__PURE__ */ not(/* @__PURE__ */ heytingAlgebraFunction(heytingAlgebraBoolean));
 var alt7 = /* @__PURE__ */ alt(altParserT);
 var applySecond6 = /* @__PURE__ */ applySecond(applyParserT);
 var fromFoldable13 = /* @__PURE__ */ fromFoldable2(foldableArray);
@@ -30653,7 +31128,7 @@ var toRat = function(x) {
   var floored = floor2(x);
   var fract = x - toNumber2(floored);
   var fract$prime = round2(fract * toNumber2(1e6));
-  return add3(toRational3(floored)(1))(toRational3(fract$prime)(1e6));
+  return add2(toRational3(floored)(1))(toRational3(fract$prime)(1e6));
 };
 var toNumber$prime2 = function(v) {
   if (v instanceof Left) {
@@ -30664,7 +31139,7 @@ var toNumber$prime2 = function(v) {
     return v.value0;
   }
   ;
-  throw new Error("Failed pattern match at Parser (line 417, column 1 - line 417, column 40): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Parser (line 542, column 1 - line 542, column 40): " + [v.constructor.name]);
 };
 var strWS = function(x) {
   return bind10(pure7(1))(function() {
@@ -30675,6 +31150,9 @@ var strWS = function(x) {
     });
   });
 };
+var semi = /* @__PURE__ */ function() {
+  return tokenParser3.semi;
+}();
 var reservedOp2 = /* @__PURE__ */ function() {
   return tokenParser3.reservedOp;
 }();
@@ -30730,12 +31208,42 @@ var structParser = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
     return pure7(fromFoldable7(xs));
   });
 });
+var lastSnap = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
+  return bind10(strWS("last"))(function() {
+    return bind10(reserved2("afterEval"))(function() {
+      return pure7(new LastTo(Snap.value));
+    });
+  });
+});
+var lastOrigin = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
+  return bind10(strWS("last"))(function() {
+    return pure7(new LastTo(Origin.value));
+  });
+});
+var lastMod = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
+  return bind10(reserved2("mod"))(function() {
+    return bind10(natural3)(function(m) {
+      return bind10(strWS("last"))(function() {
+        return bind10(reserved2("afterEval"))(function() {
+          return pure7(new LastTo(new Mod(m)));
+        });
+      });
+    });
+  });
+});
 var isTempoRefd = function(v) {
   if (v instanceof Prop) {
     return new Just(v.value0);
   }
   ;
   return Nothing.value;
+};
+var isReplica = function(v) {
+  if (v instanceof Replica) {
+    return true;
+  }
+  ;
+  return false;
 };
 var identifier2 = /* @__PURE__ */ function() {
   return tokenParser3.identifier;
@@ -30756,6 +31264,17 @@ var ratio = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
     });
   });
 });
+var replica = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
+  return bind10(voiceId2)(function(id) {
+    return bind10(reserved2("<-"))(function() {
+      return bind10(voiceId2)(function(id2) {
+        return bind10(semi)(function() {
+          return pure7(singleton3(id)(new Replica(id2)));
+        });
+      });
+    });
+  });
+});
 var getTemporalMap = function(program) {
   var isTemporal = function(v) {
     if (v instanceof TimeExpression) {
@@ -30764,24 +31283,28 @@ var getTemporalMap = function(program) {
     ;
     return false;
   };
-  return unions2(map18(unexpressTempo)(filter2(function(expression1) {
+  return unions2(map18(unexpressTempo)(filter3(function(expression1) {
     return isTemporal(expression1);
   })(program)));
 };
 var getTempoRef = function(v) {
-  if (v.value0 instanceof Kairos) {
+  if (v instanceof Temporal && v.value0 instanceof Kairos) {
     return isTempoRefd(v.value0.value1);
   }
   ;
-  if (v.value0 instanceof Metric) {
+  if (v instanceof Temporal && v.value0 instanceof Metric) {
     return isTempoRefd(v.value0.value2);
   }
   ;
-  if (v.value0 instanceof Converge) {
+  if (v instanceof Temporal && v.value0 instanceof Converge) {
     return isTempoRefd(v.value0.value3);
   }
   ;
-  throw new Error("Failed pattern match at Parser (line 376, column 1 - line 376, column 39): " + [v.constructor.name]);
+  if (v instanceof Replica) {
+    return Nothing.value;
+  }
+  ;
+  throw new Error("Failed pattern match at Parser (line 500, column 1 - line 500, column 39): " + [v.constructor.name]);
 };
 var getAuralMap = function(program) {
   var isAural = function(v) {
@@ -30791,7 +31314,7 @@ var getAuralMap = function(program) {
     ;
     return false;
   };
-  return unions2(map18(unexpressAural)(filter2(function(expression1) {
+  return unions2(map18(unexpressAural)(filter3(function(expression1) {
     return isAural(expression1);
   })(program)));
 };
@@ -30857,8 +31380,8 @@ var checkTempi = function($copy_aMap) {
         var $tco_result;
         function $tco_loop(aMap, alreadyRefd, aKey, temporal1) {
           var anotherKey = fromMaybe("")(getTempoRef(temporal1));
-          var $80 = eq5(getTempoRef(temporal1))(Nothing.value);
-          if ($80) {
+          var $94 = eq5(getTempoRef(temporal1))(Nothing.value);
+          if ($94) {
             $tco_done = true;
             return true;
           }
@@ -30884,10 +31407,10 @@ var checkTempi = function($copy_aMap) {
               return;
             }
             ;
-            throw new Error("Failed pattern match at Parser (line 371, column 34 - line 373, column 92): " + [v1.constructor.name]);
+            throw new Error("Failed pattern match at Parser (line 495, column 34 - line 497, column 92): " + [v1.constructor.name]);
           }
           ;
-          throw new Error("Failed pattern match at Parser (line 369, column 10 - line 373, column 92): " + [v.constructor.name]);
+          throw new Error("Failed pattern match at Parser (line 493, column 10 - line 497, column 92): " + [v.constructor.name]);
         }
         ;
         while (!$tco_done) {
@@ -30909,17 +31432,17 @@ var check2 = function($copy_v) {
         var $tco_done = false;
         var $tco_result;
         function $tco_loop(v, v1, v2, v3) {
-          if (v3.value0 instanceof Kairos) {
+          if (v3 instanceof Temporal && v3.value0 instanceof Kairos) {
             $tco_done = true;
             return true;
           }
           ;
-          if (v3.value0 instanceof Metric) {
+          if (v3 instanceof Temporal && v3.value0 instanceof Metric) {
             $tco_done = true;
             return true;
           }
           ;
-          if (v3.value0 instanceof Converge) {
+          if (v3 instanceof Temporal && v3.value0 instanceof Converge) {
             var v4 = lookup3(v3.value0.value0)(v);
             if (v4 instanceof Nothing) {
               $tco_done = true;
@@ -30941,13 +31464,49 @@ var check2 = function($copy_v) {
                 return;
               }
               ;
-              throw new Error("Failed pattern match at Parser (line 355, column 26 - line 357, column 93): " + [v5.constructor.name]);
+              throw new Error("Failed pattern match at Parser (line 477, column 26 - line 479, column 93): " + [v5.constructor.name]);
             }
             ;
-            throw new Error("Failed pattern match at Parser (line 353, column 3 - line 357, column 93): " + [v4.constructor.name]);
+            throw new Error("Failed pattern match at Parser (line 475, column 3 - line 479, column 93): " + [v4.constructor.name]);
           }
           ;
-          throw new Error("Failed pattern match at Parser (line 349, column 1 - line 349, column 78): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+          if (v3 instanceof Replica) {
+            if (v2 === v3.value0) {
+              $tco_done = true;
+              return false;
+            }
+            ;
+            if (otherwise) {
+              var v4 = lookup3(v3.value0)(v);
+              if (v4 instanceof Nothing) {
+                $tco_done = true;
+                return false;
+              }
+              ;
+              if (v4 instanceof Just) {
+                var v5 = elem3(v3.value0)(v1);
+                if (v5) {
+                  $tco_done = true;
+                  return false;
+                }
+                ;
+                if (!v5) {
+                  $tco_var_v = v;
+                  $tco_var_v1 = new Cons(v2, v1);
+                  $tco_var_v2 = v3.value0;
+                  $copy_v3 = v4.value0;
+                  return;
+                }
+                ;
+                throw new Error("Failed pattern match at Parser (line 485, column 24 - line 487, column 74): " + [v5.constructor.name]);
+              }
+              ;
+              throw new Error("Failed pattern match at Parser (line 483, column 5 - line 487, column 74): " + [v4.constructor.name]);
+            }
+            ;
+          }
+          ;
+          throw new Error("Failed pattern match at Parser (line 471, column 1 - line 471, column 78): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
         }
         ;
         while (!$tco_done) {
@@ -30959,9 +31518,11 @@ var check2 = function($copy_v) {
     };
   };
 };
-var check = function(aMap) {
+var check = function(aMap$prime) {
+  var checkID = !elem12(false)(mapWithIndex3(check2(aMap$prime)(Nil.value))(aMap$prime));
+  var aReplicaMap = filter4(isReplica)(aMap$prime);
+  var aMap = filter4(not1(isReplica))(aMap$prime);
   var checkTempoMark = !elem12(false)(mapWithIndex3(checkTempi(aMap)(Nil.value))(aMap));
-  var checkID = !elem12(false)(mapWithIndex3(check2(aMap)(Nil.value))(aMap));
   return checkID && checkTempoMark;
 };
 var charWS3 = function(x) {
@@ -31018,6 +31579,11 @@ var parsePercenTo = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() 
     return pure7(p);
   });
 });
+var cToLast = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
+  return bind10(choice5([$$try(lastMod), lastSnap, lastOrigin]))(function(last3) {
+    return pure7(last3);
+  });
+});
 var cFromStructure = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
   return bind10(natural3)(function(v) {
     return bind10(string("-"))(function() {
@@ -31039,6 +31605,11 @@ var cFromPercen = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
     });
   });
 });
+var cFromLast = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
+  return bind10(strWS("last"))(function() {
+    return pure7(Last2.value);
+  });
+});
 var bpm = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
   return bind10(map19(toNumber$prime2)(naturalOrFloat2))(function(x) {
     return bind10(reserved2("bpm the"))(function() {
@@ -31056,8 +31627,8 @@ var tempoMark = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
 var converging = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
   return bind10(whitespace3)(function() {
     return bind10(voiceId2)(function(voice) {
-      return bind10(alt7(choice5([$$try(parens3(parsePercenTo)), $$try(parens3(parseProcessTo)), parens3(parseStructureTo)]))(pure7(new ProcessTo(0, Snap.value))))(function(cTo) {
-        return bind10(choice5([$$try(parens3(cFromPercen)), $$try(parens3(cFromProcess)), parens3(cFromStructure)]))(function(cFrom) {
+      return bind10(alt7(choice5([$$try(cToLast), $$try(parens3(parsePercenTo)), $$try(parens3(parseProcessTo)), parens3(parseStructureTo)]))(pure7(new ProcessTo(0, Snap.value))))(function(cTo) {
+        return bind10(choice5([$$try(cFromLast), $$try(parens3(cFromPercen)), $$try(parens3(cFromProcess)), parens3(cFromStructure)]))(function(cFrom) {
           return bind10(alt7(parens3(tempoMark))(pure7(XTempo.value)))(function(tm) {
             return pure7(new Converge(voice, cTo, cFrom, tm));
           });
@@ -31139,12 +31710,17 @@ var polytemporalRelation = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(func
   });
 });
 var temporal = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
-  return bind10(polytemporalRelation)(function(x) {
+  return bind10(choice5([$$try(replica), polytemporalRelation]))(function(exp2) {
+    return pure7(exp2);
+  });
+});
+var timeExpression = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
+  return bind10(temporal)(function(x) {
     return pure7(new TimeExpression(x));
   });
 });
 var expression = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
-  return bind10(choice5([$$try(temporal), $$try(aural)]))(function(x) {
+  return bind10(choice5([$$try(timeExpression), $$try(aural)]))(function(x) {
     return pure7(x);
   });
 });
@@ -31156,29 +31732,78 @@ var parseProgram = /* @__PURE__ */ discard4(whitespace3)(function() {
   });
 });
 
-// output/Calculations/index.js
-var map20 = /* @__PURE__ */ map(functorMaybe);
-var toRational4 = /* @__PURE__ */ toRational(toRationalInt);
+// output/TimePacketOps/index.js
 var unwrap4 = /* @__PURE__ */ unwrap();
-var mul12 = /* @__PURE__ */ mul(semiringRational);
-var pure8 = /* @__PURE__ */ pure(applicativeEffect);
+var fromDateTimeToPosix = function(x) {
+  return unwrap4(unInstant(fromDateTime(x))) / 1e3;
+};
+var secsFromOriginAtEval = function(tp) {
+  var oPosix = fromDateTimeToPosix(tp.origin);
+  var $$eval = fromDateTimeToPosix(tp["eval"]);
+  return $$eval - oPosix;
+};
+var secsFromOriginAtWE = function(tp) {
+  var we = fromDateTimeToPosix(tp.we);
+  var oPosix = fromDateTimeToPosix(tp.origin);
+  return we - oPosix;
+};
+var secsFromOriginAtWS = function(tp) {
+  var ws = fromDateTimeToPosix(tp.ws);
+  var oPosix = fromDateTimeToPosix(tp.origin);
+  return ws - oPosix;
+};
+
+// output/TestOpsAndDefs/index.js
+var toRational4 = /* @__PURE__ */ toRational(toRationalInt);
+var defTemporal = /* @__PURE__ */ function() {
+  return new Temporal(new Kairos(0, new CPM(toRational4(120)(1))), O.value, false);
+}();
+var defConvergeTo = /* @__PURE__ */ function() {
+  return new ProcessTo(0, Origin.value);
+}();
+var defConvergeFrom = /* @__PURE__ */ function() {
+  return new Process(0);
+}();
+
+// output/Calculations/index.js
 var lookup4 = /* @__PURE__ */ lookup(ordString);
-var map110 = /* @__PURE__ */ map(functorArray);
+var pure8 = /* @__PURE__ */ pure(applicativeEffect);
+var toRational5 = /* @__PURE__ */ toRational(toRationalInt);
+var map20 = /* @__PURE__ */ map(functorArray);
 var eq13 = /* @__PURE__ */ eq(/* @__PURE__ */ eqArray(eqInt));
 var mod5 = /* @__PURE__ */ mod(euclideanRingInt);
-var fromFoldable14 = /* @__PURE__ */ fromFoldable(foldableList);
+var fromFoldable9 = /* @__PURE__ */ fromFoldable(foldableList);
 var div12 = /* @__PURE__ */ div(euclideanRingRational);
+var mul12 = /* @__PURE__ */ mul(semiringRational);
+var map110 = /* @__PURE__ */ map(functorMaybe);
 var intersectionWith2 = /* @__PURE__ */ intersectionWith(ordString);
 var eq22 = /* @__PURE__ */ eq(/* @__PURE__ */ eqMaybe(/* @__PURE__ */ eqTuple(eqString)(eqNumber)));
 var map24 = /* @__PURE__ */ map(functorEffect);
-var show4 = /* @__PURE__ */ show(/* @__PURE__ */ showMaybe(/* @__PURE__ */ showTuple(showString)(showNumber)));
-var show13 = /* @__PURE__ */ show(showNumber);
-var show22 = /* @__PURE__ */ show(showString);
-var show32 = /* @__PURE__ */ show(/* @__PURE__ */ showList(showString));
+var show9 = /* @__PURE__ */ show(/* @__PURE__ */ showList(valueShow));
 var traverseWithIndex2 = /* @__PURE__ */ traverseWithIndex(traversableWithIndexMap)(applicativeEffect);
 var map32 = /* @__PURE__ */ map(functorFn);
-var posFromEvent = function(v) {
-  return v.value0.value1;
+var unloopEvents = function(es) {
+  return filter2(function(v) {
+    return v.value1.value0 === 0;
+  })(es);
+};
+var simplifyCTo = function(v) {
+  return function(v1) {
+    if (v1 instanceof LastTo) {
+      return new ProcessTo(v, v1.value0);
+    }
+    ;
+    return v1;
+  };
+};
+var simplifyCFrom = function(v) {
+  return function(v1) {
+    if (v1 instanceof Last2) {
+      return new Process(v);
+    }
+    ;
+    return v1;
+  };
 };
 var getTempoMark = function(v) {
   if (v instanceof Kairos) {
@@ -31193,66 +31818,141 @@ var getTempoMark = function(v) {
     return v.value3;
   }
   ;
-  throw new Error("Failed pattern match at Calculations (line 364, column 1 - line 364, column 41): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Calculations (line 465, column 1 - line 465, column 41): " + [v.constructor.name]);
 };
-var getKey = function(v) {
-  if (v.value0 instanceof Converge) {
-    return v.value0.value0;
-  }
-  ;
-  return "2666";
-};
-var fromDateTimeToPosix = function(x) {
-  return unwrap4(unInstant(fromDateTime(x))) / 1e3;
-};
-var secsFromOriginAtEval = function(tp) {
-  var oPosix1 = fromDateTimeToPosix(tp.origin);
-  var eval1 = fromDateTimeToPosix(tp["eval"]);
-  return eval1 - oPosix1;
-};
-var secsFromOriginAtWE = function(tp) {
-  var we = fromDateTimeToPosix(tp.we);
-  var oPosix1 = fromDateTimeToPosix(tp.origin);
-  return we - oPosix1;
-};
-var secsFromOriginAtWS = function(tp) {
-  var ws = fromDateTimeToPosix(tp.ws);
-  var oPosix1 = fromDateTimeToPosix(tp.origin);
-  return ws - oPosix1;
-};
-var eventsInWindowUnlooped = function(es) {
-  return filter(function(v) {
-    return v.value1.value0 === 0;
-  })(es);
-};
-var elapsedVoiceAtEval = function(tp) {
-  return function(x1) {
-    return function(dur) {
-      var eval1 = secsFromOriginAtEval(tp);
-      var atEval2 = (eval1 - x1) / dur;
-      return pure8(atEval2);
-    };
+var getRhythmic = function($copy_v) {
+  return function($copy_v1) {
+    var $tco_var_v = $copy_v;
+    var $tco_done = false;
+    var $tco_result;
+    function $tco_loop(v, v1) {
+      if (v1 instanceof Temporal) {
+        $tco_done = true;
+        return v1.value1;
+      }
+      ;
+      if (v1 instanceof Replica) {
+        var v2 = lookup4(v1.value0)(v);
+        if (v2 instanceof Nothing) {
+          $tco_done = true;
+          return O.value;
+        }
+        ;
+        if (v2 instanceof Just) {
+          $tco_var_v = v;
+          $copy_v1 = v2.value0;
+          return;
+        }
+        ;
+        throw new Error("Failed pattern match at Calculations (line 449, column 30 - line 451, column 64): " + [v2.constructor.name]);
+      }
+      ;
+      throw new Error("Failed pattern match at Calculations (line 447, column 1 - line 447, column 60): " + [v.constructor.name, v1.constructor.name]);
+    }
+    ;
+    while (!$tco_done) {
+      $tco_result = $tco_loop($tco_var_v, $copy_v1);
+    }
+    ;
+    return $tco_result;
   };
 };
-var defTemporal = /* @__PURE__ */ function() {
-  return new Temporal(new Kairos(0, new CPM(toRational4(120)(1))), O.value, false);
-}();
-var isNotConvergent = function(dictOrd) {
-  var lookup1 = lookup(dictOrd);
-  return function(aKey) {
-    return function(mapa) {
-      var f = function(v) {
-        if (v.value0 instanceof Converge) {
+var getKey = function($copy_v) {
+  return function($copy_v1) {
+    var $tco_var_v = $copy_v;
+    var $tco_done = false;
+    var $tco_result;
+    function $tco_loop(v, v1) {
+      if (v1 instanceof Temporal && v1.value0 instanceof Converge) {
+        $tco_done = true;
+        return v1.value0.value0;
+      }
+      ;
+      if (v1 instanceof Temporal) {
+        $tco_done = true;
+        return "2666";
+      }
+      ;
+      if (v1 instanceof Replica) {
+        var v2 = lookup4(v1.value0)(v);
+        if (v2 instanceof Nothing) {
+          $tco_done = true;
+          return "2666";
+        }
+        ;
+        if (v2 instanceof Just) {
+          $tco_var_v = v;
+          $copy_v1 = v2.value0;
+          return;
+        }
+        ;
+        throw new Error("Failed pattern match at Calculations (line 299, column 3 - line 301, column 25): " + [v2.constructor.name]);
+      }
+      ;
+      throw new Error("Failed pattern match at Calculations (line 296, column 1 - line 296, column 53): " + [v.constructor.name, v1.constructor.name]);
+    }
+    ;
+    while (!$tco_done) {
+      $tco_result = $tco_loop($tco_var_v, $copy_v1);
+    }
+    ;
+    return $tco_result;
+  };
+};
+var getConvergences = function(v) {
+  if (v instanceof Converge) {
+    return new Tuple(v.value1, v.value2);
+  }
+  ;
+  return new Tuple(defConvergeTo, defConvergeFrom);
+};
+var f$prime = function($copy_v) {
+  return function($copy_v1) {
+    var $tco_var_v = $copy_v;
+    var $tco_done = false;
+    var $tco_result;
+    function $tco_loop(v, v1) {
+      if (v1 instanceof Temporal && v1.value0 instanceof Converge) {
+        $tco_done = true;
+        return false;
+      }
+      ;
+      if (v1 instanceof Temporal) {
+        $tco_done = true;
+        return true;
+      }
+      ;
+      if (v1 instanceof Replica) {
+        var v2 = lookup4(v1.value0)(v);
+        if (v2 instanceof Nothing) {
+          $tco_done = true;
           return false;
         }
         ;
-        return true;
-      };
-      return f(fromMaybe(defTemporal)(lookup1(aKey)(mapa)));
-    };
+        if (v2 instanceof Just) {
+          $tco_var_v = v;
+          $copy_v1 = v2.value0;
+          return;
+        }
+        ;
+        throw new Error("Failed pattern match at Calculations (line 307, column 21 - line 309, column 41): " + [v2.constructor.name]);
+      }
+      ;
+      throw new Error("Failed pattern match at Calculations (line 305, column 1 - line 305, column 47): " + [v.constructor.name, v1.constructor.name]);
+    }
+    ;
+    while (!$tco_done) {
+      $tco_result = $tco_loop($tco_var_v, $copy_v1);
+    }
+    ;
+    return $tco_result;
   };
 };
-var isNotConvergent1 = /* @__PURE__ */ isNotConvergent(ordString);
+var isNotConvergent = function(aKey) {
+  return function(mapa) {
+    return f$prime(mapa)(fromMaybe(defTemporal)(lookup4(aKey)(mapa)));
+  };
+};
 var keysForReferencePath = function($copy_aKey) {
   return function($copy_mapa) {
     return function($copy_listOfReferences) {
@@ -31261,15 +31961,15 @@ var keysForReferencePath = function($copy_aKey) {
       var $tco_done = false;
       var $tco_result;
       function $tco_loop(aKey, mapa, listOfReferences) {
-        if (isNotConvergent1(aKey)(mapa)) {
+        if (isNotConvergent(aKey)(mapa)) {
           $tco_done = true;
           return Nil.value;
         }
         ;
         if (otherwise) {
-          var nextCheck = getKey(fromMaybe(defTemporal)(lookup4(aKey)(mapa)));
-          var $171 = isNotConvergent1(nextCheck)(mapa);
-          if ($171) {
+          var nextCheck = getKey(mapa)(fromMaybe(defTemporal)(lookup4(aKey)(mapa)));
+          var $206 = isNotConvergent(nextCheck)(mapa);
+          if ($206) {
             $tco_done = true;
             return new Cons(nextCheck, listOfReferences);
           }
@@ -31280,7 +31980,7 @@ var keysForReferencePath = function($copy_aKey) {
           return;
         }
         ;
-        throw new Error("Failed pattern match at Calculations (line 277, column 1 - line 277, column 85): " + [aKey.constructor.name, mapa.constructor.name, listOfReferences.constructor.name]);
+        throw new Error("Failed pattern match at Calculations (line 287, column 1 - line 287, column 85): " + [aKey.constructor.name, mapa.constructor.name, listOfReferences.constructor.name]);
       }
       ;
       while (!$tco_done) {
@@ -31291,18 +31991,54 @@ var keysForReferencePath = function($copy_aKey) {
     };
   };
 };
-var defConvergeTo = /* @__PURE__ */ function() {
-  return new ProcessTo(0, Origin.value);
+var elapsedVoiceAtEval = function(tp) {
+  return function(x1) {
+    return function(dur) {
+      var $$eval = secsFromOriginAtEval(tp);
+      var atEval2 = ($$eval - x1) / dur;
+      return pure8(atEval2);
+    };
+  };
+};
+var defTempoMark = /* @__PURE__ */ function() {
+  return new CPM(toRational5(120)(1));
 }();
-var defConvergeFrom = /* @__PURE__ */ function() {
-  return new Process(0);
-}();
-var getConvergences = function(v) {
-  if (v instanceof Converge) {
-    return new Tuple(v.value1, v.value2);
-  }
-  ;
-  return new Tuple(defConvergeTo, defConvergeFrom);
+var tempoMark2 = function($copy_v) {
+  return function($copy_v1) {
+    var $tco_var_v = $copy_v;
+    var $tco_done = false;
+    var $tco_result;
+    function $tco_loop(v, v1) {
+      if (v1 instanceof Temporal) {
+        $tco_done = true;
+        return getTempoMark(v1.value0);
+      }
+      ;
+      if (v1 instanceof Replica) {
+        var v2 = lookup4(v1.value0)(v);
+        if (v2 instanceof Nothing) {
+          $tco_done = true;
+          return defTempoMark;
+        }
+        ;
+        if (v2 instanceof Just) {
+          $tco_var_v = v;
+          $copy_v1 = v2.value0;
+          return;
+        }
+        ;
+        throw new Error("Failed pattern match at Calculations (line 461, column 28 - line 463, column 62): " + [v2.constructor.name]);
+      }
+      ;
+      throw new Error("Failed pattern match at Calculations (line 459, column 1 - line 459, column 59): " + [v.constructor.name, v1.constructor.name]);
+    }
+    ;
+    while (!$tco_done) {
+      $tco_result = $tco_loop($tco_var_v, $copy_v1);
+    }
+    ;
+    return $tco_result;
+  };
 };
 var cpPos = function(v) {
   return function(v1) {
@@ -31317,7 +32053,7 @@ var cpPos = function(v) {
         return toNumber2(floor2(n$prime)) + v1;
       }
       ;
-      throw new Error("Failed pattern match at Calculations (line 444, column 1 - line 444, column 50): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
+      throw new Error("Failed pattern match at Calculations (line 428, column 1 - line 428, column 50): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
     };
   };
 };
@@ -31327,17 +32063,17 @@ var filterEventToPosFrom = function(cp) {
       return function(lenOnset) {
         var result = function() {
           if (cp instanceof Structure) {
-            return fromMaybe(0)(head(map110(function(x) {
+            return fromMaybe(0)(head(map20(function(x) {
               return cpPos(new Left(cp.value0))(snd(x))(lenOnset);
-            })(filter(function(x) {
+            })(filter2(function(x) {
               return eq13(fst(x))(cp.value1);
             })(structAndPos))));
           }
           ;
           if (cp instanceof Process) {
-            return fromMaybe(0)(head(map110(function(x) {
+            return fromMaybe(0)(head(map20(function(x) {
               return cpPos(new Right(cp.value0))(snd(x))(lenOnset);
-            })(filter(function(x) {
+            })(filter2(function(x) {
               return fst(x) === mod5(cp.value0)(lenOnset);
             })(eventsAndPos))));
           }
@@ -31346,7 +32082,7 @@ var filterEventToPosFrom = function(cp) {
             return cp.value0 / 100;
           }
           ;
-          throw new Error("Failed pattern match at Calculations (line 439, column 18 - line 442, column 45): " + [cp.constructor.name]);
+          return 0;
         }();
         return result;
       };
@@ -31359,17 +32095,17 @@ var filterEventToPosTo = function(cp) {
       return function(lenOnset) {
         var result = function() {
           if (cp instanceof StructureTo) {
-            return fromMaybe(0)(head(map110(function(x) {
+            return fromMaybe(0)(head(map20(function(x) {
               return cpPos(new Left(cp.value0))(snd(x))(lenOnset);
-            })(filter(function(x) {
+            })(filter2(function(x) {
               return eq13(fst(x))(cp.value1);
             })(structAndPos))));
           }
           ;
           if (cp instanceof ProcessTo) {
-            return fromMaybe(0)(head(map110(function(x) {
+            return fromMaybe(0)(head(map20(function(x) {
               return cpPos(new Right(cp.value0))(snd(x))(lenOnset);
-            })(filter(function(x) {
+            })(filter2(function(x) {
               return fst(x) === mod5(cp.value0)(lenOnset);
             })(eventsAndPos))));
           }
@@ -31378,7 +32114,7 @@ var filterEventToPosTo = function(cp) {
             return cp.value0 / 100;
           }
           ;
-          throw new Error("Failed pattern match at Calculations (line 432, column 18 - line 435, column 49): " + [cp.constructor.name]);
+          return 0;
         }();
         return result;
       };
@@ -31386,32 +32122,69 @@ var filterEventToPosTo = function(cp) {
   };
 };
 var innerPosCTo = function(rhythmic2) {
-  return function(t1) {
+  return function(t) {
     return function(cTo) {
       var structIndexes = rhythmicStructIndex(rhythmic2)([0]);
-      var onsetPercent = fromFoldable14(rhythmicToOnsets(rhythmic2));
-      var structAndPos = zip(structIndexes)(map110(function(v) {
+      var onsetPercent = fromFoldable9(rhythmicToOnsets(rhythmic2));
+      var structAndPos = zip(structIndexes)(map20(function(v) {
         return v.value1;
       })(onsetPercent));
       var lenOnset = length(onsetPercent);
       var eventIndexesPerVoice = range2(0)(lenOnset - 1 | 0);
-      var eventsAndPos = zip(eventIndexesPerVoice)(map110(function(v) {
+      var eventsAndPos = zip(eventIndexesPerVoice)(map20(function(v) {
         return v.value1;
       })(onsetPercent));
       var percentPos = filterEventToPosTo(cTo)(structAndPos)(eventsAndPos)(lenOnset);
-      var dur = durFromRhythmic(rhythmic2)(t1);
+      var dur = durFromRhythmic(rhythmic2)(t);
       return percentPos;
     };
   };
 };
-var calculateStartConvergent = function(durSecsConverged) {
-  return function(convergeTo) {
-    return function(durSecsVoice) {
-      return function(convergeFrom) {
-        var cTo = convergeTo * durSecsConverged;
-        var cFrom = convergeFrom * durSecsVoice;
-        var startOfVoice = cTo - cFrom;
-        return startOfVoice;
+var convergences = function($copy_v) {
+  return function($copy_v1) {
+    var $tco_var_v = $copy_v;
+    var $tco_done = false;
+    var $tco_result;
+    function $tco_loop(v, v1) {
+      if (v1 instanceof Temporal) {
+        $tco_done = true;
+        return getConvergences(v1.value0);
+      }
+      ;
+      if (v1 instanceof Replica) {
+        var v2 = lookup4(v1.value0)(v);
+        if (v2 instanceof Nothing) {
+          $tco_done = true;
+          return new Tuple(defConvergeTo, defConvergeFrom);
+        }
+        ;
+        if (v2 instanceof Just) {
+          $tco_var_v = v;
+          $copy_v1 = v2.value0;
+          return;
+        }
+        ;
+        throw new Error("Failed pattern match at Calculations (line 279, column 31 - line 281, column 59): " + [v2.constructor.name]);
+      }
+      ;
+      throw new Error("Failed pattern match at Calculations (line 277, column 1 - line 277, column 82): " + [v.constructor.name, v1.constructor.name]);
+    }
+    ;
+    while (!$tco_done) {
+      $tco_result = $tco_loop($tco_var_v, $copy_v1);
+    }
+    ;
+    return $tco_result;
+  };
+};
+var calculateStartConvergent = function(durConverged) {
+  return function(convergeTo1) {
+    return function(durVoice) {
+      return function(convergeFrom1) {
+        var cTo = convergeTo1 * durConverged;
+        var cFrom = convergeFrom1 * durVoice;
+        var startOfVoiceInSecs = cTo - cFrom;
+        return startOfVoiceInSecs;
       };
     };
   };
@@ -31428,27 +32201,27 @@ var calculateRTempo = function($copy_v) {
         function $tco_loop(v, v1, v2, v3) {
           if (v2 instanceof CPM) {
             $tco_done = true;
-            return toNumber3(div12(v2.value0)(toRational4(4)(1))) * v3;
+            return toNumber3(div12(v2.value0)(toRational5(4)(1))) * v3;
           }
           ;
           if (v2 instanceof BPM) {
             $tco_done = true;
-            return toNumber3(div12(div12(v2.value0)(toRational4(4)(1)))(v2.value1)) * v3;
+            return toNumber3(div12(div12(v2.value0)(toRational5(4)(1)))(v2.value1)) * v3;
           }
           ;
           if (v2 instanceof CPS) {
             $tco_done = true;
-            return toNumber3(mul12(v2.value0)(toRational4(60)(1))) * v3;
+            return toNumber3(mul12(v2.value0)(toRational5(60)(1))) * v3;
           }
           ;
           if (v2 instanceof XTempo) {
             $tco_done = true;
-            return toNumber3(mul12(mul12(v1.freq)(toRational4(60)(1)))(toRational4(4)(1))) * v3;
+            return toNumber3(mul12(mul12(v1.freq)(toRational5(60)(1)))(toRational5(4)(1))) * v3;
           }
           ;
           if (v2 instanceof Prop) {
-            var newTM = fromMaybe(new CPM(fromInt2(120)))(map20(function(v4) {
-              return getTempoMark(v4.value0);
+            var newTM = fromMaybe(new CPM(fromInt2(120)))(map110(function(temporal2) {
+              return tempoMark2(v)(temporal2);
             })(lookup4(v2.value0)(v)));
             var newProp = toNumber2(v2.value1) / toNumber2(v2.value2) * v3;
             $tco_var_v = v;
@@ -31458,7 +32231,7 @@ var calculateRTempo = function($copy_v) {
             return;
           }
           ;
-          throw new Error("Failed pattern match at Calculations (line 369, column 1 - line 369, column 82): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+          throw new Error("Failed pattern match at Calculations (line 355, column 1 - line 355, column 82): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
         }
         ;
         while (!$tco_done) {
@@ -31474,48 +32247,48 @@ var processTempoMark = function(v) {
   return function(v1) {
     return function(v2) {
       if (v instanceof CPM) {
-        return toNumber3(div12(v.value0)(toRational4(4)(1)));
+        return toNumber3(div12(v.value0)(toRational5(4)(1)));
       }
       ;
       if (v instanceof BPM) {
-        return toNumber3(div12(div12(v.value0)(toRational4(4)(1)))(v.value1));
+        return toNumber3(div12(div12(v.value0)(toRational5(4)(1)))(v.value1));
       }
       ;
       if (v instanceof CPS) {
-        return toNumber3(mul12(v.value0)(toRational4(60)(1)));
+        return toNumber3(mul12(v.value0)(toRational5(60)(1)));
       }
       ;
       if (v instanceof XTempo) {
-        return toNumber3(mul12(mul12(v1.freq)(toRational4(60)(1)))(toRational4(4)(1)));
+        return toNumber3(mul12(mul12(v1.freq)(toRational5(60)(1)))(toRational5(4)(1)));
       }
       ;
       if (v instanceof Prop) {
         var prop = toNumber2(v.value1) / toNumber2(v.value2);
-        var otherTempo = map20(function(v3) {
-          return calculateRTempo(v2)(v1)(getTempoMark(v3.value0))(prop);
+        var otherTempo = map110(function(temporal2) {
+          return calculateRTempo(v2)(v1)(tempoMark2(v2)(temporal2))(prop);
         })(lookup4(v.value0)(v2));
         return fromMaybe(120)(otherTempo);
       }
       ;
-      throw new Error("Failed pattern match at Calculations (line 355, column 1 - line 355, column 73): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
+      throw new Error("Failed pattern match at Calculations (line 345, column 1 - line 345, column 73): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
     };
   };
 };
 var calculateCFrom = function(cp) {
-  return function(t1) {
+  return function(t) {
     return function(rhythmic2) {
       var structIndexes = rhythmicStructIndex(rhythmic2)([0]);
-      var onsetPercent = fromFoldable14(rhythmicToOnsets(rhythmic2));
-      var structAndPos = zip(structIndexes)(map110(function(v) {
+      var onsetPercent = fromFoldable9(rhythmicToOnsets(rhythmic2));
+      var structAndPos = zip(structIndexes)(map20(function(v) {
         return v.value1;
       })(onsetPercent));
       var lenOnset = length(onsetPercent);
       var eventIndexesPerVoice = range2(0)(lenOnset - 1 | 0);
-      var eventsAndPos = zip(eventIndexesPerVoice)(map110(function(v) {
+      var eventsAndPos = zip(eventIndexesPerVoice)(map20(function(v) {
         return v.value1;
       })(onsetPercent));
       var percentPos = filterEventToPosFrom(cp)(structAndPos)(eventsAndPos)(lenOnset);
-      var dur = durFromRhythmic(rhythmic2)(t1);
+      var dur = durFromRhythmic(rhythmic2)(t);
       return percentPos;
     };
   };
@@ -31545,7 +32318,7 @@ var aligner = function(v) {
       return ceiledModInMetre * toNumber2(v1.value0);
     }
     ;
-    throw new Error("Failed pattern match at Calculations (line 401, column 1 - line 401, column 38): " + [v.constructor.name, v1.constructor.name]);
+    throw new Error("Failed pattern match at Calculations (line 383, column 1 - line 383, column 38): " + [v.constructor.name, v1.constructor.name]);
   };
 };
 var calculateCToMetric = function(v) {
@@ -31565,7 +32338,7 @@ var calculateCToMetric = function(v) {
       return v1.value0 / 100 + aligned;
     }
     ;
-    throw new Error("Failed pattern match at Calculations (line 385, column 1 - line 385, column 52): " + [v.constructor.name, v1.constructor.name]);
+    return 0;
   };
 };
 var x1MetricVoice = function(tp) {
@@ -31575,7 +32348,7 @@ var x1MetricVoice = function(tp) {
         return function(rhythmic2) {
           return function(mapa) {
             var tempo = processTempoMark(tm)(tp.tempo)(mapa);
-            var eval1 = secsFromOriginAtEval(tp);
+            var $$eval = secsFromOriginAtEval(tp);
             var externalVoiceSecs = 1 / toNumber3(tp.tempo.freq);
             var cyclesAtEval = toNumber3(timeToCount(tp.tempo)(tp["eval"]));
             var cTo = calculateCToMetric(cyclesAtEval)(cTo$prime);
@@ -31607,7 +32380,7 @@ var calculateCToNEW = function(v) {
         return v2.value0 / 100 + aligned;
       }
       ;
-      throw new Error("Failed pattern match at Calculations (line 393, column 1 - line 393, column 59): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
+      return 0;
     };
   };
 };
@@ -31617,59 +32390,40 @@ var recursiveRefX1 = function(v) {
       return function(v3) {
         return function(v4) {
           if (v4 instanceof Nil) {
-            var cKey = getKey(v1);
-            var v5 = function(v6) {
-              return getConvergences(v6.value0);
-            }(v1);
-            var rhythmic2 = function(v6) {
-              return v6.value1;
-            }(v1);
-            var processedTM = function(v6) {
-              return processTempoMark(getTempoMark(v6.value0))(v.tempo)(v2);
-            }(v1);
+            var cKey = getKey(v2)(v1);
+            var v5 = convergences(v2)(v1);
+            var rhythmic2 = getRhythmic(v2)(v1);
+            var processedTM = processTempoMark(tempoMark2(v2)(v1))(v.tempo)(v2);
             var dur = durFromRhythmic(rhythmic2)(processedTM);
             var cFrom = calculateCFrom(v5.value1)(processedTM)(rhythmic2);
             var temporalHack = fromMaybe(defTemporal)(lookup4(cKey)(v2));
             return function __do2() {
               var incomingKeyX1 = function() {
-                var $276 = eq22(v3)(Nothing.value);
-                if ($276) {
+                var $326 = eq22(v3)(Nothing.value);
+                if ($326) {
                   return map24(Just.create)(map24(Tuple.create(cKey))(findReferencedX1(v)(temporalHack)(v2)))();
                 }
                 ;
                 return v3;
               }();
-              log2("incomingKeyX1 " + show4(incomingKeyX1))();
               var v6 = fromMaybe(new Tuple("error", 2.666))(incomingKeyX1);
-              log2("refX1 " + show13(v6.value1))();
               var refTemporal2 = fromMaybe(defTemporal)(lookup4(v6.value0)(v2));
-              var refRhythmic2 = function(v7) {
-                return v7.value1;
-              }(refTemporal2);
-              var refTM = function(v7) {
-                return processTempoMark(getTempoMark(v7.value0))(v.tempo)(v2);
-              }(refTemporal2);
+              var refRhythmic2 = getRhythmic(v2)(refTemporal2);
+              var refTM = processTempoMark(tempoMark2(v2)(refTemporal2))(v.tempo)(v2);
               var refDur2 = durFromRhythmic(refRhythmic2)(refTM);
               var refVoiceAtEval = elapsedVoiceAtEval(v)(v6.value1)(refDur2)();
               var innerPos = innerPosCTo(refRhythmic2)(refTM)(v5.value0);
               var cTo = calculateCToNEW(innerPos)(refVoiceAtEval)(v5.value0);
               var x1 = calculateStartConvergent(refDur2)(cTo)(dur)(cFrom);
-              log2("recursiveRefwithoutWay" + show13(v6.value1 + x1))();
               return v6.value1 + x1;
             };
           }
           ;
           if (v4 instanceof Cons) {
             var refTemporal = fromMaybe(defTemporal)(lookup4(v4.value0)(v2));
-            var v5 = function(v6) {
-              return getConvergences(v6.value0);
-            }(refTemporal);
-            var refRhythmic = function(v6) {
-              return v6.value1;
-            }(refTemporal);
-            var refProcessedTM = function(v6) {
-              return processTempoMark(getTempoMark(v6.value0))(v.tempo)(v2);
-            }(refTemporal);
+            var v5 = convergences(v2)(refTemporal);
+            var refRhythmic = getRhythmic(v2)(refTemporal);
+            var refProcessedTM = processTempoMark(tempoMark2(v2)(refTemporal))(v.tempo)(v2);
             var refDur = durFromRhythmic(refRhythmic)(refProcessedTM);
             var cFrom = calculateCFrom(v5.value1)(refProcessedTM)(refRhythmic);
             return function __do2() {
@@ -31680,12 +32434,8 @@ var recursiveRefX1 = function(v) {
                 ;
                 if (v3 instanceof Just) {
                   var prevTemporal = fromMaybe(defTemporal)(lookup4(fst(v3.value0))(v2));
-                  var prevRhythmic = function(v6) {
-                    return v6.value1;
-                  }(prevTemporal);
-                  var prevTM = function(v6) {
-                    return processTempoMark(getTempoMark(v6.value0))(v.tempo)(v2);
-                  }(prevTemporal);
+                  var prevRhythmic = getRhythmic(v2)(prevTemporal);
+                  var prevTM = processTempoMark(tempoMark2(v2)(prevTemporal))(v.tempo)(v2);
                   var prevDur = durFromRhythmic(prevRhythmic)(prevTM);
                   var prevVoiceAtEval = elapsedVoiceAtEval(v)(snd(v3.value0))(prevDur)();
                   var innerPos = innerPosCTo(prevRhythmic)(prevTM)(v5.value0);
@@ -31694,10 +32444,9 @@ var recursiveRefX1 = function(v) {
                   return snd(v3.value0) + refX12;
                 }
                 ;
-                throw new Error("Failed pattern match at Calculations (line 255, column 12 - line 266, column 47): " + [v3.constructor.name]);
+                throw new Error("Failed pattern match at Calculations (line 261, column 12 - line 272, column 47): " + [v3.constructor.name]);
               }();
               var result = recursiveRefX1(v)(v1)(v2)(new Just(new Tuple(v4.value0, refX1)))(v4.value1)();
-              log2("result recursiveRef " + show13(result))();
               return result;
             };
           }
@@ -31711,35 +32460,36 @@ var recursiveRefX1 = function(v) {
 var findReferencedX1 = function(v) {
   return function(v1) {
     return function(v2) {
-      if (v1.value0 instanceof Kairos) {
-        var eval1 = secsFromOriginAtEval(v);
-        var x1 = eval1 + v1.value0.value0;
+      if (v1 instanceof Replica) {
+        var replicatedTemporal = fromMaybe(defTemporal)(lookup4(v1.value0)(v2));
         return function __do2() {
-          log2("x1 kairos voice " + show13(x1))();
-          return x1;
+          var result = findReferencedX1(v)(replicatedTemporal)(v2)();
+          return result;
         };
       }
       ;
-      if (v1.value0 instanceof Metric) {
+      if (v1 instanceof Temporal && v1.value0 instanceof Kairos) {
+        var $$eval = secsFromOriginAtEval(v);
+        var x1 = $$eval + v1.value0.value0;
+        return pure8(x1);
+      }
+      ;
+      if (v1 instanceof Temporal && v1.value0 instanceof Metric) {
         return function __do2() {
           var x12 = x1MetricVoice(v)(v1.value0.value2)(v1.value0.value0)(v1.value0.value1)(v1.value1)(v2)();
-          log2("x1 metric voice " + show13(x12))();
           return x12;
         };
       }
       ;
-      if (v1.value0 instanceof Converge) {
+      if (v1 instanceof Temporal && v1.value0 instanceof Converge) {
         var way = keysForReferencePath(v1.value0.value0)(v2)(Nil.value);
         return function __do2() {
-          log2("key " + show22(v1.value0.value0))();
-          log2("way: " + show32(way))();
           var recursiveX1 = recursiveRefX1(v)(new Temporal(new Converge(v1.value0.value0, v1.value0.value1, v1.value0.value2, v1.value0.value3), v1.value1, v1.value2))(v2)(Nothing.value)(way)();
-          log2("x1 converge voice" + show13(recursiveX1))();
           return recursiveX1;
         };
       }
       ;
-      throw new Error("Failed pattern match at Calculations (line 201, column 1 - line 201, column 83): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
+      throw new Error("Failed pattern match at Calculations (line 197, column 1 - line 197, column 83): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
     };
   };
 };
@@ -31750,28 +32500,20 @@ var x1ConvergeVoice = function(tp) {
         return function(cFrom$prime) {
           return function(rhythmic2) {
             return function(mapa) {
-              var referencedTemporal = fromMaybe(new Temporal(new Kairos(0, new CPM(fromInt2(120))), O.value, false))(lookup4(cKey)(mapa));
-              var referencedDur = function(v) {
-                return durFromRhythmic(v.value1)(processTempoMark(getTempoMark(v.value0))(tp.tempo)(mapa));
-              }(referencedTemporal);
-              var referencedRhythmic = function(v) {
-                return v.value1;
-              }(referencedTemporal);
-              var referencedTempo = function(v) {
-                return processTempoMark(getTempoMark(v.value0))(tp.tempo)(mapa);
-              }(referencedTemporal);
+              var refTemporal = fromMaybe(defTemporal)(lookup4(cKey)(mapa));
+              var refRhythmic = getRhythmic(mapa)(refTemporal);
+              var refTempo = processTempoMark(tempoMark2(mapa)(refTemporal))(tp.tempo)(mapa);
+              var refDur = durFromRhythmic(refRhythmic)(refTempo);
               return function __do2() {
-                var referencedX1 = findReferencedX1(tp)(referencedTemporal)(mapa)();
-                var referencedVoiceAtEval = elapsedVoiceAtEval(tp)(referencedX1)(referencedDur)();
-                log2("referencedVoiceAtEval top " + show13(referencedVoiceAtEval))();
-                var innerPos = innerPosCTo(referencedRhythmic)(referencedTempo)(cTo$prime);
-                var cTo = calculateCToNEW(innerPos)(referencedVoiceAtEval)(cTo$prime);
+                var refX1 = findReferencedX1(tp)(refTemporal)(mapa)();
+                var refVoiceAtEval = elapsedVoiceAtEval(tp)(refX1)(refDur)();
+                var innerPos = innerPosCTo(refRhythmic)(refTempo)(cTo$prime);
+                var cTo = calculateCToNEW(innerPos)(refVoiceAtEval)(cTo$prime);
                 var processedTempoMark = processTempoMark(tm)(tp.tempo)(mapa);
                 var cFrom = calculateCFrom(cFrom$prime)(processedTempoMark)(rhythmic2);
                 var dur = durFromRhythmic(rhythmic2)(processedTempoMark);
-                var x1 = calculateStartConvergent(referencedDur)(cTo)(dur)(cFrom);
-                log2("x1 converge voice top " + show13(referencedX1 + x1))();
-                return referencedX1 + x1;
+                var x1 = calculateStartConvergent(refDur)(cTo)(dur)(cFrom);
+                return refX1 + x1;
               };
             };
           };
@@ -31782,7 +32524,7 @@ var x1ConvergeVoice = function(tp) {
 };
 var addPosixOriginToCalculation = function(posix) {
   return function(es) {
-    return map110(function(v) {
+    return map20(function(v) {
       return new Event(new Onset(v.value0.value0, v.value0.value1 + posix), v.value1);
     })(es);
   };
@@ -31791,24 +32533,35 @@ var calculateTemporal = function(v) {
   return function(v1) {
     return function(v2) {
       return function(v3) {
-        if (v3.value0 instanceof Kairos) {
+        if (v3 instanceof Replica) {
+          var replicatedTemporal = fromMaybe(defTemporal)(lookup4(v3.value0)(v));
+          return function __do2() {
+            var result = calculateTemporal(v)(v1)(v2)(replicatedTemporal)();
+            return result;
+          };
+        }
+        ;
+        if (v3 instanceof Temporal && v3.value0 instanceof Kairos) {
           var ws = secsFromOriginAtWS(v1);
           var we = secsFromOriginAtWE(v1);
           var tempo = processTempoMark(v3.value0.value1)(v1.tempo)(v);
           var posixAtOrigin = fromDateTimeToPosix(origin(v1.tempo));
-          var eval1 = secsFromOriginAtEval(v1);
-          var x1 = eval1 + v3.value0.value0;
+          var posFromEvent = function(v4) {
+            return v4.value0.value1;
+          };
+          var $$eval = secsFromOriginAtEval(v1);
+          var x1 = $$eval + v3.value0.value0;
           var dur = durFromRhythmic(v3.value1)(tempo);
           var indexes = getIndexes(v3.value1)(ws - dur)(we)(x1)(dur);
           var blocks = getBlocks(ws - dur)(we)(x1)(dur);
-          var onsets = onsetsFromBlocks(blocks)(fromFoldable14(rhythmicToOnsets(v3.value1)))(dur);
+          var onsets = onsetsFromBlocks(blocks)(fromFoldable9(rhythmicToOnsets(v3.value1)))(dur);
           var events = zipWith(Event.create)(onsets)(indexes);
-          var looped = addPosixOriginToCalculation(posixAtOrigin)(filter(function(e) {
+          var looped = addPosixOriginToCalculation(posixAtOrigin)(filter2(function(e) {
             return posFromEvent(e) >= ws && posFromEvent(e) < we;
           })(events));
-          var unlooped = addPosixOriginToCalculation(posixAtOrigin)(filter(function(e) {
+          var unlooped = addPosixOriginToCalculation(posixAtOrigin)(filter2(function(e) {
             return posFromEvent(e) >= ws && posFromEvent(e) <= we;
-          })(eventsInWindowUnlooped(events)));
+          })(unloopEvents(events)));
           return pure8(function() {
             if (v3.value2) {
               return looped;
@@ -31818,25 +32571,30 @@ var calculateTemporal = function(v) {
           }());
         }
         ;
-        if (v3.value0 instanceof Metric) {
+        if (v3 instanceof Temporal && v3.value0 instanceof Metric) {
           var dur = durFromRhythmic(v3.value1)(processTempoMark(v3.value0.value2)(v1.tempo)(v));
+          var lengthRhythm = length(fromFoldable9(rhythmicToOnsets(v3.value1))) - 1 | 0;
+          var simCTo = simplifyCTo(lengthRhythm)(v3.value0.value0);
+          var simCFrom = simplifyCFrom(lengthRhythm)(v3.value0.value1);
           return function __do2() {
-            var x12 = x1MetricVoice(v1)(v3.value0.value2)(v3.value0.value0)(v3.value0.value1)(v3.value1)(v)();
-            log2("x1 IN metricTemporal " + show13(x12))();
+            var x12 = x1MetricVoice(v1)(v3.value0.value2)(simCTo)(simCFrom)(v3.value1)(v)();
             var posixAtOrigin2 = fromDateTimeToPosix(origin(v1.tempo));
             var ws2 = secsFromOriginAtWS(v1);
             var we2 = secsFromOriginAtWE(v1);
             var blocks2 = getBlocks(ws2 - dur)(we2)(x12)(dur);
-            var onsetPercent = fromFoldable14(rhythmicToOnsets(v3.value1));
+            var onsetPercent = fromFoldable9(rhythmicToOnsets(v3.value1));
             var onsets2 = onsetsFromBlocks(blocks2)(onsetPercent)(dur);
             var indexes2 = getIndexes(v3.value1)(ws2 - dur)(we2)(x12)(dur);
             var events2 = zipWith(Event.create)(onsets2)(indexes2);
-            var looped2 = addPosixOriginToCalculation(posixAtOrigin2)(filter(function(e) {
-              return posFromEvent(e) >= ws2 && posFromEvent(e) < we2;
+            var posFromEvent2 = function(v4) {
+              return v4.value0.value1;
+            };
+            var looped2 = addPosixOriginToCalculation(posixAtOrigin2)(filter2(function(e) {
+              return posFromEvent2(e) >= ws2 && posFromEvent2(e) < we2;
             })(events2));
-            var unlooped2 = addPosixOriginToCalculation(posixAtOrigin2)(filter(function(e) {
-              return posFromEvent(e) >= ws2 && posFromEvent(e) < we2;
-            })(eventsInWindowUnlooped(events2)));
+            var unlooped2 = addPosixOriginToCalculation(posixAtOrigin2)(filter2(function(e) {
+              return posFromEvent2(e) >= ws2 && posFromEvent2(e) < we2;
+            })(unloopEvents(events2)));
             if (v3.value2) {
               return looped2;
             }
@@ -31845,24 +32603,30 @@ var calculateTemporal = function(v) {
           };
         }
         ;
-        if (v3.value0 instanceof Converge) {
+        if (v3 instanceof Temporal && v3.value0 instanceof Converge) {
           var dur = durFromRhythmic(v3.value1)(processTempoMark(v3.value0.value3)(v1.tempo)(v));
+          var lengthRhythm = length(fromFoldable9(rhythmicToOnsets(v3.value1))) - 1 | 0;
+          var simCTo = simplifyCTo(lengthRhythm)(v3.value0.value1);
+          var simCFrom = simplifyCFrom(lengthRhythm)(v3.value0.value2);
           return function __do2() {
-            var x12 = x1ConvergeVoice(v1)(v3.value0.value3)(v3.value0.value0)(v3.value0.value1)(v3.value0.value2)(v3.value1)(v)();
+            var x12 = x1ConvergeVoice(v1)(v3.value0.value3)(v3.value0.value0)(simCTo)(simCFrom)(v3.value1)(v)();
             var posixAtOrigin2 = fromDateTimeToPosix(origin(v1.tempo));
             var ws2 = secsFromOriginAtWS(v1);
             var we2 = secsFromOriginAtWE(v1);
             var blocks2 = getBlocks(ws2 - dur)(we2)(x12)(dur);
-            var onsetPercent = fromFoldable14(rhythmicToOnsets(v3.value1));
+            var onsetPercent = fromFoldable9(rhythmicToOnsets(v3.value1));
             var onsets2 = onsetsFromBlocks(blocks2)(onsetPercent)(dur);
             var indexes2 = getIndexes(v3.value1)(ws2 - dur)(we2)(x12)(dur);
             var events2 = zipWith(Event.create)(onsets2)(indexes2);
-            var looped2 = addPosixOriginToCalculation(posixAtOrigin2)(filter(function(e) {
-              return posFromEvent(e) >= ws2 && posFromEvent(e) < we2;
+            var posFromEvent2 = function(v4) {
+              return v4.value0.value1;
+            };
+            var looped2 = addPosixOriginToCalculation(posixAtOrigin2)(filter2(function(e) {
+              return posFromEvent2(e) >= ws2 && posFromEvent2(e) < we2;
             })(events2));
-            var unlooped2 = addPosixOriginToCalculation(posixAtOrigin2)(filter(function(e) {
-              return posFromEvent(e) >= ws2 && posFromEvent(e) < we2;
-            })(eventsInWindowUnlooped(events2)));
+            var unlooped2 = addPosixOriginToCalculation(posixAtOrigin2)(filter2(function(e) {
+              return posFromEvent2(e) >= ws2 && posFromEvent2(e) < we2;
+            })(unloopEvents(events2)));
             if (v3.value2) {
               return looped2;
             }
@@ -31871,7 +32635,7 @@ var calculateTemporal = function(v) {
           };
         }
         ;
-        throw new Error("Failed pattern match at Calculations (line 124, column 1 - line 124, column 102): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+        throw new Error("Failed pattern match at Calculations (line 92, column 1 - line 92, column 102): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
       };
     };
   };
@@ -31881,12 +32645,13 @@ var calculateVoice = function(tempoMap) {
     return function(tp) {
       return function(aKey) {
         return function(v) {
-          var rhythmic2 = function(v1) {
-            return v1.value1;
-          }(v.value0);
           var events = calculateTemporal(tempoMap)(tp)(aKey)(v.value0);
-          var toWaste = map24(auralSpecs(voiceMap)(rhythmic2)(v.value1))(events);
-          return toWaste;
+          var rhythmic2 = getRhythmic(tempoMap)(v.value0);
+          return function __do2() {
+            log2("aural " + show9(v.value1))();
+            var toWaste = map24(auralSpecs(voiceMap)(rhythmic2)(v.value1))(events)();
+            return toWaste;
+          };
         };
       };
     };
@@ -31903,7 +32668,7 @@ var programToWaste = function(program) {
   return function(ws$prime) {
     return function(we$prime) {
       return function(eval$prime) {
-        return function(t1) {
+        return function(t) {
           var voices$prime = assambleVoice(program);
           var toWaste = function(almostW) {
             var posix = function(v) {
@@ -31924,20 +32689,20 @@ var programToWaste = function(program) {
             ws: ws$prime,
             we: we$prime,
             "eval": eval$prime,
-            origin: origin(t1),
-            tempo: t1
+            origin: origin(t),
+            tempo: t
           };
           var f = function(w) {
             return w.event.value0.value0;
           };
           var getXs = function(ws) {
-            return filter(function(w) {
+            return filter2(function(w) {
               return f(w);
             })(ws);
           };
           var calculatedVoices = calculateVoices(getTemporalMap(program))(voices$prime)(timePacket);
-          var almostWs = map24(map32(map32(concat)(fromFoldable14))(values))(calculatedVoices);
-          var waste = map24(map32(map110(toWaste))(getXs))(almostWs);
+          var almostWs = map24(map32(map32(concat)(fromFoldable9))(values))(calculatedVoices);
+          var waste = map24(map32(map20(toWaste))(getXs))(almostWs);
           return waste;
         };
       };
@@ -31956,8 +32721,8 @@ var unsafeToForeign = unsafeCoerce2;
 // output/Main/index.js
 var bind11 = /* @__PURE__ */ bind(bindEffect);
 var map21 = /* @__PURE__ */ map(functorArray);
-var fromFoldable9 = /* @__PURE__ */ fromFoldable2(foldableArray);
-var toRational5 = /* @__PURE__ */ toRational(toRationalInt);
+var fromFoldable10 = /* @__PURE__ */ fromFoldable2(foldableArray);
+var toRational6 = /* @__PURE__ */ toRational(toRationalInt);
 var unsafeMaybeMilliseconds = function($copy_v) {
   var $tco_done = false;
   var $tco_result;
@@ -32015,8 +32780,8 @@ var scheduleNoteEvents = function(tk) {
 };
 var launch = function __do() {
   log2("timekNot: launch")();
-  var ast = $$new(fromFoldable9([new TimeExpression(empty2)]))();
-  var tempo = bind11(newTempo(toRational5(1)(1)))($$new)();
+  var ast = $$new(fromFoldable10([new TimeExpression(empty2)]))();
+  var tempo = bind11(newTempo(toRational6(1)(1)))($$new)();
   var $$eval = bind11(nowDateTime)($$new)();
   return {
     ast,

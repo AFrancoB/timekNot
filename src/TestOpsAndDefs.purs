@@ -1,4 +1,4 @@
-module TestOpsAndDefs (defMapTemporals,defTemporal,defPolytemporal,defConvergeTo,defConvergeFrom) where
+module TestOpsAndDefs (defMapTemporals,defTemporal,defPolytemporal,defConvergeTo,defConvergeFrom,defVoice,defAural) where
 
 import Prelude
 
@@ -6,7 +6,7 @@ import Data.Tuple
 import Data.Maybe
 import Data.Map as M
 import Data.Int (floor,round,toNumber)
-import Data.List (fromFoldable)
+import Data.List (fromFoldable, List(..))
 
 import Data.Tempo
 
@@ -35,6 +35,15 @@ defPolytemporal = Kairos 0.0 (CPM (120%1))
 
 defConvergeTo = ProcessTo 0 Origin
 defConvergeFrom = Process 0
+
+defVoice = Voice defTemporal defAural
+defAural = Nil
+
+defEvent = Event defOnset defIndex
+
+defOnset = Onset true 0.0
+
+defIndex = Index 0 [0] 0
 
   ---- testing stuff ---------------
 makeDate :: Int -> Month -> Int -> Date

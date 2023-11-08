@@ -13,22 +13,15 @@ import Data.Foldable (sum)
 import Data.Int
 import Data.FunctorWithIndex (mapWithIndex)
 import Data.Array (filter,fromFoldable,(!!), zipWith, replicate, concat, (..), (:), init, tail, last,head,reverse,zip, cons, snoc, length, singleton, splitAt)
-
-import Data.List
+import Data.List (List(..))
 import Data.Traversable (scanl)
 import Data.List (fromFoldable,concat,zip,zipWith,length,init) as L
 
-import Control.Applicative
-
-import Data.Newtype
-
 import Data.Tempo
-
-import Parsing
 
 import AST
 import Parser
-import Rhythm
+import Rhythm -- is this used?
 import TestOpsAndDefs
 import DurationAndIndex
 import TimePacketOps
@@ -55,7 +48,15 @@ import Data.TraversableWithIndex
 ---- structure-oriented index: an int identifier for each segment on a voice and an array to identifier internal events in a voice: The head is the 'natural' subdivisions of the voice, each new element in the array is a new subdivision
 ---- a structure oriented index has a voice index and a structure index. A voice index is an Int while the Structure Index is an Array Int. The notation I have made for the structure oriented index is: 3-0.2.4  to the left of the (-) is the voice index and to the right of it is the event position in the rhythmic idea. The head of the array is the top level of the nested subdivisions and the last is the deepest level of the subdivisions.  
 
----
+---- ISSUE: unions in getAuralMap need to be changed for something that allows multiple aural expressions to be bound into one single temporal expression:
+{- for example:
+v0 <- diverge | xxxx :|
+
+v0.sound = _ "bd cp";
+v0.sound = _-_ "drum" .n = _ 0..20;
+-}
+-- this above should generate two voices. This will make the 'Replica'' parsing obsolete unless it is added with a way to change specific parameters like tempo, convergeFrom, convergeTo, etc...
+
 programToWaste:: Program -> DateTime -> DateTime -> DateTime -> Tempo -> Effect (Array Waste)
 programToWaste program ws' we' eval' t = waste
   where timePacket = {ws: ws', we: we', eval: eval', origin: origin t, tempo: t}
@@ -77,17 +78,24 @@ assambleVoice program = M.intersectionWith (\x y -> Voice x y) tempoMap auralMap
   where tempoMap = getTemporalMap program
         auralMap = getAuralMap program
 
------ down from here is the same as visualiser
+
+-- voices:: Map String (List Aural)
 calculateVoices:: M.Map String Temporal -> Voices -> TimePacket -> Effect (M.Map String (Array AlmostWaste))
 calculateVoices tempoMap voiceMap tp = traverseWithIndex (calculateVoice tempoMap voiceMap tp) voiceMap  -- to get rid of Effect, change traverseWithIndex to mapWithIndex
 
 calculateVoice:: M.Map String Temporal -> Voices -> TimePacket -> String -> Voice -> Effect (Array AlmostWaste)
-calculateVoice tempoMap voiceMap tp aKey (Voice temporal aural) = toWaste
-  where events = calculateTemporal tempoMap tp aKey temporal -- Array Event
-        rhythmic = (\(Temporal p r l) -> r) temporal
-        toWaste = auralSpecs voiceMap rhythmic aural <$> events
+calculateVoice tempoMap voiceMap tp aKey (Voice temporal aurals) = do 
+    let events = calculateTemporal tempoMap tp aKey temporal -- Array Event
+    let rhythmic = getRhythmic tempoMap temporal
+    log ("aural " <> show aurals)
+    toWaste <- auralSpecs voiceMap rhythmic aurals <$> events
+    pure toWaste
 
 calculateTemporal:: M.Map String Temporal -> TimePacket -> String -> Temporal -> Effect (Array Event)
+calculateTemporal mapa tp aKey (Replica id) = do
+  let replicatedTemporal = fromMaybe defTemporal $ M.lookup id mapa
+  result <- calculateTemporal mapa tp aKey replicatedTemporal 
+  pure result 
 calculateTemporal mapa tp aKey (Temporal (Kairos asap tempoMark) rhythmic loop) = do
   let tempo = processTempoMark tempoMark tp.tempo mapa
       posixAtOrigin = fromDateTimeToPosix (origin tp.tempo)
@@ -109,8 +117,11 @@ calculateTemporal mapa tp aKey (Temporal (Kairos asap tempoMark) rhythmic loop) 
 calculateTemporal mapa tp aKey (Temporal (Metric cTo' cFrom' tm) rhythmic loop) = do
   let dur = durFromRhythmic rhythmic $ processTempoMark tm tp.tempo mapa -- correct (change tempo naming to other name)
   -- log ("durCalcTempoMetricTemporal " <> show dur)
-  x1 <- x1MetricVoice tp tm cTo' cFrom' rhythmic mapa
-  log ("x1 IN metricTemporal " <> show x1)
+  let lengthRhythm = (length $ fromFoldable $ rhythmicToOnsets rhythmic)-1
+  let simCTo = simplifyCTo lengthRhythm cTo'
+  let simCFrom = simplifyCFrom lengthRhythm cFrom'
+  x1 <- x1MetricVoice tp tm simCTo simCFrom rhythmic mapa
+  -- log ("x1 IN metricTemporal " <> show x1)
   let posixAtOrigin = fromDateTimeToPosix (origin tp.tempo)
   -- let eval = secsFromOriginAtEval tp
   let ws = secsFromOriginAtWS tp
@@ -129,7 +140,10 @@ calculateTemporal mapa tp aKey (Temporal (Metric cTo' cFrom' tm) rhythmic loop) 
                                   -- v2            --v1
 calculateTemporal mapa tp aKey (Temporal (Converge cKey cTo' cFrom' tm) rhythmic loop) = do
   let dur = durFromRhythmic rhythmic $ processTempoMark tm tp.tempo mapa 
-  x1 <- x1ConvergeVoice tp tm cKey cTo' cFrom' rhythmic mapa -- v1
+  let lengthRhythm = (length $ fromFoldable $ rhythmicToOnsets rhythmic)-1
+  let simCTo = simplifyCTo lengthRhythm cTo'
+  let simCFrom = simplifyCFrom lengthRhythm cFrom'
+  x1 <- x1ConvergeVoice tp tm cKey simCTo simCFrom rhythmic mapa -- v1
   let posixAtOrigin = fromDateTimeToPosix (origin tp.tempo)
   -- let eval = secsFromOriginAtEval tp
   let ws = secsFromOriginAtWS tp
@@ -153,53 +167,65 @@ unloopEvents es = filter (\(Event _ (Index b _ _)) -> b == 0) es
 addPosixOriginToCalculation:: Number -> Array Event -> Array Event
 addPosixOriginToCalculation posix es = map (\(Event (Onset bool pos) i) -> Event (Onset bool (pos + posix)) i) es
 
--- find x1 and dur of referenceVoice for convergent temporal
-x1ConvergeVoice:: TimePacket -> TempoMark -> String -> ConvergeTo -> ConvergeFrom -> Rhythmic -> M.Map String Temporal -> Effect Number -- this number is secs from origin
-                     -- v1
-x1ConvergeVoice  tp tm cKey cTo' cFrom' rhythmic mapa = do
-  let referencedTemporal = fromMaybe (Temporal (Kairos 0.0 (CPM (fromInt 120))) O false) $ M.lookup cKey mapa
-  let referencedDur = (\(Temporal p rhy _) -> durFromRhythmic rhy $ processTempoMark (getTempoMark p) tp.tempo mapa) referencedTemporal
-  let referencedRhythmic = (\(Temporal _ r _) -> r) referencedTemporal
-  let referencedTempo = (\(Temporal p _ _) -> processTempoMark (getTempoMark p) tp.tempo mapa) referencedTemporal -- ::Number -- cpm                    -v1
-  referencedX1 <- findReferencedX1 tp referencedTemporal mapa
-  referencedVoiceAtEval <- elapsedVoiceAtEval tp referencedX1 referencedDur -- not secs but cycles
-  log ("referencedVoiceAtEval top " <> show referencedVoiceAtEval)
-  let innerPos = innerPosCTo referencedRhythmic referencedTempo cTo'
-  let cTo = calculateCToNEW innerPos referencedVoiceAtEval cTo'
+simplifyCTo:: Int -> ConvergeTo -> ConvergeTo
+simplifyCTo n (LastTo a) = ProcessTo n a  
+simplifyCTo n cTo = cTo 
 
+simplifyCFrom:: Int -> ConvergeFrom -> ConvergeFrom
+simplifyCFrom n Last = Process n  
+simplifyCFrom n cfrom = cfrom
+
+-- find x1 and dur of referenceVoice for convergent temporal
+x1ConvergeVoice:: TimePacket -> TempoMark -> String -> ConvergeTo -> ConvergeFrom -> Rhythmic -> M.Map String Temporal -> Effect Number 
+x1ConvergeVoice  tp tm cKey cTo' cFrom' rhythmic mapa = do
+  let refTemporal = fromMaybe defTemporal $ M.lookup cKey mapa
+  let refRhythmic = getRhythmic mapa refTemporal
+  let refTempo = processTempoMark (tempoMark mapa refTemporal) tp.tempo mapa -- ::Number -- cpm    
+  let refDur = durFromRhythmic refRhythmic refTempo
+  -- let refDur = (\(Temporal p rhy _) -> durFromRhythmic rhy $ processTempoMark (getTempoMark p) tp.tempo mapa) refTemporal
+  refX1 <- findReferencedX1 tp refTemporal mapa
+  refVoiceAtEval <- elapsedVoiceAtEval tp refX1 refDur -- not secs but cycles
+  -- log ("refVoiceAtEval top " <> show refVoiceAtEval)
+  let innerPos = innerPosCTo refRhythmic refTempo cTo'
+  let cTo = calculateCToNEW innerPos refVoiceAtEval cTo'
   let processedTempoMark = processTempoMark tm tp.tempo mapa
   let cFrom = calculateCFrom cFrom' processedTempoMark rhythmic
   let dur = durFromRhythmic rhythmic processedTempoMark
-  
-  let x1 = calculateStartConvergent referencedDur cTo dur cFrom  -- result in secs
-  log ("x1 converge voice top " <> show (referencedX1 + x1))
+  let x1 = calculateStartConvergent refDur cTo dur cFrom  -- result in secs
+  -- log ("x1 converge voice top " <> show (refX1 + x1))
   -- cuando empieza la voz en secs, cuanto dura cada bloque en secs, donde esta la voz en eval
-  pure (referencedX1 + x1)
+  pure (refX1 + x1)
 
 findReferencedX1::TimePacket -> Temporal -> M.Map String Temporal -> Effect Number
+findReferencedX1 tp (Replica id) mapa = do
+  let replicatedTemporal = fromMaybe defTemporal $ M.lookup id mapa
+  result <- findReferencedX1 tp replicatedTemporal mapa 
+  pure result
 findReferencedX1 tp (Temporal (Kairos asap tm) rhy _) mapa = do
   let eval = secsFromOriginAtEval tp
   let x1 = eval + asap
-  log ("x1 kairos voice " <> show x1)
+  -- log ("x1 kairos voice " <> show x1)
   pure x1
 findReferencedX1 tp (Temporal (Metric cTo cFrom tm) rhy _) mapa = do
   x1 <- x1MetricVoice tp tm cTo cFrom rhy mapa 
-  log ("x1 metric voice " <> show x1)
+  -- log ("x1 metric voice " <> show x1)
   pure x1            -- v1            --v0
 findReferencedX1 tp (Temporal (Converge cKey cTo cFrom tm) rhy l) mapa = do
   let way = keysForReferencePath cKey mapa (Nil) -- Array String
-  log ("key " <> show cKey) 
-  log ("way: " <> show way)      -- v1               --v0
+  -- log ("key " <> show cKey) 
+  -- log ("way: " <> show way)      -- v1               --v0
   recursiveX1 <- recursiveRefX1 tp (Temporal (Converge cKey cTo cFrom tm) rhy l) mapa Nothing way -- v1's x1
-  log ("x1 converge voice" <> show recursiveX1)
+  -- log ("x1 converge voice" <> show recursiveX1)
   pure recursiveX1
 
 recursiveRefX1:: TimePacket -> Temporal -> M.Map String Temporal -> Maybe (Tuple String Number) -> List String -> Effect Number      -- v2                                           -- incoming with [] is v1
 recursiveRefX1 tp temporal mapa incomingKeyX1' (Nil) = do
-  let cKey = getKey temporal 
-  let (Tuple cTo' cFrom') = (\(Temporal p _ _) -> getConvergences p) temporal 
-  let rhythmic = (\(Temporal _ r _) -> r) temporal
-  let processedTM = (\(Temporal p _ _) -> processTempoMark (getTempoMark p) tp.tempo mapa) temporal
+  let cKey = getKey mapa temporal 
+  let (Tuple cTo' cFrom') = convergences mapa temporal
+  -- let (Tuple cTo' cFrom') = (\(Temporal p _ _) -> getConvergences p) temporal 
+  let rhythmic = getRhythmic mapa temporal
+  let processedTM = processTempoMark (tempoMark mapa temporal) tp.tempo mapa 
+  -- let processedTM = (\(Temporal p _ _) -> processTempoMark (getTempoMark p) tp.tempo mapa) temporal
   let dur = durFromRhythmic rhythmic processedTM
   let cFrom = calculateCFrom cFrom' processedTM rhythmic 
 
@@ -207,35 +233,39 @@ recursiveRefX1 tp temporal mapa incomingKeyX1' (Nil) = do
   incomingKeyX1 <- if incomingKeyX1' == Nothing then 
             Just <$> (Tuple cKey <$> (findReferencedX1 tp temporalHack mapa)) else pure incomingKeyX1'
 
-  log ("incomingKeyX1 " <> show incomingKeyX1)
+  -- log ("incomingKeyX1 " <> show incomingKeyX1)
   
   let (Tuple refKey refX1) = fromMaybe (Tuple "error" 2.666) incomingKeyX1 
-  log ("refX1 " <> show refX1)
+  -- log ("refX1 " <> show refX1)
   let refTemporal = fromMaybe defTemporal $ M.lookup refKey mapa
-  let refRhythmic = (\(Temporal _ r _) ->  r) refTemporal
-  let refTM = (\(Temporal p _ _) -> processTempoMark (getTempoMark p) tp.tempo mapa) refTemporal
+
+  let refRhythmic = getRhythmic mapa refTemporal
+  let refTM = processTempoMark (tempoMark mapa refTemporal) tp.tempo mapa
+  -- let refTM = (\(Temporal p _ _) -> processTempoMark (getTempoMark p) tp.tempo mapa) refTemporal
   let refDur = durFromRhythmic refRhythmic refTM
   refVoiceAtEval <- elapsedVoiceAtEval tp refX1 refDur -- not secs but cycles
   let innerPos = innerPosCTo refRhythmic refTM cTo'
   let cTo = calculateCToNEW innerPos refVoiceAtEval cTo'
 
   let x1 = calculateStartConvergent refDur cTo dur cFrom
-  log ("recursiveRefwithoutWay" <> show (refX1 + x1))
+  -- log ("recursiveRefwithoutWay" <> show (refX1 + x1))
   pure (refX1 + x1)
   
 recursiveRefX1 tp temporal mapa incomingKeyX1 (Cons x xs) = do
   let refTemporal = fromMaybe defTemporal $ M.lookup x mapa  -- v0
-  let (Tuple cTo' cFrom') = (\(Temporal p _ _) -> getConvergences p) refTemporal 
-  let refRhythmic = (\(Temporal _ r _) -> r) refTemporal
-  let refProcessedTM = (\(Temporal p _ _) -> processTempoMark (getTempoMark p) tp.tempo mapa) refTemporal
+  let (Tuple cTo' cFrom') = convergences mapa refTemporal
+  let refRhythmic = getRhythmic mapa refTemporal
+  let refProcessedTM = processTempoMark (tempoMark mapa refTemporal) tp.tempo mapa 
+  -- let refRhythmic = (\(Temporal _ r _) -> r) refTemporal
+  -- let refProcessedTM = (\(Temporal p _ _) -> processTempoMark (getTempoMark p) tp.tempo mapa) refTemporal
   let refDur = durFromRhythmic refRhythmic refProcessedTM
   let cFrom = calculateCFrom cFrom' refProcessedTM refRhythmic
   refX1 <- case incomingKeyX1 of
           Nothing -> findReferencedX1 tp refTemporal mapa -- result: v0's block1's start point (x1)
           Just prevKeyX1 -> do
                 let prevTemporal = fromMaybe defTemporal $ M.lookup (fst prevKeyX1) mapa
-                let prevRhythmic = (\(Temporal _ r _) ->  r) prevTemporal
-                let prevTM = (\(Temporal p _ _) -> processTempoMark (getTempoMark p) tp.tempo mapa) prevTemporal
+                let prevRhythmic = getRhythmic mapa prevTemporal
+                let prevTM = processTempoMark (tempoMark mapa prevTemporal) tp.tempo mapa
                 let prevDur = durFromRhythmic prevRhythmic prevTM
                 prevVoiceAtEval <- elapsedVoiceAtEval tp (snd prevKeyX1) prevDur -- not secs but cycles
                 let innerPos = innerPosCTo prevRhythmic prevTM cTo'
@@ -243,14 +273,18 @@ recursiveRefX1 tp temporal mapa incomingKeyX1 (Cons x xs) = do
                 let refX1 = calculateStartConvergent prevDur cTo refDur cFrom
                 pure ((snd prevKeyX1) + refX1) 
   result <- recursiveRefX1 tp temporal mapa (Just (Tuple x refX1)) xs 
-  log ("result recursiveRef " <> show result)
+  -- log ("result recursiveRef " <> show result)
   pure result
+
+convergences:: M.Map String Temporal -> Temporal -> Tuple ConvergeTo ConvergeFrom
+convergences _ (Temporal p _ _) = getConvergences p
+convergences m (Replica id) = case M.lookup id m of
+                                Nothing -> Tuple defConvergeTo defConvergeFrom
+                                Just t -> convergences m t
 
 getConvergences:: Polytemporal -> Tuple ConvergeTo ConvergeFrom
 getConvergences (Converge _ cTo cFrom _) = Tuple cTo cFrom
 getConvergences _ = Tuple defConvergeTo defConvergeFrom
-
-recursor = keysForReferencePath "v0" defMapTemporals (Nil)
 
 keysForReferencePath:: String -> M.Map String Temporal -> List String -> List String
 keysForReferencePath aKey {-v0-} mapa listOfReferences 
@@ -259,14 +293,22 @@ keysForReferencePath aKey {-v0-} mapa listOfReferences
       if (isNotConvergent nextCheck mapa)
         then (Cons nextCheck listOfReferences)
           else keysForReferencePath nextCheck mapa (Cons nextCheck listOfReferences)
-    where nextCheck = getKey $ fromMaybe defTemporal $ M.lookup aKey mapa 
+    where nextCheck = getKey mapa $ fromMaybe defTemporal $ M.lookup aKey mapa 
 
-getKey (Temporal (Converge aKey _ _ _) _ _) = aKey
-getKey (Temporal _ _ _) = "2666"
+getKey _ (Temporal (Converge aKey _ _ _) _ _) = aKey
+getKey _ (Temporal _ _ _) = "2666"
+getKey m (Replica id) = 
+  case M.lookup id m of 
+    Nothing -> "2666"
+    Just t -> getKey m t
 
-isNotConvergent aKey mapa = f $ fromMaybe defTemporal $ M.lookup aKey mapa 
-  where f (Temporal (Converge _ _ _ _) _ _) = false
-        f (Temporal _ _ _) = true
+isNotConvergent aKey mapa = f' mapa $ fromMaybe defTemporal $ M.lookup aKey mapa 
+
+f' m (Temporal (Converge _ _ _ _) _ _) = false
+f' m (Temporal _ _ _) = true
+f' m (Replica id) = case M.lookup id m of
+                        Nothing -> false 
+                        Just t -> f' m t
 
 elapsedVoiceAtEval:: TimePacket -> Number -> Number -> Effect Number
 elapsedVoiceAtEval tp x1 dur = do
@@ -309,12 +351,8 @@ processTempoMark (CPS cps) _ _ = R.toNumber (cps * (60%1))
 processTempoMark XTempo t _ = (R.toNumber (t.freq * (60%1) * (4%1)))
 processTempoMark (Prop id x y) t mapa = fromMaybe 120.0 otherTempo
   where prop = (toNumber x / toNumber y)
-        otherTempo =  (\(Temporal p _ _) -> calculateRTempo mapa t (getTempoMark p) prop) <$> M.lookup id mapa
-
-getTempoMark:: Polytemporal -> TempoMark
-getTempoMark (Kairos _ tm) = tm
-getTempoMark (Metric _ _ tm) = tm
-getTempoMark (Converge _ _ _ tm) = tm
+        otherTempo = (\temporal -> calculateRTempo mapa t (tempoMark mapa temporal) prop) <$> M.lookup id mapa
+        -- otherTempo =  (\(Temporal p _ _) -> calculateRTempo mapa t (getTempoMark p) prop) <$> M.lookup id mapa
 
 calculateRTempo:: M.Map String Temporal -> Tempo -> TempoMark -> Number -> Number 
 calculateRTempo m t (CPM cpm) prop = (R.toNumber (cpm / (4%1))) * prop
@@ -323,7 +361,7 @@ calculateRTempo m t (CPS cps) prop = R.toNumber (cps * (60%1)) * prop
 calculateRTempo m t XTempo prop = (R.toNumber (t.freq * (60%1) * (4%1))) * prop
 calculateRTempo m t (Prop id x y) prop = calculateRTempo m t newTM newProp
   where newProp = (toNumber x / toNumber y) * prop
-        newTM = fromMaybe (CPM (fromInt 120)) $ (\(Temporal p _ _) -> (getTempoMark p)) <$> M.lookup id m
+        newTM = fromMaybe (CPM (fromInt 120)) $ (\temporal -> tempoMark m temporal) <$> M.lookup id m
 
 -- calculating convergence points
 calculateCToMetric:: Number -> ConvergeTo -> Number
@@ -333,6 +371,7 @@ calculateCToMetric cyclesAtEval (ProcessTo i a) = (toNumber i) + aligned
   where aligned = aligner cyclesAtEval a
 calculateCToMetric cyclesAtEval (PercenTo p a) =  (p / 100.0) + aligned
   where aligned = aligner cyclesAtEval a
+calculateCToMetric cyclesAtEval _ = 0.0
 
 calculateCToNEW:: Number -> Number -> ConvergeTo -> Number
 calculateCToNEW innerPos cyclesAtEval (StructureTo b st a) = innerPos + aligned
@@ -341,6 +380,7 @@ calculateCToNEW innerPos cyclesAtEval (ProcessTo i a) = innerPos + aligned
   where aligned = aligner cyclesAtEval a
 calculateCToNEW innerPos cyclesAtEval (PercenTo p a) =  (p / 100.0) + aligned
   where aligned = aligner cyclesAtEval a
+calculateCToNEW innerPos cyclesAtEval _ = 0.0
 
 aligner:: Number -> CPAlign -> Number -- in cycles of external metre
 aligner cyclesAtEval Origin = 0.0 
@@ -377,6 +417,7 @@ filterEventToPosTo cp structAndPos eventsAndPos lenOnset = result
                     (StructureTo v st a) -> fromMaybe 0.0 $ head $ map (\x -> cpPos (Left v) (snd x) lenOnset) $ filter (\x -> fst x == st) structAndPos
                     (ProcessTo e a) -> fromMaybe 0.0 $ head $ map (\x -> cpPos (Right e) (snd x) lenOnset) $ filter (\x -> fst x == (e`mod`lenOnset)) eventsAndPos
                     (PercenTo p a) ->  p / 100.0 
+                    _ -> 0.0
 
 filterEventToPosFrom:: ConvergeFrom -> Array (Tuple (Array Int) Number) -> Array (Tuple Int Number) -> Int -> Number
 filterEventToPosFrom cp structAndPos eventsAndPos lenOnset = result
@@ -384,9 +425,68 @@ filterEventToPosFrom cp structAndPos eventsAndPos lenOnset = result
                     (Structure v st) -> fromMaybe 0.0 $ head $ map (\x -> cpPos (Left v) (snd x) lenOnset) $ filter (\x -> fst x == st) structAndPos
                     (Process e) -> fromMaybe 0.0 $ head $ map (\x -> cpPos (Right e) (snd x) lenOnset) $ filter (\x -> fst x == (e`mod`lenOnset)) eventsAndPos
                     (Percen p) ->  p / 100.0 
+                    _ -> 0.0
 
 cpPos:: Either Int Int -> Number -> Int -> Number
 cpPos (Left v) x lenOnset = v' + x
   where v' = (toNumber v)
 cpPos (Right n) x lenOnset = (toNumber $ floor n') + x
   where n' = (toNumber n)/(toNumber lenOnset)
+
+
+--- helpers
+
+defPolytemporal = Kairos 0.0 defTempoMark
+
+defTempoMark = CPM (120%1)
+
+getPolytemporal:: M.Map String Temporal -> Temporal -> Polytemporal
+getPolytemporal _ (Temporal p _ _) = p 
+getPolytemporal m (Replica id) = case M.lookup id m of
+                                      Nothing -> defPolytemporal
+                                      Just t -> getPolytemporal m t
+
+getRhythmic:: M.Map String Temporal -> Temporal -> Rhythmic
+getRhythmic m (Temporal _ r _) = r
+getRhythmic m (Replica id) = case M.lookup id m of
+                                      Nothing -> O
+                                      Just t -> getRhythmic m t
+
+getLoop:: M.Map String Temporal -> Temporal -> Boolean
+getLoop m (Temporal _ _ l) = l
+getLoop m (Replica id) = case M.lookup id m of
+                                      Nothing -> false
+                                      Just t -> getLoop m t
+
+tempoMark:: M.Map String Temporal -> Temporal -> TempoMark
+tempoMark m (Temporal p _ _) = getTempoMark p 
+tempoMark m (Replica id) = case M.lookup id m of
+                                      Nothing -> defTempoMark
+                                      Just t -> tempoMark m t
+
+getTempoMark:: Polytemporal -> TempoMark
+getTempoMark (Kairos _ tm) = tm
+getTempoMark (Metric _ _ tm) = tm
+getTempoMark (Converge _ _ _ tm) = tm
+
+convergeTo:: M.Map String Temporal -> Temporal -> ConvergeTo
+convergeTo m (Temporal p _ _) = getConvergeTo p
+convergeTo m (Replica id) = case M.lookup id m of
+                                      Nothing -> defConvergeTo
+                                      Just t -> convergeTo m t
+
+convergeFrom:: M.Map String Temporal -> Temporal -> ConvergeFrom
+convergeFrom m (Temporal p _ _ ) = getConvergeFrom p
+convergeFrom m (Replica id) = case M.lookup id m of
+                                      Nothing -> defConvergeFrom
+                                      Just t -> convergeFrom m t
+
+getConvergeTo:: Polytemporal -> ConvergeTo
+getConvergeTo (Converge _ cTo _ _) = cTo
+getConvergeTo (Metric cTo _ _) = cTo
+getConvergeTo _ = defConvergeTo
+
+getConvergeFrom:: Polytemporal -> ConvergeFrom
+getConvergeFrom (Converge _ _ cFrom _) = cFrom
+getConvergeFrom (Metric _ cFrom _) = cFrom
+getConvergeFrom _ = defConvergeFrom

@@ -4,7 +4,7 @@
   "description": "timeknot",
   "private": true,
   "dependencies": {
-    "esbuild": "^0.15.18",
-    "erv": "0.0.3"
+    "@diegovdc/erv": "^0.0.4",
+    "esbuild": "^0.15.18"
   }
 }

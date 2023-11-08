@@ -1,4 +1,4 @@
-module AST(TimekNot(..),Waste(..),AlmostWaste(..), Voices, Voice(..),Program(..),Expression(..),Aural(..),Value(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), Waste(..),showEventIndex, showStructureIndex) where
+module AST(TimekNot(..),Waste(..),AlmostWaste(..), Voices, Voice(..),Program(..),Expression(..),Aural(..),Value(..),Span(..),Ops(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), Waste(..),showEventIndex, showStructureIndex) where
 
 import Prelude
 import Effect.Ref
@@ -9,8 +9,6 @@ import Data.DateTime
 import Data.Rational
 import Data.Map
 import Data.Tuple
-
-
 
 type Waste = {
   whenPosix:: Number, 
@@ -45,10 +43,12 @@ type TimekNot = {
 type Voices = Map String Voice
 
 -- aural:: List Value // Temporal, which  type has:: Polytemporal Rhythmic Loop
-data Voice = Voice Temporal Aural
+data Voice = Voice Temporal (List Aural)
 
 instance voiceShow :: Show Voice where
     show (Voice t a) = show t <> " " <> show a 
+
+type Aural = List Value
 
 type Program = List Expression
 
@@ -66,54 +66,72 @@ type AudioAttributes = {
   n:: List Value
 }
 
-type Aural = List Value
-
 -- future additions to Value: OSound | OTransposedSound | Full Sound OSound
 -- for now only X generates sounds, O should be allowed to invoke sound as well. Full will allow to invoke sound for X and O as pairs
 
+-- refactor as {sound: string, n: Int, etc...} -- What was going to be auralAttributes
 data Value = 
   Sound Span (List String) | TransposedSound String | 
-  N Span (List Int) | TransposedN String |
-  Gain Span (List Number) | TransposedGain String |
-  Pan Span (List Number) | TransposedPan String |
-  Speed Span (List Number) | TransposedSpeed String |
-  Begin Span (List Number) | TransposedBegin String | 
-  End Span (List Number) | TransposedEnd String |
+  N Span (List Int) | TransposedN String | TransposedNWith String (List Ops) |
+  Gain Span (List Number) | TransposedGain String | TransposedGainWith String (List Ops) |
+  Pan Span (List Number) | TransposedPan String | TransposedPanWith String (List Ops) |
+  Speed Span (List Number) | TransposedSpeed String | TransposedSpeedWith String (List Ops) |
+  Begin Span (List Number) | TransposedBegin String | TransposedBeginWith String (List Ops) |
+  End Span (List Number) | TransposedEnd String | TransposedEndWith String (List Ops) |
   CutOff Span (List Number) | TransposedCutOff String |
-  Vowel Span (List Number) | TransposedVowel String
+  Vowel Span (List Number) | TransposedVowel String | 
+  Chord Span (List Number) | TransposedChord String
+
+data Ops = AddInt Int | AddNum Number | MultInt Int | MultNum Number
+
+instance show :: Show Ops where
+  show (AddInt n) = "_+" <> show n
+  show (AddNum n) = "_+" <> show n
+  show (MultInt n) = "_*" <> show n
+  show (MultNum n) = "_*" <> show n
 
 instance valueShow :: Show Value where
   show (Sound x l) = show x <> " " <> show l
   show (TransposedSound voice) = "s transposed from " <> voice
   show (N x l) = show x <> " " <> show l
   show (TransposedN voice) = "n transposed from " <> voice
+  show (TransposedNWith voice l) = show l <> "n transposedWith from " <> voice
   show (Gain x l) = show x <> " " <> show l
   show (TransposedGain voice) = "gain transposed from " <> voice
+  show (TransposedGainWith voice l) = "gain transposedWith from " <> voice
   show (Pan x l) = show x <> " " <> show l
   show (TransposedPan voice) = "pan transposed from " <> voice
+  show (TransposedPanWith voice l) = "pan transposedWith from " <> voice
   show (Speed x l) = show x <> " " <> show l
   show (TransposedSpeed voice) = "speed transposed from " <> voice
+  show (TransposedSpeedWith voice l) = "speed transposedWith from " <> voice
   show (Begin x l) = show x <> " " <> show l
   show (TransposedBegin voice) = "begin transposed from " <> voice
+  show (TransposedBeginWith voice l) = "begin transposedWith from " <> voice
   show (End x l) = show x <> " " <> show l
   show (TransposedEnd voice) = "end transposed from " <> voice
+  show (TransposedEndWith voice l) = "end transposedWith from " <> voice
   show (CutOff x l) = show x <> " " <> show l
   show (TransposedCutOff voice) = "cutoff transposed from " <> voice
   show (Vowel x l) = show x <> " " <> show l
   show (TransposedVowel voice) = "vowel transposed from " <> voice
+  show (Chord x l) = show x <> " " <> show l
+  show (TransposedChord voice) = "chord transposed from " <> voice
 
-data Span = CycleEvent | CycleBlock | CycleInBlock | SpreadBlock
+data Span = CycleEvent | CycleBlock | CycleInBlock | SpreadBlock -- | Weight
 
 instance spanShow :: Show Span where
   show CycleEvent =    "_"
   show CycleBlock =    "_-"
   show CycleInBlock =  "-_"
   show SpreadBlock =   "_-_"
+  -- show Weight = "-_-"
 
-data Temporal = Temporal Polytemporal Rhythmic Boolean
+data Temporal = Temporal Polytemporal Rhythmic Boolean | Replica String -- this will require a check and the recursive implementation now very familiar
 
 instance temporalShow :: Show Temporal where
     show (Temporal x y z) = show x <> " " <> show y <> (if z then " looped" else " unlooped")
+    show (Replica id) = "replicated from " <> show id
 
 data Polytemporal = 
   Kairos Number TempoMark | -- last arg is tempo -- Arg: universal time unit (miliseconds and datetime in purs)
@@ -141,7 +159,7 @@ instance Show Rhythmic where
   show O = "o"
   show (Sd xs) = "[" <> show xs <> "]"
   show (Repeat xs n) = "!" <> show xs <> "#" <> show n
-  show (Bjorklund eu k n r) = "bjorklund"
+  show (Bjorklund eu k n r) = "("<>show k<>","<>show n<>") "<>show eu
   show (Rhythmics xs) = show xs
 
 data Euclidean = Full Rhythmic Rhythmic | K Rhythmic | InvK Rhythmic | Simple -- add simple inverse
@@ -170,7 +188,7 @@ instance Show CPAlign where
 ---- Snap cp happens at closest voice or event.
 ---- Origin will align the cp at 0 (1st of January, 1970: 12:00 am)
 
-data ConvergeFrom = Structure Int (Array Int) | Process Int | Percen Number
+data ConvergeFrom = Structure Int (Array Int) | Process Int | Percen Number | Last
 
 instance Show ConvergeFrom where
   show (Structure x xs) = show x <>"-"<> result <> " "
@@ -178,8 +196,9 @@ instance Show ConvergeFrom where
             result = Str.take (Str.length subdivisions - 1) subdivisions
   show (Process e) = show e
   show (Percen p) = show p <> "%"
+  show Last = "last"
 
-data ConvergeTo = StructureTo Int (Array Int) CPAlign | ProcessTo Int CPAlign | PercenTo Number CPAlign
+data ConvergeTo = StructureTo Int (Array Int) CPAlign | ProcessTo Int CPAlign | PercenTo Number CPAlign | LastTo CPAlign
 
 instance Show ConvergeTo where
   show (StructureTo x xs a) = show x <>"-"<> result <> " " <> show a
@@ -187,6 +206,7 @@ instance Show ConvergeTo where
             result = Str.take (Str.length subdivisions - 1) subdivisions
   show (ProcessTo e a) = show e <> " " <> show a
   show (PercenTo p a) = show p <> "% " <> show a
+  show (LastTo a) = "last"
 
 -- perhaps this is the output of processTempoMark, this will allow users to declare a total duration of a block (reverting more or less the additive logic to divisive)
 type Duration = Rational
