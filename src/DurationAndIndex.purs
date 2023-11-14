@@ -1,4 +1,4 @@
-module DurationAndIndex(durFromRhythmic,rhythmicToVoiceDuration,rhythmicToOnsets, getIndexes, rhythmicStructIndex, getVoiceIndex, getBlocks, durInSecs, onsetsFromBlocks) where
+module DurationAndIndex(durFromRhythmic,rhythmicToVoiceDuration,rhythmicToOnsets, getIndexes, rhythmicStructIndex, getVoiceIndex, getBlocks, durInSecs, onsetsFromBlocks, bjorklund) where
 
 
 import Prelude
@@ -112,7 +112,7 @@ assambleIndex vs st es = concat $ zipWith f vs xs
 funquilla:: Array Int -> Array Int -> Int -> Array (Array Int) 
 funquilla voicesIndexes onsetIndexes lenOnsets = map (\voiceIndex -> funquilla' onsetIndexes lenOnsets voiceIndex) voicesIndexes
   where funquilla' onsetIndexes lenOnsets voiceIndex = map (\onsetIndex -> (voiceIndex*lenOnsets)+onsetIndex) onsetIndexes
-
+  
 
 rhythmicStructIndex:: Rhythmic -> Array Int -> Array (Array Int)
 rhythmicStructIndex X i = [i] 

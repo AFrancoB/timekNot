@@ -1,15 +1,15 @@
-module Parser(temporal, check, parseProgram, getTemporalMap, getAuralMap, test, testP) where
+module Parser(temporal, check, parseProgram, replica, getTemporalMap, getAuralMap, test, testP, test') where
 
 import Prelude
 
 import Data.Identity
-import Data.List (List(..), head, tail, elem, (:), filter)
-import Data.List (fromFoldable) as L
+import Data.List (List(..), head, tail, elem, (:), concat)
+import Data.List (fromFoldable, filter) as L
 import Data.Array (fromFoldable) as A
 import Data.Either
 import Data.Int
 import Data.Tuple (Tuple(..), fst, snd)
-import Data.Map (Map(..), lookup, keys, singleton, fromFoldable, toUnfoldable, member, unions, empty)
+import Data.Map (Map(..), filter, lookup, keys, singleton, fromFoldable, toUnfoldable, member, unions, empty)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Set as Set
 import Data.Maybe
@@ -33,12 +33,67 @@ import Aural
 
 type P = ParserT String Identity
 
---1 gather a list of expressions 
---2 loose the expression part and apply an intersectionWith to all of it and build: 
--- Map (String (Voice Temporal Aural))
--- that is what is processed at calculateOnset
-
 testP str = runParser str parseProgram
+
+-- ISSUES
+---- range of Numbers is absolutely broken. DO NOT USE
+---- Make all tests: start testing all the checks: tempoCheck, idCheck replicaCheck!!!
+
+-- TO DO LIST October 17th:
+---- finish refactor of transposeWith DONE
+---- implement keyword last DONE
+---- implement copy of temporals: v1 <- v0 DONE
+---- implement weight
+
+-----
+-- minor goals: 
+
+-- for now: pitch from the middle east
+
+-- implemented basic math --- SEEMS LIKE A MAJOR TASK
+
+-- refactor show of my data types. They mostly suck.
+
+-- implementaciones siguientes:
+  -- xenopitch
+
+  -- refer to the most recent version of tempi-purs
+
+  -- events specific to concrete indexes: 2-0.1 "cp" -- should generate a cp sound only at 2-0.1
+
+  -- implement unleash parser 
+
+  -- chords:
+-- v0 <- ... | xxxx :|
+-- v0.chord = _-_ [0 3 7 12] [0 5 8 10] [-1 2 7 14] [0 3 7 12]
+
+  -- razgado
+-- r <- razgado 0.2 5 -- donde 0.2 es dur en secs y 5 es numero de notas 
+-- r.sound = "grandpiano" .speed = _-_ 1 1.1 1.2 1.3 1.4 1.5;
+
+  -- canonise (tms) cp rhythmic <<- anchor (id index (_-4 means every fourth event in block)) 
+-- v0 <- diverge | xxxx :|
+-- c <- canonise cpm(100,200,300,400,500) cp: 5 | xxxxx || <<- v0 _-4
+
+  -- concat temporals
+-- v0 <- (2 afterEval) (3)              | xxox ||
+-- v1 <- (2 afterEval) (1) (v0 3:5) | xxx[xx]ox ||
+-- w <- v0 <> v1 :|
+
+  -- refactor auralSpecs!!!!!!
+
+  -- acceleration in unlooped events (how to represent this? and calculate the durations of the events??)
+
+  -- Start with post-evaluation CPs
+
+  -- grand project:
+  -- Monoid programs:: Map ZoneIndex Voices
+  ----- each zone has its eval time. Every zone accesses temporals and aurals
+  ----- trans-zone relationships: 
+        --  two zones cannot name equally a temporal
+        --  priority given to referencing (rather than referenced) zones
+        -- what are the implications of this in an ensemble?
+
 
 parseProgram:: P Program
 parseProgram = do
@@ -50,24 +105,38 @@ parseProgram = do
 expression:: P Expression
 expression = do
   _ <- pure 1
-  x <- choice [try temporal, try aural]
+  x <- choice [try timeExpression, try aural]
   pure x
 
--- temporal not polytemporal
-temporal:: P Expression
+timeExpression:: P Expression
+timeExpression = do
+  _ <- pure 1
+  x <- temporal
+  pure $ TimeExpression x
+
+temporal:: P (Map String Temporal)
 temporal = do
-    _ <- pure 1
-    x <- polytemporalRelation
-    pure $ TimeExpression x
+  _ <- pure 1
+  exp <- choice [try replica, polytemporalRelation]
+  pure exp
+
+replica:: P (Map String Temporal)
+replica = do
+  _ <- pure 1
+  id <- voiceId
+  _ <- reserved "<-"
+  id2 <- voiceId 
+  _ <- semi
+  pure $ singleton id $ Replica id2
 
 polytemporalRelation:: P (Map String Temporal)
 polytemporalRelation = do
-    _ <- pure 1
-    p <- choice [try kairos, try metric, converge]
-    _ <- charWS '|'
-    r <- rhythmic
-    l <- choice [(strWS "||" *> pure false), (strWS ":|" *> pure true)]
-    pure $ singleton (fst p) $ Temporal (snd p) r l
+  _ <- pure 1
+  p <- choice [try kairos, try metric, converge]
+  _ <- charWS '|'
+  r <- rhythmic
+  l <- choice [(strWS "||" *> pure false), (strWS ":|" *> pure true)]
+  pure $ singleton (fst p) $ Temporal (snd p) r l
 
 kairos:: P (Tuple String Polytemporal)
 kairos = do
@@ -75,7 +144,7 @@ kairos = do
   id <- voiceId
   _ <- reserved "<-"
   n <- choice [secsFromEval, atEval]
-  tm <- parens tempoMark <|> pure XTempo -- the alternative should be same as estuary tempo
+  tm <- parens tempoMark <|> pure XTempo
   pure $ Tuple id $ Kairos n tm
 
 secsFromEval:: P Number 
@@ -136,10 +205,16 @@ converging = do
   _ <- pure 1
   _ <- whitespace
   voice <- voiceId -- choice between metricVoice or arbitrary name of a voice
-  cTo <- choice [try $ parens parsePercenTo, try $ parens parseProcessTo, parens parseStructureTo] <|> (pure $ ProcessTo 0 Snap)
-  cFrom <- choice [try $ parens cFromPercen, try $ parens cFromProcess, parens cFromStructure]
+  cTo <- choice [try cToLast, try $ parens parsePercenTo, try $ parens parseProcessTo, parens parseStructureTo] <|> (pure $ ProcessTo 0 Snap)
+  cFrom <- choice [try cFromLast, try $ parens cFromPercen, try $ parens cFromProcess, parens cFromStructure]
   tm <- parens tempoMark <|> pure XTempo -- the alternative should be same as estuary tempo
   pure $ Converge voice cTo cFrom tm
+
+cFromLast:: P ConvergeFrom
+cFromLast = do
+  _ <- pure 1
+  _ <- strWS "last"
+  pure $ Last 
 
 cFromPercen:: P ConvergeFrom
 cFromPercen = do
@@ -161,6 +236,35 @@ cFromStructure = do
   _ <- string "-"
   st <- structParser
   pure $ Structure v st
+
+--
+cToLast:: P ConvergeTo
+cToLast = do
+  _ <- pure 1
+  last <- choice [try lastMod, lastSnap, lastOrigin]
+  pure last 
+
+lastOrigin:: P ConvergeTo
+lastOrigin = do
+  _ <- pure 1
+  _ <- strWS "last" 
+  pure $ LastTo Origin
+
+lastSnap:: P ConvergeTo
+lastSnap = do
+  _ <- pure 1
+  _ <- strWS "last" 
+  _ <- reserved "afterEval"
+  pure $ LastTo Snap
+
+lastMod:: P ConvergeTo
+lastMod = do
+  _ <- pure 1
+  _ <- reserved "mod"
+  m <- natural
+  _ <- strWS "last"
+  _ <- reserved "afterEval"
+  pure $ LastTo (Mod m)
 
 parsePercenTo:: P ConvergeTo
 parsePercenTo = do
@@ -324,7 +428,7 @@ test x =
                     false -> Left "failed the check"
 
 getTemporalMap:: Program -> Map String Temporal
-getTemporalMap program = unions $ map unexpressTempo $ filter (\ expression -> isTemporal expression) program
+getTemporalMap program = unions $ map unexpressTempo $ L.filter (\ expression -> isTemporal expression) program
   where isTemporal (TimeExpression _) = true 
         isTemporal _ = false 
 
@@ -332,19 +436,42 @@ unexpressTempo:: Expression -> Map String Temporal
 unexpressTempo (TimeExpression x) = x 
 unexpressTempo _ = empty
 
-getAuralMap:: Program -> Map String Aural
-getAuralMap program = unions $ map unexpressAural $ filter (\ expression -> isAural expression) program
+getAuralMap:: Program -> Map String (List Aural)
+getAuralMap program = toListAurals $ map unexpressAural $ L.filter (\ expression -> isAural expression) program
   where isAural (AuralExpression _) = true
         isAural _ = false
+
+toListAurals:: List (Map String Aural) -> Map String (List Aural)
+toListAurals mapas = unions $ map (\k -> toAurals k vals) $ map fst vals
+  where vals = concat $ map toUnfoldable mapas
+        toAurals key vals = singleton key $ map snd $ L.filter (\v -> (fst v) == key) vals
 
 unexpressAural:: Expression -> Map String Aural
 unexpressAural (AuralExpression x) = x 
 unexpressAural _ = empty
 
+-- test' :: String -> Either String (Map String Temporal)
+test' x =
+  case getTemporalMap <$> runParser x parseProgram of
+    Left (ParseError err _) -> Left err
+    Right aMap -> Right $ check aMap 
+
 check :: Map String Temporal -> Boolean
-check aMap = checkID && checkTempoMark
-  where checkID = not $ elem false $ mapWithIndex (check2 aMap Nil) aMap   
+check aMap' = (checkID) && checkTempoMark
+  where aReplicaMap = filter isReplica aMap'
+        aMap = filter (not isReplica) aMap'
+        checkID = not $ elem false $ mapWithIndex (check2 aMap' Nil) aMap'  
         checkTempoMark = not $ elem false $ mapWithIndex (checkTempi aMap Nil) aMap
+
+isReplica:: Temporal -> Boolean
+isReplica (Replica _) = true
+isReplica _ = false
+
+
+getReplicaKey:: Temporal -> String
+getReplicaKey (Replica id) = id
+getReplicaKey _ = "2666"
+
 
 check2 :: Map String Temporal -> List String -> String -> Temporal -> Boolean
 check2 aMap alreadyRefd aKey (Temporal (Kairos _ _) _ _) = true
@@ -355,13 +482,15 @@ check2 aMap alreadyRefd aKey (Temporal (Converge anotherKey _ _ _) _ _) =
     Just anotherValue -> case elem aKey alreadyRefd of
                            true -> false
                            false -> check2 aMap (aKey : alreadyRefd) anotherKey anotherValue
+check2 aMap alreadyRefd aKey (Replica id) 
+  | aKey == id = false
+  | otherwise = 
+    case lookup id aMap of
+          Nothing -> false
+          Just nVal -> case elem id alreadyRefd of
+                        true -> false
+                        false -> check2 aMap (aKey : alreadyRefd) id nVal
 
-
--- this funca needs to be tested. Next time you build the software on estuary you need to do this and it should fail:
-
--- v0 <- diverge   120bpm | x :|
--- v1 <- diverge (v2 3:4) | x :|
--- v2 <- diverge (v1 5:7) | x :| -- this line can be commented out as first test
 
 checkTempi:: Map String Temporal -> List String -> String -> Temporal -> Boolean
 checkTempi aMap alreadyRefd aKey temporal = 
@@ -377,6 +506,7 @@ getTempoRef:: Temporal -> Maybe String
 getTempoRef (Temporal (Kairos _ tm) _ _) = isTempoRefd tm
 getTempoRef (Temporal (Metric _ _ tm) _ _) = isTempoRefd tm
 getTempoRef (Temporal (Converge _ _ _ tm) _ _) = isTempoRefd tm
+getTempoRef (Replica _) = Nothing
 
 isTempoRefd:: TempoMark -> Maybe String
 isTempoRefd (Prop id _ _) = Just id

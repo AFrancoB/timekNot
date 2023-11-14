@@ -32,6 +32,12 @@ import AST
 
 type P = ParserT String Identity 
 
+-- to do: implement int parser as follows:
+-- | <4 4 3> :| -- this should generate: xoooxoooxoo
+-- | <4 4 3 , 0> :| -- this should generate: xoooxoooxoo , separates the pattern from a rotation value
+-- | <4 4 3 , 0, xx> :| -- this should generate: xxooooooxxooooooxxoooo, instead of assuming a pattern (X) the player gives one to the program
+-- this should be added to Rhythmic as a constructor:
+-- Numeric Rhythmic (Array Int) Int
 
 rhythmic:: P Rhythmic
 rhythmic = do

@@ -1,4 +1,4 @@
-module Aural(aural, parseRangeNum) where
+module Aural(aural, parseRangeNum, transposeNWith) where
 
 import Prelude
 
@@ -35,7 +35,7 @@ aural:: P Expression
 aural = do 
     _ <- pure 1
     x <- values
-    _ <- reserved ";"
+    _ <- reserved ";" -- this need to be fixed!
     pure $ AuralExpression x -- (Map Strg Aural)
 
 values:: P (Map String Aural)
@@ -49,8 +49,81 @@ value:: P Value
 value = do
     _ <- pure 1
     _ <- reservedOp "."
-    valType <- choice [try sound,try n, try gain, try pan, try speed]
+    valType <- choice [try sound,try n, try gain, try pan, try speed, try begin, end]
     pure valType
+
+-- chord:: P Value
+-- chord = do
+--     _ <- pure 1
+--     _ <- reserved "chord"
+--     _ <- reservedOp "="
+--     chords <- [try makeChord, transposeChord]
+--     pure n
+
+-- makeChord:: P Value
+-- makeChord = do
+--     _ <- pure 1
+--     sp <- parseSpan
+--     spdList <- choice [try (A.fromFoldable <$> parseRangeInt), many parseInt]
+--     pure $ Chord sp $ fromFoldable spdList
+
+-- transposeChord:: P Value
+-- transposeChord = do
+--     id <- voiceId
+--     pure $ TransposedChord id
+
+
+end:: P Value
+end = do
+    _ <- pure 1
+    _ <- choice [reserved "end"]
+    _ <- reservedOp "="
+    end <- choice [try makeEnd, transposeEnd]
+    pure end
+
+-- transposeEndWith:: P Value
+-- transposeEndWith = do
+--     id <- voiceId
+--     with <- parens transNumVal
+--     pure $ TransposedEndWith id with
+
+transposeEnd:: P Value
+transposeEnd = do
+    id <- voiceId
+    pure $ TransposedEnd id
+
+makeEnd:: P Value
+makeEnd = do
+    _ <- pure 1
+    sp <- parseSpan
+    spdList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
+    pure $ End sp $ fromFoldable spdList
+
+begin:: P Value
+begin = do
+    _ <- pure 1
+    _ <- choice [try $ reserved "begin",reserved "begin"]
+    _ <- reservedOp "="
+    sound <- choice [try makeBegin, transposeBegin]
+    pure sound
+
+-- transposeBeginWith:: P Value
+-- transposeBeginWith = do
+--     id <- voiceId
+--     with <- parens transNumVal
+--     pure $ TransposedBeginWith id with
+
+transposeBegin:: P Value
+transposeBegin = do
+    id <- voiceId
+    pure $ TransposedBegin id
+
+makeBegin:: P Value
+makeBegin = do
+    _ <- pure 1
+    sp <- parseSpan
+    panList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
+    pure $ Begin sp $ fromFoldable panList
 
 speed:: P Value
 speed = do
@@ -60,50 +133,11 @@ speed = do
     n <- choice [try makeSpeed, transposeSpeed]
     pure n
 
-pan:: P Value
-pan = do
-    _ <- pure 1
-    _ <- choice [try $ reserved "pan",reserved "pan"]
-    _ <- reservedOp "="
-    sound <- choice [try makePan, transposePan]
-    pure sound
-
-gain:: P Value
-gain = do
-    _ <- pure 1
-    _ <- choice [reserved "gain"]
-    _ <- reservedOp "="
-    n <- choice [try makeGain, transposeGain]
-    pure n
-
-n:: P Value
-n = do
-    _ <- pure 1
-    _ <- choice [reserved "n"]
-    _ <- reservedOp "="
-    n <- choice [try makeN, transposeN]
-    pure n
-
-transposeN:: P Value
-transposeN = do
-    id <- voiceId
-    pure $ TransposedN id
-
-makeN:: P Value
-makeN = do
-    _ <- pure 1
-    sp <- parseSpan
-    strList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural] 
-    pure $ N sp $ fromFoldable strList
-
-sound:: P Value
-sound = do
-    _ <- pure 1
-    _ <- choice [try $ reserved "sound",reserved "s"]
-    _ <- reservedOp "="
-    sound <- choice [try makeSound, transposeSound]
-    pure sound
-
+-- transposeSpeedWith:: P Value
+-- transposeSpeedWith = do
+--     id <- voiceId
+--     with <- parens transNumVal
+--     pure $ TransposedSpeedWith id with
 
 transposeSpeed:: P Value
 transposeSpeed = do
@@ -117,6 +151,20 @@ makeSpeed = do
     spdList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     pure $ Speed sp $ fromFoldable spdList
 
+pan:: P Value
+pan = do
+    _ <- pure 1
+    _ <- choice [try $ reserved "pan",reserved "pan"]
+    _ <- reservedOp "="
+    sound <- choice [try makePan, transposePan]
+    pure sound
+
+-- transposePanWith:: P Value
+-- transposePanWith = do
+--     id <- voiceId
+--     with <- parens transNumVal
+--     pure $ TransposedPanWith id with
+
 transposePan:: P Value
 transposePan = do
     id <- voiceId
@@ -129,6 +177,26 @@ makePan = do
     panList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     pure $ Pan sp $ fromFoldable panList
 
+gain:: P Value
+gain = do
+    _ <- pure 1
+    _ <- choice [reserved "gain"]
+    _ <- reservedOp "="
+    n <- choice [try makeGain, transposeGain]
+    pure n
+
+-- transposeGainWith:: P Value
+-- transposeGainWith = do
+--     id <- voiceId
+--     with <- parens transNumVal
+--     pure $ TransposedGainWith id with
+
+transNumVal:: P (List (Number -> Number))
+transNumVal = do 
+    _ <- pure 1
+    op <- choice [reservedOp "+" *> pure add, reservedOp "*" *> pure mul]
+    numList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
+    pure $ map op $ fromFoldable numList
 
 transposeGain:: P Value
 transposeGain = do
@@ -142,6 +210,81 @@ makeGain = do
     gainList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     pure $ Gain sp $ fromFoldable gainList
 
+n:: P Value
+n = do
+    _ <- pure 1
+    _ <- choice [reserved "n"]
+    _ <- reservedOp "="
+    n <- choice [try makeN, {-try transposeNWith,-} transposeN]
+    pure n
+
+transposeNWith:: P Value
+transposeNWith = do
+    id <- voiceId
+    with <- transIntVal
+    pure $ TransposedNWith id with
+
+transIntVal:: P (List Ops)
+transIntVal = do 
+    _ <- pure 1
+    n <- choice [try $ parens addInts, try $ parens multInts]
+    pure n
+
+addInts:: P (List Ops)
+addInts = do
+    _ <- pure 1
+    _ <- reserved "+"
+    ns <- many natural
+    pure $ map (\n -> AddInt n) $ fromFoldable ns
+
+multInts:: P (List Ops)
+multInts = do
+    _ <- pure 1
+    _ <- reserved "*"
+    ns <- many natural
+    pure $ map (\n -> MultInt n) $ fromFoldable ns
+
+mixInts:: P (List Ops)
+mixInts = do
+    _ <- pure 1
+    xs <- many $ choice [parens oneAdd, parens oneMult]
+    pure $ fromFoldable xs
+
+oneAdd:: P Ops
+oneAdd = do
+    _ <- pure 1
+    _ <- reserved "+"
+    n <- natural
+    pure $ AddInt n
+
+oneMult:: P Ops
+oneMult = do
+    _ <- pure 1
+    _ <- reserved "*"
+    n <- natural
+    pure $ MultInt n
+
+transposeN:: P Value
+transposeN = do
+    id <- voiceId
+    pure $ TransposedN id
+
+makeN:: P Value
+makeN = do
+    _ <- pure 1
+    sp <- parseSpan
+    strList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
+    pure $ N sp $ fromFoldable strList
+
+sound:: P Value
+sound = do
+    _ <- pure 1
+    _ <- choice [try $ reserved "sound",reserved "s"]
+    _ <- reservedOp "="
+    sound <- choice [try makeSound, transposeSound]
+    pure sound
+
+
 transposeSound:: P Value
 transposeSound = do
     id <- voiceId
@@ -154,6 +297,7 @@ makeSound = do
     strList <- sampleParser 
     pure $ Sound sp strList
 
+--
 parseSpan:: P Span
 parseSpan = do
     _ <- pure 1
@@ -164,6 +308,7 @@ parseSpan = do
                  , reserved "_" *>   pure  CycleEvent
                 ]
     pure x
+    ---
 
 sampleParser:: P (List String)
 sampleParser = do
@@ -221,6 +366,7 @@ specialRange (Tuple i1 d1) (Tuple i2 d2) = map (\rangeInt -> (toNumber rangeInt)
           n2 = ((toNumber i2) * 10.0) + (toNumber d2) -- Tuple 3 6 will become 36
           rangeInts = ((floor n1)..(floor n2))
 
+
 parseSpecialNum:: P (Tuple Int Int)
 parseSpecialNum = choice [try parseSpecialNum', toSpecial <$> natural]
 
@@ -247,6 +393,22 @@ negNum = do
   _ <- charWS '-'
   x <- naturalOrFloat
   pure ((-1.0) * toNumber' x)
+
+
+-- check2 :: Map String Aural -> List String -> String -> Aural -> Boolean
+-- check2 aMap alreadyRefd aKey (Temporal (Kairos _ _) _ _) = true
+-- check2 aMap alreadyRefd aKey (Temporal (Metric _ _ _) _ _) = true
+-- check2 aMap alreadyRefd aKey (Temporal (Converge anotherKey _ _ _) _ _) =
+--   case lookup anotherKey aMap of
+--     Nothing -> false
+--     Just anotherValue -> case elem aKey alreadyRefd of
+--                            true -> false
+--                            false -> check2 aMap (aKey : alreadyRefd) anotherKey anotherValue
+
+
+
+
+
 
 
 tokenParser = makeTokenParser haskellStyle
