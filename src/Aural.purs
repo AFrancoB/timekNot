@@ -3,15 +3,15 @@ module Aural(aural, parseRangeNum, transposeNWith) where
 import Prelude
 
 import Data.Identity
-import Data.List (List(..), head, tail, elem, (:), filter, fromFoldable, (..))
+import Data.List (List(..), head, tail, elem, (:), filter, fromFoldable, (..), length, zip)
 import Data.Array (fromFoldable) as A
 import Data.Either
 import Data.Int
 import Data.Tuple (Tuple(..), fst, snd)
-import Data.Map (Map(..), lookup, keys, singleton, toUnfoldable, member)
+import Data.Map (Map(..), lookup, keys, singleton, toUnfoldable, member, mapMaybe)
 import Data.Map (fromFoldable) as M
 import Data.Maybe (Maybe(..), fromMaybe)
-import Data.Set as Set
+-- import Data.Set as Set
 import Data.String as Str
 
 import Data.FunctorWithIndex (mapWithIndex)
@@ -49,7 +49,7 @@ value:: P Value
 value = do
     _ <- pure 1
     _ <- reservedOp "."
-    valType <- choice [try sound,try n, try gain, try pan, try speed, try begin, end]
+    valType <- choice [try sound,try n, try gain, try pan, try speed, try begin, try end, mayeh]
     pure valType
 
 -- chord:: P Value
@@ -72,7 +72,41 @@ value = do
 --     id <- voiceId
 --     pure $ TransposedChord id
 
+-- Dastgah
 
+-- Intervals: Bozorg 182; Kuchak 114; Tanini 204; Baghie 90.
+
+-- shur: D Eqb F G Aqb Bb C 
+-- normalised to 24ET: 0   175      300        500         675        800         1000        1200
+-- using intervals:    0   182      114 (296)  204 (500) - 182 (682)- 114 (796) - 204 (1000) - 1200
+-- name of interfvals: 0 - Bozorg - Kuchak   -  Tanini   - Bozorg   - Kuchak    - Tanini  ??? how to get to the Octave? 
+
+-- corrected by Mehdad: 0 1.82 2.96 5.0 7.04 7.94 9.98 12.0
+
+mayeh:: P Value
+mayeh = do
+    _ <- pure 1
+    choice [try shur]
+
+shur:: P Value
+shur = do
+    _ <- pure 1
+    _ <- choice [reserved "shur"]
+    _ <- reservedOp "="
+    shur <- makeShur
+    pure shur
+
+-- Dastgah Span Dastgah
+
+makeShur:: P Value 
+makeShur = do
+    _ <- pure 1
+    sp <- parseSpan
+    shurList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
+    pure $ Dastgah sp (Shur $ fromFoldable shurList)
+
+
+--
 end:: P Value
 end = do
     _ <- pure 1
@@ -90,7 +124,8 @@ end = do
 transposeEnd:: P Value
 transposeEnd = do
     id <- voiceId
-    pure $ TransposedEnd id
+    n <- brackets natural <|> pure 0
+    pure $ TransposedEnd id n
 
 makeEnd:: P Value
 makeEnd = do
@@ -116,7 +151,8 @@ begin = do
 transposeBegin:: P Value
 transposeBegin = do
     id <- voiceId
-    pure $ TransposedBegin id
+    n <- brackets natural <|> pure 0
+    pure $ TransposedBegin id n
 
 makeBegin:: P Value
 makeBegin = do
@@ -142,7 +178,8 @@ speed = do
 transposeSpeed:: P Value
 transposeSpeed = do
     id <- voiceId
-    pure $ TransposedSpeed id
+    n <- brackets natural <|> pure 0
+    pure $ TransposedSpeed id n
 
 makeSpeed:: P Value
 makeSpeed = do
@@ -168,7 +205,8 @@ pan = do
 transposePan:: P Value
 transposePan = do
     id <- voiceId
-    pure $ TransposedPan id
+    n <- brackets natural <|> pure 0
+    pure $ TransposedPan id n
 
 makePan:: P Value
 makePan = do
@@ -201,7 +239,8 @@ transNumVal = do
 transposeGain:: P Value
 transposeGain = do
     id <- voiceId
-    pure $ TransposedGain id
+    n <- brackets natural <|> pure 0
+    pure $ TransposedGain id n
 
 makeGain:: P Value
 makeGain = do
@@ -221,8 +260,9 @@ n = do
 transposeNWith:: P Value
 transposeNWith = do
     id <- voiceId
+    n <- brackets natural <|> pure 0
     with <- transIntVal
-    pure $ TransposedNWith id with
+    pure $ TransposedNWith id n with
 
 transIntVal:: P (List Ops)
 transIntVal = do 
@@ -267,7 +307,8 @@ oneMult = do
 transposeN:: P Value
 transposeN = do
     id <- voiceId
-    pure $ TransposedN id
+    n <- brackets natural <|> pure 0
+    pure $ TransposedN id n
 
 makeN:: P Value
 makeN = do
@@ -288,7 +329,8 @@ sound = do
 transposeSound:: P Value
 transposeSound = do
     id <- voiceId
-    pure $ TransposedSound id
+    n <- brackets natural <|> pure 0
+    pure $ TransposedSound id n
 
 makeSound:: P Value
 makeSound = do
@@ -395,16 +437,21 @@ negNum = do
   pure ((-1.0) * toNumber' x)
 
 
--- check2 :: Map String Aural -> List String -> String -> Aural -> Boolean
--- check2 aMap alreadyRefd aKey (Temporal (Kairos _ _) _ _) = true
--- check2 aMap alreadyRefd aKey (Temporal (Metric _ _ _) _ _) = true
--- check2 aMap alreadyRefd aKey (Temporal (Converge anotherKey _ _ _) _ _) =
---   case lookup anotherKey aMap of
---     Nothing -> false
---     Just anotherValue -> case elem aKey alreadyRefd of
---                            true -> false
---                            false -> check2 aMap (aKey : alreadyRefd) anotherKey anotherValue
 
+-- there are three layers that need to be identified: the string that identifies the bounded temporal, the Int that identifies the index of the aural, and then I need a way to identify its type of Value:if it is a sound, gain, speed, etc. For this I could use the constructor of Value...? 
+
+-- checkTransposition:: Voices -> Boolean
+-- checkTransposition aMap = not $ elem false $ mapWithIndex (checkTransposition1 aMap Nil) anAuralMap
+--     where anAuralMap = mapMaybe (\(Voice _ a) -> Just a) aMap
+
+
+-- checkTransposition1:: Voices -> List (Tuple String Int) -> String -> List Aural -> Boolean
+-- checkTransposition1 aMap refd id aurals = not $ elem false $ mapped
+--     where zipped = zip aurals (0..(length aurals))
+--           mapped = map (checkTransposition2 aMap refd id) zipped
+    
+-- checkTransposition2 :: Voices -> List (Tuple String Int) -> String -> Tuple (List Value) Int -> Boolean
+-- checkTransposition2 aMap refd id aurals = 
 
 
 

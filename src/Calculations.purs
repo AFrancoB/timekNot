@@ -69,7 +69,7 @@ programToWaste program ws' we' eval' t = waste
         getXs:: Array AlmostWaste -> Array AlmostWaste
         getXs ws = filter (\w -> f w) ws
         toWaste:: AlmostWaste -> Waste
-        toWaste almostW =  {whenPosix: posix, s: almostW.s, n: almostW.n, gain: almostW.gain, pan: almostW.pan, speed: almostW.speed, begin: almostW.begin, end: almostW.end}
+        toWaste almostW =  {whenPosix: posix, s: almostW.s, n: almostW.n, gain: almostW.gain, pan: almostW.pan, speed: almostW.speed, begin: almostW.begin, end: almostW.end, note: almostW.note}
             where posix = (\(Event (Onset _ p) _) -> p) almostW.event
         waste = map toWaste <$> getXs <$> almostWs
         
@@ -87,7 +87,6 @@ calculateVoice:: M.Map String Temporal -> Voices -> TimePacket -> String -> Voic
 calculateVoice tempoMap voiceMap tp aKey (Voice temporal aurals) = do 
     let events = calculateTemporal tempoMap tp aKey temporal -- Array Event
     let rhythmic = getRhythmic tempoMap temporal
-    log ("aural " <> show aurals)
     toWaste <- auralSpecs voiceMap rhythmic aurals <$> events
     pure toWaste
 

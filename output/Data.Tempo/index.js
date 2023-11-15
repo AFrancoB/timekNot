@@ -17,9 +17,9 @@ var add1 = /* #__PURE__ */ Data_Semiring.add(Data_Rational.semiringRational);
 var mul1 = /* #__PURE__ */ Data_Semiring.mul(Data_Rational.semiringRational);
 var div1 = /* #__PURE__ */ Data_EuclideanRing.div(Data_Rational.euclideanRingRational);
 var identity = /* #__PURE__ */ Control_Category.identity(Control_Category.categoryFn);
-var adjust = /* #__PURE__ */ Data_DateTime.adjust(Data_Time_Duration.durationMilliseconds);
+var adjust = /* #__PURE__ */ Data_DateTime.adjust(Data_Time_Duration.durationSeconds);
 var fromJust = /* #__PURE__ */ Data_Maybe.fromJust();
-var adjust1 = /* #__PURE__ */ Data_DateTime.adjust(Data_Time_Duration.durationSeconds);
+var toRational1 = /* #__PURE__ */ Data_Rational.toRational(Data_Rational.toRationalBigInt);
 var timeToCountNumber = function (x) {
     return function (t) {
         var timeDiff = unwrap(diff(t)(x.time));
@@ -35,7 +35,7 @@ var timeToCount = function (x) {
     };
 };
 var origin = function (x) {
-    var increment = div1(mul1(x.count)(Data_Rational.fromInt(-1000 | 0)))(x.freq);
+    var increment = div1(mul1(x.count)(Data_Rational.fromInt(-1 | 0)))(x.freq);
     return Data_Maybe.maybe(x.time)(identity)(adjust(Data_Rational.toNumber(increment))(x.time));
 };
 var newTempo = function (freq) {
@@ -49,9 +49,9 @@ var newTempo = function (freq) {
     };
 };
 var fromForeignTempo = function (x) {
-    var time = Data_DateTime_Instant.toDateTime(fromJust(Data_DateTime_Instant.instant(x.time)));
-    var freq = toRational(x.freqNumerator)(x.freqDenominator);
-    var count = toRational(x.countNumerator)(x.countDenominator);
+    var time = Data_DateTime_Instant.toDateTime(fromJust(Data_DateTime_Instant.instant(x.time * 1000.0)));
+    var freq = toRational1(x.freqNumerator)(x.freqDenominator);
+    var count = toRational1(x.countNumerator)(x.countDenominator);
     return {
         freq: freq,
         time: time,
@@ -60,7 +60,7 @@ var fromForeignTempo = function (x) {
 };
 var countToTime = function (x) {
     return function (c) {
-        return Data_Maybe.maybe(x.time)(identity)(adjust1(Data_Rational.toNumber(div1(c)(x.freq)))(origin(x)));
+        return Data_Maybe.maybe(x.time)(identity)(adjust(Data_Rational.toNumber(div1(c)(x.freq)))(origin(x)));
     };
 };
 export {
