@@ -40,9 +40,10 @@ testP str = runParser str parseProgram
 ---- Make all tests: start testing all the checks: tempoCheck, idCheck replicaCheck!!!
 
 -- TO DO LIST October 17th:
----- finish refactor of transposeWith DONE
+---- finish refactor of transposeWith 
 ---- implement keyword last DONE
 ---- implement copy of temporals: v1 <- v0 DONE
+---- implement many aurals for one temporal
 ---- implement weight
 
 -----
@@ -457,7 +458,7 @@ test' x =
     Right aMap -> Right $ check aMap 
 
 check :: Map String Temporal -> Boolean
-check aMap' = (checkID) && checkTempoMark
+check aMap' = checkID && checkTempoMark
   where aReplicaMap = filter isReplica aMap'
         aMap = filter (not isReplica) aMap'
         checkID = not $ elem false $ mapWithIndex (check2 aMap' Nil) aMap'  
@@ -482,6 +483,8 @@ check2 aMap alreadyRefd aKey (Temporal (Converge anotherKey _ _ _) _ _) =
     Just anotherValue -> case elem aKey alreadyRefd of
                            true -> false
                            false -> check2 aMap (aKey : alreadyRefd) anotherKey anotherValue
+
+-- in case of replica
 check2 aMap alreadyRefd aKey (Replica id) 
   | aKey == id = false
   | otherwise = 

@@ -109,5 +109,11 @@ in  upstream
     , version = "6fc66e5f1b60a49c2326a1bcd79756bd68115e2a"
     }
   with rationals.version = "v6.0.0"
+  with purescript-tempi =
+    { dependencies = ["prelude"]
+    , repo = "https://github.com/dktr0/purescript-tempi.git"
+    , version = "9329e3e"
+    }
+  	
 
 

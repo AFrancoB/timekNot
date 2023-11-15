@@ -1,4 +1,4 @@
-module AST(TimekNot(..),Waste(..),AlmostWaste(..), Voices, Voice(..),Program(..),Expression(..),Aural(..),Value(..),Span(..),Ops(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), Waste(..),showEventIndex, showStructureIndex) where
+module AST(TimekNot(..),Waste(..),AlmostWaste(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..),Dastgah(..),Span(..),Ops(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), Waste(..),showEventIndex, showStructureIndex) where
 
 import Prelude
 import Effect.Ref
@@ -18,7 +18,8 @@ type Waste = {
   pan:: Number,
   speed:: Number,
   begin:: Number,
-  end:: Number
+  end:: Number,
+  note:: Number
   }
 
 type AlmostWaste = {
@@ -29,7 +30,8 @@ type AlmostWaste = {
   pan:: Number,
   speed:: Number,
   begin:: Number,
-  end:: Number
+  end:: Number,
+  note:: Number
   }
 
 type TimekNot = {
@@ -52,9 +54,6 @@ type Aural = List Value
 
 type Program = List Expression
 
--- instance programShow :: Show Program where
---   show (Program xs) = show xs
-
 data Expression = TimeExpression (Map String Temporal) | AuralExpression (Map String Aural) -- here add a convergence expression when the non-ephemeral convergence points are properly imagined
 
 instance expressionShow :: Show Expression where
@@ -71,20 +70,27 @@ type AudioAttributes = {
 
 -- refactor as {sound: string, n: Int, etc...} -- What was going to be auralAttributes
 data Value = 
-  Sound Span (List String) | TransposedSound String | 
-  N Span (List Int) | TransposedN String | TransposedNWith String (List Ops) |
-  Gain Span (List Number) | TransposedGain String | TransposedGainWith String (List Ops) |
-  Pan Span (List Number) | TransposedPan String | TransposedPanWith String (List Ops) |
-  Speed Span (List Number) | TransposedSpeed String | TransposedSpeedWith String (List Ops) |
-  Begin Span (List Number) | TransposedBegin String | TransposedBeginWith String (List Ops) |
-  End Span (List Number) | TransposedEnd String | TransposedEndWith String (List Ops) |
-  CutOff Span (List Number) | TransposedCutOff String |
-  Vowel Span (List Number) | TransposedVowel String | 
-  Chord Span (List Number) | TransposedChord String
+  Sound Span (List String) | TransposedSound String Int | 
+  N Span (List Int) | TransposedN String Int | TransposedNWith String Int (List Ops) |
+  Gain Span (List Number) | TransposedGain String Int | TransposedGainWith String Int (List Ops) |
+  Pan Span (List Number) | TransposedPan String Int | TransposedPanWith String Int (List Ops) |
+  Speed Span (List Number) | TransposedSpeed String Int | TransposedSpeedWith String Int (List Ops) |
+  Begin Span (List Number) | TransposedBegin String Int | TransposedBeginWith String Int (List Ops) |
+  End Span (List Number) | TransposedEnd String Int | TransposedEndWith String Int (List Ops) |
+  CutOff Span (List Number) | TransposedCutOff String Int |
+  Vowel Span (List Number) | TransposedVowel String Int | 
+  Chord Span (List Number) | TransposedChord String Int |
+  Dastgah Span Dastgah
+
+data Dastgah = Shur (List Int) -- 1 to 8 then it cycles back
+
+instance showDatsgah :: Show Dastgah where
+  show (Shur l) = "shur " <> show l
+
 
 data Ops = AddInt Int | AddNum Number | MultInt Int | MultNum Number
 
-instance show :: Show Ops where
+instance showOps :: Show Ops where
   show (AddInt n) = "_+" <> show n
   show (AddNum n) = "_+" <> show n
   show (MultInt n) = "_*" <> show n
@@ -92,31 +98,32 @@ instance show :: Show Ops where
 
 instance valueShow :: Show Value where
   show (Sound x l) = show x <> " " <> show l
-  show (TransposedSound voice) = "s transposed from " <> voice
+  show (TransposedSound voice n) = "s transposed from " <> voice
   show (N x l) = show x <> " " <> show l
-  show (TransposedN voice) = "n transposed from " <> voice
-  show (TransposedNWith voice l) = show l <> "n transposedWith from " <> voice
+  show (TransposedN voice n) = "n transposed from " <> voice
+  show (TransposedNWith voice n l) = show l <> "n transposedWith from " <> voice
   show (Gain x l) = show x <> " " <> show l
-  show (TransposedGain voice) = "gain transposed from " <> voice
-  show (TransposedGainWith voice l) = "gain transposedWith from " <> voice
+  show (TransposedGain voice n) = "gain transposed from " <> voice
+  show (TransposedGainWith voice n l) = "gain transposedWith from " <> voice
   show (Pan x l) = show x <> " " <> show l
-  show (TransposedPan voice) = "pan transposed from " <> voice
-  show (TransposedPanWith voice l) = "pan transposedWith from " <> voice
+  show (TransposedPan voice n) = "pan transposed from " <> voice
+  show (TransposedPanWith voice n l) = "pan transposedWith from " <> voice
   show (Speed x l) = show x <> " " <> show l
-  show (TransposedSpeed voice) = "speed transposed from " <> voice
-  show (TransposedSpeedWith voice l) = "speed transposedWith from " <> voice
+  show (TransposedSpeed voice n) = "speed transposed from " <> voice
+  show (TransposedSpeedWith voice n l) = "speed transposedWith from " <> voice
   show (Begin x l) = show x <> " " <> show l
-  show (TransposedBegin voice) = "begin transposed from " <> voice
-  show (TransposedBeginWith voice l) = "begin transposedWith from " <> voice
+  show (TransposedBegin voice n) = "begin transposed from " <> voice
+  show (TransposedBeginWith voice n l) = "begin transposedWith from " <> voice
   show (End x l) = show x <> " " <> show l
-  show (TransposedEnd voice) = "end transposed from " <> voice
-  show (TransposedEndWith voice l) = "end transposedWith from " <> voice
+  show (TransposedEnd voice n) = "end transposed from " <> voice
+  show (TransposedEndWith voice n l) = "end transposedWith from " <> voice
   show (CutOff x l) = show x <> " " <> show l
-  show (TransposedCutOff voice) = "cutoff transposed from " <> voice
+  show (TransposedCutOff voice n) = "cutoff transposed from " <> voice
   show (Vowel x l) = show x <> " " <> show l
-  show (TransposedVowel voice) = "vowel transposed from " <> voice
+  show (TransposedVowel voice n) = "vowel transposed from " <> voice
   show (Chord x l) = show x <> " " <> show l
-  show (TransposedChord voice) = "chord transposed from " <> voice
+  show (TransposedChord voice n) = "chord transposed from " <> voice
+  show (Dastgah span d) = show d
 
 data Span = CycleEvent | CycleBlock | CycleInBlock | SpreadBlock -- | Weight
 

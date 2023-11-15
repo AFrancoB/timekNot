@@ -1,4 +1,4 @@
-module AuralSpecs (auralSpecs,bjorklundAsInterval) where
+module AuralSpecs (auralSpecs,bjorklundAsInterval,cycleAurals, testVoice) where
 
 import Prelude
 
@@ -91,9 +91,75 @@ auralSpecs' m rhy aural events =
         speedPGNS = processSpeed m rhy (getSpeed aural) panGNS
         beginSpPGNS = processBegin m rhy (getBegin aural) speedPGNS
         endBSpPGNS = processEnd m rhy (getEnd aural) beginSpPGNS
+        noteEBSpPGNS = processNote m rhy (getDastgah aural) endBSpPGNS
         -- cutoffEBSpPGNS = processCutOff
         -- vowelCEBSpPGNS = processVowel
-    in endBSpPGNS -- vowelCEBSpPGNS
+    in noteEBSpPGNS
+
+
+-- note
+processNote:: Voices -> Rhythmic -> Maybe Value -> 
+               Array {event::Event, s::String, n::Int, gain::Number, pan::Number, speed::Number, begin::Number, end::Number}  -> 
+               Array {event::Event, s::String, n::Int, gain::Number, pan::Number, speed::Number, begin::Number, end::Number, note:: Number}
+processNote _ _ _ [] = []
+processNote _ _ Nothing ws = map (\w -> {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: w.begin, end: 1.0, note: 0.0}) ws
+-- processNote m r (Just (TransposedNote id)) ws = findReferredNote r ws id m 
+processNote _ r (Just (Dastgah span d)) ws = spanDastgah span (fromFoldable (dToList d)) ws r
+processNote _ _ _ _ = []
+
+getDastgah:: List Value -> Maybe Value
+getDastgah aural = head $ filter isDastgah $ fromFoldable aural
+
+isDastgah:: Value -> Boolean
+isDastgah (Dastgah _ _) = true
+-- isDastgah (TransposedDastgah _) = true
+isDastgah _ = false
+
+-- 0 1.82 2.96 5.0 7.04 7.94 9.98 12.0
+-- data Dastgah = Shur (List Int)
+dToList:: Dastgah -> List Number
+dToList (Shur ns) = map f ns
+  where f n = case (n-1)`mod`8 of
+                0 -> 0.0 
+                1 -> 1.82
+                2 -> 2.96
+                3 -> 5.0
+                4 -> 7.04
+                5 -> 7.94
+                6 -> 9.98
+                7 -> 12.0
+                _ -> 0.0
+dToList _ = Nil
+
+spanDastgah:: Span -> Array Number -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number, end:: Number} -> Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number, end:: Number, note:: Number}
+spanDastgah CycleEvent xs ws _ = map (processDastgah xs) ws
+  where processDastgah xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: w.begin, end: w.end, note: note} 
+              where note = fromMaybe 0.9666 $ xs !! (getEventIndex w.event `mod` length xs)
+spanDastgah CycleBlock xs ws _ = map (processDastgah xs) ws
+  where processDastgah xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: w.begin, end: w.end, note: note}  
+              where note = fromMaybe 0.9666 $ xs !! (getBlockIndex w.event `mod` length xs)
+spanDastgah CycleInBlock xs ws _ = map (processDastgah xs) ws
+  where processDastgah xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: w.begin, end: w.end, note: note} 
+              where note = fromMaybe 0.9666 $ xs !! (getStructureIndex w.event `mod` length xs)
+spanDastgah SpreadBlock xs ws rhythmic = map (processDastgah xs) ws
+  where processDastgah xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: w.begin, end: w.end, note: note} 
+              where percenPositions = map (\(Onset b p) -> p) $ rhythmicToOnsets rhythmic 
+                    modIndex = (getEventIndex w.event) `mod` (length $ fromFoldable percenPositions)
+                    percenPos = fromMaybe 0.0 $ (fromFoldable percenPositions) !! modIndex
+                    segment = 1.0 / toNumber (length xs)
+                    limitsFst = cons 0.0 (scanl (+) 0.0 $ replicate ((length xs) - 1) segment)
+                    limitsSnd = snoc (scanl (+) 0.0 $ replicate ((length xs) - 1) segment) 1.0
+                    limits = zip limitsFst limitsSnd
+                    noteLimits = zip xs limits
+                    note = fromMaybe 0.9666 $ head $ map f $ filter isJust $ spreadNotes percenPos noteLimits
+                        where f (Just x) = x
+                              f Nothing = 0.9666
+
+spreadNotes:: Number -> Array (Tuple Number (Tuple Number Number)) -> Array (Maybe Number)
+spreadNotes percenPos bLimits = map (\sLimit -> spreadNote percenPos sLimit) bLimits
+
+spreadNote::  Number -> Tuple Number (Tuple Number Number) -> Maybe Number
+spreadNote percenPos (Tuple b limit) = if (percenPos >= fst limit) && (percenPos < snd limit) then Just b else Nothing
 
 
 -- end
@@ -102,14 +168,14 @@ processEnd:: Voices -> Rhythmic -> Maybe Value ->
                Array {event::Event, s::String, n::Int, gain::Number, pan::Number, speed::Number, begin::Number, end::Number}
 processEnd _ _ _ [] = []
 processEnd _ _ Nothing ws = map (\w -> {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: w.begin, end: 1.0}) ws
--- processEnd m r (Just (TransposedEnd id)) ws = findReferredEnd r ws id m 
+processEnd m r (Just (TransposedEnd id n)) ws = findReferredEnd r ws (Tuple id n) m 
 processEnd _ r (Just (End span eList)) ws = spanEnd span (fromFoldable eList) ws r
 processEnd _ _ _ _ = []
 
--- findReferredEnd:: Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number} -> String -> Voices -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number, end:: Number}
--- findReferredEnd r ws id mapa = processEnd mapa r newVal ws
---     where maybeVoice = M.lookup id mapa -- Maybe Voice
---           newVal = ((\(Voice temporal aural) -> aural) <$> maybeVoice) >>= getEnd -- Maybe Value
+findReferredEnd:: Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number} -> (Tuple String Int) -> Voices -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number, end:: Number}
+findReferredEnd r ws (Tuple id n) mapa = processEnd mapa r newVal ws
+    where newVal = cycleAurals n $ M.lookup id mapa -- Maybe (Voice Temporal (List Aural))
+
 
 spanEnd:: Span -> Array Number -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number} -> Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number, end:: Number}
 spanEnd CycleEvent xs ws _ = map (processEnd xs) ws
@@ -146,7 +212,7 @@ getEnd aural = head $ filter isEnd $ fromFoldable aural
 
 isEnd:: Value -> Boolean
 isEnd (End _ _) = true
-isEnd (TransposedEnd _) = true
+isEnd (TransposedEnd _ _) = true
 isEnd _ = false
 
 -- begin
@@ -155,14 +221,13 @@ processBegin:: Voices -> Rhythmic -> Maybe Value ->
                Array {event::Event, s::String, n::Int, gain::Number, pan::Number, speed::Number, begin::Number}
 processBegin _ _ _ [] = []
 processBegin _ _ Nothing ws = map (\w -> {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: 0.0}) ws
--- processBegin m r (Just (TransposedBegin id)) ws = findReferredBegin r ws id m 
+processBegin m r (Just (TransposedBegin id n)) ws = findReferredBegin r ws (Tuple id n) m 
 processBegin _ r (Just (Begin span bList)) ws = spanBegin span (fromFoldable bList) ws r
 processBegin _ _ _ _ = []
 
--- findReferredBegin:: Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number} -> String -> Voices -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number}
--- findReferredBegin r ws id mapa = processBegin mapa r newVal ws
---     where maybeVoice = M.lookup id mapa -- Maybe Voice
---           newVal = ((\(Voice temporal aural) -> aural) <$> maybeVoice) >>= getBegin -- Maybe Value
+findReferredBegin:: Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number} -> Tuple String Int -> Voices -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number}
+findReferredBegin r ws (Tuple id n) mapa = processBegin mapa r newVal ws
+    where newVal = cycleAurals n $ M.lookup id mapa
 
 spanBegin:: Span -> Array Number -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number} -> Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number}
 spanBegin CycleEvent xs ws _ = map (processBn xs) ws
@@ -199,7 +264,7 @@ getBegin aural = head $ filter isBegin $ fromFoldable aural
 
 isBegin:: Value -> Boolean
 isBegin (Begin _ _) = true
-isBegin (TransposedBegin _) = true
+isBegin (TransposedBegin _ _) = true
 isBegin _ = false
 
 -- speed
@@ -208,14 +273,13 @@ processSpeed:: Voices -> Rhythmic -> Maybe Value ->
                Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number}
 processSpeed _ _ _ [] = []
 processSpeed _ _ Nothing ws = map (\w -> {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: 1.0}) ws
--- processSpeed m r (Just (TransposedSpeed id)) ws = findOtherVoiceSpeed r ws id m 
+processSpeed m r (Just (TransposedSpeed id n)) ws = findOtherVoiceSpeed r ws (Tuple id n) m 
 processSpeed _ r (Just (Speed span spList)) ws = spanSpeed span (fromFoldable spList) ws r
 processSpeed _ _ _ _ = []
 
--- findOtherVoiceSpeed:: Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number} -> String -> Voices -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number}
--- findOtherVoiceSpeed r ws id mapa = processSpeed mapa r newVal ws
---     where maybeVoice = M.lookup id mapa -- Maybe Voice
---           newVal = ((\(Voice temporal aural) -> aural) <$> maybeVoice) >>= getSpeed -- Maybe Value
+findOtherVoiceSpeed:: Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number} -> Tuple String Int -> Voices -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number}
+findOtherVoiceSpeed r ws (Tuple id n) mapa = processSpeed mapa r newVal ws
+    where newVal = cycleAurals n $ M.lookup id mapa
 
 spanSpeed:: Span -> Array Number -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number} -> Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number}
 spanSpeed CycleEvent xs ws _ = map (processSp xs) ws
@@ -252,21 +316,20 @@ getSpeed aural = head $ filter isSpeed $ fromFoldable aural
 
 isSpeed:: Value -> Boolean
 isSpeed (Speed _ _) = true
-isSpeed (TransposedSpeed _) = true
+isSpeed (TransposedSpeed _ _) = true
 isSpeed _ = false
 
 -- pan
 processPan:: Voices -> Rhythmic -> Maybe Value -> Array {event:: Event, s:: String, n:: Int, gain:: Number}  -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number}
 processPan _ _ _ [] = []
 processPan _ _ Nothing ws = map (\w -> {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: 0.5}) ws
--- processPan m r (Just (TransposedPan id)) ws = findOtherVoicePan r ws id m 
+processPan m r (Just (TransposedPan id n)) ws = findOtherVoicePan r ws (Tuple id n) m 
 processPan _ r (Just (Pan span pList)) ws = spanPan span (fromFoldable pList) ws r
 processPan _ _ _ _ = []
 
--- findOtherVoicePan:: Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number} -> String -> Voices -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number}
--- findOtherVoicePan r ws id mapa = processPan mapa r newVal ws
---     where maybeVoice = M.lookup id mapa -- Maybe Voice
---           newVal = ((\(Voice temporal aural) -> aural) <$> maybeVoice) >>= getPan -- Maybe Value
+findOtherVoicePan:: Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number} -> (Tuple String Int) -> Voices -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number}
+findOtherVoicePan r ws (Tuple id n) mapa = processPan mapa r newVal ws
+    where newVal = cycleAurals n $ M.lookup id mapa
 
 spanPan:: Span -> Array Number -> Array {event:: Event, s:: String, n:: Int, gain:: Number} -> Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number}
 spanPan CycleEvent xs ws _ = map (processP xs) ws
@@ -303,21 +366,20 @@ getPan aural = head $ filter isPan $ fromFoldable aural
 
 isPan:: Value -> Boolean
 isPan (Pan _ _) = true
-isPan (TransposedPan _) = true
+isPan (TransposedPan _ _) = true
 isPan _ = false
 
 -- gain
 processGain:: Voices -> Rhythmic -> Maybe Value -> Array {event:: Event, s:: String, n:: Int}  -> Array {event:: Event, s:: String, n:: Int, gain:: Number}
 processGain _ _ _ [] = []
 processGain _ _ Nothing ws = map (\w -> {event: w.event, s: w.s, n: w.n, gain: 1.0}) ws
--- processGain m r (Just (TransposedGain id)) ws = findOtherVoiceGain r ws id m 
+processGain m r (Just (TransposedGain id n)) ws = findOtherVoiceGain r ws (Tuple id n) m 
 processGain _ r (Just (Gain span gList)) ws = spanGain span (fromFoldable gList) ws r
 processGain _ _ _ _ = [] 
 
--- findOtherVoiceGain:: Rhythmic -> Array {event:: Event, s:: String, n:: Int} -> String -> Voices -> Array {event:: Event, s:: String, n:: Int, gain:: Number}
--- findOtherVoiceGain r ws id mapa = processGain mapa r newVal ws
---     where maybeVoice = M.lookup id mapa -- Maybe Voice
---           newVal = ((\(Voice temporal aural) -> aural) <$> maybeVoice) >>= getGain -- Maybe Value
+findOtherVoiceGain:: Rhythmic -> Array {event:: Event, s:: String, n:: Int} -> Tuple String Int -> Voices -> Array {event:: Event, s:: String, n:: Int, gain:: Number}
+findOtherVoiceGain r ws (Tuple id n) mapa = processGain mapa r newVal ws
+    where newVal = cycleAurals n $ M.lookup id mapa
 
 spanGain:: Span -> Array Number -> Array {event:: Event, s:: String, n:: Int} -> Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number}
 spanGain CycleEvent xs ws _ = map (processG xs) ws
@@ -354,7 +416,7 @@ getGain aural = head $ filter isGain $ fromFoldable aural
 
 isGain:: Value -> Boolean
 isGain (Gain _ _) = true
-isGain (TransposedGain _) = true
+isGain (TransposedGain _ _) = true
 isGain _ = false
 
 -- N
@@ -362,7 +424,7 @@ processN:: Voices -> Rhythmic -> Maybe Value -> Array {event:: Event, s:: String
 processN _ _ _ [] = []
 processN _ _ Nothing ws = map (\w -> {event: w.event, s: w.s, n: 0}) ws
 -- processN m r (Just (TransposedNWith id l)) ws = findOtherNWith r ws id l m 
--- processN m r (Just (TransposedN id)) ws = findOtherVoiceN r ws id m 
+processN m r (Just (TransposedN id n)) ws = findOtherVoiceN r ws (Tuple id n) m 
 processN _ r (Just (N span nList)) ws = spanN span (fromFoldable nList) ws r
 processN _ _ _ _ = [] 
 
@@ -373,7 +435,6 @@ processN _ _ _ _ = []
 --           patron = bjorklundAsInterval (length lista) (length transposed)
 --           zipped = concat $ zipWith (\x n -> replicate n x) (fromFoldable lista) patron 
 --           newTransposition = zipWith (\n newN -> newN n ) transposed zipped
-
 
 
 -- this events are organised via their index, the array does not represent the position in the cycle. The lista and new transposition need to be organised in the same way
@@ -401,10 +462,9 @@ op (AddInt n) n' = n + n'
 op (MultInt n) n' = n + n'
 op _ _ = 0
 
--- findOtherVoiceN:: Rhythmic -> Array {event:: Event, s:: String} -> String -> Voices -> Array {event:: Event, s:: String, n:: Int}
--- findOtherVoiceN r ws id mapa = processN mapa r newVal ws
---     where maybeVoice = M.lookup id mapa -- Maybe Voice
---           newVal = ((\(Voice temporal aural) -> aural) <$> maybeVoice) >>= getN -- Maybe Value
+findOtherVoiceN:: Rhythmic -> Array {event:: Event, s:: String} -> Tuple String Int -> Voices -> Array {event:: Event, s:: String, n:: Int}
+findOtherVoiceN r ws (Tuple id n) mapa = processN mapa r newVal ws
+    where newVal = cycleAurals n $ M.lookup id mapa
 
 spanN:: Span -> Array Int -> Array {event:: Event, s:: String} -> Rhythmic -> Array {event:: Event, s:: String, n:: Int}
 spanN CycleEvent xs ws _ = map (processN xs) ws
@@ -448,21 +508,20 @@ getSpan _ = CycleEvent
 
 isN:: Value -> Boolean
 isN (N _ _) = true
-isN (TransposedN _) = true
-isN (TransposedNWith _ _) = true
+isN (TransposedN _ _) = true
+isN (TransposedNWith _ _ _) = true
 isN _ = false
 
 -- Sound
 processSound:: Voices -> Rhythmic -> Maybe Value -> Array Event -> Array {event:: Event, s:: String} 
 processSound _ _ Nothing _ = []
--- processSound m r (Just (TransposedSound id)) es = findOtherVoiceSound r es id m 
+processSound m r (Just (TransposedSound id n)) es = findOtherVoiceSound r es (Tuple id n) m 
 processSound _ r (Just (Sound span sList)) events = spanSound span (fromFoldable sList) events r
 processSound _ _ _ _ = [] 
 
--- findOtherVoiceSound:: Rhythmic -> Array Event -> String -> Voices -> Array {event:: Event, s:: String}
--- findOtherVoiceSound r ws id mapa = processSound mapa r newVal ws
---     where maybeVoice = M.lookup id mapa -- Maybe Voice
---           newVal = ((\(Voice temporal aural) -> aural) <$> maybeVoice) >>= getSound -- Maybe Value
+findOtherVoiceSound:: Rhythmic -> Array Event -> Tuple String Int -> Voices -> Array {event:: Event, s:: String}
+findOtherVoiceSound r ws (Tuple id n) mapa = processSound mapa r newVal ws
+    where newVal = cycleAurals n $ M.lookup id mapa
 
 spanSound:: Span -> Array String -> Array Event -> Rhythmic -> Array {event:: Event, s:: String}  
 spanSound CycleEvent xs events _ = map (processSound xs) events
@@ -499,10 +558,20 @@ getSound aural = head $ filter isSound $ fromFoldable aural
 
 isSound:: Value -> Boolean
 isSound (Sound _ _) = true
-isSound (TransposedSound _) = true
+isSound (TransposedSound _ _) = true
 isSound _ = false
 
 ---
+testVoice = Voice defTemporal $ L.fromFoldable [L.fromFoldable [End CycleBlock Nil], L.fromFoldable [Gain CycleEvent Nil, End CycleInBlock Nil]]
+
+cycleAurals:: Int -> Maybe Voice -> Maybe Value
+cycleAurals n mVoice = do
+  voice <- mVoice
+  let aurals = (\(Voice t aurals) -> aurals) voice
+  let len = L.length aurals 
+  newVal <- (fromFoldable aurals) !! (n`mod`len)
+  getEnd newVal
+
 getStructureIndex:: Event -> Int
 getStructureIndex (Event _ (Index _ xs _)) = fromMaybe 0 $ head $ xs
 
