@@ -1,14 +1,14 @@
-module Aural(aural, parseRangeNum, transposeNWith) where
+module Aural(aural, checkXPitch, getXPitchMap) where
 
 import Prelude
 
 import Data.Identity
-import Data.List (List(..), head, tail, elem, (:), filter, fromFoldable, (..), length, zip)
-import Data.Array (fromFoldable) as A
+import Data.List (List(..), head, tail, elem, (:), filter, fromFoldable, (..), length, zip, concat, mapMaybe)
+import Data.Array (fromFoldable, length) as A
 import Data.Either
 import Data.Int
 import Data.Tuple (Tuple(..), fst, snd)
-import Data.Map (Map(..), lookup, keys, singleton, toUnfoldable, member, mapMaybe)
+import Data.Map (Map(..), lookup, keys, singleton, toUnfoldable, member, values, unions)
 import Data.Map (fromFoldable) as M
 import Data.Maybe (Maybe(..), fromMaybe)
 -- import Data.Set as Set
@@ -34,12 +34,12 @@ type P = ParserT String Identity
 aural:: P Expression
 aural = do 
     _ <- pure 1
-    x <- values
+    x <- parseValues
     _ <- reserved ";" -- this need to be fixed!
     pure $ AuralExpression x -- (Map Strg Aural)
 
-values:: P (Map String Aural)
-values = do
+parseValues:: P (Map String Aural)
+parseValues = do
     _ <- pure 1
     id <- voiceId
     xs <- many value
@@ -49,8 +49,18 @@ value:: P Value
 value = do
     _ <- pure 1
     _ <- reservedOp "."
-    valType <- choice [try sound,try n, try gain, try pan, try speed, try begin, try end, mayeh]
+    valType <- choice [try sound,try n, try gain, try pan, try speed, try begin, try end, try mayeh, xeno]
     pure valType
+
+xeno:: P Value 
+xeno = do
+    _ <- pure 1
+    id <- identifier
+    n <- (Just <$> brackets natural) <|> pure Nothing
+    _ <- reservedOp "="
+    sp <- parseSpan
+    xnL <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
+    pure $ Xeno (Tuple id n) sp $ fromFoldable xnL
 
 -- chord:: P Value
 -- chord = do
@@ -437,6 +447,60 @@ negNum = do
   pure ((-1.0) * toNumber' x)
 
 
+-- tests
+
+-- test' x =
+--   case runParser x parseProgram of
+--     Left (ParseError err _) -> Left err
+--     Right aMap -> Right $ check aMap 
+
+checkXPitch :: List Expression -> Boolean
+checkXPitch expressions = not $ elem false $ map (\kn -> func aXenoPitchMap kn) listOfPitchID
+  where aXenoPitchMap = getXPitchMap expressions
+        listOfPitchID = getXenoIDs $ getAuralMap expressions
+     --   checkNotes = not $ elem false $ mapWithIndex (check2 aMap' Nil) aMap'  
+
+func:: Map String XenoPitch -> Tuple String (Maybe Int) -> Boolean
+func mapa (Tuple k Nothing) = case lookup k mapa of
+                                Nothing -> false
+                                Just xn -> true 
+func mapa (Tuple k (Just n)) = case lookup k mapa of
+                                Nothing -> false
+                                Just xn -> f xn n 
+
+f:: XenoPitch -> Int -> Boolean
+f (CPSet s f (Just subs)) indx = indx <= A.length subs  
+f _ _ = false
+
+getXenoIDs:: Map String (List Aural) -> List (Tuple String (Maybe Int))
+getXenoIDs aurals = noteIDs
+    where noteIDs = mapMaybe keepXeno $ concat $ concat $ values aurals
+
+keepXeno (Xeno id _ _) = Just id
+keepXeno _ = Nothing
+
+getAuralMap:: Program -> Map String (List Aural)
+getAuralMap program = toListAurals $ map unexpressAural $ filter (\ expression -> isAural expression) program
+  where isAural (AuralExpression _) = true
+        isAural _ = false
+
+toListAurals:: List (Map String Aural) -> Map String (List Aural)
+toListAurals mapas = unions $ map (\k -> toAurals k vals) $ map fst vals
+  where vals = concat $ map toUnfoldable mapas
+        toAurals key vals = singleton key $ map snd $ filter (\v -> (fst v) == key) vals
+
+unexpressAural:: Expression -> Map String Aural
+unexpressAural (AuralExpression x) = x 
+unexpressAural _ = empty
+
+getXPitchMap:: Program -> Map String XenoPitch
+getXPitchMap program = unions $ map unexpressPitch $ filter (\ expression -> isXPitch expression) program
+  where isXPitch (XenoPitchExpression _) = true
+        isXPitch _ = false
+
+unexpressPitch:: Expression -> Map String XenoPitch
+unexpressPitch (XenoPitchExpression x) = x 
+unexpressPitch _ = empty
 
 -- there are three layers that need to be identified: the string that identifies the bounded temporal, the Int that identifies the index of the aural, and then I need a way to identify its type of Value:if it is a sound, gain, speed, etc. For this I could use the constructor of Value...? 
 

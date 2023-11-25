@@ -1,4 +1,4 @@
-module TestOpsAndDefs (defMapTemporals,defTemporal,defPolytemporal,defConvergeTo,defConvergeFrom,defVoice,defAural) where
+module TestOpsAndDefs (defMapTemporals,defTemporal,defPolytemporal,defConvergeTo,defConvergeFrom,defVoice,defAural, defEvent) where
 
 import Prelude
 

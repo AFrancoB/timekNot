@@ -27,6 +27,7 @@ import DurationAndIndex
 import Parser
 import Rhythm
 import TestOpsAndDefs
+import XenoPitch
 
 import Data.Rational (Rational(..), (%), fromInt)
 import Data.Rational (toNumber) as R
@@ -78,12 +79,12 @@ These are the fields/options for the record passed to playSample:
 
 -- refactoring aural from List Value to List List Value broke the tranbsposition system in aural specs. Fix it!
 
-auralSpecs:: Voices -> Rhythmic -> List (List Value) -> Array Event -> Array AlmostWaste
-auralSpecs m rhy aurals events = concat $ map (\a -> auralSpecs' m rhy a events) $ fromFoldable aurals 
+auralSpecs:: Voices -> Rhythmic -> List (List Value) -> M.Map String XenoPitch -> Array Event -> Array AlmostWaste
+auralSpecs m rhy aurals xenopitch events = concat $ map (\a -> auralSpecs' m rhy a xenopitch events) $ fromFoldable aurals 
 
 -- aural specs processes one voice at the time
-auralSpecs':: Voices -> Rhythmic -> List Value -> Array Event -> Array AlmostWaste
-auralSpecs' m rhy aural events =
+auralSpecs':: Voices -> Rhythmic -> List Value -> M.Map String XenoPitch -> Array Event -> Array AlmostWaste
+auralSpecs' m rhy aural xenopitch events =
     let sounds = processSound m rhy (getSound aural) events
         nS = processN m rhy (getN aural) sounds 
         gainNS = processGain m rhy (getGain aural) nS
@@ -91,29 +92,46 @@ auralSpecs' m rhy aural events =
         speedPGNS = processSpeed m rhy (getSpeed aural) panGNS
         beginSpPGNS = processBegin m rhy (getBegin aural) speedPGNS
         endBSpPGNS = processEnd m rhy (getEnd aural) beginSpPGNS
-        noteEBSpPGNS = processNote m rhy (getDastgah aural) endBSpPGNS
+        noteEBSpPGNS = processNote m rhy (getNote aural) xenopitch endBSpPGNS
         -- cutoffEBSpPGNS = processCutOff
         -- vowelCEBSpPGNS = processVowel
     in noteEBSpPGNS
 
 
 -- note
-processNote:: Voices -> Rhythmic -> Maybe Value -> 
+processNote:: Voices -> Rhythmic -> Maybe Value -> M.Map String XenoPitch ->
                Array {event::Event, s::String, n::Int, gain::Number, pan::Number, speed::Number, begin::Number, end::Number}  -> 
                Array {event::Event, s::String, n::Int, gain::Number, pan::Number, speed::Number, begin::Number, end::Number, note:: Number}
-processNote _ _ _ [] = []
-processNote _ _ Nothing ws = map (\w -> {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: w.begin, end: 1.0, note: 0.0}) ws
+processNote _ _ _ _ [] = []
+processNote _ _ Nothing xn ws = map (\w -> {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: w.begin, end: 1.0, note: 0.0}) ws
 -- processNote m r (Just (TransposedNote id)) ws = findReferredNote r ws id m 
-processNote _ r (Just (Dastgah span d)) ws = spanDastgah span (fromFoldable (dToList d)) ws r
-processNote _ _ _ _ = []
+processNote _ r (Just (Dastgah span d)) _ ws = spanDastgah span (fromFoldable (dToList d)) ws r
 
-getDastgah:: List Value -> Maybe Value
-getDastgah aural = head $ filter isDastgah $ fromFoldable aural
+-- xn: [0, 3.6, 6.9 10.3, 12.0]
+processNote _ r (Just (Xeno id span lista)) xn ws = spanXeno span (fromFoldable midiIntervals) ws r
+  where target = fromMaybe (EDO 0.0 0) $ M.lookup (fst id) xn 
+        midiIntervals = xenoPitchAsAuralPattern (Tuple target (snd id)) $ fromFoldable lista
+processNote _ _ _ _ _ = []
 
-isDastgah:: Value -> Boolean
-isDastgah (Dastgah _ _) = true
+getNote:: List Value -> Maybe Value
+getNote aural = head $ filter isNote $ fromFoldable aural
+
+isNote:: Value -> Boolean
+isNote (Dastgah _ _) = true
 -- isDastgah (TransposedDastgah _) = true
-isDastgah _ = false
+isNote (Xeno _ _ _) = true
+isNote _ = false
+
+
+-- getTarget:: Array (Array Number) -> Maybe Int -> Array Number
+-- getTarget midiIntervalsubsets Nothing = fromMaybe [] $ midiIntervalsubsets !! 0
+-- getTarget midiIntervalsubsets (Just index) = fromMaybe [] $ midiIntervalsubsets !! index
+
+
+-- abrir notacion para subsets y relacionarla con spanXeno!!!!
+spanXeno:: Span -> Array Number -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number, end:: Number} -> Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number, end:: Number, note:: Number}
+spanXeno span xs ws r = spanDastgah span xs ws r
+
 
 -- 0 1.82 2.96 5.0 7.04 7.94 9.98 12.0
 -- data Dastgah = Shur (List Int)

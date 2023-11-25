@@ -1,4 +1,4 @@
-module Parser(temporal, check, parseProgram, replica, getTemporalMap, getAuralMap, test, testP, test') where
+module Parser(temporal, check, parseProgram, replica, getTemporalMap, getAuralMap, test, testP,xPitchExpression, expression) where
 
 import Prelude
 
@@ -40,16 +40,17 @@ testP str = runParser str parseProgram
 ---- Make all tests: start testing all the checks: tempoCheck, idCheck replicaCheck!!!
 
 -- TO DO LIST October 17th:
+---- refactor Aural and Value
 ---- finish refactor of transposeWith 
 ---- implement keyword last DONE
 ---- implement copy of temporals: v1 <- v0 DONE
----- implement many aurals for one temporal
+---- implement many aurals for one temporal DONE
 ---- implement weight
 
 -----
 -- minor goals: 
 
--- for now: pitch from the middle east
+-- for now: pitch from the middle east DONE partially: Shur for now
 
 -- implemented basic math --- SEEMS LIKE A MAJOR TASK
 
@@ -58,7 +59,7 @@ testP str = runParser str parseProgram
 -- implementaciones siguientes:
   -- xenopitch
 
-  -- refer to the most recent version of tempi-purs
+  -- refer to the most recent version of tempi-purs DONE (instead of pulling it from the internet I copied the code from the repo)
 
   -- events specific to concrete indexes: 2-0.1 "cp" -- should generate a cp sound only at 2-0.1
 
@@ -86,6 +87,16 @@ testP str = runParser str parseProgram
   -- acceleration in unlooped events (how to represent this? and calculate the durations of the events??)
 
   -- Start with post-evaluation CPs
+-- Anchor.build = "first" (100 secsFromEval)
+-- Anchor.build = "second" (100 xBeatsFromEval)
+-- Anchor.move = "first" (100 secsFromEval)
+-- Anchor.move = "second" (100 xBeatsFromEval)
+-- Anchor.move = "first" (3 fromCurrentPosition)
+-- Anchor.remove = "first"
+
+-- v <- first cTo cFrom tm | xxxx :|
+
+
 
   -- grand project:
   -- Monoid programs:: Map ZoneIndex Voices
@@ -106,8 +117,95 @@ parseProgram = do
 expression:: P Expression
 expression = do
   _ <- pure 1
-  x <- choice [try timeExpression, try aural]
-  pure x
+  choice [try timeExpression, try aural, try anchorExpression, xPitchExpression]
+  
+xPitchExpression:: P Expression
+xPitchExpression = do
+  _ <- pure 1
+  x <- braces $ many $ xPitch
+  pure $ XenoPitchExpression $ unions x
+
+xPitch:: P (Map String XenoPitch)
+xPitch = do
+  _ <- pure 1
+  id <- identifier
+  _ <- reserved "<-"
+  x <- choice [try cpSet] --, try mos, try edo]
+  _ <- reserved ";"
+  pure $ singleton id x
+
+cpSet:: P XenoPitch
+cpSet = do
+  _ <- pure 1
+  _ <- reserved "cps"
+  sz <- natural
+  factors <- parens $ many natural
+  subsets' <- subsets <|> pure Nothing
+  pure $ CPSet sz factors subsets'
+
+subsets:: P (Maybe (Array Int))
+subsets = do
+  _ <- pure 1
+  _ <- reserved "|"
+  xs <- setWith `sepBy` comma
+  pure (Just $ A.fromFoldable xs)
+
+setWith:: P Int
+setWith = do
+  _ <- pure 1
+  _ <- reserved "withFactor"
+  n <- natural
+  pure n
+
+
+
+--
+anchorExpression:: P Expression
+anchorExpression = do
+  _ <- pure 1
+  x <- anchor
+  pure $ AnchorExpression x
+
+anchor:: P (Map String Anchor)
+anchor = do
+  _ <- pure 1
+
+  id <- identifier
+  x <- choice [buildA, moveA, removeA]
+  _ <- charWS ';'
+  pure $ singleton id x
+
+buildA:: P Anchor
+buildA = do
+  _ <- pure 1
+  _ <- reserved ".build ="
+  x <- choice [try beatA, secsA]
+  pure $ Build x
+
+beatA:: P (Either Number Number)
+beatA = do
+  num <- naturalOrFloat
+  _ <- reserved "beats from eval"
+  pure $ Left (toNumber' num)
+
+secsA:: P (Either Number Number)
+secsA = do
+  num <- naturalOrFloat
+  _ <- reserved "secs from eval"
+  pure $ Right (toNumber' num)
+
+moveA:: P Anchor
+moveA = do
+  _ <- pure 1
+  _ <- reserved ".move ="
+  x <- choice [try beatA, secsA]
+  pure $ Move x
+
+removeA:: P Anchor
+removeA = do
+  _ <- pure 1
+  _ <- reserved ".remove"
+  pure $ Remove
 
 timeExpression:: P Expression
 timeExpression = do
@@ -118,8 +216,7 @@ timeExpression = do
 temporal:: P (Map String Temporal)
 temporal = do
   _ <- pure 1
-  exp <- choice [try replica, polytemporalRelation]
-  pure exp
+  choice [try replica, polytemporalRelation]
 
 replica:: P (Map String Temporal)
 replica = do
@@ -390,9 +487,11 @@ cpm = do
 bpm:: P TempoMark 
 bpm = do
   _ <- pure 1
+  fig <- figure
+  _ <- charWS '='
   x <- toNumber' <$> naturalOrFloat
-  _ <- reserved "bpm the"
-  fig <- figure <|> (pure $ fromInt 1)
+  _ <- reserved "bpm"
+  
   pure $ BPM (toRat x) fig
 
 figure:: P Rational
@@ -420,12 +519,12 @@ ratio = do
   y <- natural
   pure $ Prop id x y
 
-test :: String -> Either String (Map String Temporal)
+test :: String -> Either String Program
 test x =
-  case getTemporalMap <$> runParser x parseProgram of
+  case runParser x parseProgram of
     Left (ParseError err _) -> Left err
-    Right aMap -> case check aMap of
-                    true -> Right aMap
+    Right prog -> case check prog of
+                    true -> Right prog
                     false -> Left "failed the check"
 
 getTemporalMap:: Program -> Map String Temporal
@@ -452,13 +551,18 @@ unexpressAural (AuralExpression x) = x
 unexpressAural _ = empty
 
 -- test' :: String -> Either String (Map String Temporal)
-test' x =
-  case getTemporalMap <$> runParser x parseProgram of
-    Left (ParseError err _) -> Left err
-    Right aMap -> Right $ check aMap 
+-- test' x =
+--   case getTemporalMap <$> runParser x parseProgram of
+--     Left (ParseError err _) -> Left err
+--     Right aMap -> Right $ check aMap 
 
-check :: Map String Temporal -> Boolean
-check aMap' = checkID && checkTempoMark
+check :: Program -> Boolean
+check program = checkedTempoAspects && checkedPitch
+  where checkedTempoAspects = checkT $ getTemporalMap program
+        checkedPitch = checkXPitch program
+
+checkT :: Map String Temporal -> Boolean
+checkT aMap' = checkID && checkTempoMark
   where aReplicaMap = filter isReplica aMap'
         aMap = filter (not isReplica) aMap'
         checkID = not $ elem false $ mapWithIndex (check2 aMap' Nil) aMap'  
@@ -467,7 +571,6 @@ check aMap' = checkID && checkTempoMark
 isReplica:: Temporal -> Boolean
 isReplica (Replica _) = true
 isReplica _ = false
-
 
 getReplicaKey:: Temporal -> String
 getReplicaKey (Replica id) = id

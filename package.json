@@ -4,7 +4,24 @@
   "description": "timeknot",
   "private": true,
   "dependencies": {
-    "@diegovdc/erv": "^0.0.4",
+    "@diegovdc/erv": "^0.0.8",
     "esbuild": "^0.15.18"
-  }
+  },
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AFrancoB/timekNot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AFrancoB/timekNot/issues"
+  },
+  "homepage": "https://github.com/AFrancoB/timekNot#readme"
 }

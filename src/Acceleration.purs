@@ -12,6 +12,7 @@ import Data.String (singleton, joinWith, take, split, trim, Pattern(..))
 import Data.Maybe hiding (optional)
 import Data.Functor
 import Control.Monad
+import Data.Array
 
 import Data.Rational (fromInt,(%))
 import Data.Rational as R
@@ -27,6 +28,39 @@ import Data.Enum
 import Partial.Unsafe
 
 import Data.Newtype
+
+
+-- valor del convergence point
+-- 48.0
+
+-- indice de desaceleracion 105%
+-- [1.05,1.1025,1.157625,1.21550625]
+
+-- --  48          1.05  4 
+-- f oper startingPoint index howMany = scanl oper startP $ scanl (*) 1.0 $ replicate howMany index
+
+
+-- parsing:
+
+-- v <- (3 afterEval) (4) (tempomark) (acc. 5%) | xxxxxxxx ||
+
+
+-- options:
+-- acc.   at CP it is tempomark. After cp it is dur*0.95. Before is dur*1.05
+-- (desacceleration is notated with: (acc. -5%)
+-- weightL Starts at dur and in CP it is 'lighter' or 'heavier' 
+-- weightR Ends at dur and in CP it is 'lighter' or 'heavier'
+-- bendR at CP starts to acc
+-- bendL at CP it finishes the process of acc
+
+-- |  xxxxxxxx ~| the final bar with the ~ will loop by producing a palympsest (so it is a monopolar osc)
+
+-- |~ xxxxxxxx ~| the pipes with the ~ will loop by producing a palympsest of the palympsest, producing more or less a bipolar oscilation
+
+
+
+
+
 
 
 -- acc:: Number -> Number -> Number -> Number
