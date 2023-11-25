@@ -1,36 +1,12265 @@
-// output/Data.Foldable/foreign.js
-var foldrArray = function(f) {
-  return function(init3) {
-    return function(xs) {
-      var acc = init3;
-      var len = xs.length;
-      for (var i = len - 1; i >= 0; i--) {
-        acc = f(xs[i])(acc);
-      }
-      return acc;
-    };
-  };
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __commonJS = (cb, mod7) => function __require() {
+  return mod7 || (0, cb[__getOwnPropNames(cb)[0]])((mod7 = { exports: {} }).exports, mod7), mod7.exports;
 };
-var foldlArray = function(f) {
-  return function(init3) {
-    return function(xs) {
-      var acc = init3;
-      var len = xs.length;
-      for (var i = 0; i < len; i++) {
-        acc = f(acc)(xs[i]);
-      }
-      return acc;
-    };
-  };
+var __copyProps = (to, from2, except, desc) => {
+  if (from2 && typeof from2 === "object" || typeof from2 === "function") {
+    for (let key of __getOwnPropNames(from2))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from2[key], enumerable: !(desc = __getOwnPropDesc(from2, key)) || desc.enumerable });
+  }
+  return to;
 };
+var __toESM = (mod7, isNodeMode, target) => (target = mod7 != null ? __create(__getProtoOf(mod7)) : {}, __copyProps(isNodeMode || !mod7 || !mod7.__esModule ? __defProp(target, "default", { value: mod7, enumerable: true }) : target, mod7));
+
+// node_modules/@diegovdc/erv/dist/lib.js
+var require_lib = __commonJS({
+  "node_modules/@diegovdc/erv/dist/lib.js"(exports, module) {
+    (function(root, factory) {
+      if (typeof define === "function" && define.amd) {
+        define([], factory);
+      } else if (typeof module === "object" && module.exports) {
+        module.exports = factory();
+      } else {
+        root.returnExports = factory();
+      }
+    })(exports, function() {
+      var shadow$umd$export = null;
+      "use strict";
+      var g, ha = globalThis;
+      function t(a) {
+        var b = typeof a;
+        return b != "object" ? b : a ? Array.isArray(a) ? "array" : b : "null";
+      }
+      function sa(a) {
+        return Object.prototype.hasOwnProperty.call(a, ia) && a[ia] || (a[ia] = ++ra);
+      }
+      var ia = "closure_uid_" + (1e9 * Math.random() >>> 0), ra = 0;
+      function ta(a) {
+        return /^[\s\xa0]*$/.test(a);
+      }
+      ;
+      function ua(a) {
+        const b = [];
+        let c = 0;
+        for (const d in a)
+          b[c++] = d;
+        return b;
+      }
+      function ja(a, b, c) {
+        return a !== null && b in a ? a[b] : c;
+      }
+      ;
+      function Ij() {
+        var a = ha.navigator;
+        return a && (a = a.userAgent) ? a : "";
+      }
+      function Jj(a) {
+        return Ij().indexOf(a) != -1;
+      }
+      ;
+      function Tg(a, b) {
+        a.sort(b || wa);
+      }
+      function Ug(a, b) {
+        const c = Array(a.length);
+        for (let e = 0; e < a.length; e++)
+          c[e] = { index: e, value: a[e] };
+        const d = b || wa;
+        Tg(c, function(e, f2) {
+          return d(e.value, f2.value) || e.index - f2.index;
+        });
+        for (b = 0; b < a.length; b++)
+          a[b] = c[b].value;
+      }
+      function wa(a, b) {
+        return a > b ? 1 : a < b ? -1 : 0;
+      }
+      ;
+      var Kj = String.prototype.repeat ? function(a, b) {
+        return a.repeat(b);
+      } : function(a, b) {
+        return Array(b + 1).join(a);
+      };
+      function Lj(a, b) {
+        if (!Number.isFinite(a))
+          return String(a);
+        a = String(a);
+        let c = a.indexOf(".");
+        c === -1 && (c = a.length);
+        const d = a[0] === "-" ? "-" : "";
+        d && (a = a.substring(1));
+        return d + Kj("0", Math.max(0, b - c)) + a;
+      }
+      ;
+      function xa(a, b) {
+        a != null && this.append.apply(this, arguments);
+      }
+      g = xa.prototype;
+      g.cb = "";
+      g.set = function(a) {
+        this.cb = "" + a;
+      };
+      g.append = function(a, b, c) {
+        this.cb += String(a);
+        if (b != null)
+          for (let d = 1; d < arguments.length; d++)
+            this.cb += arguments[d];
+        return this;
+      };
+      g.clear = function() {
+        this.cb = "";
+      };
+      g.getLength = function() {
+        return this.cb.length;
+      };
+      g.toString = function() {
+        return this.cb;
+      };
+      var E = {}, Mj = null, Nj = true, wf = null;
+      function Da() {
+        return new u(null, 5, [ya, true, za, true, Aa, false, Ba, false, Ca, null], null);
+      }
+      function Oj() {
+        Nj = false;
+        Mj = function() {
+          var a = arguments, b = console.log, c = b.apply, d = console;
+          {
+            const e = a.length;
+            if (0 < e) {
+              const f2 = Array(e);
+              for (let h = 0; h < e; h++)
+                f2[h] = a[h];
+              a = f2;
+            } else
+              a = [];
+          }
+          return c.call(b, d, a);
+        };
+      }
+      function v(a) {
+        return a != null && a !== false;
+      }
+      function Ka(a) {
+        return Array.isArray(a);
+      }
+      function La(a) {
+        return a == null ? true : a === false ? true : false;
+      }
+      function x(a, b) {
+        return a[t(b == null ? null : b)] ? true : a._ ? true : false;
+      }
+      function Pj(a) {
+        return a == null ? null : a.constructor;
+      }
+      function y(a, b) {
+        var c = Pj(b);
+        return Error(["No protocol method ", a, " defined for type ", v(v(c) ? c.Db : c) ? c.fb : t(b), ": ", b].join(""));
+      }
+      function Na(a) {
+        var b = a.fb;
+        return v(b) ? b : B.g(a);
+      }
+      var Zb = typeof Symbol !== "undefined" && t(Symbol) === "function" ? Symbol.iterator : "@@iterator", eh = { _RBRACE_: "}", _COLON_: ":", _BANG_: "!", _QMARK_: "?", _BSLASH_: "\\\\", _SLASH_: "/", _PERCENT_: "%", _PLUS_: "+", _SHARP_: "#", _LBRACE_: "{", _BAR_: "|", _LBRACK_: "[", _EQ_: "=", _: "-", _TILDE_: "~", _RBRACK_: "]", _GT_: ">", _SINGLEQUOTE_: "'", _CIRCA_: "@", _AMPERSAND_: "&", _DOUBLEQUOTE_: '\\"', _CARET_: "^", _LT_: "<", _STAR_: "*" }, dh = null;
+      function Oa(a) {
+        for (var b = a.length, c = Array(b), d = 0; ; )
+          if (d < b)
+            c[d] = a[d], d += 1;
+          else
+            break;
+        return c;
+      }
+      function Qj(a) {
+        function b(d, e) {
+          d.push(e);
+          return d;
+        }
+        var c = [];
+        return Vc.j ? Vc.j(b, c, a) : Vc.call(null, b, c, a);
+      }
+      function Pa() {
+      }
+      function Vg() {
+      }
+      function Qa() {
+      }
+      function Sa(a) {
+        if (a != null && a.X != null)
+          a = a.X(a);
+        else {
+          var b = Sa[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = Sa._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("ICounted.-count", a);
+        }
+        return a;
+      }
+      function Ta() {
+      }
+      function Ua(a) {
+        if (a != null && a.aa != null)
+          a = a.aa(a);
+        else {
+          var b = Ua[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = Ua._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("IEmptyableCollection.-empty", a);
+        }
+        return a;
+      }
+      function Vi() {
+      }
+      function Va(a, b) {
+        if (a != null && a.ca != null)
+          a = a.ca(a, b);
+        else {
+          var c = Va[t(a == null ? null : a)];
+          if (c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else if (c = Va._, c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else
+            throw y("ICollection.-conj", a);
+        }
+        return a;
+      }
+      function Wa() {
+      }
+      var zd = function() {
+        function a(d, e, f2) {
+          var h = zc[t(d == null ? null : d)];
+          if (h != null)
+            return h.j ? h.j(d, e, f2) : h.call(null, d, e, f2);
+          h = zc._;
+          if (h != null)
+            return h.j ? h.j(d, e, f2) : h.call(null, d, e, f2);
+          throw y("IIndexed.-nth", d);
+        }
+        function b(d, e) {
+          var f2 = zc[t(d == null ? null : d)];
+          if (f2 != null)
+            return f2.h ? f2.h(d, e) : f2.call(null, d, e);
+          f2 = zc._;
+          if (f2 != null)
+            return f2.h ? f2.h(d, e) : f2.call(null, d, e);
+          throw y("IIndexed.-nth", d);
+        }
+        var c = null;
+        c = function(d, e, f2) {
+          switch (arguments.length) {
+            case 2:
+              return b.call(this, d, e);
+            case 3:
+              return a.call(this, d, e, f2);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        c.h = b;
+        c.j = a;
+        return c;
+      }(), zc = function zc2(a) {
+        switch (arguments.length) {
+          case 2:
+            return zc2.h(arguments[0], arguments[1]);
+          case 3:
+            return zc2.j(arguments[0], arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      };
+      zc.h = function(a, b) {
+        return a != null && a.da != null ? a.da(a, b) : zd(a, b);
+      };
+      zc.j = function(a, b, c) {
+        return a != null && a.ra != null ? a.ra(a, b, c) : zd(a, b, c);
+      };
+      zc.I = 3;
+      function Wi() {
+      }
+      function C(a) {
+        if (a != null && a.fa != null)
+          a = a.fa(a);
+        else {
+          var b = C[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = C._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("ISeq.-first", a);
+        }
+        return a;
+      }
+      function Xa(a) {
+        if (a != null && a.ia != null)
+          a = a.ia(a);
+        else {
+          var b = Xa[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = Xa._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("ISeq.-rest", a);
+        }
+        return a;
+      }
+      function Ya() {
+      }
+      function Wg(a) {
+        if (a != null && a.ea != null)
+          a = a.ea(a);
+        else {
+          var b = Wg[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = Wg._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("INext.-next", a);
+        }
+        return a;
+      }
+      function Za() {
+      }
+      var Ad = function() {
+        function a(d, e, f2) {
+          var h = fg[t(d == null ? null : d)];
+          if (h != null)
+            return h.j ? h.j(d, e, f2) : h.call(null, d, e, f2);
+          h = fg._;
+          if (h != null)
+            return h.j ? h.j(d, e, f2) : h.call(null, d, e, f2);
+          throw y("ILookup.-lookup", d);
+        }
+        function b(d, e) {
+          var f2 = fg[t(d == null ? null : d)];
+          if (f2 != null)
+            return f2.h ? f2.h(d, e) : f2.call(null, d, e);
+          f2 = fg._;
+          if (f2 != null)
+            return f2.h ? f2.h(d, e) : f2.call(null, d, e);
+          throw y("ILookup.-lookup", d);
+        }
+        var c = null;
+        c = function(d, e, f2) {
+          switch (arguments.length) {
+            case 2:
+              return b.call(this, d, e);
+            case 3:
+              return a.call(this, d, e, f2);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        c.h = b;
+        c.j = a;
+        return c;
+      }(), fg = function fg2(a) {
+        switch (arguments.length) {
+          case 2:
+            return fg2.h(arguments[0], arguments[1]);
+          case 3:
+            return fg2.j(arguments[0], arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      };
+      fg.h = function(a, b) {
+        return a != null && a.sa != null ? a.sa(a, b) : Ad(a, b);
+      };
+      fg.j = function(a, b, c) {
+        return a != null && a.Y != null ? a.Y(a, b, c) : Ad(a, b, c);
+      };
+      fg.I = 3;
+      function $a() {
+      }
+      function ab(a, b) {
+        if (a != null && a.nb != null)
+          a = a.nb(a, b);
+        else {
+          var c = ab[t(a == null ? null : a)];
+          if (c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else if (c = ab._, c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else
+            throw y("IAssociative.-contains-key?", a);
+        }
+        return a;
+      }
+      function bb(a, b, c) {
+        if (a != null && a.Ya != null)
+          a = a.Ya(a, b, c);
+        else {
+          var d = bb[t(a == null ? null : a)];
+          if (d != null)
+            a = d.j ? d.j(a, b, c) : d.call(null, a, b, c);
+          else if (d = bb._, d != null)
+            a = d.j ? d.j(a, b, c) : d.call(null, a, b, c);
+          else
+            throw y("IAssociative.-assoc", a);
+        }
+        return a;
+      }
+      function cb(a, b) {
+        if (a != null && a.zb != null)
+          a = a.zb(a, b);
+        else {
+          var c = cb[t(a == null ? null : a)];
+          if (c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else if (c = cb._, c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else
+            throw y("IFind.-find", a);
+        }
+        return a;
+      }
+      function db() {
+      }
+      function Xg(a, b) {
+        if (a != null && a.Kb != null)
+          a = a.Kb(a, b);
+        else {
+          var c = Xg[t(a == null ? null : a)];
+          if (c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else if (c = Xg._, c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else
+            throw y("IMap.-dissoc", a);
+        }
+        return a;
+      }
+      function eb(a) {
+        if (a != null && a.Lc != null)
+          a = a.key;
+        else {
+          var b = eb[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = eb._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("IMapEntry.-key", a);
+        }
+        return a;
+      }
+      function fb(a) {
+        if (a != null && a.Mc != null)
+          a = a.M;
+        else {
+          var b = fb[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = fb._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("IMapEntry.-val", a);
+        }
+        return a;
+      }
+      function gb() {
+      }
+      function aa(a, b) {
+        if (a != null && a.Wd != null)
+          a = a.Wd(a, b);
+        else {
+          var c = aa[t(a == null ? null : a)];
+          if (c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else if (c = aa._, c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else
+            throw y("ISet.-disjoin", a);
+        }
+        return a;
+      }
+      function Bg(a) {
+        if (a != null && a.Na != null)
+          a = a.Na(a);
+        else {
+          var b = Bg[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = Bg._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("IStack.-peek", a);
+        }
+        return a;
+      }
+      function Cg(a) {
+        if (a != null && a.Oa != null)
+          a = a.Oa(a);
+        else {
+          var b = Cg[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = Cg._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("IStack.-pop", a);
+        }
+        return a;
+      }
+      function hb() {
+      }
+      function ib(a, b, c) {
+        if (a != null && a.ob != null)
+          a = a.ob(a, b, c);
+        else {
+          var d = ib[t(a == null ? null : a)];
+          if (d != null)
+            a = d.j ? d.j(a, b, c) : d.call(null, a, b, c);
+          else if (d = ib._, d != null)
+            a = d.j ? d.j(a, b, c) : d.call(null, a, b, c);
+          else
+            throw y("IVector.-assoc-n", a);
+        }
+        return a;
+      }
+      function D(a) {
+        if (a != null && a.xb != null)
+          a = a.xb(a);
+        else {
+          var b = D[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = D._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("IDeref.-deref", a);
+        }
+        return a;
+      }
+      function jb() {
+      }
+      function kb(a) {
+        if (a != null && a.S != null)
+          a = a.S(a);
+        else {
+          var b = kb[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = kb._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("IMeta.-meta", a);
+        }
+        return a;
+      }
+      function mb(a, b) {
+        if (a != null && a.T != null)
+          a = a.T(a, b);
+        else {
+          var c = mb[t(a == null ? null : a)];
+          if (c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else if (c = mb._, c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else
+            throw y("IWithMeta.-with-meta", a);
+        }
+        return a;
+      }
+      function nb() {
+      }
+      var Bd = function() {
+        function a(d, e, f2) {
+          var h = hg[t(d == null ? null : d)];
+          if (h != null)
+            return h.j ? h.j(d, e, f2) : h.call(null, d, e, f2);
+          h = hg._;
+          if (h != null)
+            return h.j ? h.j(d, e, f2) : h.call(null, d, e, f2);
+          throw y("IReduce.-reduce", d);
+        }
+        function b(d, e) {
+          var f2 = hg[t(d == null ? null : d)];
+          if (f2 != null)
+            return f2.h ? f2.h(d, e) : f2.call(null, d, e);
+          f2 = hg._;
+          if (f2 != null)
+            return f2.h ? f2.h(d, e) : f2.call(null, d, e);
+          throw y("IReduce.-reduce", d);
+        }
+        var c = null;
+        c = function(d, e, f2) {
+          switch (arguments.length) {
+            case 2:
+              return b.call(this, d, e);
+            case 3:
+              return a.call(this, d, e, f2);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        c.h = b;
+        c.j = a;
+        return c;
+      }(), hg = function hg2(a) {
+        switch (arguments.length) {
+          case 2:
+            return hg2.h(arguments[0], arguments[1]);
+          case 3:
+            return hg2.j(arguments[0], arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      };
+      hg.h = function(a, b) {
+        return a != null && a.ka != null ? a.ka(a, b) : Bd(a, b);
+      };
+      hg.j = function(a, b, c) {
+        return a != null && a.la != null ? a.la(a, b, c) : Bd(a, b, c);
+      };
+      hg.I = 3;
+      function ob() {
+      }
+      function pb(a, b, c) {
+        if (a != null && a.Jb != null)
+          a = a.Jb(a, b, c);
+        else {
+          var d = pb[t(a == null ? null : a)];
+          if (d != null)
+            a = d.j ? d.j(a, b, c) : d.call(null, a, b, c);
+          else if (d = pb._, d != null)
+            a = d.j ? d.j(a, b, c) : d.call(null, a, b, c);
+          else
+            throw y("IKVReduce.-kv-reduce", a);
+        }
+        return a;
+      }
+      function qb(a, b) {
+        if (a != null && a.U != null)
+          a = a.U(a, b);
+        else {
+          var c = qb[t(a == null ? null : a)];
+          if (c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else if (c = qb._, c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else
+            throw y("IEquiv.-equiv", a);
+        }
+        return a;
+      }
+      function rb(a) {
+        if (a != null && a.V != null)
+          a = a.V(a);
+        else {
+          var b = rb[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = rb._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("IHash.-hash", a);
+        }
+        return a;
+      }
+      function sb() {
+      }
+      function tb(a) {
+        if (a != null && a.W != null)
+          a = a.W(a);
+        else {
+          var b = tb[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = tb._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("ISeqable.-seq", a);
+        }
+        return a;
+      }
+      function ub() {
+      }
+      function vb() {
+      }
+      function wb() {
+      }
+      function xg() {
+      }
+      function yg(a) {
+        if (a != null && a.Za != null)
+          a = a.Za(a);
+        else {
+          var b = yg[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = yg._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("IReversible.-rseq", a);
+        }
+        return a;
+      }
+      function xb(a, b) {
+        if (a != null && a.vc != null)
+          a = a.vc(a, b);
+        else {
+          var c = xb[t(a == null ? null : a)];
+          if (c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else if (c = xb._, c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else
+            throw y("IWriter.-write", a);
+        }
+        return a;
+      }
+      function yb() {
+      }
+      function zb(a, b, c) {
+        if (a != null && a.R != null)
+          a = a.R(a, b, c);
+        else {
+          var d = zb[t(a == null ? null : a)];
+          if (d != null)
+            a = d.j ? d.j(a, b, c) : d.call(null, a, b, c);
+          else if (d = zb._, d != null)
+            a = d.j ? d.j(a, b, c) : d.call(null, a, b, c);
+          else
+            throw y("IPrintWithWriter.-pr-writer", a);
+        }
+        return a;
+      }
+      function Ab(a) {
+        if (a != null && a.yb != null)
+          a = a.yb(a);
+        else {
+          var b = Ab[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = Ab._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("IEditableCollection.-as-transient", a);
+        }
+        return a;
+      }
+      function Bb(a, b) {
+        if (a != null && a.Cb != null)
+          a = a.Cb(a, b);
+        else {
+          var c = Bb[t(a == null ? null : a)];
+          if (c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else if (c = Bb._, c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else
+            throw y("ITransientCollection.-conj!", a);
+        }
+        return a;
+      }
+      function Cb(a) {
+        if (a != null && a.Ob != null)
+          a = a.Ob(a);
+        else {
+          var b = Cb[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = Cb._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("ITransientCollection.-persistent!", a);
+        }
+        return a;
+      }
+      function Db(a, b, c) {
+        if (a != null && a.Bb != null)
+          a = a.Bb(a, b, c);
+        else {
+          var d = Db[t(a == null ? null : a)];
+          if (d != null)
+            a = d.j ? d.j(a, b, c) : d.call(null, a, b, c);
+          else if (d = Db._, d != null)
+            a = d.j ? d.j(a, b, c) : d.call(null, a, b, c);
+          else
+            throw y("ITransientAssociative.-assoc!", a);
+        }
+        return a;
+      }
+      function Rj(a, b) {
+        if (a != null && a.Ld != null)
+          a = a.Ld(a, b);
+        else {
+          var c = Rj[t(a == null ? null : a)];
+          if (c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else if (c = Rj._, c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else
+            throw y("ITransientMap.-dissoc!", a);
+        }
+        return a;
+      }
+      function Eb() {
+      }
+      function Fb(a, b) {
+        if (a != null && a.xa != null)
+          a = a.xa(a, b);
+        else {
+          var c = Fb[t(a == null ? null : a)];
+          if (c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else if (c = Fb._, c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else
+            throw y("IComparable.-compare", a);
+        }
+        return a;
+      }
+      function Gb(a) {
+        if (a != null && a.nc != null)
+          a = a.nc(a);
+        else {
+          var b = Gb[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = Gb._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("IChunk.-drop-first", a);
+        }
+        return a;
+      }
+      function Hb(a) {
+        if (a != null && a.Ib != null)
+          a = a.Ib(a);
+        else {
+          var b = Hb[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = Hb._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("IChunkedSeq.-chunked-first", a);
+        }
+        return a;
+      }
+      function Ib(a) {
+        if (a != null && a.eb != null)
+          a = a.eb(a);
+        else {
+          var b = Ib[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = Ib._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("IChunkedSeq.-chunked-rest", a);
+        }
+        return a;
+      }
+      function Tj(a) {
+        if (a != null && a.ed != null)
+          a = a.ed(a);
+        else {
+          var b = Tj[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = Tj._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("INamed.-name", a);
+        }
+        return a;
+      }
+      function Uj(a) {
+        if (a != null && a.gd != null)
+          a = a.gd(a);
+        else {
+          var b = Uj[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = Uj._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("INamed.-namespace", a);
+        }
+        return a;
+      }
+      function Jb(a, b) {
+        if (a != null && a.Pc != null)
+          a = a.Pc(a, b);
+        else {
+          var c = Jb[t(a == null ? null : a)];
+          if (c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else if (c = Jb._, c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else
+            throw y("IReset.-reset!", a);
+        }
+        return a;
+      }
+      var Dd = function() {
+        function a(f2, h, k, l, m) {
+          var n2 = jg[t(f2 == null ? null : f2)];
+          if (n2 != null)
+            return n2.N ? n2.N(f2, h, k, l, m) : n2.call(null, f2, h, k, l, m);
+          n2 = jg._;
+          if (n2 != null)
+            return n2.N ? n2.N(f2, h, k, l, m) : n2.call(null, f2, h, k, l, m);
+          throw y("ISwap.-swap!", f2);
+        }
+        function b(f2, h, k, l) {
+          var m = jg[t(f2 == null ? null : f2)];
+          if (m != null)
+            return m.K ? m.K(f2, h, k, l) : m.call(null, f2, h, k, l);
+          m = jg._;
+          if (m != null)
+            return m.K ? m.K(f2, h, k, l) : m.call(null, f2, h, k, l);
+          throw y("ISwap.-swap!", f2);
+        }
+        function c(f2, h, k) {
+          var l = jg[t(f2 == null ? null : f2)];
+          if (l != null)
+            return l.j ? l.j(f2, h, k) : l.call(null, f2, h, k);
+          l = jg._;
+          if (l != null)
+            return l.j ? l.j(f2, h, k) : l.call(null, f2, h, k);
+          throw y("ISwap.-swap!", f2);
+        }
+        function d(f2, h) {
+          var k = jg[t(f2 == null ? null : f2)];
+          if (k != null)
+            return k.h ? k.h(f2, h) : k.call(null, f2, h);
+          k = jg._;
+          if (k != null)
+            return k.h ? k.h(f2, h) : k.call(null, f2, h);
+          throw y("ISwap.-swap!", f2);
+        }
+        var e = null;
+        e = function(f2, h, k, l, m) {
+          switch (arguments.length) {
+            case 2:
+              return d.call(this, f2, h);
+            case 3:
+              return c.call(this, f2, h, k);
+            case 4:
+              return b.call(this, f2, h, k, l);
+            case 5:
+              return a.call(this, f2, h, k, l, m);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        e.h = d;
+        e.j = c;
+        e.K = b;
+        e.N = a;
+        return e;
+      }(), jg = function jg2(a) {
+        switch (arguments.length) {
+          case 2:
+            return jg2.h(arguments[0], arguments[1]);
+          case 3:
+            return jg2.j(arguments[0], arguments[1], arguments[2]);
+          case 4:
+            return jg2.K(arguments[0], arguments[1], arguments[2], arguments[3]);
+          case 5:
+            return jg2.N(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      };
+      jg.h = function(a, b) {
+        return a != null && a.Rc != null ? a.Rc(a, b) : Dd(a, b);
+      };
+      jg.j = function(a, b, c) {
+        return a != null && a.Sc != null ? a.Sc(a, b, c) : Dd(a, b, c);
+      };
+      jg.K = function(a, b, c, d) {
+        return a != null && a.Tc != null ? a.Tc(a, b, c, d) : Dd(a, b, c, d);
+      };
+      jg.N = function(a, b, c, d, e) {
+        return a != null && a.Uc != null ? a.Uc(a, b, c, d, e) : Dd(a, b, c, d, e);
+      };
+      jg.I = 5;
+      function Vj(a) {
+        if (a != null && a.ld != null)
+          a.ld(a, true);
+        else {
+          var b = Vj[t(a == null ? null : a)];
+          if (b != null)
+            b.h ? b.h(a, true) : b.call(null, a, true);
+          else if (b = Vj._, b != null)
+            b.h ? b.h(a, true) : b.call(null, a, true);
+          else
+            throw y("IVolatile.-vreset!", a);
+        }
+      }
+      function Kb() {
+      }
+      function Lb(a) {
+        if (a != null && a.wa != null)
+          a = a.wa(a);
+        else {
+          var b = Lb[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = Lb._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("IIterable.-iterator", a);
+        }
+        return a;
+      }
+      function Mb(a) {
+        this.pd = a;
+        this.m = 1073741824;
+        this.H = 0;
+      }
+      Mb.prototype.vc = function(a, b) {
+        return this.pd.append(b);
+      };
+      function Nb(a) {
+        var b = new xa();
+        a.R(null, new Mb(b), Da());
+        return B.g(b);
+      }
+      var Ob = typeof Math !== "undefined" && typeof Math.imul !== "undefined" ? function(a, b) {
+        return Math.imul(a, b);
+      } : function(a, b) {
+        var c = a & 65535, d = b & 65535;
+        return c * d + ((a >>> 16 & 65535) * d + c * (b >>> 16 & 65535) << 16 >>> 0) | 0;
+      };
+      function Pb(a) {
+        a = Ob(a | 0, -862048943);
+        return Ob(a << 15 | a >>> -15, 461845907);
+      }
+      function Qb(a, b) {
+        a = (a | 0) ^ (b | 0);
+        return Ob(a << 13 | a >>> -13, 5) + -430675100 | 0;
+      }
+      function Rb(a, b) {
+        a = (a | 0) ^ b;
+        a = Ob(a ^ a >>> 16, -2048144789);
+        a = Ob(a ^ a >>> 13, -1028477387);
+        return a ^ a >>> 16;
+      }
+      function Sb(a) {
+        a: {
+          var b = 1;
+          for (var c = 0; ; )
+            if (b < a.length)
+              c = Qb(c, Pb(a.charCodeAt(b - 1) | a.charCodeAt(b) << 16)), b += 2;
+            else {
+              b = c;
+              break a;
+            }
+        }
+        return Rb((a.length & 1) === 1 ? b ^ Pb(a.charCodeAt(a.length - 1)) : b, Ob(2, a.length));
+      }
+      var Ub = {}, Tb = 0;
+      function Vb(a) {
+        255 < Tb && (Ub = {}, Tb = 0);
+        if (a == null)
+          return 0;
+        var b = Ub[a];
+        if (typeof b === "number")
+          a = b;
+        else {
+          a:
+            if (a != null)
+              if (b = a.length, 0 < b)
+                for (var c = 0, d = 0; ; )
+                  if (c < b)
+                    d = Ob(31, d) + a.charCodeAt(c), c += 1;
+                  else {
+                    b = d;
+                    break a;
+                  }
+              else
+                b = 0;
+            else
+              b = 0;
+          Ub[a] = b;
+          Tb += 1;
+          a = b;
+        }
+        return a;
+      }
+      function Wb(a) {
+        if (a != null && (a.m & 4194304 || E === a.vd))
+          return a.V(null) ^ 0;
+        if (typeof a === "number") {
+          if (isFinite(a))
+            return Math.floor(a) % 2147483647;
+          switch (a) {
+            case Infinity:
+              return 2146435072;
+            case -Infinity:
+              return -1048576;
+            default:
+              return 2146959360;
+          }
+        } else
+          return a === true ? a = 1231 : a === false ? a = 1237 : typeof a === "string" ? (a = Vb(a), a = a === 0 ? a : Rb(Qb(0, Pb(a)), 4)) : a = a instanceof Date ? a.valueOf() ^ 0 : a == null ? 0 : rb(a) ^ 0, a;
+      }
+      function Xb(a, b) {
+        return a ^ b + 2654435769 + (a << 6) + (a >> 2);
+      }
+      function Qg(a, b) {
+        if (a.Wa === b.Wa)
+          return 0;
+        var c = La(a.pa);
+        if (v(c ? b.pa : c))
+          return -1;
+        if (v(a.pa)) {
+          if (La(b.pa))
+            return 1;
+          c = wa(a.pa, b.pa);
+          return c === 0 ? wa(a.name, b.name) : c;
+        }
+        return wa(a.name, b.name);
+      }
+      function F(a, b, c, d, e) {
+        this.pa = a;
+        this.name = b;
+        this.Wa = c;
+        this.vb = d;
+        this.Va = e;
+        this.m = 2154168321;
+        this.H = 4096;
+      }
+      g = F.prototype;
+      g.toString = function() {
+        return this.Wa;
+      };
+      g.U = function(a, b) {
+        return b instanceof F ? this.Wa === b.Wa : false;
+      };
+      g.call = function(a) {
+        switch (arguments.length - 1) {
+          case 1:
+            return this.g(arguments[1]);
+          case 2:
+            return this.h(arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length - 1)].join(""));
+        }
+      };
+      g.apply = function(a, b) {
+        return this.call.apply(this, [this].concat(Oa(b)));
+      };
+      g.g = function(a) {
+        return T.h ? T.h(a, this) : T.call(null, a, this);
+      };
+      g.h = function(a, b) {
+        return T.j ? T.j(a, this, b) : T.call(null, a, this, b);
+      };
+      g.S = function() {
+        return this.Va;
+      };
+      g.T = function(a, b) {
+        return new F(this.pa, this.name, this.Wa, this.vb, b);
+      };
+      g.V = function() {
+        var a = this.vb;
+        return a != null ? a : this.vb = a = Xb(Sb(this.name), Vb(this.pa));
+      };
+      g.ed = function() {
+        return this.name;
+      };
+      g.gd = function() {
+        return this.pa;
+      };
+      g.R = function(a, b) {
+        return xb(b, this.Wa);
+      };
+      var Lf = function Lf2(a) {
+        switch (arguments.length) {
+          case 1:
+            return Lf2.g(arguments[0]);
+          case 2:
+            return Lf2.h(arguments[0], arguments[1]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      };
+      Lf.g = function(a) {
+        for (; ; ) {
+          if (a instanceof F)
+            return a;
+          if (typeof a === "string") {
+            var b = a.indexOf("/");
+            return 1 > b ? Lf.h(null, a) : Lf.h(a.substring(0, b), a.substring(b + 1, a.length));
+          }
+          if (a instanceof V)
+            a = a.Pa;
+          else
+            throw Error("no conversion to symbol");
+        }
+      };
+      Lf.h = function(a, b) {
+        var c = a != null ? [B.g(a), "/", B.g(b)].join("") : b;
+        return new F(a, b, c, null, null);
+      };
+      Lf.I = 2;
+      function Yb(a) {
+        return a != null ? a.H & 131072 || E === a.wd ? true : a.H ? false : x(Kb, a) : x(Kb, a);
+      }
+      function H(a) {
+        if (a == null)
+          return null;
+        if (a != null && (a.m & 8388608 || E === a.Qc))
+          return a.W(null);
+        if (Ka(a) || typeof a === "string")
+          return a.length === 0 ? null : new G(a, 0, null);
+        if (a != null && a[Zb] != null)
+          return a = ja(a, Zb).call(a), $b.g ? $b.g(a) : $b.call(null, a);
+        if (x(sb, a))
+          return tb(a);
+        throw Error([B.g(a), " is not ISeqable"].join(""));
+      }
+      function I(a) {
+        if (a == null)
+          return null;
+        if (a != null && (a.m & 64 || E === a.Ab))
+          return a.fa(null);
+        a = H(a);
+        return a == null ? null : C(a);
+      }
+      function ac(a) {
+        return a != null ? a != null && (a.m & 64 || E === a.Ab) ? a.ia(null) : (a = H(a)) ? a.ia(null) : J : J;
+      }
+      function N2(a) {
+        return a == null ? null : a != null && (a.m & 128 || E === a.Nb) ? a.ea(null) : H(ac(a));
+      }
+      var P = function P2(a) {
+        switch (arguments.length) {
+          case 1:
+            return P2.g(arguments[0]);
+          case 2:
+            return P2.h(arguments[0], arguments[1]);
+          default:
+            for (var c = [], d = arguments.length, e = 0; ; )
+              if (e < d)
+                c.push(arguments[e]), e += 1;
+              else
+                break;
+            return P2.o(arguments[0], arguments[1], new G(c.slice(2), 0, null));
+        }
+      };
+      P.g = function() {
+        return true;
+      };
+      P.h = function(a, b) {
+        return a == null ? b == null : a === b || qb(a, b);
+      };
+      P.o = function(a, b, c) {
+        for (; ; )
+          if (P.h(a, b))
+            if (N2(c))
+              a = b, b = I(c), c = N2(c);
+            else
+              return P.h(b, I(c));
+          else
+            return false;
+      };
+      P.J = function(a) {
+        var b = I(a), c = N2(a);
+        a = I(c);
+        c = N2(c);
+        return this.o(b, a, c);
+      };
+      P.I = 2;
+      function bc(a) {
+        this.O = a;
+      }
+      bc.prototype.next = function() {
+        if (this.O != null) {
+          var a = I(this.O);
+          this.O = N2(this.O);
+          return { value: a, done: false };
+        }
+        return { value: null, done: true };
+      };
+      function cc(a) {
+        return new bc(H(a));
+      }
+      function dc(a, b) {
+        this.value = a;
+        this.Gb = b;
+        this.jc = null;
+        this.m = 8388672;
+        this.H = 0;
+      }
+      dc.prototype.W = function() {
+        return this;
+      };
+      dc.prototype.fa = function() {
+        return this.value;
+      };
+      dc.prototype.ia = function() {
+        this.jc == null && (this.jc = $b.g ? $b.g(this.Gb) : $b.call(null, this.Gb));
+        return this.jc;
+      };
+      function $b(a) {
+        var b = a.next();
+        return v(b.done) ? null : new dc(b.value, a);
+      }
+      function ec(a) {
+        var b = 0, c = 1;
+        for (a = H(a); ; )
+          if (a != null)
+            b += 1, c = Ob(31, c) + Wb(I(a)) | 0, a = N2(a);
+          else
+            return Rb(Qb(0, Pb(c)), b);
+      }
+      var lg = Rb(Qb(0, Pb(1)), 0);
+      function fc(a) {
+        var b = 0, c = 0;
+        for (a = H(a); ; )
+          if (a != null)
+            b += 1, c = c + Wb(I(a)) | 0, a = N2(a);
+          else
+            return Rb(Qb(0, Pb(c)), b);
+      }
+      var mg = Rb(Qb(0, Pb(0)), 0);
+      Qa["null"] = true;
+      Sa["null"] = function() {
+        return 0;
+      };
+      Date.prototype.U = function(a, b) {
+        return b instanceof Date && this.valueOf() === b.valueOf();
+      };
+      Date.prototype.wb = E;
+      Date.prototype.xa = function(a, b) {
+        if (b instanceof Date)
+          return wa(this.valueOf(), b.valueOf());
+        throw Error(["Cannot compare ", B.g(this), " to ", B.g(b)].join(""));
+      };
+      qb.number = function(a, b) {
+        return a === b;
+      };
+      Pa["function"] = true;
+      jb["function"] = true;
+      kb["function"] = function() {
+        return null;
+      };
+      rb._ = function(a) {
+        return sa(a);
+      };
+      function gc(a) {
+        this.M = a;
+        this.m = 32768;
+        this.H = 0;
+      }
+      gc.prototype.xb = function() {
+        return this.M;
+      };
+      function hc(a) {
+        return a instanceof gc;
+      }
+      function Wj(a) {
+        return hc(a) ? kc.g ? kc.g(a) : kc.call(null, a) : a;
+      }
+      function kc(a) {
+        return D(a);
+      }
+      function lc(a, b) {
+        var c = a.X(null);
+        if (c === 0)
+          return b.C ? b.C() : b.call(null);
+        for (var d = a.da(null, 0), e = 1; ; )
+          if (e < c) {
+            var f2 = a.da(null, e);
+            d = b.h ? b.h(d, f2) : b.call(null, d, f2);
+            if (hc(d))
+              return D(d);
+            e += 1;
+          } else
+            return d;
+      }
+      function mc(a, b, c) {
+        var d = a.X(null), e = c;
+        for (c = 0; ; )
+          if (c < d) {
+            var f2 = a.da(null, c);
+            e = b.h ? b.h(e, f2) : b.call(null, e, f2);
+            if (hc(e))
+              return D(e);
+            c += 1;
+          } else
+            return e;
+      }
+      function nc(a, b) {
+        var c = a.length;
+        if (a.length === 0)
+          return b.C ? b.C() : b.call(null);
+        for (var d = a[0], e = 1; ; )
+          if (e < c) {
+            var f2 = a[e];
+            d = b.h ? b.h(d, f2) : b.call(null, d, f2);
+            if (hc(d))
+              return D(d);
+            e += 1;
+          } else
+            return d;
+      }
+      function oc(a, b, c) {
+        var d = a.length, e = c;
+        for (c = 0; ; )
+          if (c < d) {
+            var f2 = a[c];
+            e = b.h ? b.h(e, f2) : b.call(null, e, f2);
+            if (hc(e))
+              return D(e);
+            c += 1;
+          } else
+            return e;
+      }
+      function pc(a, b, c, d) {
+        for (var e = a.length; ; )
+          if (d < e) {
+            var f2 = a[d];
+            c = b.h ? b.h(c, f2) : b.call(null, c, f2);
+            if (hc(c))
+              return D(c);
+            d += 1;
+          } else
+            return c;
+      }
+      function qc(a) {
+        return a != null ? a.m & 2 || E === a.Gc ? true : a.m ? false : x(Qa, a) : x(Qa, a);
+      }
+      function rc(a) {
+        return a != null ? a.m & 16 || E === a.tc ? true : a.m ? false : x(Wa, a) : x(Wa, a);
+      }
+      function Q(a, b, c) {
+        var d = O2.g ? O2.g(a) : O2.call(null, a);
+        if (c >= d)
+          return -1;
+        !(0 < c) && 0 > c && (c += d, c = 0 > c ? 0 : c);
+        for (; ; )
+          if (c < d) {
+            if (P.h(sc ? sc(a, c) : tc.call(null, a, c), b))
+              return c;
+            c += 1;
+          } else
+            return -1;
+      }
+      function R(a, b, c) {
+        var d = O2.g ? O2.g(a) : O2.call(null, a);
+        if (d === 0)
+          return -1;
+        0 < c ? (--d, c = d < c ? d : c) : c = 0 > c ? d + c : c;
+        for (; ; )
+          if (0 <= c) {
+            if (P.h(sc ? sc(a, c) : tc.call(null, a, c), b))
+              return c;
+            --c;
+          } else
+            return -1;
+      }
+      function uc(a, b) {
+        this.l = a;
+        this.B = b;
+      }
+      uc.prototype.ga = function() {
+        return this.B < this.l.length;
+      };
+      uc.prototype.next = function() {
+        var a = this.l[this.B];
+        this.B += 1;
+        return a;
+      };
+      function G(a, b, c) {
+        this.l = a;
+        this.B = b;
+        this.A = c;
+        this.m = 166592766;
+        this.H = 139264;
+      }
+      g = G.prototype;
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, O2.g ? O2.g(this) : O2.call(null, this));
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.da = function(a, b) {
+        a = b + this.B;
+        if (0 <= a && a < this.l.length)
+          return this.l[a];
+        throw Error("Index out of bounds");
+      };
+      g.ra = function(a, b, c) {
+        a = b + this.B;
+        return 0 <= a && a < this.l.length ? this.l[a] : c;
+      };
+      g.wa = function() {
+        return new uc(this.l, this.B);
+      };
+      g.S = function() {
+        return this.A;
+      };
+      g.ea = function() {
+        return this.B + 1 < this.l.length ? new G(this.l, this.B + 1, null) : null;
+      };
+      g.X = function() {
+        var a = this.l.length - this.B;
+        return 0 > a ? 0 : a;
+      };
+      g.Za = function() {
+        var a = this.X(null);
+        return 0 < a ? new wc(this, a - 1, null) : null;
+      };
+      g.V = function() {
+        return ec(this);
+      };
+      g.U = function(a, b) {
+        return dd.h ? dd.h(this, b) : dd.call(null, this, b);
+      };
+      g.aa = function() {
+        return J;
+      };
+      g.ka = function(a, b) {
+        return pc(this.l, b, this.l[this.B], this.B + 1);
+      };
+      g.la = function(a, b, c) {
+        return pc(this.l, b, c, this.B);
+      };
+      g.fa = function() {
+        return this.l[this.B];
+      };
+      g.ia = function() {
+        return this.B + 1 < this.l.length ? new G(this.l, this.B + 1, null) : J;
+      };
+      g.W = function() {
+        return this.B < this.l.length ? this : null;
+      };
+      g.T = function(a, b) {
+        return b === this.A ? this : new G(this.l, this.B, b);
+      };
+      g.ca = function(a, b) {
+        return U.h ? U.h(b, this) : U.call(null, b, this);
+      };
+      G.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function vc(a) {
+        return 0 < a.length ? new G(a, 0, null) : null;
+      }
+      function wc(a, b, c) {
+        this.ac = a;
+        this.B = b;
+        this.A = c;
+        this.m = 32374990;
+        this.H = 8192;
+      }
+      g = wc.prototype;
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, O2.g ? O2.g(this) : O2.call(null, this));
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.S = function() {
+        return this.A;
+      };
+      g.ea = function() {
+        return 0 < this.B ? new wc(this.ac, this.B - 1, null) : null;
+      };
+      g.X = function() {
+        return this.B + 1;
+      };
+      g.V = function() {
+        return ec(this);
+      };
+      g.U = function(a, b) {
+        return dd.h ? dd.h(this, b) : dd.call(null, this, b);
+      };
+      g.aa = function() {
+        return J;
+      };
+      g.ka = function(a, b) {
+        return Sc ? Sc(b, this) : Uc.call(null, b, this);
+      };
+      g.la = function(a, b, c) {
+        return Tc ? Tc(b, c, this) : Uc.call(null, b, c, this);
+      };
+      g.fa = function() {
+        return zc(this.ac, this.B);
+      };
+      g.ia = function() {
+        return 0 < this.B ? new wc(this.ac, this.B - 1, null) : J;
+      };
+      g.W = function() {
+        return this;
+      };
+      g.T = function(a, b) {
+        return b === this.A ? this : new wc(this.ac, this.B, b);
+      };
+      g.ca = function(a, b) {
+        return U.h ? U.h(b, this) : U.call(null, b, this);
+      };
+      wc.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function xc(a) {
+        return I(N2(a));
+      }
+      function bh(a) {
+        for (; ; ) {
+          var b = N2(a);
+          if (b != null)
+            a = b;
+          else
+            return I(a);
+        }
+      }
+      qb._ = function(a, b) {
+        return a === b;
+      };
+      var Z = function Z2(a) {
+        switch (arguments.length) {
+          case 0:
+            return Z2.C();
+          case 1:
+            return Z2.g(arguments[0]);
+          case 2:
+            return Z2.h(arguments[0], arguments[1]);
+          default:
+            for (var c = [], d = arguments.length, e = 0; ; )
+              if (e < d)
+                c.push(arguments[e]), e += 1;
+              else
+                break;
+            return Z2.o(arguments[0], arguments[1], new G(c.slice(2), 0, null));
+        }
+      };
+      Z.C = function() {
+        return be;
+      };
+      Z.g = function(a) {
+        return a;
+      };
+      Z.h = function(a, b) {
+        return a != null ? Va(a, b) : new ed(null, b, null, 1, null);
+      };
+      Z.o = function(a, b, c) {
+        for (; ; )
+          if (v(c))
+            a = Z.h(a, b), b = I(c), c = N2(c);
+          else
+            return Z.h(a, b);
+      };
+      Z.J = function(a) {
+        var b = I(a), c = N2(a);
+        a = I(c);
+        c = N2(c);
+        return this.o(b, a, c);
+      };
+      Z.I = 2;
+      function yc(a) {
+        return a == null ? null : a != null && (a.m & 4 || E === a.Ic) ? a.aa(null) : (a != null ? a.m & 4 || E === a.Ic || (a.m ? 0 : x(Ta, a)) : x(Ta, a)) ? Ua(a) : null;
+      }
+      function O2(a) {
+        if (a != null)
+          if (a != null && (a.m & 2 || E === a.Gc))
+            a = a.X(null);
+          else if (Ka(a))
+            a = a.length;
+          else if (typeof a === "string")
+            a = a.length;
+          else if (a != null && (a.m & 8388608 || E === a.Qc))
+            a: {
+              a = H(a);
+              for (var b = 0; ; ) {
+                if (qc(a)) {
+                  a = b + Sa(a);
+                  break a;
+                }
+                a = N2(a);
+                b += 1;
+              }
+            }
+          else
+            a = Sa(a);
+        else
+          a = 0;
+        return a;
+      }
+      function Ac(a, b, c) {
+        for (; ; ) {
+          if (a == null)
+            return c;
+          if (b === 0)
+            return H(a) ? I(a) : c;
+          if (rc(a))
+            return zc(a, b, c);
+          if (H(a))
+            a = N2(a), --b;
+          else
+            return c;
+        }
+      }
+      function tc(a) {
+        switch (arguments.length) {
+          case 2:
+            return sc(arguments[0], arguments[1]);
+          case 3:
+            return S(arguments[0], arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      }
+      function sc(a, b) {
+        if (typeof b !== "number")
+          throw Error("Index argument to nth must be a number");
+        if (a == null)
+          return a;
+        if (a != null && (a.m & 16 || E === a.tc))
+          return a.da(null, b);
+        if (Ka(a)) {
+          if (-1 < b && b < a.length)
+            return a[b | 0];
+          throw Error("Index out of bounds");
+        }
+        if (typeof a === "string") {
+          if (-1 < b && b < a.length)
+            return a.charAt(b | 0);
+          throw Error("Index out of bounds");
+        }
+        if (a != null && (a.m & 64 || E === a.Ab) || a != null && (a.m & 16777216 || E === a.uc)) {
+          if (0 > b)
+            throw Error("Index out of bounds");
+          a:
+            for (; ; ) {
+              if (a == null)
+                throw Error("Index out of bounds");
+              if (b === 0) {
+                if (H(a)) {
+                  a = I(a);
+                  break a;
+                }
+                throw Error("Index out of bounds");
+              }
+              if (rc(a)) {
+                a = zc(a, b);
+                break a;
+              }
+              if (H(a))
+                a = N2(a), --b;
+              else
+                throw Error("Index out of bounds");
+            }
+          return a;
+        }
+        if (x(Wa, a))
+          return zc(a, b);
+        throw Error(["nth not supported on this type ", B.g(Na(Pj(a)))].join(""));
+      }
+      function S(a, b, c) {
+        if (typeof b !== "number")
+          throw Error("Index argument to nth must be a number.");
+        if (a == null)
+          return c;
+        if (a != null && (a.m & 16 || E === a.tc))
+          return a.ra(null, b, c);
+        if (Ka(a))
+          return -1 < b && b < a.length ? a[b | 0] : c;
+        if (typeof a === "string")
+          return -1 < b && b < a.length ? a.charAt(b | 0) : c;
+        if (a != null && (a.m & 64 || E === a.Ab) || a != null && (a.m & 16777216 || E === a.uc))
+          return 0 > b ? c : Ac(a, b, c);
+        if (x(Wa, a))
+          return zc(a, b, c);
+        throw Error(["nth not supported on this type ", B.g(Na(Pj(a)))].join(""));
+      }
+      var T = function T2(a) {
+        switch (arguments.length) {
+          case 2:
+            return T2.h(arguments[0], arguments[1]);
+          case 3:
+            return T2.j(arguments[0], arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      };
+      T.h = function(a, b) {
+        return a == null ? null : a != null && (a.m & 256 || E === a.Kc) ? a.sa(null, b) : Ka(a) ? b != null && b < a.length ? a[b | 0] : null : typeof a === "string" ? b != null && -1 < b && b < a.length ? a.charAt(b | 0) : null : x(Za, a) ? fg(a, b) : null;
+      };
+      T.j = function(a, b, c) {
+        return a != null ? a != null && (a.m & 256 || E === a.Kc) ? a.Y(null, b, c) : Ka(a) ? b != null && -1 < b && b < a.length ? a[b | 0] : c : typeof a === "string" ? b != null && -1 < b && b < a.length ? a.charAt(b | 0) : c : x(Za, a) ? fg(a, b, c) : c : c;
+      };
+      T.I = 3;
+      var If = function If2(a) {
+        switch (arguments.length) {
+          case 3:
+            return If2.j(arguments[0], arguments[1], arguments[2]);
+          default:
+            for (var c = [], d = arguments.length, e = 0; ; )
+              if (e < d)
+                c.push(arguments[e]), e += 1;
+              else
+                break;
+            return If2.o(arguments[0], arguments[1], arguments[2], new G(c.slice(3), 0, null));
+        }
+      };
+      If.j = function(a, b, c) {
+        return a != null && (a.m & 512 || E === a.Fc) ? a.Ya(null, b, c) : a != null ? bb(a, b, c) : Ee([b, c]);
+      };
+      If.o = function(a, b, c, d) {
+        for (; ; )
+          if (a = If.j(a, b, c), v(d))
+            b = I(d), c = xc(d), d = N2(N2(d));
+          else
+            return a;
+      };
+      If.J = function(a) {
+        var b = I(a), c = N2(a);
+        a = I(c);
+        var d = N2(c);
+        c = I(d);
+        d = N2(d);
+        return this.o(b, a, c, d);
+      };
+      If.I = 3;
+      var Bh = function Bh2(a) {
+        switch (arguments.length) {
+          case 1:
+            return Bh2.g(arguments[0]);
+          case 2:
+            return Bh2.h(arguments[0], arguments[1]);
+          default:
+            for (var c = [], d = arguments.length, e = 0; ; )
+              if (e < d)
+                c.push(arguments[e]), e += 1;
+              else
+                break;
+            return Bh2.o(arguments[0], arguments[1], new G(c.slice(2), 0, null));
+        }
+      };
+      Bh.g = function(a) {
+        return a;
+      };
+      Bh.h = function(a, b) {
+        return a == null ? null : Xg(a, b);
+      };
+      Bh.o = function(a, b, c) {
+        for (; ; ) {
+          if (a == null)
+            return null;
+          a = Bh.h(a, b);
+          if (v(c))
+            b = I(c), c = N2(c);
+          else
+            return a;
+        }
+      };
+      Bh.J = function(a) {
+        var b = I(a), c = N2(a);
+        a = I(c);
+        c = N2(c);
+        return this.o(b, a, c);
+      };
+      Bh.I = 2;
+      function Yg(a) {
+        var b = typeof a === "function";
+        return b ? b : a != null ? E === a.Ec ? true : a.Fd ? false : x(Pa, a) : x(Pa, a);
+      }
+      function Bc(a, b) {
+        this.F = a;
+        this.A = b;
+        this.m = 393217;
+        this.H = 0;
+      }
+      g = Bc.prototype;
+      g.S = function() {
+        return this.A;
+      };
+      g.T = function(a, b) {
+        return new Bc(this.F, b);
+      };
+      g.Ec = E;
+      g.call = function(a) {
+        switch (arguments.length - 1) {
+          case 0:
+            return this.C();
+          case 1:
+            return this.g(arguments[1]);
+          case 2:
+            return this.h(arguments[1], arguments[2]);
+          case 3:
+            return this.j(arguments[1], arguments[2], arguments[3]);
+          case 4:
+            return this.K(arguments[1], arguments[2], arguments[3], arguments[4]);
+          case 5:
+            return this.N(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]);
+          case 6:
+            return this.ta(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6]);
+          case 7:
+            return this.La(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7]);
+          case 8:
+            return this.va(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8]);
+          case 9:
+            return this.Ma(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9]);
+          case 10:
+            return this.Aa(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10]);
+          case 11:
+            return this.Ba(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11]);
+          case 12:
+            return this.Ca(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12]);
+          case 13:
+            return this.Da(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12], arguments[13]);
+          case 14:
+            return this.Ea(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12], arguments[13], arguments[14]);
+          case 15:
+            return this.Fa(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12], arguments[13], arguments[14], arguments[15]);
+          case 16:
+            return this.Ga(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12], arguments[13], arguments[14], arguments[15], arguments[16]);
+          case 17:
+            return this.Ha(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12], arguments[13], arguments[14], arguments[15], arguments[16], arguments[17]);
+          case 18:
+            return this.Ia(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12], arguments[13], arguments[14], arguments[15], arguments[16], arguments[17], arguments[18]);
+          case 19:
+            return this.Ja(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12], arguments[13], arguments[14], arguments[15], arguments[16], arguments[17], arguments[18], arguments[19]);
+          case 20:
+            return this.Ka(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12], arguments[13], arguments[14], arguments[15], arguments[16], arguments[17], arguments[18], arguments[19], arguments[20]);
+          case 21:
+            return this.Kd(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12], arguments[13], arguments[14], arguments[15], arguments[16], arguments[17], arguments[18], arguments[19], arguments[20], arguments[21]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length - 1)].join(""));
+        }
+      };
+      g.apply = function(a, b) {
+        return this.call.apply(this, [this].concat(Oa(b)));
+      };
+      g.C = function() {
+        return this.F.C ? this.F.C() : this.F.call(null);
+      };
+      g.g = function(a) {
+        return this.F.g ? this.F.g(a) : this.F.call(null, a);
+      };
+      g.h = function(a, b) {
+        return this.F.h ? this.F.h(a, b) : this.F.call(null, a, b);
+      };
+      g.j = function(a, b, c) {
+        return this.F.j ? this.F.j(a, b, c) : this.F.call(null, a, b, c);
+      };
+      g.K = function(a, b, c, d) {
+        return this.F.K ? this.F.K(a, b, c, d) : this.F.call(null, a, b, c, d);
+      };
+      g.N = function(a, b, c, d, e) {
+        return this.F.N ? this.F.N(a, b, c, d, e) : this.F.call(null, a, b, c, d, e);
+      };
+      g.ta = function(a, b, c, d, e, f2) {
+        return this.F.ta ? this.F.ta(a, b, c, d, e, f2) : this.F.call(null, a, b, c, d, e, f2);
+      };
+      g.La = function(a, b, c, d, e, f2, h) {
+        return this.F.La ? this.F.La(a, b, c, d, e, f2, h) : this.F.call(null, a, b, c, d, e, f2, h);
+      };
+      g.va = function(a, b, c, d, e, f2, h, k) {
+        return this.F.va ? this.F.va(a, b, c, d, e, f2, h, k) : this.F.call(null, a, b, c, d, e, f2, h, k);
+      };
+      g.Ma = function(a, b, c, d, e, f2, h, k, l) {
+        return this.F.Ma ? this.F.Ma(a, b, c, d, e, f2, h, k, l) : this.F.call(null, a, b, c, d, e, f2, h, k, l);
+      };
+      g.Aa = function(a, b, c, d, e, f2, h, k, l, m) {
+        return this.F.Aa ? this.F.Aa(a, b, c, d, e, f2, h, k, l, m) : this.F.call(null, a, b, c, d, e, f2, h, k, l, m);
+      };
+      g.Ba = function(a, b, c, d, e, f2, h, k, l, m, n2) {
+        return this.F.Ba ? this.F.Ba(a, b, c, d, e, f2, h, k, l, m, n2) : this.F.call(null, a, b, c, d, e, f2, h, k, l, m, n2);
+      };
+      g.Ca = function(a, b, c, d, e, f2, h, k, l, m, n2, p) {
+        return this.F.Ca ? this.F.Ca(a, b, c, d, e, f2, h, k, l, m, n2, p) : this.F.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p);
+      };
+      g.Da = function(a, b, c, d, e, f2, h, k, l, m, n2, p, q) {
+        return this.F.Da ? this.F.Da(a, b, c, d, e, f2, h, k, l, m, n2, p, q) : this.F.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q);
+      };
+      g.Ea = function(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r) {
+        return this.F.Ea ? this.F.Ea(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r) : this.F.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r);
+      };
+      g.Fa = function(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w) {
+        return this.F.Fa ? this.F.Fa(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w) : this.F.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w);
+      };
+      g.Ga = function(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z) {
+        return this.F.Ga ? this.F.Ga(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z) : this.F.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z);
+      };
+      g.Ha = function(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A) {
+        return this.F.Ha ? this.F.Ha(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A) : this.F.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A);
+      };
+      g.Ia = function(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2) {
+        return this.F.Ia ? this.F.Ia(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2) : this.F.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2);
+      };
+      g.Ja = function(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M) {
+        return this.F.Ja ? this.F.Ja(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M) : this.F.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M);
+      };
+      g.Ka = function(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca) {
+        return this.F.Ka ? this.F.Ka(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca) : this.F.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca);
+      };
+      g.Kd = function(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca, la) {
+        return ng.Jc ? ng.Jc(this.F, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca, la) : ng.call(null, this.F, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca, la);
+      };
+      function Cc(a, b) {
+        return typeof a === "function" ? new Bc(a, b) : a == null ? null : mb(a, b);
+      }
+      function Dc(a) {
+        var b = a != null;
+        return (b ? a != null ? a.m & 131072 || E === a.pc || (a.m ? 0 : x(jb, a)) : x(jb, a) : b) ? kb(a) : null;
+      }
+      function da(a) {
+        return a == null ? null : Cg(a);
+      }
+      var ea = function ea2(a) {
+        switch (arguments.length) {
+          case 1:
+            return ea2.g(arguments[0]);
+          case 2:
+            return ea2.h(arguments[0], arguments[1]);
+          default:
+            for (var c = [], d = arguments.length, e = 0; ; )
+              if (e < d)
+                c.push(arguments[e]), e += 1;
+              else
+                break;
+            return ea2.o(arguments[0], arguments[1], new G(c.slice(2), 0, null));
+        }
+      };
+      ea.g = function(a) {
+        return a;
+      };
+      ea.h = function(a, b) {
+        return a == null ? null : aa(a, b);
+      };
+      ea.o = function(a, b, c) {
+        for (; ; ) {
+          if (a == null)
+            return null;
+          a = ea.h(a, b);
+          if (v(c))
+            b = I(c), c = N2(c);
+          else
+            return a;
+        }
+      };
+      ea.J = function(a) {
+        var b = I(a), c = N2(a);
+        a = I(c);
+        c = N2(c);
+        return this.o(b, a, c);
+      };
+      ea.I = 2;
+      function Ec(a) {
+        return a == null || La(H(a));
+      }
+      function Xi(a) {
+        return a == null ? false : a != null ? a.m & 8 || E === a.td ? true : a.m ? false : x(Vi, a) : x(Vi, a);
+      }
+      function Fc(a) {
+        return a == null ? false : a != null ? a.m & 4096 || E === a.Dd ? true : a.m ? false : x(gb, a) : x(gb, a);
+      }
+      function Gc(a) {
+        return a != null ? a.m & 16777216 || E === a.uc ? true : a.m ? false : x(ub, a) : x(ub, a);
+      }
+      function Hc(a) {
+        return a == null ? false : a != null ? a.m & 1024 || E === a.zd ? true : a.m ? false : x(db, a) : x(db, a);
+      }
+      function Ic(a) {
+        return a != null ? a.m & 67108864 || E === a.Bd ? true : a.m ? false : x(wb, a) : x(wb, a);
+      }
+      function Jc(a) {
+        return a != null ? a.m & 16384 || E === a.Ed ? true : a.m ? false : x(hb, a) : x(hb, a);
+      }
+      function Kc(a) {
+        return a != null ? a.H & 512 || E === a.sd ? true : false : false;
+      }
+      function Lc(a, b, c, d, e) {
+        for (; ; ) {
+          if (e === 0)
+            return c;
+          c[d] = a[b];
+          d += 1;
+          --e;
+          b += 1;
+        }
+      }
+      var Oc = {};
+      function Yi(a) {
+        return a == null ? false : a != null ? a.m & 64 || E === a.Ab ? true : a.m ? false : x(Wi, a) : x(Wi, a);
+      }
+      function Mc(a) {
+        return a == null ? false : a === false ? false : true;
+      }
+      function Nc(a) {
+        return typeof a === "number" && !isNaN(a) && a !== Infinity && parseFloat(a) === parseInt(a, 10);
+      }
+      function Pc(a, b) {
+        return a != null && (a.m & 512 || E === a.Fc) ? a.nb(null, b) : x($a, a) ? ab(a, b) : T.j(a, b, Oc) === Oc ? false : true;
+      }
+      var cj = function cj2(a) {
+        switch (arguments.length) {
+          case 1:
+            return cj2.g(arguments[0]);
+          case 2:
+            return cj2.h(arguments[0], arguments[1]);
+          default:
+            for (var c = [], d = arguments.length, e = 0; ; )
+              if (e < d)
+                c.push(arguments[e]), e += 1;
+              else
+                break;
+            return cj2.o(arguments[0], arguments[1], new G(c.slice(2), 0, null));
+        }
+      };
+      cj.g = function() {
+        return true;
+      };
+      cj.h = function(a, b) {
+        return !P.h(a, b);
+      };
+      cj.o = function(a, b, c) {
+        if (P.h(a, b))
+          return false;
+        a = Ui([a, b]);
+        for (b = c; ; ) {
+          var d = I(b);
+          c = N2(b);
+          if (v(b)) {
+            if (Pc(a, d))
+              return false;
+            a = Z.h(a, d);
+            b = c;
+          } else
+            return true;
+        }
+      };
+      cj.J = function(a) {
+        var b = I(a), c = N2(a);
+        a = I(c);
+        c = N2(c);
+        return this.o(b, a, c);
+      };
+      cj.I = 2;
+      function Qc(a, b) {
+        if (a === b)
+          return 0;
+        if (a == null)
+          return -1;
+        if (b == null)
+          return 1;
+        if (typeof a === "number") {
+          if (typeof b === "number")
+            return wa(a, b);
+          throw Error(["Cannot compare ", B.g(a), " to ", B.g(b)].join(""));
+        }
+        if (a != null ? a.H & 2048 || E === a.wb || (a.H ? 0 : x(Eb, a)) : x(Eb, a))
+          return Fb(a, b);
+        if (typeof a !== "string" && !Ka(a) && a !== true && a !== false || Pj(a) !== Pj(b))
+          throw Error(["Cannot compare ", B.g(a), " to ", B.g(b)].join(""));
+        return wa(a, b);
+      }
+      function Rc(a, b) {
+        var c = O2(a), d = O2(b);
+        if (c < d)
+          a = -1;
+        else if (c > d)
+          a = 1;
+        else if (c === 0)
+          a = 0;
+        else
+          a:
+            for (d = 0; ; ) {
+              var e = Qc(sc(a, d), sc(b, d));
+              if (e === 0 && d + 1 < c)
+                d += 1;
+              else {
+                a = e;
+                break a;
+              }
+            }
+        return a;
+      }
+      function ah(a) {
+        return P.h(a, Qc) ? Qc : function(b, c) {
+          var d = a.h ? a.h(b, c) : a.call(null, b, c);
+          return typeof d === "number" ? d : v(d) ? -1 : v(a.h ? a.h(c, b) : a.call(null, c, b)) ? 1 : 0;
+        };
+      }
+      function ch(a, b) {
+        if (H(b)) {
+          var c = Fg.g ? Fg.g(b) : Fg.call(null, b);
+          Ug(c, ah(a));
+          return Cc(H(c), Dc(b));
+        }
+        return J;
+      }
+      function fa(a, b) {
+        return ch(function(c, d) {
+          c = a.g ? a.g(c) : a.call(null, c);
+          d = a.g ? a.g(d) : a.call(null, d);
+          var e = ah(Qc);
+          return e.h ? e.h(c, d) : e.call(null, c, d);
+        }, b);
+      }
+      function Uc(a) {
+        switch (arguments.length) {
+          case 2:
+            return Sc(arguments[0], arguments[1]);
+          case 3:
+            return Tc(arguments[0], arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      }
+      function Sc(a, b) {
+        var c = H(b);
+        return c ? (b = I(c), c = N2(c), Vc.j ? Vc.j(a, b, c) : Vc.call(null, a, b, c)) : a.C ? a.C() : a.call(null);
+      }
+      function Tc(a, b, c) {
+        for (c = H(c); ; )
+          if (c) {
+            var d = I(c);
+            b = a.h ? a.h(b, d) : a.call(null, b, d);
+            if (hc(b))
+              return D(b);
+            c = N2(c);
+          } else
+            return b;
+      }
+      function Wc(a, b) {
+        a = Lb(a);
+        if (v(a.ga()))
+          for (var c = a.next(); ; )
+            if (a.ga()) {
+              var d = a.next();
+              c = b.h ? b.h(c, d) : b.call(null, c, d);
+              if (hc(c))
+                return D(c);
+            } else
+              return c;
+        else
+          return b.C ? b.C() : b.call(null);
+      }
+      function Xc(a, b, c) {
+        for (a = Lb(a); ; )
+          if (a.ga()) {
+            var d = a.next();
+            c = b.h ? b.h(c, d) : b.call(null, c, d);
+            if (hc(c))
+              return D(c);
+          } else
+            return c;
+      }
+      var Vc = function Vc2(a) {
+        switch (arguments.length) {
+          case 2:
+            return Vc2.h(arguments[0], arguments[1]);
+          case 3:
+            return Vc2.j(arguments[0], arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      };
+      Vc.h = function(a, b) {
+        return b != null && (b.m & 524288 || E === b.Oc) ? b.ka(null, a) : Ka(b) ? nc(b, a) : typeof b === "string" ? nc(b, a) : x(nb, b) ? hg(b, a) : Yb(b) ? Wc(b, a) : Sc(a, b);
+      };
+      Vc.j = function(a, b, c) {
+        return c != null && (c.m & 524288 || E === c.Oc) ? c.la(null, a, b) : Ka(c) ? oc(c, a, b) : typeof c === "string" ? oc(c, a, b) : x(nb, c) ? hg(c, a, b) : Yb(c) ? Xc(c, a, b) : Tc(a, b, c);
+      };
+      Vc.I = 3;
+      function Yc(a, b, c) {
+        return c != null ? pb(c, a, b) : b;
+      }
+      function Zc(a) {
+        return a;
+      }
+      function Xj(a, b) {
+        return function() {
+          function c(h, k) {
+            return a.h ? a.h(h, k) : a.call(null, h, k);
+          }
+          function d(h) {
+            return b.g ? b.g(h) : b.call(null, h);
+          }
+          function e() {
+            return a.C ? a.C() : a.call(null);
+          }
+          var f2 = null;
+          f2 = function(h, k) {
+            switch (arguments.length) {
+              case 0:
+                return e.call(this);
+              case 1:
+                return d.call(this, h);
+              case 2:
+                return c.call(this, h, k);
+            }
+            throw Error("Invalid arity: " + arguments.length);
+          };
+          f2.C = e;
+          f2.g = d;
+          f2.h = c;
+          return f2;
+        }();
+      }
+      function Yj(a, b, c) {
+        return $c(a, b, b.C ? b.C() : b.call(null), c);
+      }
+      function $c(a, b, c, d) {
+        a = a.g ? a.g(b) : a.call(null, b);
+        c = Vc.j(a, c, d);
+        return a.g ? a.g(c) : a.call(null, c);
+      }
+      var wl = function wl2(a) {
+        switch (arguments.length) {
+          case 0:
+            return wl2.C();
+          case 1:
+            return wl2.g(arguments[0]);
+          case 2:
+            return wl2.h(arguments[0], arguments[1]);
+          default:
+            for (var c = [], d = arguments.length, e = 0; ; )
+              if (e < d)
+                c.push(arguments[e]), e += 1;
+              else
+                break;
+            return wl2.o(arguments[0], arguments[1], new G(c.slice(2), 0, null));
+        }
+      };
+      wl.C = function() {
+        return 0;
+      };
+      wl.g = function(a) {
+        return a;
+      };
+      wl.h = function(a, b) {
+        return a + b;
+      };
+      wl.o = function(a, b, c) {
+        return Vc.j(wl, a + b, c);
+      };
+      wl.J = function(a) {
+        var b = I(a), c = N2(a);
+        a = I(c);
+        c = N2(c);
+        return this.o(b, a, c);
+      };
+      wl.I = 2;
+      var ka = function ka2(a) {
+        switch (arguments.length) {
+          case 0:
+            return ka2.C();
+          case 1:
+            return ka2.g(arguments[0]);
+          case 2:
+            return ka2.h(arguments[0], arguments[1]);
+          default:
+            for (var c = [], d = arguments.length, e = 0; ; )
+              if (e < d)
+                c.push(arguments[e]), e += 1;
+              else
+                break;
+            return ka2.o(arguments[0], arguments[1], new G(c.slice(2), 0, null));
+        }
+      };
+      ka.C = function() {
+        return 1;
+      };
+      ka.g = function(a) {
+        return a;
+      };
+      ka.h = function(a, b) {
+        return a * b;
+      };
+      ka.o = function(a, b, c) {
+        return Vc.j(ka, a * b, c);
+      };
+      ka.J = function(a) {
+        var b = I(a), c = N2(a);
+        a = I(c);
+        c = N2(c);
+        return this.o(b, a, c);
+      };
+      ka.I = 2;
+      function ad(a) {
+        return 0 <= a ? Math.floor(a) : Math.ceil(a);
+      }
+      function bd(a, b) {
+        return ad((a - a % b) / b);
+      }
+      function cd(a) {
+        a -= a >> 1 & 1431655765;
+        a = (a & 858993459) + (a >> 2 & 858993459);
+        return 16843009 * (a + (a >> 4) & 252645135) >> 24;
+      }
+      function ak(a) {
+        switch (arguments.length) {
+          case 1:
+            return true;
+          case 2:
+            return qb(arguments[0], arguments[1]);
+          default:
+            for (var b = [], c = arguments.length, d = 0; ; )
+              if (d < c)
+                b.push(arguments[d]), d += 1;
+              else
+                break;
+            a:
+              for (c = arguments[0], d = arguments[1], b = new G(b.slice(2), 0, null); ; )
+                if (c === d)
+                  if (N2(b))
+                    c = d, d = I(b), b = N2(b);
+                  else {
+                    c = d === I(b);
+                    break a;
+                  }
+                else {
+                  c = false;
+                  break a;
+                }
+            return c;
+        }
+      }
+      function bk(a, b) {
+        return qb(a, b);
+      }
+      var B = function B2(a) {
+        switch (arguments.length) {
+          case 0:
+            return B2.C();
+          case 1:
+            return B2.g(arguments[0]);
+          default:
+            for (var c = [], d = arguments.length, e = 0; ; )
+              if (e < d)
+                c.push(arguments[e]), e += 1;
+              else
+                break;
+            return B2.o(arguments[0], new G(c.slice(1), 0, null));
+        }
+      };
+      B.C = function() {
+        return "";
+      };
+      B.g = function(a) {
+        return a == null ? "" : [a].join("");
+      };
+      B.o = function(a, b) {
+        for (a = new xa(B.g(a)); ; )
+          if (v(b))
+            a = a.append(B.g(I(b))), b = N2(b);
+          else
+            return a.toString();
+      };
+      B.J = function(a) {
+        var b = I(a);
+        a = N2(a);
+        return this.o(b, a);
+      };
+      B.I = 1;
+      function dd(a, b) {
+        if (Gc(b))
+          if (qc(a) && qc(b) && O2(a) !== O2(b))
+            a = false;
+          else
+            a:
+              for (a = H(a), b = H(b); ; ) {
+                if (a == null) {
+                  a = b == null;
+                  break a;
+                }
+                if (b != null && P.h(I(a), I(b)))
+                  a = N2(a), b = N2(b);
+                else {
+                  a = false;
+                  break a;
+                }
+              }
+        else
+          a = null;
+        return Mc(a);
+      }
+      function ed(a, b, c, d, e) {
+        this.A = a;
+        this.first = b;
+        this.bb = c;
+        this.count = d;
+        this.D = e;
+        this.m = 65937646;
+        this.H = 8192;
+      }
+      g = ed.prototype;
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, this.count);
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.S = function() {
+        return this.A;
+      };
+      g.ea = function() {
+        return this.count === 1 ? null : this.bb;
+      };
+      g.X = function() {
+        return this.count;
+      };
+      g.Na = function() {
+        return this.first;
+      };
+      g.Oa = function() {
+        return this.ia(null);
+      };
+      g.V = function() {
+        var a = this.D;
+        return a != null ? a : this.D = a = ec(this);
+      };
+      g.U = function(a, b) {
+        return dd(this, b);
+      };
+      g.aa = function() {
+        return mb(J, this.A);
+      };
+      g.ka = function(a, b) {
+        return Sc(b, this);
+      };
+      g.la = function(a, b, c) {
+        return Tc(b, c, this);
+      };
+      g.fa = function() {
+        return this.first;
+      };
+      g.ia = function() {
+        return this.count === 1 ? J : this.bb;
+      };
+      g.W = function() {
+        return this;
+      };
+      g.T = function(a, b) {
+        return b === this.A ? this : new ed(b, this.first, this.bb, this.count, this.D);
+      };
+      g.ca = function(a, b) {
+        return new ed(this.A, b, this, this.count + 1, null);
+      };
+      function fd(a) {
+        return a != null ? a.m & 33554432 || E === a.yd ? true : a.m ? false : x(vb, a) : x(vb, a);
+      }
+      ed.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function gd(a) {
+        this.A = a;
+        this.m = 65937614;
+        this.H = 8192;
+      }
+      g = gd.prototype;
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, O2(this));
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.S = function() {
+        return this.A;
+      };
+      g.ea = function() {
+        return null;
+      };
+      g.X = function() {
+        return 0;
+      };
+      g.Na = function() {
+        return null;
+      };
+      g.Oa = function() {
+        throw Error("Can't pop empty list");
+      };
+      g.V = function() {
+        return lg;
+      };
+      g.U = function(a, b) {
+        return fd(b) || Gc(b) ? H(b) == null : false;
+      };
+      g.aa = function() {
+        return this;
+      };
+      g.ka = function(a, b) {
+        return Sc(b, this);
+      };
+      g.la = function(a, b, c) {
+        return Tc(b, c, this);
+      };
+      g.fa = function() {
+        return null;
+      };
+      g.ia = function() {
+        return J;
+      };
+      g.W = function() {
+        return null;
+      };
+      g.T = function(a, b) {
+        return b === this.A ? this : new gd(b);
+      };
+      g.ca = function(a, b) {
+        return new ed(this.A, b, null, 1, null);
+      };
+      var J = new gd(null);
+      gd.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function Ag(a) {
+        return (a != null ? a.m & 134217728 || E === a.Cd || (a.m ? 0 : x(xg, a)) : x(xg, a)) ? (a = yg(a)) ? a : J : Vc.j(Z, J, a);
+      }
+      var ji = function ji2(a) {
+        for (var c = [], d = arguments.length, e = 0; ; )
+          if (e < d)
+            c.push(arguments[e]), e += 1;
+          else
+            break;
+        return ji2.o(0 < c.length ? new G(c.slice(0), 0, null) : null);
+      };
+      ji.o = function(a) {
+        if (a instanceof G && a.B === 0)
+          var b = a.l;
+        else
+          a:
+            for (b = []; ; )
+              if (a != null)
+                b.push(C(a)), a = Wg(a);
+              else
+                break a;
+        a = b.length;
+        for (var c = J; ; )
+          if (0 < a) {
+            var d = a - 1;
+            c = Va(c, b[a - 1]);
+            a = d;
+          } else
+            return c;
+      };
+      ji.I = 0;
+      ji.J = function(a) {
+        return this.o(H(a));
+      };
+      function hd(a, b, c, d) {
+        this.A = a;
+        this.first = b;
+        this.bb = c;
+        this.D = d;
+        this.m = 65929452;
+        this.H = 8192;
+      }
+      g = hd.prototype;
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, O2(this));
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.S = function() {
+        return this.A;
+      };
+      g.ea = function() {
+        return this.bb == null ? null : H(this.bb);
+      };
+      g.V = function() {
+        var a = this.D;
+        return a != null ? a : this.D = a = ec(this);
+      };
+      g.U = function(a, b) {
+        return dd(this, b);
+      };
+      g.aa = function() {
+        return J;
+      };
+      g.ka = function(a, b) {
+        return Sc(b, this);
+      };
+      g.la = function(a, b, c) {
+        return Tc(b, c, this);
+      };
+      g.fa = function() {
+        return this.first;
+      };
+      g.ia = function() {
+        return this.bb == null ? J : this.bb;
+      };
+      g.W = function() {
+        return this;
+      };
+      g.T = function(a, b) {
+        return b === this.A ? this : new hd(b, this.first, this.bb, this.D);
+      };
+      g.ca = function(a, b) {
+        return new hd(null, b, this, null);
+      };
+      hd.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function U(a, b) {
+        return b == null ? new ed(null, a, null, 1, null) : b != null && (b.m & 64 || E === b.Ab) ? new hd(null, a, b, null) : new hd(null, a, H(b), null);
+      }
+      function Rg(a, b) {
+        if (a.Pa === b.Pa)
+          return 0;
+        var c = La(a.pa);
+        if (v(c ? b.pa : c))
+          return -1;
+        if (v(a.pa)) {
+          if (La(b.pa))
+            return 1;
+          c = wa(a.pa, b.pa);
+          return c === 0 ? wa(a.name, b.name) : c;
+        }
+        return wa(a.name, b.name);
+      }
+      function V(a, b, c, d) {
+        this.pa = a;
+        this.name = b;
+        this.Pa = c;
+        this.vb = d;
+        this.m = 2153775105;
+        this.H = 4096;
+      }
+      g = V.prototype;
+      g.toString = function() {
+        return [":", B.g(this.Pa)].join("");
+      };
+      g.U = function(a, b) {
+        return b instanceof V ? this.Pa === b.Pa : false;
+      };
+      g.call = function(a) {
+        switch (arguments.length - 1) {
+          case 1:
+            return this.g(arguments[1]);
+          case 2:
+            return this.h(arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length - 1)].join(""));
+        }
+      };
+      g.apply = function(a, b) {
+        return this.call.apply(this, [this].concat(Oa(b)));
+      };
+      g.g = function(a) {
+        return T.h(a, this);
+      };
+      g.h = function(a, b) {
+        return T.j(a, this, b);
+      };
+      g.V = function() {
+        var a = this.vb;
+        return a != null ? a : this.vb = a = Xb(Sb(this.name), Vb(this.pa)) + 2654435769 | 0;
+      };
+      g.ed = function() {
+        return this.name;
+      };
+      g.gd = function() {
+        return this.pa;
+      };
+      g.R = function(a, b) {
+        return xb(b, [":", B.g(this.Pa)].join(""));
+      };
+      function id(a, b) {
+        return a === b ? true : a instanceof V && b instanceof V ? a.Pa === b.Pa : false;
+      }
+      function jd(a) {
+        if (a != null && (a.H & 4096 || E === a.Nc))
+          return a.gd(null);
+        throw Error(["Doesn't support namespace: ", B.g(a)].join(""));
+      }
+      function kd(a) {
+        return a instanceof V || a instanceof F;
+      }
+      var Ef = function Ef2(a) {
+        switch (arguments.length) {
+          case 1:
+            return Ef2.g(arguments[0]);
+          case 2:
+            return Ef2.h(arguments[0], arguments[1]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      };
+      Ef.g = function(a) {
+        if (a instanceof V)
+          return a;
+        if (a instanceof F)
+          return new V(jd(a), qf.g ? qf.g(a) : qf.call(null, a), a.Wa, null);
+        if (P.h("/", a))
+          return new V(null, a, a, null);
+        if (typeof a === "string") {
+          var b = a.split("/");
+          return b.length === 2 ? new V(b[0], b[1], a, null) : new V(null, b[0], a, null);
+        }
+        return null;
+      };
+      Ef.h = function(a, b) {
+        a = a instanceof V ? qf.g ? qf.g(a) : qf.call(null, a) : a instanceof F ? qf.g ? qf.g(a) : qf.call(null, a) : a;
+        b = b instanceof V ? qf.g ? qf.g(b) : qf.call(null, b) : b instanceof F ? qf.g ? qf.g(b) : qf.call(null, b) : b;
+        return new V(a, b, [v(a) ? [B.g(a), "/"].join("") : null, B.g(b)].join(""), null);
+      };
+      Ef.I = 2;
+      function ld(a, b, c, d) {
+        this.A = a;
+        this.Rb = b;
+        this.O = c;
+        this.D = d;
+        this.m = 32374988;
+        this.H = 1;
+      }
+      g = ld.prototype;
+      g.toString = function() {
+        return Nb(this);
+      };
+      function md(a) {
+        a.Rb != null && (a.O = a.Rb.C ? a.Rb.C() : a.Rb.call(null), a.Rb = null);
+        return a.O;
+      }
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, O2(this));
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.S = function() {
+        return this.A;
+      };
+      g.ea = function() {
+        this.W(null);
+        return this.O == null ? null : N2(this.O);
+      };
+      g.V = function() {
+        var a = this.D;
+        return a != null ? a : this.D = a = ec(this);
+      };
+      g.U = function(a, b) {
+        return dd(this, b);
+      };
+      g.aa = function() {
+        return mb(J, this.A);
+      };
+      g.ka = function(a, b) {
+        return Sc(b, this);
+      };
+      g.la = function(a, b, c) {
+        return Tc(b, c, this);
+      };
+      g.fa = function() {
+        this.W(null);
+        return this.O == null ? null : I(this.O);
+      };
+      g.ia = function() {
+        this.W(null);
+        return this.O != null ? ac(this.O) : J;
+      };
+      g.W = function() {
+        md(this);
+        if (this.O == null)
+          return null;
+        for (var a = this.O; ; )
+          if (a instanceof ld)
+            a = md(a);
+          else
+            return this.O = a, H(this.O);
+      };
+      g.T = function(a, b) {
+        var c = this;
+        return b === this.A ? c : new ld(b, function() {
+          return c.W(null);
+        }, null, this.D);
+      };
+      g.ca = function(a, b) {
+        return U(b, this);
+      };
+      ld.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function nd(a) {
+        this.lc = a;
+        this.end = 0;
+        this.m = 2;
+        this.H = 0;
+      }
+      nd.prototype.add = function(a) {
+        this.lc[this.end] = a;
+        return this.end += 1;
+      };
+      nd.prototype.ha = function() {
+        var a = new od(this.lc, 0, this.end);
+        this.lc = null;
+        return a;
+      };
+      nd.prototype.X = function() {
+        return this.end;
+      };
+      function ma(a) {
+        return new nd(Array(a));
+      }
+      function od(a, b, c) {
+        this.l = a;
+        this.ma = b;
+        this.end = c;
+        this.m = 524306;
+        this.H = 0;
+      }
+      g = od.prototype;
+      g.X = function() {
+        return this.end - this.ma;
+      };
+      g.da = function(a, b) {
+        return this.l[this.ma + b];
+      };
+      g.ra = function(a, b, c) {
+        return 0 <= b && b < this.end - this.ma ? this.l[this.ma + b] : c;
+      };
+      g.nc = function() {
+        if (this.ma === this.end)
+          throw Error("-drop-first of empty chunk");
+        return new od(this.l, this.ma + 1, this.end);
+      };
+      g.ka = function(a, b) {
+        return pc(this.l, b, this.l[this.ma], this.ma + 1);
+      };
+      g.la = function(a, b, c) {
+        return pc(this.l, b, c, this.ma);
+      };
+      function pd(a, b, c, d) {
+        this.ha = a;
+        this.Sa = b;
+        this.A = c;
+        this.D = d;
+        this.m = 31850732;
+        this.H = 1536;
+      }
+      g = pd.prototype;
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, O2(this));
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.S = function() {
+        return this.A;
+      };
+      g.ea = function() {
+        return 1 < Sa(this.ha) ? new pd(Gb(this.ha), this.Sa, null, null) : this.Sa == null ? null : tb(this.Sa);
+      };
+      g.V = function() {
+        var a = this.D;
+        return a != null ? a : this.D = a = ec(this);
+      };
+      g.U = function(a, b) {
+        return dd(this, b);
+      };
+      g.aa = function() {
+        return J;
+      };
+      g.fa = function() {
+        return zc(this.ha, 0);
+      };
+      g.ia = function() {
+        return 1 < Sa(this.ha) ? new pd(Gb(this.ha), this.Sa, null, null) : this.Sa == null ? J : this.Sa;
+      };
+      g.W = function() {
+        return this;
+      };
+      g.Ib = function() {
+        return this.ha;
+      };
+      g.eb = function() {
+        return this.Sa == null ? J : this.Sa;
+      };
+      g.T = function(a, b) {
+        return b === this.A ? this : new pd(this.ha, this.Sa, b, this.D);
+      };
+      g.ca = function(a, b) {
+        return U(b, this);
+      };
+      g.bc = function() {
+        return this.Sa == null ? null : this.Sa;
+      };
+      pd.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function qd(a, b) {
+        return Sa(a) === 0 ? b : new pd(a, b, null, null);
+      }
+      function rd(a, b) {
+        a.add(b);
+      }
+      function Fg(a) {
+        var b = [];
+        for (a = H(a); ; )
+          if (a != null)
+            b.push(I(a)), a = N2(a);
+          else
+            return b;
+      }
+      function sd(a, b) {
+        if (qc(b))
+          return O2(b);
+        var c = 0;
+        for (b = H(b); ; )
+          if (b != null && c < a)
+            c += 1, b = N2(b);
+          else
+            return c;
+      }
+      var og = function og2(a) {
+        if (a == null)
+          return null;
+        var c = N2(a);
+        return c == null ? H(I(a)) : U(I(a), og2.g ? og2.g(c) : og2.call(null, c));
+      }, Sj = function Sj2(a) {
+        switch (arguments.length) {
+          case 0:
+            return Sj2.C();
+          case 1:
+            return Sj2.g(arguments[0]);
+          case 2:
+            return Sj2.h(arguments[0], arguments[1]);
+          default:
+            for (var c = [], d = arguments.length, e = 0; ; )
+              if (e < d)
+                c.push(arguments[e]), e += 1;
+              else
+                break;
+            return Sj2.o(arguments[0], arguments[1], new G(c.slice(2), 0, null));
+        }
+      };
+      Sj.C = function() {
+        return new ld(null, function() {
+          return null;
+        }, null, null);
+      };
+      Sj.g = function(a) {
+        return new ld(null, function() {
+          return a;
+        }, null, null);
+      };
+      Sj.h = function(a, b) {
+        return new ld(null, function() {
+          var c = H(a);
+          return c ? Kc(c) ? qd(Hb(c), Sj.h(Ib(c), b)) : U(I(c), Sj.h(ac(c), b)) : b;
+        }, null, null);
+      };
+      Sj.o = function(a, b, c) {
+        return function h(e, f2) {
+          return new ld(null, function() {
+            var k = H(e);
+            return k ? Kc(k) ? qd(Hb(k), h(Ib(k), f2)) : U(I(k), h(ac(k), f2)) : v(f2) ? h(I(f2), N2(f2)) : null;
+          }, null, null);
+        }(Sj.h(a, b), c);
+      };
+      Sj.J = function(a) {
+        var b = I(a), c = N2(a);
+        a = I(c);
+        c = N2(c);
+        return this.o(b, a, c);
+      };
+      Sj.I = 2;
+      var ck = function ck2(a) {
+        switch (arguments.length) {
+          case 0:
+            return ck2.C();
+          case 1:
+            return ck2.g(arguments[0]);
+          case 2:
+            return ck2.h(arguments[0], arguments[1]);
+          default:
+            for (var c = [], d = arguments.length, e = 0; ; )
+              if (e < d)
+                c.push(arguments[e]), e += 1;
+              else
+                break;
+            return ck2.o(arguments[0], arguments[1], new G(c.slice(2), 0, null));
+        }
+      };
+      ck.C = function() {
+        return Ab(be);
+      };
+      ck.g = function(a) {
+        return a;
+      };
+      ck.h = function(a, b) {
+        return Bb(a, b);
+      };
+      ck.o = function(a, b, c) {
+        for (; ; )
+          if (a = Bb(a, b), v(c))
+            b = I(c), c = N2(c);
+          else
+            return a;
+      };
+      ck.J = function(a) {
+        var b = I(a), c = N2(a);
+        a = I(c);
+        c = N2(c);
+        return this.o(b, a, c);
+      };
+      ck.I = 2;
+      function td(a, b, c) {
+        var d = H(c);
+        if (b === 0)
+          return a.C ? a.C() : a.call(null);
+        c = C(d);
+        var e = Xa(d);
+        if (b === 1)
+          return a.g ? a.g(c) : a.call(null, c);
+        d = C(e);
+        var f2 = Xa(e);
+        if (b === 2)
+          return a.h ? a.h(c, d) : a.call(null, c, d);
+        e = C(f2);
+        var h = Xa(f2);
+        if (b === 3)
+          return a.j ? a.j(c, d, e) : a.call(null, c, d, e);
+        f2 = C(h);
+        var k = Xa(h);
+        if (b === 4)
+          return a.K ? a.K(c, d, e, f2) : a.call(null, c, d, e, f2);
+        h = C(k);
+        var l = Xa(k);
+        if (b === 5)
+          return a.N ? a.N(c, d, e, f2, h) : a.call(null, c, d, e, f2, h);
+        k = C(l);
+        var m = Xa(l);
+        if (b === 6)
+          return a.ta ? a.ta(c, d, e, f2, h, k) : a.call(null, c, d, e, f2, h, k);
+        l = C(m);
+        var n2 = Xa(m);
+        if (b === 7)
+          return a.La ? a.La(c, d, e, f2, h, k, l) : a.call(null, c, d, e, f2, h, k, l);
+        m = C(n2);
+        var p = Xa(n2);
+        if (b === 8)
+          return a.va ? a.va(c, d, e, f2, h, k, l, m) : a.call(null, c, d, e, f2, h, k, l, m);
+        n2 = C(p);
+        var q = Xa(p);
+        if (b === 9)
+          return a.Ma ? a.Ma(c, d, e, f2, h, k, l, m, n2) : a.call(null, c, d, e, f2, h, k, l, m, n2);
+        p = C(q);
+        var r = Xa(q);
+        if (b === 10)
+          return a.Aa ? a.Aa(c, d, e, f2, h, k, l, m, n2, p) : a.call(null, c, d, e, f2, h, k, l, m, n2, p);
+        q = C(r);
+        var w = Xa(r);
+        if (b === 11)
+          return a.Ba ? a.Ba(c, d, e, f2, h, k, l, m, n2, p, q) : a.call(null, c, d, e, f2, h, k, l, m, n2, p, q);
+        r = C(w);
+        var z = Xa(w);
+        if (b === 12)
+          return a.Ca ? a.Ca(c, d, e, f2, h, k, l, m, n2, p, q, r) : a.call(null, c, d, e, f2, h, k, l, m, n2, p, q, r);
+        w = C(z);
+        var A = Xa(z);
+        if (b === 13)
+          return a.Da ? a.Da(c, d, e, f2, h, k, l, m, n2, p, q, r, w) : a.call(null, c, d, e, f2, h, k, l, m, n2, p, q, r, w);
+        z = C(A);
+        var K2 = Xa(A);
+        if (b === 14)
+          return a.Ea ? a.Ea(c, d, e, f2, h, k, l, m, n2, p, q, r, w, z) : a.call(null, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z);
+        A = C(K2);
+        var M = Xa(K2);
+        if (b === 15)
+          return a.Fa ? a.Fa(c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A) : a.call(null, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A);
+        K2 = C(M);
+        var ca = Xa(M);
+        if (b === 16)
+          return a.Ga ? a.Ga(c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2) : a.call(null, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2);
+        M = C(ca);
+        var la = Xa(ca);
+        if (b === 17)
+          return a.Ha ? a.Ha(c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M) : a.call(null, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M);
+        ca = C(la);
+        var Ga = Xa(la);
+        if (b === 18)
+          return a.Ia ? a.Ia(c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca) : a.call(null, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca);
+        la = C(Ga);
+        Ga = Xa(Ga);
+        if (b === 19)
+          return a.Ja ? a.Ja(c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca, la) : a.call(null, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca, la);
+        var qa = C(Ga);
+        Xa(Ga);
+        if (b === 20)
+          return a.Ka ? a.Ka(c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca, la, qa) : a.call(null, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca, la, qa);
+        throw Error("Only up to 20 arguments supported on functions");
+      }
+      function ud(a) {
+        return a != null && (a.m & 128 || E === a.Nb) ? a.ea(null) : H(ac(a));
+      }
+      function wd(a, b, c) {
+        return c == null ? a.g ? a.g(b) : a.call(a, b) : vd(a, b, C(c), ud(c));
+      }
+      function vd(a, b, c, d) {
+        return d == null ? a.h ? a.h(b, c) : a.call(a, b, c) : xd(a, b, c, C(d), ud(d));
+      }
+      function xd(a, b, c, d, e) {
+        return e == null ? a.j ? a.j(b, c, d) : a.call(a, b, c, d) : yd(a, b, c, d, C(e), ud(e));
+      }
+      function yd(a, b, c, d, e, f2) {
+        if (f2 == null)
+          return a.K ? a.K(b, c, d, e) : a.call(a, b, c, d, e);
+        var h = C(f2), k = N2(f2);
+        if (k == null)
+          return a.N ? a.N(b, c, d, e, h) : a.call(a, b, c, d, e, h);
+        f2 = C(k);
+        var l = N2(k);
+        if (l == null)
+          return a.ta ? a.ta(b, c, d, e, h, f2) : a.call(a, b, c, d, e, h, f2);
+        k = C(l);
+        var m = N2(l);
+        if (m == null)
+          return a.La ? a.La(b, c, d, e, h, f2, k) : a.call(a, b, c, d, e, h, f2, k);
+        l = C(m);
+        var n2 = N2(m);
+        if (n2 == null)
+          return a.va ? a.va(b, c, d, e, h, f2, k, l) : a.call(a, b, c, d, e, h, f2, k, l);
+        m = C(n2);
+        var p = N2(n2);
+        if (p == null)
+          return a.Ma ? a.Ma(b, c, d, e, h, f2, k, l, m) : a.call(a, b, c, d, e, h, f2, k, l, m);
+        n2 = C(p);
+        var q = N2(p);
+        if (q == null)
+          return a.Aa ? a.Aa(b, c, d, e, h, f2, k, l, m, n2) : a.call(a, b, c, d, e, h, f2, k, l, m, n2);
+        p = C(q);
+        var r = N2(q);
+        if (r == null)
+          return a.Ba ? a.Ba(b, c, d, e, h, f2, k, l, m, n2, p) : a.call(a, b, c, d, e, h, f2, k, l, m, n2, p);
+        q = C(r);
+        var w = N2(r);
+        if (w == null)
+          return a.Ca ? a.Ca(b, c, d, e, h, f2, k, l, m, n2, p, q) : a.call(a, b, c, d, e, h, f2, k, l, m, n2, p, q);
+        r = C(w);
+        var z = N2(w);
+        if (z == null)
+          return a.Da ? a.Da(b, c, d, e, h, f2, k, l, m, n2, p, q, r) : a.call(a, b, c, d, e, h, f2, k, l, m, n2, p, q, r);
+        w = C(z);
+        var A = N2(z);
+        if (A == null)
+          return a.Ea ? a.Ea(b, c, d, e, h, f2, k, l, m, n2, p, q, r, w) : a.call(a, b, c, d, e, h, f2, k, l, m, n2, p, q, r, w);
+        z = C(A);
+        var K2 = N2(A);
+        if (K2 == null)
+          return a.Fa ? a.Fa(b, c, d, e, h, f2, k, l, m, n2, p, q, r, w, z) : a.call(a, b, c, d, e, h, f2, k, l, m, n2, p, q, r, w, z);
+        A = C(K2);
+        var M = N2(K2);
+        if (M == null)
+          return a.Ga ? a.Ga(b, c, d, e, h, f2, k, l, m, n2, p, q, r, w, z, A) : a.call(a, b, c, d, e, h, f2, k, l, m, n2, p, q, r, w, z, A);
+        K2 = C(M);
+        var ca = N2(M);
+        if (ca == null)
+          return a.Ha ? a.Ha(b, c, d, e, h, f2, k, l, m, n2, p, q, r, w, z, A, K2) : a.call(a, b, c, d, e, h, f2, k, l, m, n2, p, q, r, w, z, A, K2);
+        M = C(ca);
+        var la = N2(ca);
+        if (la == null)
+          return a.Ia ? a.Ia(b, c, d, e, h, f2, k, l, m, n2, p, q, r, w, z, A, K2, M) : a.call(a, b, c, d, e, h, f2, k, l, m, n2, p, q, r, w, z, A, K2, M);
+        ca = C(la);
+        var Ga = N2(la);
+        if (Ga == null)
+          return a.Ja ? a.Ja(b, c, d, e, h, f2, k, l, m, n2, p, q, r, w, z, A, K2, M, ca) : a.call(a, b, c, d, e, h, f2, k, l, m, n2, p, q, r, w, z, A, K2, M, ca);
+        la = C(Ga);
+        Ga = N2(Ga);
+        if (Ga == null)
+          return a.Ka ? a.Ka(b, c, d, e, h, f2, k, l, m, n2, p, q, r, w, z, A, K2, M, ca, la) : a.call(a, b, c, d, e, h, f2, k, l, m, n2, p, q, r, w, z, A, K2, M, ca, la);
+        b = [b, c, d, e, h, f2, k, l, m, n2, p, q, r, w, z, A, K2, M, ca, la];
+        for (c = Ga; ; )
+          if (c)
+            b.push(C(c)), c = N2(c);
+          else
+            break;
+        return a.apply(a, b);
+      }
+      function ng(a) {
+        switch (arguments.length) {
+          case 2:
+            return na(arguments[0], arguments[1]);
+          case 3:
+            return oa(arguments[0], arguments[1], arguments[2]);
+          case 4:
+            return pa(arguments[0], arguments[1], arguments[2], arguments[3]);
+          case 5:
+            return Fa(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
+          default:
+            for (var b = [], c = arguments.length, d = 0; ; )
+              if (d < c)
+                b.push(arguments[d]), d += 1;
+              else
+                break;
+            return dk(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], new G(b.slice(5), 0, null));
+        }
+      }
+      function na(a, b) {
+        if (a.J) {
+          var c = a.I, d = sd(c + 1, b);
+          return d <= c ? td(a, d, b) : a.J(b);
+        }
+        b = H(b);
+        return b == null ? a.C ? a.C() : a.call(a) : wd(a, C(b), ud(b));
+      }
+      function oa(a, b, c) {
+        if (a.J) {
+          b = U(b, c);
+          var d = a.I;
+          c = sd(d, c) + 1;
+          return c <= d ? td(a, c, b) : a.J(b);
+        }
+        return wd(a, b, H(c));
+      }
+      function pa(a, b, c, d) {
+        return a.J ? (b = U(b, U(c, d)), c = a.I, d = 2 + sd(c - 1, d), d <= c ? td(a, d, b) : a.J(b)) : vd(a, b, c, H(d));
+      }
+      function Fa(a, b, c, d, e) {
+        return a.J ? (b = U(b, U(c, U(d, e))), c = a.I, e = 3 + sd(c - 2, e), e <= c ? td(a, e, b) : a.J(b)) : xd(a, b, c, d, H(e));
+      }
+      function dk(a, b, c, d, e, f2) {
+        return a.J ? (f2 = og(f2), b = U(b, U(c, U(d, U(e, f2)))), c = a.I, f2 = 4 + sd(c - 3, f2), f2 <= c ? td(a, f2, b) : a.J(b)) : yd(a, b, c, d, e, og(f2));
+      }
+      function Ig(a) {
+        return a != null && (a.m & 64 || E === a.Ab) ? N2(a) ? Ee(Fg(a)) : H(a) ? I(a) : Cd : a;
+      }
+      function fk(a) {
+        return H(a) ? a : null;
+      }
+      function eg(a) {
+        this.te = a;
+        this.m = 393216;
+        this.H = 0;
+      }
+      g = eg.prototype;
+      g.T = function(a, b) {
+        return new eg(b);
+      };
+      g.S = function() {
+        return this.te;
+      };
+      g.ga = function() {
+        return false;
+      };
+      g.next = function() {
+        return Error("No such element");
+      };
+      g.remove = function() {
+        return Error("Unsupported operation");
+      };
+      var Ed = {}, pg = {};
+      function Fd(a) {
+        this.Hb = Ed;
+        this.mb = a;
+      }
+      Fd.prototype.ga = function() {
+        this.Hb === Ed ? (this.Hb = pg, this.mb = H(this.mb)) : this.Hb === this.mb && (this.mb = N2(this.Hb));
+        return this.mb != null;
+      };
+      Fd.prototype.next = function() {
+        if (this.ga())
+          return this.Hb = this.mb, I(this.mb);
+        throw Error("No such element");
+      };
+      Fd.prototype.remove = function() {
+        return Error("Unsupported operation");
+      };
+      function Gd(a, b) {
+        for (; ; ) {
+          if (H(b) == null)
+            return true;
+          var c = I(b);
+          c = a.g ? a.g(c) : a.call(null, c);
+          if (v(c))
+            b = N2(b);
+          else
+            return false;
+        }
+      }
+      function Eg(a, b) {
+        for (; ; )
+          if (b = H(b)) {
+            var c = I(b);
+            c = a.g ? a.g(c) : a.call(null, c);
+            if (v(c))
+              return c;
+            b = N2(b);
+          } else
+            return null;
+      }
+      function Ha(a) {
+        return function() {
+          function b(h, k) {
+            return La(a.h ? a.h(h, k) : a.call(null, h, k));
+          }
+          function c(h) {
+            return La(a.g ? a.g(h) : a.call(null, h));
+          }
+          function d() {
+            return La(a.C ? a.C() : a.call(null));
+          }
+          var e = null, f2 = function() {
+            function h(l, m, n2) {
+              var p = null;
+              if (2 < arguments.length) {
+                p = 0;
+                for (var q = Array(arguments.length - 2); p < q.length; )
+                  q[p] = arguments[p + 2], ++p;
+                p = new G(q, 0, null);
+              }
+              return k.call(this, l, m, p);
+            }
+            function k(l, m, n2) {
+              return La(pa(a, l, m, n2));
+            }
+            h.I = 2;
+            h.J = function(l) {
+              var m = I(l);
+              l = N2(l);
+              var n2 = I(l);
+              l = ac(l);
+              return k(m, n2, l);
+            };
+            h.o = k;
+            return h;
+          }();
+          e = function(h, k, l) {
+            switch (arguments.length) {
+              case 0:
+                return d.call(this);
+              case 1:
+                return c.call(this, h);
+              case 2:
+                return b.call(this, h, k);
+              default:
+                var m = null;
+                if (2 < arguments.length) {
+                  m = 0;
+                  for (var n2 = Array(arguments.length - 2); m < n2.length; )
+                    n2[m] = arguments[m + 2], ++m;
+                  m = new G(n2, 0, null);
+                }
+                return f2.o(h, k, m);
+            }
+            throw Error("Invalid arity: " + arguments.length);
+          };
+          e.I = 2;
+          e.J = f2.J;
+          e.C = d;
+          e.g = c;
+          e.h = b;
+          e.o = f2.o;
+          return e;
+        }();
+      }
+      function gk() {
+        return function() {
+          function a(b) {
+            if (0 < arguments.length)
+              for (var c = 0, d = Array(arguments.length - 0); c < d.length; )
+                d[c] = arguments[c + 0], ++c;
+            return null;
+          }
+          a.I = 0;
+          a.J = function(b) {
+            H(b);
+            return null;
+          };
+          a.o = function() {
+            return null;
+          };
+          return a;
+        }();
+      }
+      var ek = function ek2(a) {
+        switch (arguments.length) {
+          case 0:
+            return ek2.C();
+          case 1:
+            return ek2.g(arguments[0]);
+          case 2:
+            return ek2.h(arguments[0], arguments[1]);
+          case 3:
+            return ek2.j(arguments[0], arguments[1], arguments[2]);
+          default:
+            for (var c = [], d = arguments.length, e = 0; ; )
+              if (e < d)
+                c.push(arguments[e]), e += 1;
+              else
+                break;
+            return ek2.o(arguments[0], arguments[1], arguments[2], new G(c.slice(3), 0, null));
+        }
+      };
+      ek.C = function() {
+        return Zc;
+      };
+      ek.g = function(a) {
+        return a;
+      };
+      ek.h = function(a, b) {
+        return function() {
+          function c(l, m, n2) {
+            l = b.j ? b.j(l, m, n2) : b.call(null, l, m, n2);
+            return a.g ? a.g(l) : a.call(null, l);
+          }
+          function d(l, m) {
+            l = b.h ? b.h(l, m) : b.call(null, l, m);
+            return a.g ? a.g(l) : a.call(null, l);
+          }
+          function e(l) {
+            l = b.g ? b.g(l) : b.call(null, l);
+            return a.g ? a.g(l) : a.call(null, l);
+          }
+          function f2() {
+            var l = b.C ? b.C() : b.call(null);
+            return a.g ? a.g(l) : a.call(null, l);
+          }
+          var h = null, k = function() {
+            function l(n2, p, q, r) {
+              var w = null;
+              if (3 < arguments.length) {
+                w = 0;
+                for (var z = Array(arguments.length - 3); w < z.length; )
+                  z[w] = arguments[w + 3], ++w;
+                w = new G(z, 0, null);
+              }
+              return m.call(this, n2, p, q, w);
+            }
+            function m(n2, p, q, r) {
+              n2 = Fa(b, n2, p, q, r);
+              return a.g ? a.g(n2) : a.call(null, n2);
+            }
+            l.I = 3;
+            l.J = function(n2) {
+              var p = I(n2);
+              n2 = N2(n2);
+              var q = I(n2);
+              n2 = N2(n2);
+              var r = I(n2);
+              n2 = ac(n2);
+              return m(p, q, r, n2);
+            };
+            l.o = m;
+            return l;
+          }();
+          h = function(l, m, n2, p) {
+            switch (arguments.length) {
+              case 0:
+                return f2.call(this);
+              case 1:
+                return e.call(this, l);
+              case 2:
+                return d.call(this, l, m);
+              case 3:
+                return c.call(this, l, m, n2);
+              default:
+                var q = null;
+                if (3 < arguments.length) {
+                  q = 0;
+                  for (var r = Array(arguments.length - 3); q < r.length; )
+                    r[q] = arguments[q + 3], ++q;
+                  q = new G(r, 0, null);
+                }
+                return k.o(l, m, n2, q);
+            }
+            throw Error("Invalid arity: " + arguments.length);
+          };
+          h.I = 3;
+          h.J = k.J;
+          h.C = f2;
+          h.g = e;
+          h.h = d;
+          h.j = c;
+          h.o = k.o;
+          return h;
+        }();
+      };
+      ek.j = function(a, b, c) {
+        return function() {
+          function d(m, n2, p) {
+            m = c.j ? c.j(m, n2, p) : c.call(null, m, n2, p);
+            m = b.g ? b.g(m) : b.call(null, m);
+            return a.g ? a.g(m) : a.call(null, m);
+          }
+          function e(m, n2) {
+            m = c.h ? c.h(m, n2) : c.call(null, m, n2);
+            m = b.g ? b.g(m) : b.call(null, m);
+            return a.g ? a.g(m) : a.call(null, m);
+          }
+          function f2(m) {
+            m = c.g ? c.g(m) : c.call(null, m);
+            m = b.g ? b.g(m) : b.call(null, m);
+            return a.g ? a.g(m) : a.call(null, m);
+          }
+          function h() {
+            var m = c.C ? c.C() : c.call(null);
+            m = b.g ? b.g(m) : b.call(null, m);
+            return a.g ? a.g(m) : a.call(null, m);
+          }
+          var k = null, l = function() {
+            function m(p, q, r, w) {
+              var z = null;
+              if (3 < arguments.length) {
+                z = 0;
+                for (var A = Array(arguments.length - 3); z < A.length; )
+                  A[z] = arguments[z + 3], ++z;
+                z = new G(A, 0, null);
+              }
+              return n2.call(this, p, q, r, z);
+            }
+            function n2(p, q, r, w) {
+              p = Fa(c, p, q, r, w);
+              p = b.g ? b.g(p) : b.call(null, p);
+              return a.g ? a.g(p) : a.call(null, p);
+            }
+            m.I = 3;
+            m.J = function(p) {
+              var q = I(p);
+              p = N2(p);
+              var r = I(p);
+              p = N2(p);
+              var w = I(p);
+              p = ac(p);
+              return n2(q, r, w, p);
+            };
+            m.o = n2;
+            return m;
+          }();
+          k = function(m, n2, p, q) {
+            switch (arguments.length) {
+              case 0:
+                return h.call(this);
+              case 1:
+                return f2.call(this, m);
+              case 2:
+                return e.call(this, m, n2);
+              case 3:
+                return d.call(this, m, n2, p);
+              default:
+                var r = null;
+                if (3 < arguments.length) {
+                  r = 0;
+                  for (var w = Array(arguments.length - 3); r < w.length; )
+                    w[r] = arguments[r + 3], ++r;
+                  r = new G(w, 0, null);
+                }
+                return l.o(m, n2, p, r);
+            }
+            throw Error("Invalid arity: " + arguments.length);
+          };
+          k.I = 3;
+          k.J = l.J;
+          k.C = h;
+          k.g = f2;
+          k.h = e;
+          k.j = d;
+          k.o = l.o;
+          return k;
+        }();
+      };
+      ek.o = function(a, b, c, d) {
+        var e = Ag(U(a, U(b, U(c, d))));
+        return function() {
+          function f2(k) {
+            var l = null;
+            if (0 < arguments.length) {
+              l = 0;
+              for (var m = Array(arguments.length - 0); l < m.length; )
+                m[l] = arguments[l + 0], ++l;
+              l = new G(m, 0, null);
+            }
+            return h.call(this, l);
+          }
+          function h(k) {
+            k = na(I(e), k);
+            for (var l = N2(e); ; )
+              if (l) {
+                var m = I(l);
+                k = m.g ? m.g(k) : m.call(null, k);
+                l = N2(l);
+              } else
+                return k;
+          }
+          f2.I = 0;
+          f2.J = function(k) {
+            k = H(k);
+            return h(k);
+          };
+          f2.o = h;
+          return f2;
+        }();
+      };
+      ek.J = function(a) {
+        var b = I(a), c = N2(a);
+        a = I(c);
+        var d = N2(c);
+        c = I(d);
+        d = N2(d);
+        return this.o(b, a, c, d);
+      };
+      ek.I = 3;
+      function hk() {
+        var a = ik;
+        return function() {
+          function b(k, l, m) {
+            return a.K ? a.K(true, k, l, m) : a.call(null, true, k, l, m);
+          }
+          function c(k, l) {
+            return a.j ? a.j(true, k, l) : a.call(null, true, k, l);
+          }
+          function d(k) {
+            return a.h ? a.h(true, k) : a.call(null, true, k);
+          }
+          function e() {
+            return a.g ? a.g(true) : a.call(null, true);
+          }
+          var f2 = null, h = function() {
+            function k(m, n2, p, q) {
+              var r = null;
+              if (3 < arguments.length) {
+                r = 0;
+                for (var w = Array(arguments.length - 3); r < w.length; )
+                  w[r] = arguments[r + 3], ++r;
+                r = new G(w, 0, null);
+              }
+              return l.call(this, m, n2, p, r);
+            }
+            function l(m, n2, p, q) {
+              return dk(a, true, m, n2, p, vc([q]));
+            }
+            k.I = 3;
+            k.J = function(m) {
+              var n2 = I(m);
+              m = N2(m);
+              var p = I(m);
+              m = N2(m);
+              var q = I(m);
+              m = ac(m);
+              return l(n2, p, q, m);
+            };
+            k.o = l;
+            return k;
+          }();
+          f2 = function(k, l, m, n2) {
+            switch (arguments.length) {
+              case 0:
+                return e.call(this);
+              case 1:
+                return d.call(this, k);
+              case 2:
+                return c.call(this, k, l);
+              case 3:
+                return b.call(this, k, l, m);
+              default:
+                var p = null;
+                if (3 < arguments.length) {
+                  p = 0;
+                  for (var q = Array(arguments.length - 3); p < q.length; )
+                    q[p] = arguments[p + 3], ++p;
+                  p = new G(q, 0, null);
+                }
+                return h.o(k, l, m, p);
+            }
+            throw Error("Invalid arity: " + arguments.length);
+          };
+          f2.I = 3;
+          f2.J = h.J;
+          f2.C = e;
+          f2.g = d;
+          f2.h = c;
+          f2.j = b;
+          f2.o = h.o;
+          return f2;
+        }();
+      }
+      function Ja(a, b) {
+        return function f2(d, e) {
+          return new ld(null, function() {
+            var h = H(e);
+            if (h) {
+              if (Kc(h)) {
+                for (var k = Hb(h), l = O2(k), m = ma(l), n2 = 0; ; )
+                  if (n2 < l)
+                    rd(m, function() {
+                      var p = d + n2, q = zc(k, n2);
+                      return a.h ? a.h(p, q) : a.call(null, p, q);
+                    }()), n2 += 1;
+                  else
+                    break;
+                return qd(m.ha(), f2(d + l, Ib(h)));
+              }
+              return U(function() {
+                var p = I(h);
+                return a.h ? a.h(d, p) : a.call(null, d, p);
+              }(), f2(d + 1, ac(h)));
+            }
+            return null;
+          }, null, null);
+        }(0, b);
+      }
+      function Hd(a) {
+        this.state = a;
+        this.Bc = this.rd = this.A = null;
+        this.H = 16386;
+        this.m = 6455296;
+      }
+      Hd.prototype.U = function(a, b) {
+        return this === b;
+      };
+      Hd.prototype.xb = function() {
+        return this.state;
+      };
+      Hd.prototype.S = function() {
+        return this.A;
+      };
+      Hd.prototype.V = function() {
+        return sa(this);
+      };
+      function jk(a) {
+        return new Hd(a);
+      }
+      function Id(a, b) {
+        if (a instanceof Hd) {
+          var c = a.rd;
+          if (c != null && !v(c.g ? c.g(b) : c.call(null, b)))
+            throw Error("Validator rejected reference state");
+          c = a.state;
+          a.state = b;
+          if (a.Bc != null)
+            a:
+              for (var d = H(a.Bc), e = null, f2 = 0, h = 0; ; )
+                if (h < f2) {
+                  var k = e.da(null, h), l = S(k, 0, null);
+                  k = S(k, 1, null);
+                  k.K ? k.K(l, a, c, b) : k.call(null, l, a, c, b);
+                  h += 1;
+                } else if (d = H(d))
+                  Kc(d) ? (e = Hb(d), d = Ib(d), l = e, f2 = O2(e), e = l) : (e = I(d), l = S(e, 0, null), k = S(e, 1, null), k.K ? k.K(l, a, c, b) : k.call(null, l, a, c, b), d = N2(d), e = null, f2 = 0), h = 0;
+                else
+                  break a;
+          return b;
+        }
+        return Jb(a, b);
+      }
+      var qg = function qg2(a) {
+        switch (arguments.length) {
+          case 2:
+            return qg2.h(arguments[0], arguments[1]);
+          case 3:
+            return qg2.j(arguments[0], arguments[1], arguments[2]);
+          case 4:
+            return qg2.K(arguments[0], arguments[1], arguments[2], arguments[3]);
+          default:
+            for (var c = [], d = arguments.length, e = 0; ; )
+              if (e < d)
+                c.push(arguments[e]), e += 1;
+              else
+                break;
+            return qg2.o(arguments[0], arguments[1], arguments[2], arguments[3], new G(c.slice(4), 0, null));
+        }
+      };
+      qg.h = function(a, b) {
+        if (a instanceof Hd) {
+          var c = a.state;
+          b = b.g ? b.g(c) : b.call(null, c);
+          a = Id(a, b);
+        } else
+          a = jg(a, b);
+        return a;
+      };
+      qg.j = function(a, b, c) {
+        if (a instanceof Hd) {
+          var d = a.state;
+          b = b.h ? b.h(d, c) : b.call(null, d, c);
+          a = Id(a, b);
+        } else
+          a = jg(a, b, c);
+        return a;
+      };
+      qg.K = function(a, b, c, d) {
+        if (a instanceof Hd) {
+          var e = a.state;
+          b = b.j ? b.j(e, c, d) : b.call(null, e, c, d);
+          a = Id(a, b);
+        } else
+          a = jg(a, b, c, d);
+        return a;
+      };
+      qg.o = function(a, b, c, d, e) {
+        return a instanceof Hd ? Id(a, Fa(b, a.state, c, d, e)) : jg(a, b, c, d, e);
+      };
+      qg.J = function(a) {
+        var b = I(a), c = N2(a);
+        a = I(c);
+        var d = N2(c);
+        c = I(d);
+        var e = N2(d);
+        d = I(e);
+        e = N2(e);
+        return this.o(b, a, c, d, e);
+      };
+      qg.I = 4;
+      function kk(a) {
+        this.state = a;
+        this.m = 32768;
+        this.H = 0;
+      }
+      kk.prototype.ld = function(a, b) {
+        return this.state = b;
+      };
+      kk.prototype.xb = function() {
+        return this.state;
+      };
+      var Y = function Y2(a) {
+        switch (arguments.length) {
+          case 1:
+            return Y2.g(arguments[0]);
+          case 2:
+            return Y2.h(arguments[0], arguments[1]);
+          case 3:
+            return Y2.j(arguments[0], arguments[1], arguments[2]);
+          case 4:
+            return Y2.K(arguments[0], arguments[1], arguments[2], arguments[3]);
+          default:
+            for (var c = [], d = arguments.length, e = 0; ; )
+              if (e < d)
+                c.push(arguments[e]), e += 1;
+              else
+                break;
+            return Y2.o(arguments[0], arguments[1], arguments[2], arguments[3], new G(c.slice(4), 0, null));
+        }
+      };
+      Y.g = function(a) {
+        return function(b) {
+          return function() {
+            function c(k, l) {
+              l = a.g ? a.g(l) : a.call(null, l);
+              return b.h ? b.h(k, l) : b.call(null, k, l);
+            }
+            function d(k) {
+              return b.g ? b.g(k) : b.call(null, k);
+            }
+            function e() {
+              return b.C ? b.C() : b.call(null);
+            }
+            var f2 = null, h = function() {
+              function k(m, n2, p) {
+                var q = null;
+                if (2 < arguments.length) {
+                  q = 0;
+                  for (var r = Array(arguments.length - 2); q < r.length; )
+                    r[q] = arguments[q + 2], ++q;
+                  q = new G(r, 0, null);
+                }
+                return l.call(this, m, n2, q);
+              }
+              function l(m, n2, p) {
+                n2 = oa(a, n2, p);
+                return b.h ? b.h(m, n2) : b.call(null, m, n2);
+              }
+              k.I = 2;
+              k.J = function(m) {
+                var n2 = I(m);
+                m = N2(m);
+                var p = I(m);
+                m = ac(m);
+                return l(n2, p, m);
+              };
+              k.o = l;
+              return k;
+            }();
+            f2 = function(k, l, m) {
+              switch (arguments.length) {
+                case 0:
+                  return e.call(this);
+                case 1:
+                  return d.call(this, k);
+                case 2:
+                  return c.call(this, k, l);
+                default:
+                  var n2 = null;
+                  if (2 < arguments.length) {
+                    n2 = 0;
+                    for (var p = Array(arguments.length - 2); n2 < p.length; )
+                      p[n2] = arguments[n2 + 2], ++n2;
+                    n2 = new G(p, 0, null);
+                  }
+                  return h.o(k, l, n2);
+              }
+              throw Error("Invalid arity: " + arguments.length);
+            };
+            f2.I = 2;
+            f2.J = h.J;
+            f2.C = e;
+            f2.g = d;
+            f2.h = c;
+            f2.o = h.o;
+            return f2;
+          }();
+        };
+      };
+      Y.h = function(a, b) {
+        return new ld(null, function() {
+          var c = H(b);
+          if (c) {
+            if (Kc(c)) {
+              for (var d = Hb(c), e = O2(d), f2 = ma(e), h = 0; ; )
+                if (h < e)
+                  rd(f2, function() {
+                    var k = zc(d, h);
+                    return a.g ? a.g(k) : a.call(null, k);
+                  }()), h += 1;
+                else
+                  break;
+              return qd(f2.ha(), Y.h(a, Ib(c)));
+            }
+            return U(function() {
+              var k = I(c);
+              return a.g ? a.g(k) : a.call(null, k);
+            }(), Y.h(a, ac(c)));
+          }
+          return null;
+        }, null, null);
+      };
+      Y.j = function(a, b, c) {
+        return new ld(null, function() {
+          var d = H(b), e = H(c);
+          if (d && e) {
+            var f2 = I(d);
+            var h = I(e);
+            f2 = a.h ? a.h(f2, h) : a.call(null, f2, h);
+            d = U(f2, Y.j(a, ac(d), ac(e)));
+          } else
+            d = null;
+          return d;
+        }, null, null);
+      };
+      Y.K = function(a, b, c, d) {
+        return new ld(null, function() {
+          var e = H(b), f2 = H(c), h = H(d);
+          if (e && f2 && h) {
+            var k = I(e);
+            var l = I(f2), m = I(h);
+            k = a.j ? a.j(k, l, m) : a.call(null, k, l, m);
+            e = U(k, Y.K(a, ac(e), ac(f2), ac(h)));
+          } else
+            e = null;
+          return e;
+        }, null, null);
+      };
+      Y.o = function(a, b, c, d, e) {
+        return Y.h(function(f2) {
+          return na(a, f2);
+        }, function k(h) {
+          return new ld(null, function() {
+            var l = Y.h(H, h);
+            return Gd(Zc, l) ? U(Y.h(I, l), k(Y.h(ac, l))) : null;
+          }, null, null);
+        }(Z.o(e, d, vc([c, b]))));
+      };
+      Y.J = function(a) {
+        var b = I(a), c = N2(a);
+        a = I(c);
+        var d = N2(c);
+        c = I(d);
+        var e = N2(d);
+        d = I(e);
+        e = N2(e);
+        return this.o(b, a, c, d, e);
+      };
+      Y.I = 4;
+      var lk = function lk2(a) {
+        switch (arguments.length) {
+          case 1:
+            return lk2.g(arguments[0]);
+          case 2:
+            return lk2.h(arguments[0], arguments[1]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      };
+      lk.g = function(a) {
+        return function(b) {
+          var c = new kk(a);
+          return function() {
+            function d(k, l) {
+              var m = D(c), n2 = c.ld(null, c.xb(null) - 1);
+              k = 0 < m ? b.h ? b.h(k, l) : b.call(null, k, l) : k;
+              return 0 < n2 ? k : hc(k) ? k : new gc(k);
+            }
+            function e(k) {
+              return b.g ? b.g(k) : b.call(null, k);
+            }
+            function f2() {
+              return b.C ? b.C() : b.call(null);
+            }
+            var h = null;
+            h = function(k, l) {
+              switch (arguments.length) {
+                case 0:
+                  return f2.call(this);
+                case 1:
+                  return e.call(this, k);
+                case 2:
+                  return d.call(this, k, l);
+              }
+              throw Error("Invalid arity: " + arguments.length);
+            };
+            h.C = f2;
+            h.g = e;
+            h.h = d;
+            return h;
+          }();
+        };
+      };
+      lk.h = function(a, b) {
+        return new ld(null, function() {
+          if (0 < a) {
+            var c = H(b);
+            return c ? U(I(c), lk.h(a - 1, ac(c))) : null;
+          }
+          return null;
+        }, null, null);
+      };
+      lk.I = 2;
+      function mk(a, b) {
+        return new ld(null, function() {
+          a:
+            for (var c = a, d = b; ; )
+              if (d = H(d), 0 < c && d)
+                --c, d = ac(d);
+              else
+                break a;
+          return d;
+        }, null, null);
+      }
+      function nk(a, b) {
+        return Y.j(function(c) {
+          return c;
+        }, b, mk(a, b));
+      }
+      function Jd(a, b, c, d) {
+        this.A = a;
+        this.count = b;
+        this.M = c;
+        this.next = d;
+        this.D = null;
+        this.m = 32374988;
+        this.H = 1;
+      }
+      g = Jd.prototype;
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, this.count);
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.S = function() {
+        return this.A;
+      };
+      g.ea = function() {
+        return this.next == null ? 1 < this.count ? this.next = new Jd(null, this.count - 1, this.M, null) : this.count === -1 ? this : null : this.next;
+      };
+      g.V = function() {
+        var a = this.D;
+        return a != null ? a : this.D = a = ec(this);
+      };
+      g.U = function(a, b) {
+        return dd(this, b);
+      };
+      g.aa = function() {
+        return J;
+      };
+      g.ka = function(a, b) {
+        if (this.count === -1)
+          for (var c = b.h ? b.h(this.M, this.M) : b.call(null, this.M, this.M); ; ) {
+            if (hc(c))
+              return D(c);
+            c = b.h ? b.h(c, this.M) : b.call(null, c, this.M);
+          }
+        else
+          for (a = 1, c = this.M; ; )
+            if (a < this.count) {
+              c = b.h ? b.h(c, this.M) : b.call(null, c, this.M);
+              if (hc(c))
+                return D(c);
+              a += 1;
+            } else
+              return c;
+      };
+      g.la = function(a, b, c) {
+        if (this.count === -1)
+          for (c = b.h ? b.h(c, this.M) : b.call(null, c, this.M); ; ) {
+            if (hc(c))
+              return D(c);
+            c = b.h ? b.h(c, this.M) : b.call(null, c, this.M);
+          }
+        else
+          for (a = 0; ; )
+            if (a < this.count) {
+              c = b.h ? b.h(c, this.M) : b.call(null, c, this.M);
+              if (hc(c))
+                return D(c);
+              a += 1;
+            } else
+              return c;
+      };
+      g.fa = function() {
+        return this.M;
+      };
+      g.ia = function() {
+        return this.next == null ? 1 < this.count ? this.next = new Jd(null, this.count - 1, this.M, null) : this.count === -1 ? this : J : this.next;
+      };
+      g.W = function() {
+        return this;
+      };
+      g.T = function(a, b) {
+        return b === this.A ? this : new Jd(b, this.count, this.M, this.next);
+      };
+      g.ca = function(a, b) {
+        return U(b, this);
+      };
+      function Ma(a, b) {
+        return 0 < a ? new Jd(null, a, b, null) : J;
+      }
+      var ok = function ok2(a) {
+        switch (arguments.length) {
+          case 0:
+            return ok2.C();
+          case 1:
+            return ok2.g(arguments[0]);
+          case 2:
+            return ok2.h(arguments[0], arguments[1]);
+          default:
+            for (var c = [], d = arguments.length, e = 0; ; )
+              if (e < d)
+                c.push(arguments[e]), e += 1;
+              else
+                break;
+            return ok2.o(arguments[0], arguments[1], new G(c.slice(2), 0, null));
+        }
+      };
+      ok.C = function() {
+        return J;
+      };
+      ok.g = function(a) {
+        return new ld(null, function() {
+          return a;
+        }, null, null);
+      };
+      ok.h = function(a, b) {
+        return new ld(null, function() {
+          var c = H(a), d = H(b);
+          return c && d ? U(I(c), U(I(d), ok.h(ac(c), ac(d)))) : null;
+        }, null, null);
+      };
+      ok.o = function(a, b, c) {
+        return new ld(null, function() {
+          var d = Y.h(H, Z.o(c, b, vc([a])));
+          return Gd(Zc, d) ? Sj.h(Y.h(I, d), na(ok, Y.h(ac, d))) : null;
+        }, null, null);
+      };
+      ok.J = function(a) {
+        var b = I(a), c = N2(a);
+        a = I(c);
+        c = N2(c);
+        return this.o(b, a, c);
+      };
+      ok.I = 2;
+      function pk() {
+        return function(a) {
+          var b = new kk(false);
+          return function() {
+            function c(h, k) {
+              if (v(D(b)))
+                return h = a.h ? a.h(h, " ") : a.call(null, h, " "), hc(h) ? h : a.h ? a.h(h, k) : a.call(null, h, k);
+              Vj(b);
+              return a.h ? a.h(h, k) : a.call(null, h, k);
+            }
+            function d(h) {
+              return a.g ? a.g(h) : a.call(null, h);
+            }
+            function e() {
+              return a.C ? a.C() : a.call(null);
+            }
+            var f2 = null;
+            f2 = function(h, k) {
+              switch (arguments.length) {
+                case 0:
+                  return e.call(this);
+                case 1:
+                  return d.call(this, h);
+                case 2:
+                  return c.call(this, h, k);
+              }
+              throw Error("Invalid arity: " + arguments.length);
+            };
+            f2.C = e;
+            f2.g = d;
+            f2.h = c;
+            return f2;
+          }();
+        };
+      }
+      function hh(a, b) {
+        return new ld(null, function() {
+          var c = H(b);
+          if (c) {
+            if (Kc(c)) {
+              for (var d = Hb(c), e = O2(d), f2 = ma(e), h = 0; ; )
+                if (h < e) {
+                  var k = zc(d, h);
+                  k = a.g ? a.g(k) : a.call(null, k);
+                  v(k) && (k = zc(d, h), f2.add(k));
+                  h += 1;
+                } else
+                  break;
+              return qd(f2.ha(), hh(a, Ib(c)));
+            }
+            d = I(c);
+            c = ac(c);
+            return v(a.g ? a.g(d) : a.call(null, d)) ? U(d, hh(a, c)) : hh(a, c);
+          }
+          return null;
+        }, null, null);
+      }
+      function Kd(a, b) {
+        return hh(Ha(a), b);
+      }
+      var Fe = function Fe2(a) {
+        switch (arguments.length) {
+          case 0:
+            return Fe2.C();
+          case 1:
+            return Fe2.g(arguments[0]);
+          case 2:
+            return Fe2.h(arguments[0], arguments[1]);
+          case 3:
+            return Fe2.j(arguments[0], arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      };
+      Fe.C = function() {
+        return be;
+      };
+      Fe.g = function(a) {
+        return a;
+      };
+      Fe.h = function(a, b) {
+        return a != null ? a != null && (a.H & 4 || E === a.Hc) ? mb(Cb(Vc.j(Bb, Ab(a), b)), Dc(a)) : Vc.j(Va, a, b) : Vc.j(Z, a, b);
+      };
+      Fe.j = function(a, b, c) {
+        if (a != null && (a.H & 4 || E === a.Hc)) {
+          var d = Dc(a);
+          return $c(b, function() {
+            function e(k, l) {
+              return ck.h(k, l);
+            }
+            function f2(k) {
+              return mb(Cb(k), d);
+            }
+            var h = null;
+            h = function(k, l) {
+              switch (arguments.length) {
+                case 1:
+                  return f2.call(this, k);
+                case 2:
+                  return e.call(this, k, l);
+              }
+              throw Error("Invalid arity: " + arguments.length);
+            };
+            h.g = f2;
+            h.h = e;
+            return h;
+          }(), Ab(a), c);
+        }
+        return $c(b, Z, a, c);
+      };
+      Fe.I = 3;
+      function qk(a, b) {
+        return Cb(Vc.j(function(c, d) {
+          return ck.h(c, a.g ? a.g(d) : a.call(null, d));
+        }, Ab(be), b));
+      }
+      function rk(a, b, c) {
+        return new ld(null, function() {
+          var d = H(c);
+          if (d) {
+            var e = lk.h(a, d);
+            return a === O2(e) ? U(e, rk(a, b, mk(b, d))) : null;
+          }
+          return null;
+        }, null, null);
+      }
+      function Xd(a, b, c, d) {
+        var e = If.j, f2 = T.h(a, b);
+        c = c.h ? c.h(f2, d) : c.call(null, f2, d);
+        return e.call(If, a, b, c);
+      }
+      function Ld(a, b) {
+        this.Z = a;
+        this.l = b;
+      }
+      function Md(a) {
+        return new Ld(a, [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]);
+      }
+      function Nd(a) {
+        return new Ld(a.Z, Oa(a.l));
+      }
+      function Od(a) {
+        a = a.v;
+        return 32 > a ? 0 : a - 1 >>> 5 << 5;
+      }
+      function Pd(a, b, c) {
+        for (; ; ) {
+          if (b === 0)
+            return c;
+          var d = Md(a);
+          d.l[0] = c;
+          c = d;
+          b -= 5;
+        }
+      }
+      var rg = function rg2(a, b, c, d) {
+        var f2 = Nd(c), h = a.v - 1 >>> b & 31;
+        b === 5 ? f2.l[h] = d : (c = c.l[h], c != null ? (b -= 5, a = rg2.K ? rg2.K(a, b, c, d) : rg2.call(null, a, b, c, d)) : a = Pd(null, b - 5, d), f2.l[h] = a);
+        return f2;
+      };
+      function Qd(a, b) {
+        throw Error(["No item ", B.g(a), " in vector of length ", B.g(b)].join(""));
+      }
+      function Rd(a, b) {
+        if (b >= Od(a))
+          return a.qa;
+        var c = a.root;
+        for (a = a.shift; ; )
+          if (0 < a) {
+            var d = a - 5;
+            c = c.l[b >>> a & 31];
+            a = d;
+          } else
+            return c.l;
+      }
+      function Sd2(a, b) {
+        return 0 <= b && b < a.v ? Rd(a, b) : Qd(b, a.v);
+      }
+      var sg = function sg2(a, b, c, d, e) {
+        var h = Nd(c);
+        if (b === 0)
+          h.l[d & 31] = e;
+        else {
+          var k = d >>> b & 31;
+          b -= 5;
+          c = c.l[k];
+          a = sg2.N ? sg2.N(a, b, c, d, e) : sg2.call(null, a, b, c, d, e);
+          h.l[k] = a;
+        }
+        return h;
+      }, Ng = function Ng2(a, b, c) {
+        var e = a.v - 2 >>> b & 31;
+        if (5 < b) {
+          b -= 5;
+          var f2 = c.l[e];
+          a = Ng2.j ? Ng2.j(a, b, f2) : Ng2.call(null, a, b, f2);
+          if (a == null && e === 0)
+            return null;
+          c = Nd(c);
+          c.l[e] = a;
+          return c;
+        }
+        if (e === 0)
+          return null;
+        c = Nd(c);
+        c.l[e] = null;
+        return c;
+      };
+      function Td(a, b, c, d, e, f2) {
+        this.B = a;
+        this.kc = b;
+        this.l = c;
+        this.ja = d;
+        this.start = e;
+        this.end = f2;
+      }
+      Td.prototype.ga = function() {
+        return this.B < this.end;
+      };
+      Td.prototype.next = function() {
+        this.B - this.kc === 32 && (this.l = Rd(this.ja, this.B), this.kc += 32);
+        var a = this.l[this.B & 31];
+        this.B += 1;
+        return a;
+      };
+      function Ud(a, b, c) {
+        return new Td(b, b - b % 32, b < O2(a) ? Rd(a, b) : null, a, b, c);
+      }
+      function Wd(a, b, c, d) {
+        return c < d ? Vd(a, b, sc(a, c), c + 1, d) : b.C ? b.C() : b.call(null);
+      }
+      function Vd(a, b, c, d, e) {
+        var f2 = c;
+        c = d;
+        for (d = Rd(a, d); ; )
+          if (c < e) {
+            var h = c & 31;
+            d = h === 0 ? Rd(a, c) : d;
+            h = d[h];
+            f2 = b.h ? b.h(f2, h) : b.call(null, f2, h);
+            if (hc(f2))
+              return D(f2);
+            c += 1;
+          } else
+            return f2;
+      }
+      function W(a, b, c, d, e, f2) {
+        this.A = a;
+        this.v = b;
+        this.shift = c;
+        this.root = d;
+        this.qa = e;
+        this.D = f2;
+        this.m = 167666463;
+        this.H = 139268;
+      }
+      g = W.prototype;
+      g.zb = function(a, b) {
+        return 0 <= b && b < this.v ? new xe(b, Rd(this, b)[b & 31]) : null;
+      };
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, O2(this));
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.sa = function(a, b) {
+        return this.Y(null, b, null);
+      };
+      g.Y = function(a, b, c) {
+        return typeof b === "number" ? this.ra(null, b, c) : c;
+      };
+      g.Jb = function(a, b, c) {
+        a = 0;
+        for (var d = c; ; )
+          if (a < this.v) {
+            var e = Rd(this, a);
+            c = e.length;
+            a:
+              for (var f2 = 0; ; )
+                if (f2 < c) {
+                  var h = f2 + a, k = e[f2];
+                  d = b.j ? b.j(d, h, k) : b.call(null, d, h, k);
+                  if (hc(d)) {
+                    e = d;
+                    break a;
+                  }
+                  f2 += 1;
+                } else {
+                  e = d;
+                  break a;
+                }
+            if (hc(e))
+              return D(e);
+            a += c;
+            d = e;
+          } else
+            return d;
+      };
+      g.mc = E;
+      g.da = function(a, b) {
+        return Sd2(this, b)[b & 31];
+      };
+      g.ra = function(a, b, c) {
+        return 0 <= b && b < this.v ? Rd(this, b)[b & 31] : c;
+      };
+      g.ob = function(a, b, c) {
+        if (0 <= b && b < this.v)
+          return Od(this) <= b ? (a = Oa(this.qa), a[b & 31] = c, new W(this.A, this.v, this.shift, this.root, a, null)) : new W(this.A, this.v, this.shift, sg(this, this.shift, this.root, b, c), this.qa, null);
+        if (b === this.v)
+          return this.ca(null, c);
+        throw Error(["Index ", B.g(b), " out of bounds  [0,", B.g(this.v), "]"].join(""));
+      };
+      g.wa = function() {
+        return Ud(this, 0, this.v);
+      };
+      g.S = function() {
+        return this.A;
+      };
+      g.X = function() {
+        return this.v;
+      };
+      g.Na = function() {
+        return 0 < this.v ? this.da(null, this.v - 1) : null;
+      };
+      g.Oa = function() {
+        if (this.v === 0)
+          throw Error("Can't pop empty vector");
+        if (this.v === 1)
+          return mb(be, this.A);
+        if (1 < this.v - Od(this))
+          return new W(this.A, this.v - 1, this.shift, this.root, this.qa.slice(0, -1), null);
+        var a = Rd(this, this.v - 2), b = Ng(this, this.shift, this.root);
+        b = b == null ? X2 : b;
+        var c = this.v - 1;
+        return 5 < this.shift && b.l[1] == null ? new W(this.A, c, this.shift - 5, b.l[0], a, null) : new W(this.A, c, this.shift, b, a, null);
+      };
+      g.Za = function() {
+        return 0 < this.v ? new wc(this, this.v - 1, null) : null;
+      };
+      g.V = function() {
+        var a = this.D;
+        return a != null ? a : this.D = a = ec(this);
+      };
+      g.U = function(a, b) {
+        if (b instanceof W)
+          if (this.v === O2(b))
+            for (a = this.wa(null), b = b.wa(null); ; )
+              if (a.ga()) {
+                var c = a.next(), d = b.next();
+                if (!P.h(c, d))
+                  return false;
+              } else
+                return true;
+          else
+            return false;
+        else
+          return dd(this, b);
+      };
+      g.yb = function() {
+        return new me(this.v, this.shift, ke.g ? ke.g(this.root) : ke.call(null, this.root), le.g ? le.g(this.qa) : le.call(null, this.qa));
+      };
+      g.aa = function() {
+        return mb(be, this.A);
+      };
+      g.ka = function(a, b) {
+        return Wd(this, b, 0, this.v);
+      };
+      g.la = function(a, b, c) {
+        a = 0;
+        for (var d = c; ; )
+          if (a < this.v) {
+            var e = Rd(this, a);
+            c = e.length;
+            a:
+              for (var f2 = 0; ; )
+                if (f2 < c) {
+                  var h = e[f2];
+                  d = b.h ? b.h(d, h) : b.call(null, d, h);
+                  if (hc(d)) {
+                    e = d;
+                    break a;
+                  }
+                  f2 += 1;
+                } else {
+                  e = d;
+                  break a;
+                }
+            if (hc(e))
+              return D(e);
+            a += c;
+            d = e;
+          } else
+            return d;
+      };
+      g.Ya = function(a, b, c) {
+        if (typeof b === "number")
+          return this.ob(null, b, c);
+        throw Error("Vector's key for assoc must be a number.");
+      };
+      g.nb = function(a, b) {
+        return Nc(b) ? 0 <= b && b < this.v : false;
+      };
+      g.W = function() {
+        if (this.v === 0)
+          return null;
+        if (32 >= this.v)
+          return new G(this.qa, 0, null);
+        a: {
+          var a = this.root;
+          for (var b = this.shift; ; )
+            if (0 < b)
+              b -= 5, a = a.l[0];
+            else {
+              a = a.l;
+              break a;
+            }
+        }
+        return ee ? ee(this, a, 0, 0) : ge.call(null, this, a, 0, 0);
+      };
+      g.T = function(a, b) {
+        return b === this.A ? this : new W(b, this.v, this.shift, this.root, this.qa, this.D);
+      };
+      g.ca = function(a, b) {
+        if (32 > this.v - Od(this)) {
+          a = this.qa.length;
+          for (var c = Array(a + 1), d = 0; ; )
+            if (d < a)
+              c[d] = this.qa[d], d += 1;
+            else
+              break;
+          c[a] = b;
+          return new W(this.A, this.v + 1, this.shift, this.root, c, null);
+        }
+        a = (c = this.v >>> 5 > 1 << this.shift) ? this.shift + 5 : this.shift;
+        c ? (c = Md(null), c.l[0] = this.root, d = Pd(null, this.shift, new Ld(null, this.qa)), c.l[1] = d) : c = rg(this, this.shift, this.root, new Ld(null, this.qa));
+        return new W(this.A, this.v + 1, a, c, [b], null);
+      };
+      g.call = function(a) {
+        switch (arguments.length - 1) {
+          case 1:
+            return this.g(arguments[1]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length - 1)].join(""));
+        }
+      };
+      g.apply = function(a, b) {
+        return this.call.apply(this, [this].concat(Oa(b)));
+      };
+      g.g = function(a) {
+        if (typeof a === "number")
+          return this.da(null, a);
+        throw Error("Key must be integer");
+      };
+      var X2 = new Ld(null, [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]), be = new W(null, 0, 5, X2, [], lg);
+      function Yd(a, b) {
+        var c = a.length;
+        a = b ? a : Oa(a);
+        if (32 > c)
+          return new W(null, c, 5, X2, a, null);
+        b = 32;
+        for (var d = new W(null, 32, 5, X2, a.slice(0, 32), null).yb(null); ; )
+          if (b < c) {
+            var e = b + 1;
+            d = ck.h(d, a[b]);
+            b = e;
+          } else
+            return Cb(d);
+      }
+      W.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function ce(a) {
+        return v(Zd.g ? Zd.g(a) : Zd.call(null, a)) ? new W(null, 2, 5, X2, [$d.g ? $d.g(a) : $d.call(null, a), ae.g ? ae.g(a) : ae.call(null, a)], null) : Jc(a) ? Cc(a, null) : Ka(a) ? Yd(a, true) : Cb(Vc.j(Bb, Ab(be), a));
+      }
+      var Vh = function Vh2(a) {
+        for (var c = [], d = arguments.length, e = 0; ; )
+          if (e < d)
+            c.push(arguments[e]), e += 1;
+          else
+            break;
+        return Vh2.o(0 < c.length ? new G(c.slice(0), 0, null) : null);
+      };
+      Vh.o = function(a) {
+        return a instanceof G && a.B === 0 ? Yd(a.l, !Ka(a.l)) : ce(a);
+      };
+      Vh.I = 0;
+      Vh.J = function(a) {
+        return this.o(H(a));
+      };
+      function de(a, b, c, d, e) {
+        this.za = a;
+        this.node = b;
+        this.B = c;
+        this.ma = d;
+        this.A = e;
+        this.D = null;
+        this.m = 32375020;
+        this.H = 1536;
+      }
+      g = de.prototype;
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, O2(this));
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.S = function() {
+        return this.A;
+      };
+      g.ea = function() {
+        if (this.ma + 1 < this.node.length) {
+          var a = this.za;
+          var b = this.node, c = this.B, d = this.ma + 1;
+          a = ee ? ee(a, b, c, d) : ge.call(null, a, b, c, d);
+          return a == null ? null : a;
+        }
+        return this.bc();
+      };
+      g.V = function() {
+        var a = this.D;
+        return a != null ? a : this.D = a = ec(this);
+      };
+      g.U = function(a, b) {
+        return dd(this, b);
+      };
+      g.aa = function() {
+        return J;
+      };
+      g.ka = function(a, b) {
+        return Wd(this.za, b, this.B + this.ma, O2(this.za));
+      };
+      g.la = function(a, b, c) {
+        return Vd(this.za, b, c, this.B + this.ma, O2(this.za));
+      };
+      g.fa = function() {
+        return this.node[this.ma];
+      };
+      g.ia = function() {
+        if (this.ma + 1 < this.node.length) {
+          var a = this.za;
+          var b = this.node, c = this.B, d = this.ma + 1;
+          a = ee ? ee(a, b, c, d) : ge.call(null, a, b, c, d);
+          return a == null ? J : a;
+        }
+        return this.eb(null);
+      };
+      g.W = function() {
+        return this;
+      };
+      g.Ib = function() {
+        var a = this.node;
+        return new od(a, this.ma, a.length);
+      };
+      g.eb = function() {
+        var a = this.B + this.node.length;
+        if (a < Sa(this.za)) {
+          var b = this.za, c = Rd(this.za, a);
+          return ee ? ee(b, c, a, 0) : ge.call(null, b, c, a, 0);
+        }
+        return J;
+      };
+      g.T = function(a, b) {
+        return b === this.A ? this : fe ? fe(this.za, this.node, this.B, this.ma, b) : ge.call(null, this.za, this.node, this.B, this.ma, b);
+      };
+      g.ca = function(a, b) {
+        return U(b, this);
+      };
+      g.bc = function() {
+        var a = this.B + this.node.length;
+        if (a < Sa(this.za)) {
+          var b = this.za, c = Rd(this.za, a);
+          return ee ? ee(b, c, a, 0) : ge.call(null, b, c, a, 0);
+        }
+        return null;
+      };
+      de.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function ge(a) {
+        switch (arguments.length) {
+          case 3:
+            var b = arguments[0], c = arguments[1], d = arguments[2];
+            return new de(b, Sd2(b, c), c, d, null);
+          case 4:
+            return ee(arguments[0], arguments[1], arguments[2], arguments[3]);
+          case 5:
+            return fe(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      }
+      function ee(a, b, c, d) {
+        return new de(a, b, c, d, null);
+      }
+      function fe(a, b, c, d, e) {
+        return new de(a, b, c, d, e);
+      }
+      function he(a, b, c, d, e) {
+        this.A = a;
+        this.ja = b;
+        this.start = c;
+        this.end = d;
+        this.D = e;
+        this.m = 167666463;
+        this.H = 139264;
+      }
+      g = he.prototype;
+      g.zb = function(a, b) {
+        if (0 > b)
+          return null;
+        a = this.start + b;
+        return a < this.end ? new xe(b, fg(this.ja, a)) : null;
+      };
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, O2(this));
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.sa = function(a, b) {
+        return this.Y(null, b, null);
+      };
+      g.Y = function(a, b, c) {
+        return typeof b === "number" ? this.ra(null, b, c) : c;
+      };
+      g.Jb = function(a, b, c) {
+        a = this.start;
+        for (var d = 0; ; )
+          if (a < this.end) {
+            var e = d, f2 = zc(this.ja, a);
+            c = b.j ? b.j(c, e, f2) : b.call(null, c, e, f2);
+            if (hc(c))
+              return D(c);
+            d += 1;
+            a += 1;
+          } else
+            return c;
+      };
+      g.da = function(a, b) {
+        return 0 > b || this.end <= this.start + b ? Qd(b, this.end - this.start) : zc(this.ja, this.start + b);
+      };
+      g.ra = function(a, b, c) {
+        return 0 > b || this.end <= this.start + b ? c : zc(this.ja, this.start + b, c);
+      };
+      g.ob = function(a, b, c) {
+        a = this.start + b;
+        if (0 > b || this.end + 1 <= a)
+          throw Error(["Index ", B.g(b), " out of bounds [0,", B.g(this.X(null)), "]"].join(""));
+        b = this.A;
+        c = If.j(this.ja, a, c);
+        var d = this.start, e = this.end;
+        a += 1;
+        a = e > a ? e : a;
+        return ie.N ? ie.N(b, c, d, a, null) : ie.call(null, b, c, d, a, null);
+      };
+      g.wa = function() {
+        return this.ja != null && E === this.ja.mc ? Ud(this.ja, this.start, this.end) : new Fd(this);
+      };
+      g.S = function() {
+        return this.A;
+      };
+      g.X = function() {
+        return this.end - this.start;
+      };
+      g.Na = function() {
+        return this.start === this.end ? null : zc(this.ja, this.end - 1);
+      };
+      g.Oa = function() {
+        if (this.start === this.end)
+          throw Error("Can't pop empty vector");
+        var a = this.A, b = this.ja, c = this.start, d = this.end - 1;
+        return ie.N ? ie.N(a, b, c, d, null) : ie.call(null, a, b, c, d, null);
+      };
+      g.Za = function() {
+        return this.start !== this.end ? new wc(this, this.end - this.start - 1, null) : null;
+      };
+      g.V = function() {
+        var a = this.D;
+        return a != null ? a : this.D = a = ec(this);
+      };
+      g.U = function(a, b) {
+        return dd(this, b);
+      };
+      g.aa = function() {
+        return mb(be, this.A);
+      };
+      g.ka = function(a, b) {
+        return this.ja != null && E === this.ja.mc ? Wd(this.ja, b, this.start, this.end) : lc(this, b);
+      };
+      g.la = function(a, b, c) {
+        return this.ja != null && E === this.ja.mc ? Vd(this.ja, b, c, this.start, this.end) : mc(this, b, c);
+      };
+      g.Ya = function(a, b, c) {
+        if (typeof b === "number")
+          return this.ob(null, b, c);
+        throw Error("Subvec's key for assoc must be a number.");
+      };
+      g.nb = function(a, b) {
+        return Nc(b) ? 0 <= b && b < this.end - this.start : false;
+      };
+      g.W = function() {
+        var a = this;
+        return function d(c) {
+          return c === a.end ? null : U(zc(a.ja, c), new ld(null, function() {
+            return d(c + 1);
+          }, null, null));
+        }(a.start);
+      };
+      g.T = function(a, b) {
+        return b === this.A ? this : ie.N ? ie.N(b, this.ja, this.start, this.end, this.D) : ie.call(null, b, this.ja, this.start, this.end, this.D);
+      };
+      g.ca = function(a, b) {
+        a = this.A;
+        b = ib(this.ja, this.end, b);
+        var c = this.start, d = this.end + 1;
+        return ie.N ? ie.N(a, b, c, d, null) : ie.call(null, a, b, c, d, null);
+      };
+      g.call = function(a) {
+        switch (arguments.length - 1) {
+          case 1:
+            return this.g(arguments[1]);
+          case 2:
+            return this.h(arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length - 1)].join(""));
+        }
+      };
+      g.apply = function(a, b) {
+        return this.call.apply(this, [this].concat(Oa(b)));
+      };
+      g.g = function(a) {
+        return this.da(null, a);
+      };
+      g.h = function(a, b) {
+        return this.ra(null, a, b);
+      };
+      he.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function ie(a, b, c, d, e) {
+        for (; ; )
+          if (b instanceof he)
+            c = b.start + c, d = b.start + d, b = b.ja;
+          else {
+            if (!Jc(b))
+              throw Error("v must satisfy IVector");
+            if (0 > c || d < c || d > O2(b))
+              throw Error("Index out of bounds");
+            return new he(a, b, c, d, e);
+          }
+      }
+      function sk(a, b, c) {
+        return ie(null, a, b | 0, c | 0, null);
+      }
+      function je(a, b) {
+        return a === b.Z ? b : new Ld(a, Oa(b.l));
+      }
+      function ke(a) {
+        return new Ld({}, Oa(a.l));
+      }
+      function le(a) {
+        var b = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
+        Lc(a, 0, b, 0, a.length);
+        return b;
+      }
+      var tg = function tg2(a, b, c, d) {
+        c = je(a.root.Z, c);
+        var f2 = a.v - 1 >>> b & 31;
+        if (b === 5)
+          a = d;
+        else {
+          var h = c.l[f2];
+          h != null ? (b -= 5, a = tg2.K ? tg2.K(a, b, h, d) : tg2.call(null, a, b, h, d)) : a = Pd(a.root.Z, b - 5, d);
+        }
+        c.l[f2] = a;
+        return c;
+      };
+      function me(a, b, c, d) {
+        this.v = a;
+        this.shift = b;
+        this.root = c;
+        this.qa = d;
+        this.H = 88;
+        this.m = 275;
+      }
+      g = me.prototype;
+      g.Cb = function(a, b) {
+        if (this.root.Z) {
+          if (32 > this.v - Od(this))
+            this.qa[this.v & 31] = b;
+          else {
+            a = new Ld(this.root.Z, this.qa);
+            var c = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
+            c[0] = b;
+            this.qa = c;
+            this.v >>> 5 > 1 << this.shift ? (b = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], c = this.shift + 5, b[0] = this.root, b[1] = Pd(this.root.Z, this.shift, a), this.root = new Ld(this.root.Z, b), this.shift = c) : this.root = tg(this, this.shift, this.root, a);
+          }
+          this.v += 1;
+          return this;
+        }
+        throw Error("conj! after persistent!");
+      };
+      g.Ob = function() {
+        if (this.root.Z) {
+          this.root.Z = null;
+          var a = this.v - Od(this), b = Array(a);
+          Lc(this.qa, 0, b, 0, a);
+          return new W(null, this.v, this.shift, this.root, b, null);
+        }
+        throw Error("persistent! called twice");
+      };
+      g.Bb = function(a, b, c) {
+        if (typeof b === "number")
+          return ne(this, b, c);
+        throw Error("TransientVector's key for assoc! must be a number.");
+      };
+      function ne(a, b, c) {
+        if (a.root.Z) {
+          if (0 <= b && b < a.v) {
+            if (Od(a) <= b)
+              a.qa[b & 31] = c;
+            else {
+              var d = function k(f2, h) {
+                h = je(a.root.Z, h);
+                if (f2 === 0)
+                  h.l[b & 31] = c;
+                else {
+                  var l = b >>> f2 & 31;
+                  f2 = k(f2 - 5, h.l[l]);
+                  h.l[l] = f2;
+                }
+                return h;
+              }(a.shift, a.root);
+              a.root = d;
+            }
+            return a;
+          }
+          if (b === a.v)
+            return a.Cb(null, c);
+          throw Error(["Index ", B.g(b), " out of bounds for TransientVector of length", B.g(a.v)].join(""));
+        }
+        throw Error("assoc! after persistent!");
+      }
+      g.X = function() {
+        if (this.root.Z)
+          return this.v;
+        throw Error("count after persistent!");
+      };
+      g.da = function(a, b) {
+        if (this.root.Z)
+          return Sd2(this, b)[b & 31];
+        throw Error("nth after persistent!");
+      };
+      g.ra = function(a, b, c) {
+        return 0 <= b && b < this.v ? this.da(null, b) : c;
+      };
+      g.sa = function(a, b) {
+        return this.Y(null, b, null);
+      };
+      g.Y = function(a, b, c) {
+        if (this.root.Z)
+          return typeof b === "number" ? this.ra(null, b, c) : c;
+        throw Error("lookup after persistent!");
+      };
+      g.call = function(a) {
+        switch (arguments.length - 1) {
+          case 1:
+            return this.g(arguments[1]);
+          case 2:
+            return this.h(arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length - 1)].join(""));
+        }
+      };
+      g.apply = function(a, b) {
+        return this.call.apply(this, [this].concat(Oa(b)));
+      };
+      g.g = function(a) {
+        return this.sa(null, a);
+      };
+      g.h = function(a, b) {
+        return this.Y(null, a, b);
+      };
+      function tk(a, b) {
+        this.Yc = a;
+        this.jd = b;
+      }
+      tk.prototype.ga = function() {
+        var a = this.Yc != null && H(this.Yc);
+        return a ? a : (a = this.jd != null) ? this.jd.ga() : a;
+      };
+      tk.prototype.next = function() {
+        if (this.Yc != null) {
+          var a = I(this.Yc);
+          this.Yc = N2(this.Yc);
+          return a;
+        }
+        if (this.jd != null && this.jd.ga())
+          return this.jd.next();
+        throw Error("No such element");
+      };
+      tk.prototype.remove = function() {
+        return Error("Unsupported operation");
+      };
+      function uk(a, b, c, d) {
+        this.A = a;
+        this.ec = b;
+        this.fc = c;
+        this.D = d;
+        this.m = 31850700;
+        this.H = 0;
+      }
+      g = uk.prototype;
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, O2(this));
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.S = function() {
+        return this.A;
+      };
+      g.ea = function() {
+        var a = N2(this.ec);
+        return a ? new uk(this.A, a, this.fc, null) : this.fc != null ? new uk(this.A, this.fc, null, null) : null;
+      };
+      g.V = function() {
+        var a = this.D;
+        return a != null ? a : this.D = a = ec(this);
+      };
+      g.U = function(a, b) {
+        return dd(this, b);
+      };
+      g.aa = function() {
+        return mb(J, this.A);
+      };
+      g.fa = function() {
+        return I(this.ec);
+      };
+      g.ia = function() {
+        var a = N2(this.ec);
+        return a ? new uk(this.A, a, this.fc, null) : this.fc == null ? this.aa(null) : new uk(this.A, this.fc, null, null);
+      };
+      g.W = function() {
+        return this;
+      };
+      g.T = function(a, b) {
+        return b === this.A ? this : new uk(b, this.ec, this.fc, this.D);
+      };
+      g.ca = function(a, b) {
+        return U(b, this);
+      };
+      uk.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function vk(a, b, c, d, e) {
+        this.A = a;
+        this.count = b;
+        this.ec = c;
+        this.fc = d;
+        this.D = e;
+        this.H = 139264;
+        this.m = 31858766;
+      }
+      g = vk.prototype;
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, this.count.g ? this.count.g(this) : this.count.call(null, this));
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.wa = function() {
+        return new tk(this.ec, Lb(this.fc));
+      };
+      g.S = function() {
+        return this.A;
+      };
+      g.X = function() {
+        return this.count;
+      };
+      g.Na = function() {
+        return I(this.ec);
+      };
+      g.Oa = function() {
+        if (v(this.ec)) {
+          var a = N2(this.ec);
+          return a ? new vk(this.A, this.count - 1, a, this.fc, null) : new vk(this.A, this.count - 1, H(this.fc), be, null);
+        }
+        return this;
+      };
+      g.V = function() {
+        var a = this.D;
+        return a != null ? a : this.D = a = ec(this);
+      };
+      g.U = function(a, b) {
+        return dd(this, b);
+      };
+      g.aa = function() {
+        return mb(wk, this.A);
+      };
+      g.fa = function() {
+        return I(this.ec);
+      };
+      g.ia = function() {
+        return ac(H(this));
+      };
+      g.W = function() {
+        var a = H(this.fc), b = this.ec;
+        return v(v(b) ? b : a) ? new uk(null, this.ec, H(a), null) : null;
+      };
+      g.T = function(a, b) {
+        return b === this.A ? this : new vk(b, this.count, this.ec, this.fc, this.D);
+      };
+      g.ca = function(a, b) {
+        v(this.ec) ? (a = this.fc, b = new vk(this.A, this.count + 1, this.ec, Z.h(v(a) ? a : be, b), null)) : b = new vk(this.A, this.count + 1, Z.h(this.ec, b), be, null);
+        return b;
+      };
+      var wk = new vk(null, 0, null, be, lg);
+      vk.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function re() {
+        this.m = 2097152;
+        this.H = 0;
+      }
+      re.prototype.U = function() {
+        return false;
+      };
+      var se = new re();
+      function te(a, b) {
+        return Mc(Hc(b) && !Ic(b) ? O2(a) === O2(b) ? (a != null ? a.m & 1048576 || E === a.xd || (a.m ? 0 : x(ob, a)) : x(ob, a)) ? Yc(function(c, d, e) {
+          return P.h(T.j(b, d, se), e) ? true : new gc(false);
+        }, true, a) : Gd(function(c) {
+          return P.h(T.j(b, I(c), se), xc(c));
+        }, a) : null : null);
+      }
+      function ue(a) {
+        this.O = a;
+      }
+      ue.prototype.next = function() {
+        if (this.O != null) {
+          var a = I(this.O), b = S(a, 0, null);
+          a = S(a, 1, null);
+          this.O = N2(this.O);
+          return { value: [b, a], done: false };
+        }
+        return { value: null, done: true };
+      };
+      function ve(a) {
+        this.O = a;
+      }
+      ve.prototype.next = function() {
+        if (this.O != null) {
+          var a = I(this.O);
+          this.O = N2(this.O);
+          return { value: [a, a], done: false };
+        }
+        return { value: null, done: true };
+      };
+      function we(a, b) {
+        if (b instanceof V)
+          a: {
+            var c = a.length;
+            b = b.Pa;
+            for (var d = 0; ; ) {
+              if (c <= d) {
+                a = -1;
+                break a;
+              }
+              if (a[d] instanceof V && b === a[d].Pa) {
+                a = d;
+                break a;
+              }
+              d += 2;
+            }
+          }
+        else if (typeof b === "string" || typeof b === "number")
+          a:
+            for (c = a.length, d = 0; ; ) {
+              if (c <= d) {
+                a = -1;
+                break a;
+              }
+              if (b === a[d]) {
+                a = d;
+                break a;
+              }
+              d += 2;
+            }
+        else if (b instanceof F)
+          a:
+            for (c = a.length, b = b.Wa, d = 0; ; ) {
+              if (c <= d) {
+                a = -1;
+                break a;
+              }
+              if (a[d] instanceof F && b === a[d].Wa) {
+                a = d;
+                break a;
+              }
+              d += 2;
+            }
+        else if (b == null)
+          a:
+            for (b = a.length, c = 0; ; ) {
+              if (b <= c) {
+                a = -1;
+                break a;
+              }
+              if (a[c] == null) {
+                a = c;
+                break a;
+              }
+              c += 2;
+            }
+        else
+          a:
+            for (c = a.length, d = 0; ; ) {
+              if (c <= d) {
+                a = -1;
+                break a;
+              }
+              if (P.h(b, a[d])) {
+                a = d;
+                break a;
+              }
+              d += 2;
+            }
+        return a;
+      }
+      function xe(a, b) {
+        this.key = a;
+        this.M = b;
+        this.D = null;
+        this.m = 166619935;
+        this.H = 0;
+      }
+      g = xe.prototype;
+      g.zb = function(a, b) {
+        switch (b) {
+          case 0:
+            return new xe(0, this.key);
+          case 1:
+            return new xe(1, this.M);
+          default:
+            return null;
+        }
+      };
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, O2(this));
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.sa = function(a, b) {
+        return this.ra(null, b, null);
+      };
+      g.Y = function(a, b, c) {
+        return this.ra(null, b, c);
+      };
+      g.da = function(a, b) {
+        if (b === 0)
+          return this.key;
+        if (b === 1)
+          return this.M;
+        throw Error("Index out of bounds");
+      };
+      g.ra = function(a, b, c) {
+        return b === 0 ? this.key : b === 1 ? this.M : c;
+      };
+      g.ob = function(a, b, c) {
+        return new W(null, 2, 5, X2, [this.key, this.M], null).ob(null, b, c);
+      };
+      g.S = function() {
+        return null;
+      };
+      g.X = function() {
+        return 2;
+      };
+      g.Lc = function() {
+        return this.key;
+      };
+      g.Mc = function() {
+        return this.M;
+      };
+      g.Na = function() {
+        return this.M;
+      };
+      g.Oa = function() {
+        return new W(null, 1, 5, X2, [this.key], null);
+      };
+      g.Za = function() {
+        return new G([this.M, this.key], 0, null);
+      };
+      g.V = function() {
+        var a = this.D;
+        return a != null ? a : this.D = a = ec(this);
+      };
+      g.U = function(a, b) {
+        return dd(this, b);
+      };
+      g.aa = function() {
+        return null;
+      };
+      g.ka = function(a, b) {
+        return lc(this, b);
+      };
+      g.la = function(a, b, c) {
+        return mc(this, b, c);
+      };
+      g.Ya = function(a, b, c) {
+        return If.j(new W(null, 2, 5, X2, [this.key, this.M], null), b, c);
+      };
+      g.nb = function(a, b) {
+        return b === 0 || b === 1;
+      };
+      g.W = function() {
+        return new G([this.key, this.M], 0, null);
+      };
+      g.T = function(a, b) {
+        return Cc(new W(null, 2, 5, X2, [this.key, this.M], null), b);
+      };
+      g.ca = function(a, b) {
+        return new W(null, 3, 5, X2, [this.key, this.M, b], null);
+      };
+      g.call = function(a) {
+        switch (arguments.length - 1) {
+          case 1:
+            return this.g(arguments[1]);
+          case 2:
+            return this.h(arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length - 1)].join(""));
+        }
+      };
+      g.apply = function(a, b) {
+        return this.call.apply(this, [this].concat(Oa(b)));
+      };
+      g.g = function(a) {
+        return this.da(null, a);
+      };
+      g.h = function(a, b) {
+        return this.ra(null, a, b);
+      };
+      function Zd(a) {
+        return a != null ? a.m & 2048 || E === a.Ad ? true : false : false;
+      }
+      function ye(a, b, c) {
+        this.l = a;
+        this.B = b;
+        this.Va = c;
+        this.m = 32374990;
+        this.H = 0;
+      }
+      g = ye.prototype;
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, O2(this));
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.S = function() {
+        return this.Va;
+      };
+      g.ea = function() {
+        return this.B < this.l.length - 2 ? new ye(this.l, this.B + 2, null) : null;
+      };
+      g.X = function() {
+        return (this.l.length - this.B) / 2;
+      };
+      g.V = function() {
+        return ec(this);
+      };
+      g.U = function(a, b) {
+        return dd(this, b);
+      };
+      g.aa = function() {
+        return J;
+      };
+      g.ka = function(a, b) {
+        return Sc(b, this);
+      };
+      g.la = function(a, b, c) {
+        return Tc(b, c, this);
+      };
+      g.fa = function() {
+        return new xe(this.l[this.B], this.l[this.B + 1]);
+      };
+      g.ia = function() {
+        return this.B < this.l.length - 2 ? new ye(this.l, this.B + 2, null) : J;
+      };
+      g.W = function() {
+        return this;
+      };
+      g.T = function(a, b) {
+        return b === this.Va ? this : new ye(this.l, this.B, b);
+      };
+      g.ca = function(a, b) {
+        return U(b, this);
+      };
+      ye.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function ze(a, b) {
+        this.l = a;
+        this.B = 0;
+        this.v = b;
+      }
+      ze.prototype.ga = function() {
+        return this.B < this.v;
+      };
+      ze.prototype.next = function() {
+        var a = new xe(this.l[this.B], this.l[this.B + 1]);
+        this.B += 2;
+        return a;
+      };
+      function u(a, b, c, d) {
+        this.A = a;
+        this.v = b;
+        this.l = c;
+        this.D = d;
+        this.m = 16647951;
+        this.H = 139268;
+      }
+      g = u.prototype;
+      g.zb = function(a, b) {
+        a = we(this.l, b);
+        return a === -1 ? null : new xe(this.l[a], this.l[a + 1]);
+      };
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.keys = function() {
+        return cc(kf.g ? kf.g(this) : kf.call(null, this));
+      };
+      g.entries = function() {
+        return new ue(H(H(this)));
+      };
+      g.values = function() {
+        return cc(mf.g ? mf.g(this) : mf.call(null, this));
+      };
+      g.has = function(a) {
+        return Pc(this, a);
+      };
+      g.get = function(a, b) {
+        return this.Y(null, a, b);
+      };
+      g.forEach = function(a) {
+        for (var b = H(this), c = null, d = 0, e = 0; ; )
+          if (e < d) {
+            var f2 = c.da(null, e), h = S(f2, 0, null);
+            f2 = S(f2, 1, null);
+            a.h ? a.h(f2, h) : a.call(null, f2, h);
+            e += 1;
+          } else if (b = H(b))
+            Kc(b) ? (c = Hb(b), b = Ib(b), h = c, d = O2(c), c = h) : (c = I(b), h = S(c, 0, null), f2 = S(c, 1, null), a.h ? a.h(f2, h) : a.call(null, f2, h), b = N2(b), c = null, d = 0), e = 0;
+          else
+            return null;
+      };
+      g.sa = function(a, b) {
+        return this.Y(null, b, null);
+      };
+      g.Y = function(a, b, c) {
+        a = we(this.l, b);
+        return a === -1 ? c : this.l[a + 1];
+      };
+      g.Jb = function(a, b, c) {
+        a = this.l.length;
+        for (var d = 0; ; )
+          if (d < a) {
+            var e = this.l[d], f2 = this.l[d + 1];
+            c = b.j ? b.j(c, e, f2) : b.call(null, c, e, f2);
+            if (hc(c))
+              return D(c);
+            d += 2;
+          } else
+            return c;
+      };
+      g.wa = function() {
+        return new ze(this.l, 2 * this.v);
+      };
+      g.S = function() {
+        return this.A;
+      };
+      g.X = function() {
+        return this.v;
+      };
+      g.V = function() {
+        var a = this.D;
+        return a != null ? a : this.D = a = fc(this);
+      };
+      g.U = function(a, b) {
+        if (Hc(b) && !Ic(b))
+          if (a = this.l.length, this.v === b.X(null))
+            for (var c = 0; ; )
+              if (c < a) {
+                var d = b.Y(null, this.l[c], Oc);
+                if (d !== Oc)
+                  if (P.h(this.l[c + 1], d))
+                    c += 2;
+                  else
+                    return false;
+                else
+                  return false;
+              } else
+                return true;
+          else
+            return false;
+        else
+          return false;
+      };
+      g.yb = function() {
+        return new Ge(this.l.length, Oa(this.l));
+      };
+      g.aa = function() {
+        return mb(Cd, this.A);
+      };
+      g.ka = function(a, b) {
+        return Wc(this, b);
+      };
+      g.la = function(a, b, c) {
+        return Xc(this, b, c);
+      };
+      g.Kb = function(a, b) {
+        if (0 <= we(this.l, b)) {
+          a = this.l.length;
+          var c = a - 2;
+          if (c === 0)
+            return this.aa(null);
+          c = Array(c);
+          for (var d = 0, e = 0; ; ) {
+            if (d >= a)
+              return new u(this.A, this.v - 1, c, null);
+            P.h(b, this.l[d]) ? d += 2 : (c[e] = this.l[d], c[e + 1] = this.l[d + 1], e += 2, d += 2);
+          }
+        } else
+          return this;
+      };
+      g.Ya = function(a, b, c) {
+        a = we(this.l, b);
+        if (a === -1) {
+          if (this.v < vg) {
+            a = this.l;
+            for (var d = a.length, e = Array(d + 2), f2 = 0; ; )
+              if (f2 < d)
+                e[f2] = a[f2], f2 += 1;
+              else
+                break;
+            e[d] = b;
+            e[d + 1] = c;
+            return new u(this.A, this.v + 1, e, null);
+          }
+          return mb(bb(Fe.h(He, this), b, c), this.A);
+        }
+        if (c === this.l[a + 1])
+          return this;
+        b = Oa(this.l);
+        b[a + 1] = c;
+        return new u(this.A, this.v, b, null);
+      };
+      g.nb = function(a, b) {
+        return we(this.l, b) !== -1;
+      };
+      g.W = function() {
+        var a = this.l;
+        return 0 <= a.length - 2 ? new ye(a, 0, null) : null;
+      };
+      g.T = function(a, b) {
+        return b === this.A ? this : new u(b, this.v, this.l, this.D);
+      };
+      g.ca = function(a, b) {
+        if (Jc(b))
+          return this.Ya(null, zc(b, 0), zc(b, 1));
+        a = this;
+        for (b = H(b); ; ) {
+          if (b == null)
+            return a;
+          var c = I(b);
+          if (Jc(c))
+            a = bb(a, zc(c, 0), zc(c, 1)), b = N2(b);
+          else
+            throw Error("conj on a map takes map entries or seqables of map entries");
+        }
+      };
+      g.call = function(a) {
+        switch (arguments.length - 1) {
+          case 1:
+            return this.g(arguments[1]);
+          case 2:
+            return this.h(arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length - 1)].join(""));
+        }
+      };
+      g.apply = function(a, b) {
+        return this.call.apply(this, [this].concat(Oa(b)));
+      };
+      g.g = function(a) {
+        return this.sa(null, a);
+      };
+      g.h = function(a, b) {
+        return this.Y(null, a, b);
+      };
+      var Cd = new u(null, 0, [], mg), vg = 8;
+      function Ae(a, b) {
+        return a === b ? true : id(a, b) ? true : P.h(a, b);
+      }
+      function Be(a) {
+        for (var b = 0, c = 0; ; )
+          if (b < a.length) {
+            var d;
+            a:
+              for (d = 0; ; )
+                if (d < b) {
+                  var e = Ae(a[b], a[d]);
+                  if (e) {
+                    d = e;
+                    break a;
+                  }
+                  d = 2 + d;
+                } else {
+                  d = false;
+                  break a;
+                }
+            c = d ? c : c + 2;
+            b = 2 + b;
+          } else
+            return c;
+      }
+      function Ce(a, b) {
+        var c = a.length - 1, d = H(b);
+        b = Array(c + 2 * O2(d));
+        a = Lc(a, 0, b, 0, c);
+        for (b = c; ; )
+          if (d) {
+            var e = I(d);
+            a[b] = eb(e);
+            a[b + 1] = fb(e);
+            b = 2 + c;
+            d = N2(d);
+          } else
+            return a;
+      }
+      function Ee(a) {
+        var b = a.length, c = (b & 1) === 1, d;
+        if (!(d = c))
+          a:
+            for (d = 0; ; )
+              if (d < a.length) {
+                var e;
+                b:
+                  for (e = 0; ; )
+                    if (e < d) {
+                      var f2 = Ae(a[d], a[e]);
+                      if (f2) {
+                        e = f2;
+                        break b;
+                      }
+                      e = 2 + e;
+                    } else {
+                      e = false;
+                      break b;
+                    }
+                if (e) {
+                  d = e;
+                  break a;
+                }
+                d = 2 + d;
+              } else {
+                d = false;
+                break a;
+              }
+        return d ? De(a, c) : new u(null, b / 2, a, null);
+      }
+      function De(a, b) {
+        var c = b ? Ce(a, Fe.h(Cd, a[a.length - 1])) : a;
+        a = Be(c);
+        var d = c.length;
+        if (a < d) {
+          a = Array(a);
+          for (var e = 0, f2 = 0; ; )
+            if (e < d)
+              (function() {
+                for (var h = 0; ; )
+                  if (h < f2) {
+                    var k = Ae(c[e], c[h]);
+                    if (k)
+                      return k;
+                    h = 2 + h;
+                  } else
+                    return false;
+              })() ? (b = f2, e = 2 + e, f2 = b) : (b = function() {
+                for (var h = d - 2; ; )
+                  if (h >= e) {
+                    if (Ae(c[e], c[h]))
+                      return h;
+                    h -= 2;
+                  } else
+                    return h;
+              }(), a[f2] = c[e], a[f2 + 1] = c[b + 1], b = 2 + f2, e = 2 + e, f2 = b);
+            else
+              break;
+          return new u(null, a.length / 2, a, null);
+        }
+        return new u(null, c.length / 2, c, null);
+      }
+      u.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function Ge(a, b) {
+        this.Eb = {};
+        this.sb = a;
+        this.l = b;
+        this.m = 259;
+        this.H = 56;
+      }
+      g = Ge.prototype;
+      g.X = function() {
+        if (this.Eb)
+          return bd(this.sb, 2);
+        throw Error("count after persistent!");
+      };
+      g.sa = function(a, b) {
+        return this.Y(null, b, null);
+      };
+      g.Y = function(a, b, c) {
+        if (this.Eb)
+          return a = we(this.l, b), a === -1 ? c : this.l[a + 1];
+        throw Error("lookup after persistent!");
+      };
+      g.Cb = function(a, b) {
+        if (this.Eb) {
+          if (Zd(b))
+            return this.Bb(null, $d.g ? $d.g(b) : $d.call(null, b), ae.g ? ae.g(b) : ae.call(null, b));
+          if (Jc(b))
+            return this.Bb(null, b.g ? b.g(0) : b.call(null, 0), b.g ? b.g(1) : b.call(null, 1));
+          a = H(b);
+          for (b = this; ; ) {
+            var c = I(a);
+            if (v(c))
+              a = N2(a), b = Db(b, $d.g ? $d.g(c) : $d.call(null, c), ae.g ? ae.g(c) : ae.call(null, c));
+            else
+              return b;
+          }
+        } else
+          throw Error("conj! after persistent!");
+      };
+      g.Ob = function() {
+        if (this.Eb)
+          return this.Eb = false, new u(null, bd(this.sb, 2), this.l, null);
+        throw Error("persistent! called twice");
+      };
+      g.Bb = function(a, b, c) {
+        if (this.Eb) {
+          a = we(this.l, b);
+          if (a === -1) {
+            if (this.sb + 2 <= 2 * vg)
+              return this.sb += 2, this.l.push(b), this.l.push(c), this;
+            a = Ie.h ? Ie.h(this.sb, this.l) : Ie.call(null, this.sb, this.l);
+            return Db(a, b, c);
+          }
+          c !== this.l[a + 1] && (this.l[a + 1] = c);
+          return this;
+        }
+        throw Error("assoc! after persistent!");
+      };
+      g.Ld = function(a, b) {
+        if (this.Eb)
+          return a = we(this.l, b), 0 <= a && (this.l[a] = this.l[this.sb - 2], this.l[a + 1] = this.l[this.sb - 1], a = this.l, a.pop(), a.pop(), this.sb -= 2), this;
+        throw Error("dissoc! after persistent!");
+      };
+      g.call = function(a) {
+        switch (arguments.length - 1) {
+          case 1:
+            return this.g(arguments[1]);
+          case 2:
+            return this.h(arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length - 1)].join(""));
+        }
+      };
+      g.apply = function(a, b) {
+        return this.call.apply(this, [this].concat(Oa(b)));
+      };
+      g.g = function(a) {
+        return this.Y(null, a, null);
+      };
+      g.h = function(a, b) {
+        return this.Y(null, a, b);
+      };
+      function Ie(a, b) {
+        for (var c = Ab(He), d = 0; ; )
+          if (d < a)
+            c = Db(c, b[d], b[d + 1]), d += 2;
+          else
+            return c;
+      }
+      function Je() {
+        this.M = false;
+      }
+      function Ke(a, b, c) {
+        a = Oa(a);
+        a[b] = c;
+        return a;
+      }
+      function Sg(a, b) {
+        var c = Array(a.length - 2);
+        Lc(a, 0, c, 0, 2 * b);
+        Lc(a, 2 * (b + 1), c, 2 * b, c.length - 2 * b);
+        return c;
+      }
+      function Le(a, b, c, d) {
+        a = a.qb(b);
+        a.l[c] = d;
+        return a;
+      }
+      function Me(a, b, c) {
+        for (var d = a.length, e = 0, f2 = c; ; )
+          if (e < d) {
+            c = a[e];
+            if (c != null) {
+              var h = a[e + 1];
+              c = b.j ? b.j(f2, c, h) : b.call(null, f2, c, h);
+            } else
+              c = a[e + 1], c = c != null ? c.Vb(b, f2) : f2;
+            if (hc(c))
+              return c;
+            e += 2;
+            f2 = c;
+          } else
+            return f2;
+      }
+      function Ne(a) {
+        this.l = a;
+        this.B = 0;
+        this.Ta = this.Wb = null;
+      }
+      Ne.prototype.advance = function() {
+        for (var a = this.l.length; ; )
+          if (this.B < a) {
+            var b = this.l[this.B], c = this.l[this.B + 1];
+            b != null ? b = this.Wb = new xe(b, c) : c != null ? (b = Lb(c), b = b.ga() ? this.Ta = b : false) : b = false;
+            this.B += 2;
+            if (b)
+              return true;
+          } else
+            return false;
+      };
+      Ne.prototype.ga = function() {
+        var a = this.Wb != null;
+        return a ? a : (a = this.Ta != null) ? a : this.advance();
+      };
+      Ne.prototype.next = function() {
+        if (this.Wb != null) {
+          var a = this.Wb;
+          this.Wb = null;
+          return a;
+        }
+        if (this.Ta != null)
+          return a = this.Ta.next(), this.Ta.ga() || (this.Ta = null), a;
+        if (this.advance())
+          return this.next();
+        throw Error("No such element");
+      };
+      Ne.prototype.remove = function() {
+        return Error("Unsupported operation");
+      };
+      function Oe(a, b, c) {
+        this.Z = a;
+        this.$ = b;
+        this.l = c;
+        this.H = 131072;
+        this.m = 0;
+      }
+      g = Oe.prototype;
+      g.qb = function(a) {
+        if (a === this.Z)
+          return this;
+        var b = cd(this.$), c = Array(0 > b ? 4 : 2 * (b + 1));
+        Lc(this.l, 0, c, 0, 2 * b);
+        return new Oe(a, this.$, c);
+      };
+      g.hd = function(a, b, c, d, e) {
+        var f2 = 1 << (c >>> b & 31);
+        if ((this.$ & f2) === 0)
+          return this;
+        var h = cd(this.$ & f2 - 1), k = this.l[2 * h], l = this.l[2 * h + 1];
+        return k == null ? (b = l.hd(a, b + 5, c, d, e), b === l ? this : b != null ? Le(this, a, 2 * h + 1, b) : this.$ === f2 ? null : xk(this, a, f2, h)) : Ae(d, k) ? (e.M = true, xk(this, a, f2, h)) : this;
+      };
+      function xk(a, b, c, d) {
+        if (a.$ === c)
+          return null;
+        a = a.qb(b);
+        b = a.l;
+        var e = b.length;
+        a.$ ^= c;
+        Lc(b, 2 * (d + 1), b, 2 * d, e - 2 * (d + 1));
+        b[e - 2] = null;
+        b[e - 1] = null;
+        return a;
+      }
+      g.Ub = function() {
+        return Ye ? Ye(this.l) : $e.call(null, this.l);
+      };
+      g.Vb = function(a, b) {
+        return Me(this.l, a, b);
+      };
+      g.jb = function(a, b, c, d) {
+        var e = 1 << (b >>> a & 31);
+        if ((this.$ & e) === 0)
+          return d;
+        var f2 = cd(this.$ & e - 1);
+        e = this.l[2 * f2];
+        f2 = this.l[2 * f2 + 1];
+        return e == null ? f2.jb(a + 5, b, c, d) : Ae(c, e) ? f2 : d;
+      };
+      g.Ra = function(a, b, c, d, e, f2) {
+        var h = 1 << (c >>> b & 31), k = cd(this.$ & h - 1);
+        if ((this.$ & h) === 0) {
+          var l = cd(this.$);
+          if (2 * l < this.l.length) {
+            a = this.qb(a);
+            b = a.l;
+            f2.M = true;
+            c = 2 * (l - k);
+            f2 = 2 * k + (c - 1);
+            for (l = 2 * (k + 1) + (c - 1); c !== 0; )
+              b[l] = b[f2], --l, --c, --f2;
+            b[2 * k] = d;
+            b[2 * k + 1] = e;
+            a.$ |= h;
+            return a;
+          }
+          if (16 <= l) {
+            k = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
+            k[c >>> b & 31] = We.Ra(a, b + 5, c, d, e, f2);
+            for (e = d = 0; ; )
+              if (32 > d)
+                (this.$ >>> d & 1) === 0 ? d += 1 : (k[d] = this.l[e] != null ? We.Ra(a, b + 5, Wb(this.l[e]), this.l[e], this.l[e + 1], f2) : this.l[e + 1], e += 2, d += 1);
+              else
+                break;
+            return new Qe(a, l + 1, k);
+          }
+          b = Array(2 * (l + 4));
+          Lc(this.l, 0, b, 0, 2 * k);
+          b[2 * k] = d;
+          b[2 * k + 1] = e;
+          Lc(this.l, 2 * k, b, 2 * (k + 1), 2 * (l - k));
+          f2.M = true;
+          a = this.qb(a);
+          a.l = b;
+          a.$ |= h;
+          return a;
+        }
+        l = this.l[2 * k];
+        h = this.l[2 * k + 1];
+        if (l == null)
+          return l = h.Ra(a, b + 5, c, d, e, f2), l === h ? this : Le(this, a, 2 * k + 1, l);
+        if (Ae(d, l))
+          return e === h ? this : Le(this, a, 2 * k + 1, e);
+        f2.M = true;
+        f2 = b + 5;
+        d = Ue ? Ue(a, f2, l, h, c, d, e) : Ve.call(null, a, f2, l, h, c, d, e);
+        e = 2 * k;
+        k = 2 * k + 1;
+        a = this.qb(a);
+        a.l[e] = null;
+        a.l[k] = d;
+        return a;
+      };
+      g.Qa = function(a, b, c, d, e) {
+        var f2 = 1 << (b >>> a & 31), h = cd(this.$ & f2 - 1);
+        if ((this.$ & f2) === 0) {
+          var k = cd(this.$);
+          if (16 <= k) {
+            h = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
+            h[b >>> a & 31] = We.Qa(a + 5, b, c, d, e);
+            for (d = c = 0; ; )
+              if (32 > c)
+                (this.$ >>> c & 1) === 0 ? c += 1 : (h[c] = this.l[d] != null ? We.Qa(a + 5, Wb(this.l[d]), this.l[d], this.l[d + 1], e) : this.l[d + 1], d += 2, c += 1);
+              else
+                break;
+            return new Qe(null, k + 1, h);
+          }
+          a = Array(2 * (k + 1));
+          Lc(this.l, 0, a, 0, 2 * h);
+          a[2 * h] = c;
+          a[2 * h + 1] = d;
+          Lc(this.l, 2 * h, a, 2 * (h + 1), 2 * (k - h));
+          e.M = true;
+          return new Oe(null, this.$ | f2, a);
+        }
+        var l = this.l[2 * h];
+        f2 = this.l[2 * h + 1];
+        if (l == null)
+          return k = f2.Qa(a + 5, b, c, d, e), k === f2 ? this : new Oe(null, this.$, Ke(this.l, 2 * h + 1, k));
+        if (Ae(c, l))
+          return d === f2 ? this : new Oe(null, this.$, Ke(this.l, 2 * h + 1, d));
+        e.M = true;
+        e = this.$;
+        k = this.l;
+        a += 5;
+        a = Te ? Te(a, l, f2, b, c, d) : Ve.call(null, a, l, f2, b, c, d);
+        c = 2 * h;
+        h = 2 * h + 1;
+        d = Oa(k);
+        d[c] = null;
+        d[h] = a;
+        return new Oe(null, e, d);
+      };
+      g.Tb = function(a, b, c, d) {
+        var e = 1 << (b >>> a & 31);
+        if ((this.$ & e) === 0)
+          return d;
+        var f2 = cd(this.$ & e - 1);
+        e = this.l[2 * f2];
+        f2 = this.l[2 * f2 + 1];
+        return e == null ? f2.Tb(a + 5, b, c, d) : Ae(c, e) ? new xe(e, f2) : d;
+      };
+      g.kb = function(a, b, c) {
+        var d = 1 << (b >>> a & 31);
+        if ((this.$ & d) === 0)
+          return this;
+        var e = cd(this.$ & d - 1), f2 = this.l[2 * e], h = this.l[2 * e + 1];
+        return f2 == null ? (a = h.kb(a + 5, b, c), a === h ? this : a != null ? new Oe(null, this.$, Ke(this.l, 2 * e + 1, a)) : this.$ === d ? null : new Oe(null, this.$ ^ d, Sg(this.l, e))) : Ae(c, f2) ? this.$ === d ? null : new Oe(null, this.$ ^ d, Sg(this.l, e)) : this;
+      };
+      g.wa = function() {
+        return new Ne(this.l);
+      };
+      var We = new Oe(null, 0, []);
+      function yk(a, b, c) {
+        var d = a.l, e = d.length;
+        a = Array(2 * (a.v - 1));
+        for (var f2 = 0, h = 1, k = 0; ; )
+          if (f2 < e)
+            f2 !== c && d[f2] != null ? (a[h] = d[f2], h += 2, k |= 1 << f2, f2 += 1) : f2 += 1;
+          else
+            return new Oe(b, k, a);
+      }
+      function Pe(a) {
+        this.l = a;
+        this.B = 0;
+        this.Ta = null;
+      }
+      Pe.prototype.ga = function() {
+        for (var a = this.l.length; ; ) {
+          if (this.Ta != null && this.Ta.ga())
+            return true;
+          if (this.B < a) {
+            var b = this.l[this.B];
+            this.B += 1;
+            b != null && (this.Ta = Lb(b));
+          } else
+            return false;
+        }
+      };
+      Pe.prototype.next = function() {
+        if (this.ga())
+          return this.Ta.next();
+        throw Error("No such element");
+      };
+      Pe.prototype.remove = function() {
+        return Error("Unsupported operation");
+      };
+      function Qe(a, b, c) {
+        this.Z = a;
+        this.v = b;
+        this.l = c;
+        this.H = 131072;
+        this.m = 0;
+      }
+      g = Qe.prototype;
+      g.qb = function(a) {
+        return a === this.Z ? this : new Qe(a, this.v, Oa(this.l));
+      };
+      g.hd = function(a, b, c, d, e) {
+        var f2 = c >>> b & 31, h = this.l[f2];
+        if (h == null)
+          return this;
+        b = h.hd(a, b + 5, c, d, e);
+        if (b === h)
+          return this;
+        if (b == null) {
+          if (8 >= this.v)
+            return yk(this, a, f2);
+          a = Le(this, a, f2, b);
+          --a.v;
+          return a;
+        }
+        return Le(this, a, f2, b);
+      };
+      g.Ub = function() {
+        return bf ? bf(this.l) : df.call(null, this.l);
+      };
+      g.Vb = function(a, b) {
+        for (var c = this.l.length, d = 0; ; )
+          if (d < c) {
+            var e = this.l[d];
+            if (e != null) {
+              b = e.Vb(a, b);
+              if (hc(b))
+                return b;
+              d += 1;
+            } else
+              d += 1;
+          } else
+            return b;
+      };
+      g.jb = function(a, b, c, d) {
+        var e = this.l[b >>> a & 31];
+        return e != null ? e.jb(a + 5, b, c, d) : d;
+      };
+      g.Ra = function(a, b, c, d, e, f2) {
+        var h = c >>> b & 31, k = this.l[h];
+        if (k == null)
+          return a = Le(this, a, h, We.Ra(a, b + 5, c, d, e, f2)), a.v += 1, a;
+        b = k.Ra(a, b + 5, c, d, e, f2);
+        return b === k ? this : Le(this, a, h, b);
+      };
+      g.Qa = function(a, b, c, d, e) {
+        var f2 = b >>> a & 31, h = this.l[f2];
+        if (h == null)
+          return new Qe(null, this.v + 1, Ke(this.l, f2, We.Qa(a + 5, b, c, d, e)));
+        a = h.Qa(a + 5, b, c, d, e);
+        return a === h ? this : new Qe(null, this.v, Ke(this.l, f2, a));
+      };
+      g.Tb = function(a, b, c, d) {
+        var e = this.l[b >>> a & 31];
+        return e != null ? e.Tb(a + 5, b, c, d) : d;
+      };
+      g.kb = function(a, b, c) {
+        var d = b >>> a & 31, e = this.l[d];
+        return e != null ? (a = e.kb(a + 5, b, c), a === e ? this : a == null ? 8 >= this.v ? yk(this, null, d) : new Qe(null, this.v - 1, Ke(this.l, d, a)) : new Qe(null, this.v, Ke(this.l, d, a))) : this;
+      };
+      g.wa = function() {
+        return new Pe(this.l);
+      };
+      function Re(a, b, c) {
+        b *= 2;
+        for (var d = 0; ; )
+          if (d < b) {
+            if (Ae(c, a[d]))
+              return d;
+            d += 2;
+          } else
+            return -1;
+      }
+      function Se(a, b, c, d) {
+        this.Z = a;
+        this.$a = b;
+        this.v = c;
+        this.l = d;
+        this.H = 131072;
+        this.m = 0;
+      }
+      g = Se.prototype;
+      g.qb = function(a) {
+        if (a === this.Z)
+          return this;
+        var b = Array(2 * (this.v + 1));
+        Lc(this.l, 0, b, 0, 2 * this.v);
+        return new Se(a, this.$a, this.v, b);
+      };
+      g.hd = function(a, b, c, d, e) {
+        b = Re(this.l, this.v, d);
+        if (b === -1)
+          return this;
+        e.M = true;
+        if (this.v === 1)
+          return null;
+        a = this.qb(a);
+        e = a.l;
+        e[b] = e[2 * this.v - 2];
+        e[b + 1] = e[2 * this.v - 1];
+        e[2 * this.v - 1] = null;
+        e[2 * this.v - 2] = null;
+        --a.v;
+        return a;
+      };
+      g.Ub = function() {
+        return Ye ? Ye(this.l) : $e.call(null, this.l);
+      };
+      g.Vb = function(a, b) {
+        return Me(this.l, a, b);
+      };
+      g.jb = function(a, b, c, d) {
+        a = Re(this.l, this.v, c);
+        return 0 > a ? d : Ae(c, this.l[a]) ? this.l[a + 1] : d;
+      };
+      g.Ra = function(a, b, c, d, e, f2) {
+        if (c === this.$a) {
+          b = Re(this.l, this.v, d);
+          if (b === -1) {
+            if (this.l.length > 2 * this.v)
+              return b = 2 * this.v, c = 2 * this.v + 1, a = this.qb(a), a.l[b] = d, a.l[c] = e, f2.M = true, a.v += 1, a;
+            c = this.l.length;
+            b = Array(c + 2);
+            Lc(this.l, 0, b, 0, c);
+            b[c] = d;
+            b[c + 1] = e;
+            f2.M = true;
+            d = this.v + 1;
+            a === this.Z ? (this.l = b, this.v = d, a = this) : a = new Se(this.Z, this.$a, d, b);
+            return a;
+          }
+          return this.l[b + 1] === e ? this : Le(this, a, b + 1, e);
+        }
+        return new Oe(a, 1 << (this.$a >>> b & 31), [null, this, null, null]).Ra(a, b, c, d, e, f2);
+      };
+      g.Qa = function(a, b, c, d, e) {
+        return b === this.$a ? (a = Re(this.l, this.v, c), a === -1 ? (a = 2 * this.v, b = Array(a + 2), Lc(this.l, 0, b, 0, a), b[a] = c, b[a + 1] = d, e.M = true, new Se(null, this.$a, this.v + 1, b)) : P.h(this.l[a + 1], d) ? this : new Se(null, this.$a, this.v, Ke(this.l, a + 1, d))) : new Oe(null, 1 << (this.$a >>> a & 31), [null, this]).Qa(a, b, c, d, e);
+      };
+      g.Tb = function(a, b, c, d) {
+        a = Re(this.l, this.v, c);
+        return 0 > a ? d : Ae(c, this.l[a]) ? new xe(this.l[a], this.l[a + 1]) : d;
+      };
+      g.kb = function(a, b, c) {
+        a = Re(this.l, this.v, c);
+        return a === -1 ? this : this.v === 1 ? null : new Se(null, this.$a, this.v - 1, Sg(this.l, bd(a, 2)));
+      };
+      g.wa = function() {
+        return new Ne(this.l);
+      };
+      function Ve(a) {
+        switch (arguments.length) {
+          case 6:
+            return Te(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]);
+          case 7:
+            return Ue(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      }
+      function Te(a, b, c, d, e, f2) {
+        var h = Wb(b);
+        if (h === d)
+          return new Se(null, h, 2, [b, c, e, f2]);
+        var k = new Je();
+        return We.Qa(a, h, b, c, k).Qa(a, d, e, f2, k);
+      }
+      function Ue(a, b, c, d, e, f2, h) {
+        var k = Wb(c);
+        if (k === e)
+          return new Se(null, k, 2, [c, d, f2, h]);
+        var l = new Je();
+        return We.Ra(a, b, k, c, d, l).Ra(a, b, e, f2, h, l);
+      }
+      function Xe(a, b, c, d, e) {
+        this.A = a;
+        this.Ua = b;
+        this.B = c;
+        this.O = d;
+        this.D = e;
+        this.m = 32374988;
+        this.H = 0;
+      }
+      g = Xe.prototype;
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, O2(this));
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.S = function() {
+        return this.A;
+      };
+      g.ea = function() {
+        if (this.O == null) {
+          var a = this.Ua, b = this.B + 2;
+          return Ze ? Ze(a, b, null) : $e.call(null, a, b, null);
+        }
+        a = this.Ua;
+        b = this.B;
+        var c = N2(this.O);
+        return Ze ? Ze(a, b, c) : $e.call(null, a, b, c);
+      };
+      g.V = function() {
+        var a = this.D;
+        return a != null ? a : this.D = a = ec(this);
+      };
+      g.U = function(a, b) {
+        return dd(this, b);
+      };
+      g.aa = function() {
+        return J;
+      };
+      g.ka = function(a, b) {
+        return Sc(b, this);
+      };
+      g.la = function(a, b, c) {
+        return Tc(b, c, this);
+      };
+      g.fa = function() {
+        return this.O == null ? new xe(this.Ua[this.B], this.Ua[this.B + 1]) : I(this.O);
+      };
+      g.ia = function() {
+        var a = this, b = a.O == null ? function() {
+          var c = a.Ua, d = a.B + 2;
+          return Ze ? Ze(c, d, null) : $e.call(null, c, d, null);
+        }() : function() {
+          var c = a.Ua, d = a.B, e = N2(a.O);
+          return Ze ? Ze(c, d, e) : $e.call(null, c, d, e);
+        }();
+        return b != null ? b : J;
+      };
+      g.W = function() {
+        return this;
+      };
+      g.T = function(a, b) {
+        return b === this.A ? this : new Xe(b, this.Ua, this.B, this.O, this.D);
+      };
+      g.ca = function(a, b) {
+        return U(b, this);
+      };
+      Xe.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function $e(a) {
+        switch (arguments.length) {
+          case 1:
+            return Ye(arguments[0]);
+          case 3:
+            return Ze(arguments[0], arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      }
+      function Ye(a) {
+        return Ze(a, 0, null);
+      }
+      function Ze(a, b, c) {
+        if (c == null)
+          for (c = a.length; ; )
+            if (b < c) {
+              if (a[b] != null)
+                return new Xe(null, a, b, null, null);
+              var d = a[b + 1];
+              if (v(d) && (d = d.Ub(), v(d)))
+                return new Xe(null, a, b + 2, d, null);
+              b += 2;
+            } else
+              return null;
+        else
+          return new Xe(null, a, b, c, null);
+      }
+      function af(a, b, c, d, e) {
+        this.A = a;
+        this.Ua = b;
+        this.B = c;
+        this.O = d;
+        this.D = e;
+        this.m = 32374988;
+        this.H = 0;
+      }
+      g = af.prototype;
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, O2(this));
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.S = function() {
+        return this.A;
+      };
+      g.ea = function() {
+        var a = this.Ua, b = this.B, c = N2(this.O);
+        return cf ? cf(a, b, c) : df.call(null, a, b, c);
+      };
+      g.V = function() {
+        var a = this.D;
+        return a != null ? a : this.D = a = ec(this);
+      };
+      g.U = function(a, b) {
+        return dd(this, b);
+      };
+      g.aa = function() {
+        return J;
+      };
+      g.ka = function(a, b) {
+        return Sc(b, this);
+      };
+      g.la = function(a, b, c) {
+        return Tc(b, c, this);
+      };
+      g.fa = function() {
+        return I(this.O);
+      };
+      g.ia = function() {
+        var a = this.Ua;
+        var b = this.B, c = N2(this.O);
+        a = cf ? cf(a, b, c) : df.call(null, a, b, c);
+        return a != null ? a : J;
+      };
+      g.W = function() {
+        return this;
+      };
+      g.T = function(a, b) {
+        return b === this.A ? this : new af(b, this.Ua, this.B, this.O, this.D);
+      };
+      g.ca = function(a, b) {
+        return U(b, this);
+      };
+      af.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function df(a) {
+        switch (arguments.length) {
+          case 1:
+            return bf(arguments[0]);
+          case 3:
+            return cf(arguments[0], arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      }
+      function bf(a) {
+        return cf(a, 0, null);
+      }
+      function cf(a, b, c) {
+        if (c == null)
+          for (c = a.length; ; )
+            if (b < c) {
+              var d = a[b];
+              if (v(d) && (d = d.Ub(), v(d)))
+                return new af(null, a, b + 1, d, null);
+              b += 1;
+            } else
+              return null;
+        else
+          return new af(null, a, b, c, null);
+      }
+      function ef(a, b) {
+        this.oa = a;
+        this.yc = b;
+        this.sc = false;
+      }
+      ef.prototype.ga = function() {
+        return !this.sc || this.yc.ga();
+      };
+      ef.prototype.next = function() {
+        if (this.sc)
+          return this.yc.next();
+        this.sc = true;
+        return new xe(null, this.oa);
+      };
+      ef.prototype.remove = function() {
+        return Error("Unsupported operation");
+      };
+      function ff2(a, b, c, d, e, f2) {
+        this.A = a;
+        this.v = b;
+        this.root = c;
+        this.na = d;
+        this.oa = e;
+        this.D = f2;
+        this.m = 16123663;
+        this.H = 139268;
+      }
+      g = ff2.prototype;
+      g.zb = function(a, b) {
+        return b == null ? this.na ? new xe(null, this.oa) : null : this.root == null ? null : this.root.Tb(0, Wb(b), b, null);
+      };
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.keys = function() {
+        return cc(kf.g ? kf.g(this) : kf.call(null, this));
+      };
+      g.entries = function() {
+        return new ue(H(H(this)));
+      };
+      g.values = function() {
+        return cc(mf.g ? mf.g(this) : mf.call(null, this));
+      };
+      g.has = function(a) {
+        return Pc(this, a);
+      };
+      g.get = function(a, b) {
+        return this.Y(null, a, b);
+      };
+      g.forEach = function(a) {
+        for (var b = H(this), c = null, d = 0, e = 0; ; )
+          if (e < d) {
+            var f2 = c.da(null, e), h = S(f2, 0, null);
+            f2 = S(f2, 1, null);
+            a.h ? a.h(f2, h) : a.call(null, f2, h);
+            e += 1;
+          } else if (b = H(b))
+            Kc(b) ? (c = Hb(b), b = Ib(b), h = c, d = O2(c), c = h) : (c = I(b), h = S(c, 0, null), f2 = S(c, 1, null), a.h ? a.h(f2, h) : a.call(null, f2, h), b = N2(b), c = null, d = 0), e = 0;
+          else
+            return null;
+      };
+      g.sa = function(a, b) {
+        return this.Y(null, b, null);
+      };
+      g.Y = function(a, b, c) {
+        return b == null ? this.na ? this.oa : c : this.root == null ? c : this.root.jb(0, Wb(b), b, c);
+      };
+      g.Jb = function(a, b, c) {
+        a = this.na ? b.j ? b.j(c, null, this.oa) : b.call(null, c, null, this.oa) : c;
+        return hc(a) ? D(a) : this.root != null ? Wj(this.root.Vb(b, a)) : a;
+      };
+      g.wa = function() {
+        var a = this.root ? Lb(this.root) : new eg(Cd);
+        return this.na ? new ef(this.oa, a) : a;
+      };
+      g.S = function() {
+        return this.A;
+      };
+      g.X = function() {
+        return this.v;
+      };
+      g.V = function() {
+        var a = this.D;
+        return a != null ? a : this.D = a = fc(this);
+      };
+      g.U = function(a, b) {
+        return te(this, b);
+      };
+      g.yb = function() {
+        return new gf(this.root, this.v, this.na, this.oa);
+      };
+      g.aa = function() {
+        return mb(He, this.A);
+      };
+      g.Kb = function(a, b) {
+        if (b == null)
+          return this.na ? new ff2(this.A, this.v - 1, this.root, false, null, null) : this;
+        if (this.root == null)
+          return this;
+        a = this.root.kb(0, Wb(b), b);
+        return a === this.root ? this : new ff2(this.A, this.v - 1, a, this.na, this.oa, null);
+      };
+      g.Ya = function(a, b, c) {
+        if (b == null)
+          return this.na && c === this.oa ? this : new ff2(this.A, this.na ? this.v : this.v + 1, this.root, true, c, null);
+        a = new Je();
+        b = (this.root == null ? We : this.root).Qa(0, Wb(b), b, c, a);
+        return b === this.root ? this : new ff2(this.A, a.M ? this.v + 1 : this.v, b, this.na, this.oa, null);
+      };
+      g.nb = function(a, b) {
+        return b == null ? this.na : this.root == null ? false : this.root.jb(0, Wb(b), b, Oc) !== Oc;
+      };
+      g.W = function() {
+        if (0 < this.v) {
+          var a = this.root != null ? this.root.Ub() : null;
+          return this.na ? U(new xe(null, this.oa), a) : a;
+        }
+        return null;
+      };
+      g.T = function(a, b) {
+        return b === this.A ? this : new ff2(b, this.v, this.root, this.na, this.oa, this.D);
+      };
+      g.ca = function(a, b) {
+        if (Jc(b))
+          return this.Ya(null, zc(b, 0), zc(b, 1));
+        a = this;
+        for (b = H(b); ; ) {
+          if (b == null)
+            return a;
+          var c = I(b);
+          if (Jc(c))
+            a = bb(a, zc(c, 0), zc(c, 1)), b = N2(b);
+          else
+            throw Error("conj on a map takes map entries or seqables of map entries");
+        }
+      };
+      g.call = function(a) {
+        switch (arguments.length - 1) {
+          case 1:
+            return this.g(arguments[1]);
+          case 2:
+            return this.h(arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length - 1)].join(""));
+        }
+      };
+      g.apply = function(a, b) {
+        return this.call.apply(this, [this].concat(Oa(b)));
+      };
+      g.g = function(a) {
+        return this.sa(null, a);
+      };
+      g.h = function(a, b) {
+        return this.Y(null, a, b);
+      };
+      var He = new ff2(null, 0, null, false, null, mg);
+      function zk(a, b) {
+        for (var c = a.length, d = 0, e = Ab(He); ; )
+          if (d < c) {
+            if (b.length <= d)
+              throw Error(["No value supplied for key: ", B.g(a[d])].join(""));
+            var f2 = d + 1;
+            e = Db(e, a[d], b[d]);
+            d = f2;
+          } else
+            return Cb(e);
+      }
+      ff2.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function gf(a, b, c, d) {
+        this.Z = {};
+        this.root = a;
+        this.count = b;
+        this.na = c;
+        this.oa = d;
+        this.m = 259;
+        this.H = 56;
+      }
+      function hf(a, b, c) {
+        if (a.Z) {
+          if (b == null)
+            a.oa !== c && (a.oa = c), a.na || (a.count += 1, a.na = true);
+          else {
+            var d = new Je();
+            b = (a.root == null ? We : a.root).Ra(a.Z, 0, Wb(b), b, c, d);
+            b !== a.root && (a.root = b);
+            d.M && (a.count += 1);
+          }
+          return a;
+        }
+        throw Error("assoc! after persistent!");
+      }
+      g = gf.prototype;
+      g.X = function() {
+        if (this.Z)
+          return this.count;
+        throw Error("count after persistent!");
+      };
+      g.sa = function(a, b) {
+        return b == null ? this.na ? this.oa : null : this.root == null ? null : this.root.jb(0, Wb(b), b);
+      };
+      g.Y = function(a, b, c) {
+        return b == null ? this.na ? this.oa : c : this.root == null ? c : this.root.jb(0, Wb(b), b, c);
+      };
+      g.Cb = function(a, b) {
+        a:
+          if (this.Z)
+            if (Zd(b))
+              a = hf(this, $d.g ? $d.g(b) : $d.call(null, b), ae.g ? ae.g(b) : ae.call(null, b));
+            else if (Jc(b))
+              a = hf(this, b.g ? b.g(0) : b.call(null, 0), b.g ? b.g(1) : b.call(null, 1));
+            else
+              for (a = H(b), b = this; ; ) {
+                var c = I(a);
+                if (v(c))
+                  a = N2(a), b = hf(b, $d.g ? $d.g(c) : $d.call(null, c), ae.g ? ae.g(c) : ae.call(null, c));
+                else {
+                  a = b;
+                  break a;
+                }
+              }
+          else
+            throw Error("conj! after persistent");
+        return a;
+      };
+      g.Ob = function() {
+        if (this.Z) {
+          this.Z = null;
+          var a = new ff2(null, this.count, this.root, this.na, this.oa, null);
+        } else
+          throw Error("persistent! called twice");
+        return a;
+      };
+      g.Bb = function(a, b, c) {
+        return hf(this, b, c);
+      };
+      g.Ld = function(a, b) {
+        if (this.Z)
+          b == null ? this.na && (this.na = false, this.oa = null, --this.count) : this.root != null && (a = new Je(), b = this.root.hd(this.Z, 0, Wb(b), b, a), b !== this.root && (this.root = b), a.M && --this.count);
+        else
+          throw Error("dissoc! after persistent!");
+        return this;
+      };
+      g.call = function(a) {
+        switch (arguments.length - 1) {
+          case 1:
+            return this.g(arguments[1]);
+          case 2:
+            return this.h(arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length - 1)].join(""));
+        }
+      };
+      g.apply = function(a, b) {
+        return this.call.apply(this, [this].concat(Oa(b)));
+      };
+      g.g = function(a) {
+        return this.sa(null, a);
+      };
+      g.h = function(a, b) {
+        return this.Y(null, a, b);
+      };
+      function jf(a, b) {
+        this.P = a;
+        this.Va = b;
+        this.m = 32374988;
+        this.H = 0;
+      }
+      g = jf.prototype;
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, O2(this));
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.S = function() {
+        return this.Va;
+      };
+      g.ea = function() {
+        var a = (this.P != null ? this.P.m & 128 || E === this.P.Nb || (this.P.m ? 0 : x(Ya, this.P)) : x(Ya, this.P)) ? this.P.ea(null) : N2(this.P);
+        return a == null ? null : new jf(a, null);
+      };
+      g.V = function() {
+        return ec(this);
+      };
+      g.U = function(a, b) {
+        return dd(this, b);
+      };
+      g.aa = function() {
+        return J;
+      };
+      g.ka = function(a, b) {
+        return Sc(b, this);
+      };
+      g.la = function(a, b, c) {
+        return Tc(b, c, this);
+      };
+      g.fa = function() {
+        return this.P.fa(null).key;
+      };
+      g.ia = function() {
+        var a = (this.P != null ? this.P.m & 128 || E === this.P.Nb || (this.P.m ? 0 : x(Ya, this.P)) : x(Ya, this.P)) ? this.P.ea(null) : N2(this.P);
+        return a != null ? new jf(a, null) : J;
+      };
+      g.W = function() {
+        return this;
+      };
+      g.T = function(a, b) {
+        return b === this.Va ? this : new jf(this.P, b);
+      };
+      g.ca = function(a, b) {
+        return U(b, this);
+      };
+      jf.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function kf(a) {
+        return (a = H(a)) ? new jf(a, null) : null;
+      }
+      function $d(a) {
+        return eb(a);
+      }
+      function lf(a, b) {
+        this.P = a;
+        this.Va = b;
+        this.m = 32374988;
+        this.H = 0;
+      }
+      g = lf.prototype;
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, O2(this));
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.S = function() {
+        return this.Va;
+      };
+      g.ea = function() {
+        var a = (this.P != null ? this.P.m & 128 || E === this.P.Nb || (this.P.m ? 0 : x(Ya, this.P)) : x(Ya, this.P)) ? this.P.ea(null) : N2(this.P);
+        return a == null ? null : new lf(a, null);
+      };
+      g.V = function() {
+        return ec(this);
+      };
+      g.U = function(a, b) {
+        return dd(this, b);
+      };
+      g.aa = function() {
+        return J;
+      };
+      g.ka = function(a, b) {
+        return Sc(b, this);
+      };
+      g.la = function(a, b, c) {
+        return Tc(b, c, this);
+      };
+      g.fa = function() {
+        return this.P.fa(null).M;
+      };
+      g.ia = function() {
+        var a = (this.P != null ? this.P.m & 128 || E === this.P.Nb || (this.P.m ? 0 : x(Ya, this.P)) : x(Ya, this.P)) ? this.P.ea(null) : N2(this.P);
+        return a != null ? new lf(a, null) : J;
+      };
+      g.W = function() {
+        return this;
+      };
+      g.T = function(a, b) {
+        return b === this.Va ? this : new lf(this.P, b);
+      };
+      g.ca = function(a, b) {
+        return U(b, this);
+      };
+      lf.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function mf(a) {
+        return (a = H(a)) ? new lf(a, null) : null;
+      }
+      function ae(a) {
+        return fb(a);
+      }
+      var Zj = function Zj2(a) {
+        for (var c = [], d = arguments.length, e = 0; ; )
+          if (e < d)
+            c.push(arguments[e]), e += 1;
+          else
+            break;
+        return Zj2.o(0 < c.length ? new G(c.slice(0), 0, null) : null);
+      };
+      Zj.o = function(a) {
+        return v(Eg(Zc, a)) ? Vc.h(function(b, c) {
+          return Z.h(v(b) ? b : Cd, c);
+        }, a) : null;
+      };
+      Zj.I = 0;
+      Zj.J = function(a) {
+        return this.o(H(a));
+      };
+      function nf(a) {
+        this.Gb = a;
+      }
+      nf.prototype.ga = function() {
+        return this.Gb.ga();
+      };
+      nf.prototype.next = function() {
+        if (this.Gb.ga())
+          return this.Gb.next().key;
+        throw Error("No such element");
+      };
+      nf.prototype.remove = function() {
+        return Error("Unsupported operation");
+      };
+      function of(a, b, c) {
+        this.A = a;
+        this.ib = b;
+        this.D = c;
+        this.m = 15077647;
+        this.H = 139268;
+      }
+      g = of.prototype;
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.keys = function() {
+        return cc(H(this));
+      };
+      g.entries = function() {
+        return new ve(H(H(this)));
+      };
+      g.values = function() {
+        return cc(H(this));
+      };
+      g.has = function(a) {
+        return Pc(this, a);
+      };
+      g.forEach = function(a) {
+        for (var b = H(this), c = null, d = 0, e = 0; ; )
+          if (e < d) {
+            var f2 = c.da(null, e), h = S(f2, 0, null);
+            f2 = S(f2, 1, null);
+            a.h ? a.h(f2, h) : a.call(null, f2, h);
+            e += 1;
+          } else if (b = H(b))
+            Kc(b) ? (c = Hb(b), b = Ib(b), h = c, d = O2(c), c = h) : (c = I(b), h = S(c, 0, null), f2 = S(c, 1, null), a.h ? a.h(f2, h) : a.call(null, f2, h), b = N2(b), c = null, d = 0), e = 0;
+          else
+            return null;
+      };
+      g.sa = function(a, b) {
+        return this.Y(null, b, null);
+      };
+      g.Y = function(a, b, c) {
+        a = cb(this.ib, b);
+        return v(a) ? eb(a) : c;
+      };
+      g.wa = function() {
+        return new nf(Lb(this.ib));
+      };
+      g.S = function() {
+        return this.A;
+      };
+      g.X = function() {
+        return Sa(this.ib);
+      };
+      g.V = function() {
+        var a = this.D;
+        return a != null ? a : this.D = a = fc(this);
+      };
+      g.U = function(a, b) {
+        if (a = Fc(b))
+          if (a = O2(this) === O2(b))
+            try {
+              return Yc(function(c, d) {
+                return (c = Pc(b, d)) ? c : new gc(false);
+              }, true, this.ib);
+            } catch (c) {
+              if (c instanceof Error)
+                return false;
+              throw c;
+            }
+          else
+            return a;
+        else
+          return a;
+      };
+      g.yb = function() {
+        return new pf(Ab(this.ib));
+      };
+      g.aa = function() {
+        return mb(wg, this.A);
+      };
+      g.Wd = function(a, b) {
+        return new of(this.A, Xg(this.ib, b), null);
+      };
+      g.W = function() {
+        return kf(this.ib);
+      };
+      g.T = function(a, b) {
+        return b === this.A ? this : new of(b, this.ib, this.D);
+      };
+      g.ca = function(a, b) {
+        return new of(this.A, If.j(this.ib, b, null), null);
+      };
+      g.call = function(a) {
+        switch (arguments.length - 1) {
+          case 1:
+            return this.g(arguments[1]);
+          case 2:
+            return this.h(arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length - 1)].join(""));
+        }
+      };
+      g.apply = function(a, b) {
+        return this.call.apply(this, [this].concat(Oa(b)));
+      };
+      g.g = function(a) {
+        return this.sa(null, a);
+      };
+      g.h = function(a, b) {
+        return this.Y(null, a, b);
+      };
+      var wg = new of(null, Cd, mg);
+      function Ui(a) {
+        for (var b = a.length, c = Ab(wg), d = 0; ; )
+          if (d < b)
+            Bb(c, a[d]), d += 1;
+          else
+            break;
+        return Cb(c);
+      }
+      of.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function pf(a) {
+        this.tb = a;
+        this.H = 136;
+        this.m = 259;
+      }
+      g = pf.prototype;
+      g.Cb = function(a, b) {
+        this.tb = Db(this.tb, b, null);
+        return this;
+      };
+      g.Ob = function() {
+        return new of(null, Cb(this.tb), null);
+      };
+      g.X = function() {
+        return O2(this.tb);
+      };
+      g.sa = function(a, b) {
+        return this.Y(null, b, null);
+      };
+      g.Y = function(a, b, c) {
+        return fg(this.tb, b, Oc) === Oc ? c : b;
+      };
+      g.call = function(a) {
+        switch (arguments.length - 1) {
+          case 1:
+            return this.g(arguments[1]);
+          case 2:
+            return this.h(arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length - 1)].join(""));
+        }
+      };
+      g.apply = function(a, b) {
+        return this.call.apply(this, [this].concat(Oa(b)));
+      };
+      g.g = function(a) {
+        return fg(this.tb, a, Oc) === Oc ? null : a;
+      };
+      g.h = function(a, b) {
+        return fg(this.tb, a, Oc) === Oc ? b : a;
+      };
+      function vl(a) {
+        if (Fc(a))
+          return Cc(a, null);
+        a = H(a);
+        if (a == null)
+          return wg;
+        if (a instanceof G && a.B === 0)
+          return Ui(a.l);
+        for (var b = Ab(wg); ; )
+          if (a != null) {
+            var c = N2(a);
+            b = Bb(b, C(a));
+            a = c;
+          } else
+            return Cb(b);
+      }
+      function oe(a) {
+        return function e(c, d) {
+          return new ld(null, function() {
+            var f2;
+            a: {
+              var h = c;
+              for (f2 = d; ; ) {
+                var k = h;
+                h = S(k, 0, null);
+                if (k = H(k))
+                  if (Pc(f2, h))
+                    h = ac(k);
+                  else {
+                    f2 = U(h, e(ac(k), Z.h(f2, h)));
+                    break a;
+                  }
+                else {
+                  f2 = null;
+                  break a;
+                }
+              }
+            }
+            return f2;
+          }, null, null);
+        }(a, wg);
+      }
+      function Zg(a) {
+        for (var b = be; ; )
+          if (N2(a))
+            b = Z.h(b, I(a)), a = N2(a);
+          else
+            return H(b);
+      }
+      function qf(a) {
+        if (a != null && (a.H & 4096 || E === a.Nc))
+          return a.ed(null);
+        if (typeof a === "string")
+          return a;
+        throw Error(["Doesn't support name: ", B.g(a)].join(""));
+      }
+      var pe = function pe2(a) {
+        switch (arguments.length) {
+          case 2:
+            return pe2.h(arguments[0], arguments[1]);
+          case 3:
+            return pe2.j(arguments[0], arguments[1], arguments[2]);
+          default:
+            for (var c = [], d = arguments.length, e = 0; ; )
+              if (e < d)
+                c.push(arguments[e]), e += 1;
+              else
+                break;
+            return pe2.o(arguments[0], arguments[1], arguments[2], new G(c.slice(3), 0, null));
+        }
+      };
+      pe.h = function(a, b) {
+        return b;
+      };
+      pe.j = function(a, b, c) {
+        return (a.g ? a.g(b) : a.call(null, b)) > (a.g ? a.g(c) : a.call(null, c)) ? b : c;
+      };
+      pe.o = function(a, b, c, d) {
+        return Vc.j(function(e, f2) {
+          return pe.j(a, e, f2);
+        }, pe.j(a, b, c), d);
+      };
+      pe.J = function(a) {
+        var b = I(a), c = N2(a);
+        a = I(c);
+        var d = N2(c);
+        c = I(d);
+        d = N2(d);
+        return this.o(b, a, c, d);
+      };
+      pe.I = 3;
+      function Ak() {
+        this.l = [];
+      }
+      Ak.prototype.add = function(a) {
+        return this.l.push(a);
+      };
+      Ak.prototype.size = function() {
+        return this.l.length;
+      };
+      Ak.prototype.clear = function() {
+        return this.l = [];
+      };
+      function Bk() {
+        return function(a) {
+          var b = new Ak();
+          return function() {
+            function c(h, k) {
+              b.add(k);
+              return b.size() === 2 ? (k = ce(b.l), b.clear(), a.h ? a.h(h, k) : a.call(null, h, k)) : h;
+            }
+            function d(h) {
+              if (!v(b.l.length === 0)) {
+                var k = ce(b.l);
+                b.clear();
+                h = Wj(a.h ? a.h(h, k) : a.call(null, h, k));
+              }
+              return a.g ? a.g(h) : a.call(null, h);
+            }
+            function e() {
+              return a.C ? a.C() : a.call(null);
+            }
+            var f2 = null;
+            f2 = function(h, k) {
+              switch (arguments.length) {
+                case 0:
+                  return e.call(this);
+                case 1:
+                  return d.call(this, h);
+                case 2:
+                  return c.call(this, h, k);
+              }
+              throw Error("Invalid arity: " + arguments.length);
+            };
+            f2.C = e;
+            f2.g = d;
+            f2.h = c;
+            return f2;
+          }();
+        };
+      }
+      function rf(a, b, c) {
+        this.start = a;
+        this.step = b;
+        this.count = c;
+        this.m = 82;
+        this.H = 0;
+      }
+      g = rf.prototype;
+      g.X = function() {
+        return this.count;
+      };
+      g.fa = function() {
+        return this.start;
+      };
+      g.da = function(a, b) {
+        return this.start + b * this.step;
+      };
+      g.ra = function(a, b, c) {
+        return 0 <= b && b < this.count ? this.start + b * this.step : c;
+      };
+      g.nc = function() {
+        if (1 >= this.count)
+          throw Error("-drop-first of empty chunk");
+        return new rf(this.start + this.step, this.step, this.count - 1);
+      };
+      function sf(a, b, c) {
+        this.B = a;
+        this.end = b;
+        this.step = c;
+      }
+      sf.prototype.ga = function() {
+        return 0 < this.step ? this.B < this.end : this.B > this.end;
+      };
+      sf.prototype.next = function() {
+        var a = this.B;
+        this.B += this.step;
+        return a;
+      };
+      function tf(a, b, c, d, e, f2, h) {
+        this.A = a;
+        this.start = b;
+        this.end = c;
+        this.step = d;
+        this.ha = e;
+        this.Xa = f2;
+        this.D = h;
+        this.m = 32375006;
+        this.H = 140800;
+      }
+      g = tf.prototype;
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, O2(this));
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.Sb = function() {
+        if (this.ha == null) {
+          var a = this.X(null);
+          32 < a ? (this.Xa = new tf(null, this.start + 32 * this.step, this.end, this.step, null, null, null), this.ha = new rf(this.start, this.step, 32)) : this.ha = new rf(this.start, this.step, a);
+        }
+      };
+      g.da = function(a, b) {
+        if (0 <= b && b < this.X(null))
+          return this.start + b * this.step;
+        if (0 <= b && this.start > this.end && this.step === 0)
+          return this.start;
+        throw Error("Index out of bounds");
+      };
+      g.ra = function(a, b, c) {
+        return 0 <= b && b < this.X(null) ? this.start + b * this.step : 0 <= b && this.start > this.end && this.step === 0 ? this.start : c;
+      };
+      g.wa = function() {
+        return new sf(this.start, this.end, this.step);
+      };
+      g.S = function() {
+        return this.A;
+      };
+      g.ea = function() {
+        return 0 < this.step ? this.start + this.step < this.end ? new tf(null, this.start + this.step, this.end, this.step, null, null, null) : null : this.start + this.step > this.end ? new tf(null, this.start + this.step, this.end, this.step, null, null, null) : null;
+      };
+      g.X = function() {
+        return Math.ceil((this.end - this.start) / this.step);
+      };
+      g.V = function() {
+        var a = this.D;
+        return a != null ? a : this.D = a = ec(this);
+      };
+      g.U = function(a, b) {
+        return dd(this, b);
+      };
+      g.aa = function() {
+        return J;
+      };
+      g.ka = function(a, b) {
+        return lc(this, b);
+      };
+      g.la = function(a, b, c) {
+        for (a = this.start; ; )
+          if (0 < this.step ? a < this.end : a > this.end) {
+            c = b.h ? b.h(c, a) : b.call(null, c, a);
+            if (hc(c))
+              return D(c);
+            a += this.step;
+          } else
+            return c;
+      };
+      g.fa = function() {
+        return this.start;
+      };
+      g.ia = function() {
+        var a = this.ea(null);
+        return a == null ? J : a;
+      };
+      g.W = function() {
+        return this;
+      };
+      g.Ib = function() {
+        this.Sb();
+        return this.ha;
+      };
+      g.eb = function() {
+        this.Sb();
+        return this.Xa == null ? J : this.Xa;
+      };
+      g.T = function(a, b) {
+        return b === this.A ? this : new tf(b, this.start, this.end, this.step, this.ha, this.Xa, this.D);
+      };
+      g.ca = function(a, b) {
+        return U(b, this);
+      };
+      g.bc = function() {
+        return H(this.eb(null));
+      };
+      tf.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function uf(a, b, c, d, e, f2, h) {
+        this.A = a;
+        this.start = b;
+        this.end = c;
+        this.step = d;
+        this.ha = e;
+        this.Xa = f2;
+        this.D = h;
+        this.H = 140800;
+        this.m = 32374988;
+      }
+      g = uf.prototype;
+      g.toString = function() {
+        return Nb(this);
+      };
+      g.indexOf = function() {
+        var a = null;
+        a = function(b, c) {
+          switch (arguments.length) {
+            case 1:
+              return Q(this, b, 0);
+            case 2:
+              return Q(this, b, c);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        a.g = function(b) {
+          return Q(this, b, 0);
+        };
+        a.h = function(b, c) {
+          return Q(this, b, c);
+        };
+        return a;
+      }();
+      g.lastIndexOf = function() {
+        function a(c) {
+          return R(this, c, O2(this));
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return R(this, c, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return R(this, c, d);
+        };
+        return b;
+      }();
+      g.Sb = function() {
+        if (this.ha == null) {
+          var a = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
+          a: {
+            var b = 0;
+            for (var c = this.start; ; )
+              if (32 > b) {
+                if (a[b] = c, b += 1, c += this.step, !(0 < this.step ? c < this.end : c > this.end)) {
+                  b = this.ha = new od(a, 0, b);
+                  break a;
+                }
+              } else {
+                b = c;
+                break a;
+              }
+          }
+          this.ha == null && (this.ha = new od(a, 0, 32), (0 < this.step ? b < this.end : b > this.end) && (this.Xa = new uf(null, b, this.end, this.step, null, null, null)));
+        }
+      };
+      g.wa = function() {
+        return new sf(this.start, this.end, this.step);
+      };
+      g.S = function() {
+        return this.A;
+      };
+      g.ea = function() {
+        return 0 < this.step ? this.start + this.step < this.end ? new uf(null, this.start + this.step, this.end, this.step, null, null, null) : null : this.start + this.step > this.end ? new uf(null, this.start + this.step, this.end, this.step, null, null, null) : null;
+      };
+      g.V = function() {
+        var a = this.D;
+        return a != null ? a : this.D = a = ec(this);
+      };
+      g.U = function(a, b) {
+        return dd(this, b);
+      };
+      g.aa = function() {
+        return J;
+      };
+      g.ka = function(a, b) {
+        return Sc(b, this);
+      };
+      g.la = function(a, b, c) {
+        for (a = this.start; ; )
+          if (0 < this.step ? a < this.end : a > this.end) {
+            c = b.h ? b.h(c, a) : b.call(null, c, a);
+            if (hc(c))
+              return D(c);
+            a += this.step;
+          } else
+            return c;
+      };
+      g.fa = function() {
+        return this.start;
+      };
+      g.ia = function() {
+        var a = this.ea(null);
+        return a == null ? J : a;
+      };
+      g.W = function() {
+        return this;
+      };
+      g.Ib = function() {
+        this.Sb();
+        return this.ha;
+      };
+      g.eb = function() {
+        this.Sb();
+        return this.Xa == null ? J : this.Xa;
+      };
+      g.T = function(a, b) {
+        return b === this.A ? this : new uf(b, this.start, this.end, this.step, this.ha, this.Xa, this.D);
+      };
+      g.ca = function(a, b) {
+        return U(b, this);
+      };
+      g.bc = function() {
+        return H(this.eb(null));
+      };
+      uf.prototype[Zb] = function() {
+        return cc(this);
+      };
+      function ll(a, b) {
+        return b <= a ? J : Nc(a) && Nc(b) && Nc(1) ? new tf(null, a, b, 1, null, null, null) : new uf(null, a, b, 1, null, null, null);
+      }
+      function ql(a) {
+        return Cb(Vc.j(function(b, c) {
+          var d = T.j(b, c, 0) + 1;
+          return Db(b, c, d);
+        }, Ab(Cd), a));
+      }
+      var wh = function wh2(a) {
+        switch (arguments.length) {
+          case 1:
+            return wh2.g(arguments[0]);
+          case 2:
+            return wh2.h(arguments[0], arguments[1]);
+          case 3:
+            return wh2.j(arguments[0], arguments[1], arguments[2]);
+          default:
+            for (var c = [], d = arguments.length, e = 0; ; )
+              if (e < d)
+                c.push(arguments[e]), e += 1;
+              else
+                break;
+            return wh2.o(arguments[0], arguments[1], arguments[2], new G(c.slice(3), 0, null));
+        }
+      };
+      wh.g = function(a) {
+        return function() {
+          function b(k, l, m) {
+            return new W(null, 1, 5, X2, [a.j ? a.j(k, l, m) : a.call(null, k, l, m)], null);
+          }
+          function c(k, l) {
+            return new W(null, 1, 5, X2, [a.h ? a.h(k, l) : a.call(null, k, l)], null);
+          }
+          function d(k) {
+            return new W(null, 1, 5, X2, [a.g ? a.g(k) : a.call(null, k)], null);
+          }
+          function e() {
+            return new W(null, 1, 5, X2, [a.C ? a.C() : a.call(null)], null);
+          }
+          var f2 = null, h = function() {
+            function k(m, n2, p, q) {
+              var r = null;
+              if (3 < arguments.length) {
+                r = 0;
+                for (var w = Array(arguments.length - 3); r < w.length; )
+                  w[r] = arguments[r + 3], ++r;
+                r = new G(w, 0, null);
+              }
+              return l.call(this, m, n2, p, r);
+            }
+            function l(m, n2, p, q) {
+              return new W(null, 1, 5, X2, [Fa(a, m, n2, p, q)], null);
+            }
+            k.I = 3;
+            k.J = function(m) {
+              var n2 = I(m);
+              m = N2(m);
+              var p = I(m);
+              m = N2(m);
+              var q = I(m);
+              m = ac(m);
+              return l(n2, p, q, m);
+            };
+            k.o = l;
+            return k;
+          }();
+          f2 = function(k, l, m, n2) {
+            switch (arguments.length) {
+              case 0:
+                return e.call(this);
+              case 1:
+                return d.call(this, k);
+              case 2:
+                return c.call(this, k, l);
+              case 3:
+                return b.call(this, k, l, m);
+              default:
+                var p = null;
+                if (3 < arguments.length) {
+                  p = 0;
+                  for (var q = Array(arguments.length - 3); p < q.length; )
+                    q[p] = arguments[p + 3], ++p;
+                  p = new G(q, 0, null);
+                }
+                return h.o(k, l, m, p);
+            }
+            throw Error("Invalid arity: " + arguments.length);
+          };
+          f2.I = 3;
+          f2.J = h.J;
+          f2.C = e;
+          f2.g = d;
+          f2.h = c;
+          f2.j = b;
+          f2.o = h.o;
+          return f2;
+        }();
+      };
+      wh.h = function(a, b) {
+        return function() {
+          function c(l, m, n2) {
+            return new W(null, 2, 5, X2, [a.j ? a.j(l, m, n2) : a.call(null, l, m, n2), b.j ? b.j(l, m, n2) : b.call(null, l, m, n2)], null);
+          }
+          function d(l, m) {
+            return new W(null, 2, 5, X2, [a.h ? a.h(l, m) : a.call(null, l, m), b.h ? b.h(l, m) : b.call(null, l, m)], null);
+          }
+          function e(l) {
+            return new W(null, 2, 5, X2, [a.g ? a.g(l) : a.call(null, l), b.g ? b.g(l) : b.call(null, l)], null);
+          }
+          function f2() {
+            return new W(null, 2, 5, X2, [a.C ? a.C() : a.call(null), b.C ? b.C() : b.call(null)], null);
+          }
+          var h = null, k = function() {
+            function l(n2, p, q, r) {
+              var w = null;
+              if (3 < arguments.length) {
+                w = 0;
+                for (var z = Array(arguments.length - 3); w < z.length; )
+                  z[w] = arguments[w + 3], ++w;
+                w = new G(z, 0, null);
+              }
+              return m.call(this, n2, p, q, w);
+            }
+            function m(n2, p, q, r) {
+              return new W(null, 2, 5, X2, [Fa(a, n2, p, q, r), Fa(b, n2, p, q, r)], null);
+            }
+            l.I = 3;
+            l.J = function(n2) {
+              var p = I(n2);
+              n2 = N2(n2);
+              var q = I(n2);
+              n2 = N2(n2);
+              var r = I(n2);
+              n2 = ac(n2);
+              return m(p, q, r, n2);
+            };
+            l.o = m;
+            return l;
+          }();
+          h = function(l, m, n2, p) {
+            switch (arguments.length) {
+              case 0:
+                return f2.call(this);
+              case 1:
+                return e.call(this, l);
+              case 2:
+                return d.call(this, l, m);
+              case 3:
+                return c.call(this, l, m, n2);
+              default:
+                var q = null;
+                if (3 < arguments.length) {
+                  q = 0;
+                  for (var r = Array(arguments.length - 3); q < r.length; )
+                    r[q] = arguments[q + 3], ++q;
+                  q = new G(r, 0, null);
+                }
+                return k.o(l, m, n2, q);
+            }
+            throw Error("Invalid arity: " + arguments.length);
+          };
+          h.I = 3;
+          h.J = k.J;
+          h.C = f2;
+          h.g = e;
+          h.h = d;
+          h.j = c;
+          h.o = k.o;
+          return h;
+        }();
+      };
+      wh.j = function(a, b, c) {
+        return function() {
+          function d(m, n2, p) {
+            return new W(null, 3, 5, X2, [a.j ? a.j(m, n2, p) : a.call(null, m, n2, p), b.j ? b.j(m, n2, p) : b.call(null, m, n2, p), c.j ? c.j(m, n2, p) : c.call(null, m, n2, p)], null);
+          }
+          function e(m, n2) {
+            return new W(null, 3, 5, X2, [a.h ? a.h(m, n2) : a.call(null, m, n2), b.h ? b.h(m, n2) : b.call(null, m, n2), c.h ? c.h(m, n2) : c.call(null, m, n2)], null);
+          }
+          function f2(m) {
+            return new W(null, 3, 5, X2, [a.g ? a.g(m) : a.call(null, m), b.g ? b.g(m) : b.call(null, m), c.g ? c.g(m) : c.call(null, m)], null);
+          }
+          function h() {
+            return new W(null, 3, 5, X2, [a.C ? a.C() : a.call(null), b.C ? b.C() : b.call(null), c.C ? c.C() : c.call(null)], null);
+          }
+          var k = null, l = function() {
+            function m(p, q, r, w) {
+              var z = null;
+              if (3 < arguments.length) {
+                z = 0;
+                for (var A = Array(arguments.length - 3); z < A.length; )
+                  A[z] = arguments[z + 3], ++z;
+                z = new G(A, 0, null);
+              }
+              return n2.call(this, p, q, r, z);
+            }
+            function n2(p, q, r, w) {
+              return new W(null, 3, 5, X2, [Fa(a, p, q, r, w), Fa(b, p, q, r, w), Fa(c, p, q, r, w)], null);
+            }
+            m.I = 3;
+            m.J = function(p) {
+              var q = I(p);
+              p = N2(p);
+              var r = I(p);
+              p = N2(p);
+              var w = I(p);
+              p = ac(p);
+              return n2(q, r, w, p);
+            };
+            m.o = n2;
+            return m;
+          }();
+          k = function(m, n2, p, q) {
+            switch (arguments.length) {
+              case 0:
+                return h.call(this);
+              case 1:
+                return f2.call(this, m);
+              case 2:
+                return e.call(this, m, n2);
+              case 3:
+                return d.call(this, m, n2, p);
+              default:
+                var r = null;
+                if (3 < arguments.length) {
+                  r = 0;
+                  for (var w = Array(arguments.length - 3); r < w.length; )
+                    w[r] = arguments[r + 3], ++r;
+                  r = new G(w, 0, null);
+                }
+                return l.o(m, n2, p, r);
+            }
+            throw Error("Invalid arity: " + arguments.length);
+          };
+          k.I = 3;
+          k.J = l.J;
+          k.C = h;
+          k.g = f2;
+          k.h = e;
+          k.j = d;
+          k.o = l.o;
+          return k;
+        }();
+      };
+      wh.o = function(a, b, c, d) {
+        var e = U(a, U(b, U(c, d)));
+        return function() {
+          function f2(p, q, r) {
+            return Vc.j(function(w, z) {
+              return Z.h(w, z.j ? z.j(p, q, r) : z.call(null, p, q, r));
+            }, be, e);
+          }
+          function h(p, q) {
+            return Vc.j(function(r, w) {
+              return Z.h(r, w.h ? w.h(p, q) : w.call(null, p, q));
+            }, be, e);
+          }
+          function k(p) {
+            return Vc.j(function(q, r) {
+              return Z.h(q, r.g ? r.g(p) : r.call(null, p));
+            }, be, e);
+          }
+          function l() {
+            return Vc.j(function(p, q) {
+              return Z.h(p, q.C ? q.C() : q.call(null));
+            }, be, e);
+          }
+          var m = null, n2 = function() {
+            function p(r, w, z, A) {
+              var K2 = null;
+              if (3 < arguments.length) {
+                K2 = 0;
+                for (var M = Array(arguments.length - 3); K2 < M.length; )
+                  M[K2] = arguments[K2 + 3], ++K2;
+                K2 = new G(M, 0, null);
+              }
+              return q.call(this, r, w, z, K2);
+            }
+            function q(r, w, z, A) {
+              return Vc.j(function(K2, M) {
+                return Z.h(K2, Fa(M, r, w, z, A));
+              }, be, e);
+            }
+            p.I = 3;
+            p.J = function(r) {
+              var w = I(r);
+              r = N2(r);
+              var z = I(r);
+              r = N2(r);
+              var A = I(r);
+              r = ac(r);
+              return q(w, z, A, r);
+            };
+            p.o = q;
+            return p;
+          }();
+          m = function(p, q, r, w) {
+            switch (arguments.length) {
+              case 0:
+                return l.call(this);
+              case 1:
+                return k.call(this, p);
+              case 2:
+                return h.call(this, p, q);
+              case 3:
+                return f2.call(this, p, q, r);
+              default:
+                var z = null;
+                if (3 < arguments.length) {
+                  z = 0;
+                  for (var A = Array(arguments.length - 3); z < A.length; )
+                    A[z] = arguments[z + 3], ++z;
+                  z = new G(A, 0, null);
+                }
+                return n2.o(p, q, r, z);
+            }
+            throw Error("Invalid arity: " + arguments.length);
+          };
+          m.I = 3;
+          m.J = n2.J;
+          m.C = l;
+          m.g = k;
+          m.h = h;
+          m.j = f2;
+          m.o = n2.o;
+          return m;
+        }();
+      };
+      wh.J = function(a) {
+        var b = I(a), c = N2(a);
+        a = I(c);
+        var d = N2(c);
+        c = I(d);
+        d = N2(d);
+        return this.o(b, a, c, d);
+      };
+      wh.I = 3;
+      function Ck(a, b) {
+        if (typeof b === "string")
+          return a = a.exec(b), a != null && P.h(a[0], b) ? a.length === 1 ? a[0] : ce(a) : null;
+        throw new TypeError("re-matches must match against a string.");
+      }
+      function Dk(a, b) {
+        if (typeof b === "string")
+          return a = a.exec(b), a == null ? null : a.length === 1 ? a[0] : ce(a);
+        throw new TypeError("re-find must match against a string.");
+      }
+      var Ek = function Ek2(a, b) {
+        var d = a.exec(b);
+        if (d == null)
+          return null;
+        var e = d[0], f2 = d.length === 1 ? e : ce(d);
+        return U(f2, new ld(null, function() {
+          var h = e.length;
+          h = d.index + (1 > h ? 1 : h);
+          return h <= b.length ? (h = b.substring(h), Ek2.h ? Ek2.h(a, h) : Ek2.call(null, a, h)) : null;
+        }, null, null));
+      };
+      function yf(a, b, c, d, e, f2, h) {
+        var k = wf;
+        wf = wf == null ? null : wf - 1;
+        try {
+          if (wf != null && 0 > wf)
+            return xb(a, "#");
+          xb(a, c);
+          if (Ca.g(f2) === 0)
+            H(h) && xb(a, function() {
+              var r = xf.g(f2);
+              return v(r) ? r : "...";
+            }());
+          else {
+            if (H(h)) {
+              var l = I(h);
+              b.j ? b.j(l, a, f2) : b.call(null, l, a, f2);
+            }
+            for (var m = N2(h), n2 = Ca.g(f2) - 1; ; )
+              if (!m || n2 != null && n2 === 0) {
+                H(m) && n2 === 0 && (xb(a, d), xb(a, function() {
+                  var r = xf.g(f2);
+                  return v(r) ? r : "...";
+                }()));
+                break;
+              } else {
+                xb(a, d);
+                var p = I(m);
+                c = a;
+                h = f2;
+                b.j ? b.j(p, c, h) : b.call(null, p, c, h);
+                var q = N2(m);
+                c = n2 - 1;
+                m = q;
+                n2 = c;
+              }
+          }
+          return xb(a, e);
+        } finally {
+          wf = k;
+        }
+      }
+      function zf(a, b) {
+        b = H(b);
+        for (var c = null, d = 0, e = 0; ; )
+          if (e < d) {
+            var f2 = c.da(null, e);
+            xb(a, f2);
+            e += 1;
+          } else if (b = H(b))
+            c = b, Kc(c) ? (b = Hb(c), d = Ib(c), c = b, f2 = O2(b), b = d, d = f2) : (f2 = I(c), xb(a, f2), b = N2(c), c = null, d = 0), e = 0;
+          else
+            return null;
+      }
+      function Fk(a) {
+        if (Mj == null)
+          throw Error("No *print-fn* fn set for evaluation environment");
+        Mj.call(null, a);
+      }
+      var Af = { '"': '\\"', "\\": "\\\\", "\b": "\\b", "\f": "\\f", "\n": "\\n", "\r": "\\r", "	": "\\t" };
+      function Bf(a) {
+        return ['"', B.g(a.replace(RegExp('[\\\\"\b\f\n\r	]', "g"), function(b) {
+          return Af[b];
+        })), '"'].join("");
+      }
+      function Cf(a, b) {
+        return (a = Mc(T.h(a, Aa))) ? (a = b != null ? b.m & 131072 || E === b.pc ? true : false : false) ? Dc(b) != null : a : a;
+      }
+      function Gf(a, b, c) {
+        if (a == null)
+          return xb(b, "nil");
+        if (Cf(c, a)) {
+          xb(b, "^");
+          var d = Dc(a);
+          Df.j ? Df.j(d, b, c) : Df.call(null, d, b, c);
+          xb(b, " ");
+        }
+        if (a.Db)
+          return a.Pb(a, b, c);
+        if (a != null ? a.m & 2147483648 || E === a.ba || (a.m ? 0 : x(yb, a)) : x(yb, a))
+          return zb(a, b, c);
+        if (a === true || a === false)
+          return xb(b, B.g(a));
+        if (typeof a === "number")
+          return xb(b, isNaN(a) ? "##NaN" : a === Number.POSITIVE_INFINITY ? "##Inf" : a === Number.NEGATIVE_INFINITY ? "##-Inf" : B.g(a));
+        if (a != null && a.constructor === Object)
+          return xb(b, "#js "), d = Y.h(function(f2) {
+            return new xe(Ck(/[A-Za-z_\*\+\?!\-'][\w\*\+\?!\-']*/, f2) != null ? Ef.g(f2) : f2, a[f2]);
+          }, ua(a)), Ff.K ? Ff.K(d, Df, b, c) : Ff.call(null, d, Df, b, c);
+        if (Ka(a))
+          return yf(b, Df, "#js [", " ", "]", c, a);
+        if (typeof a === "string")
+          return v(za.g(c)) ? xb(b, Bf(a)) : xb(b, a);
+        if (typeof a === "function") {
+          var e = a.name;
+          c = v(function() {
+            var f2 = e == null;
+            return f2 ? f2 : ta(e);
+          }()) ? "Function" : e;
+          return zf(b, vc(["#object[", c, v(false) ? [' "', B.g(a), '"'].join("") : "", "]"]));
+        }
+        if (a instanceof Date)
+          return c = function(f2, h) {
+            for (f2 = B.g(f2); ; )
+              if (f2.length < h)
+                f2 = ["0", f2].join("");
+              else
+                return f2;
+          }, zf(b, vc(['#inst "', c(a.getUTCFullYear(), 4), "-", c(a.getUTCMonth() + 1, 2), "-", c(a.getUTCDate(), 2), "T", c(a.getUTCHours(), 2), ":", c(a.getUTCMinutes(), 2), ":", c(a.getUTCSeconds(), 2), ".", c(a.getUTCMilliseconds(), 3), "-", '00:00"']));
+        if (a instanceof RegExp)
+          return zf(b, vc(['#"', a.source, '"']));
+        if (t(a) === "symbol" || typeof Symbol !== "undefined" && a instanceof Symbol)
+          return zf(b, vc(["#object[", a.toString(), "]"]));
+        if (v(function() {
+          var f2 = a == null ? null : a.constructor;
+          return f2 == null ? null : f2.fb;
+        }()))
+          return zf(b, vc(["#object[", a.constructor.fb.replace(RegExp("/", "g"), "."), "]"]));
+        e = function() {
+          var f2 = a == null ? null : a.constructor;
+          return f2 == null ? null : f2.name;
+        }();
+        c = v(function() {
+          var f2 = e == null;
+          return f2 ? f2 : ta(e);
+        }()) ? "Object" : e;
+        return a.constructor == null ? zf(b, vc(["#object[", c, "]"])) : zf(b, vc(["#object[", c, " ", B.g(a), "]"]));
+      }
+      function Df(a, b, c) {
+        var d = Hf.g(c);
+        return v(d) ? (c = If.j(c, Jf, Gf), d.j ? d.j(a, b, c) : d.call(null, a, b, c)) : Gf(a, b, c);
+      }
+      function Pi(a, b) {
+        if (Ec(a))
+          b = "";
+        else {
+          var c = B, d = c.g, e = new xa(), f2 = new Mb(e);
+          Df(I(a), f2, b);
+          a = H(N2(a));
+          for (var h = null, k = 0, l = 0; ; )
+            if (l < k) {
+              var m = h.da(null, l);
+              xb(f2, " ");
+              Df(m, f2, b);
+              l += 1;
+            } else if (a = H(a))
+              h = a, Kc(h) ? (a = Hb(h), k = Ib(h), h = a, m = O2(a), a = k, k = m) : (m = I(h), xb(f2, " "), Df(m, f2, b), a = N2(h), h = null, k = 0), l = 0;
+            else
+              break;
+          b = d.call(c, e);
+        }
+        return b;
+      }
+      function Mf(a) {
+        return a instanceof F ? Lf.h(null, qf(a)) : Ef.h(null, qf(a));
+      }
+      function Nf(a) {
+        if (v(false)) {
+          var b = H(a), c = H(b), d = I(c);
+          N2(c);
+          S(d, 0, null);
+          S(d, 1, null);
+          c = yc(a);
+          for (a = null; ; ) {
+            d = a;
+            b = H(b);
+            a = I(b);
+            var e = N2(b), f2 = a;
+            a = S(f2, 0, null);
+            b = S(f2, 1, null);
+            if (v(f2))
+              if (a instanceof V || a instanceof F)
+                if (v(d))
+                  if (P.h(d, jd(a)))
+                    c = If.j(c, Mf(a), b), a = d, b = e;
+                  else
+                    return null;
+                else if (d = jd(a), v(d))
+                  c = If.j(c, Mf(a), b), a = d, b = e;
+                else
+                  return null;
+              else
+                return null;
+            else
+              return new W(null, 2, 5, X2, [d, c], null);
+          }
+        } else
+          return null;
+      }
+      function Of(a, b, c, d, e) {
+        return yf(d, function(f2, h, k) {
+          var l = eb(f2);
+          c.j ? c.j(l, h, k) : c.call(null, l, h, k);
+          xb(h, " ");
+          f2 = fb(f2);
+          return c.j ? c.j(f2, h, k) : c.call(null, f2, h, k);
+        }, [B.g(a), "{"].join(""), ", ", "}", e, H(b));
+      }
+      function Ff(a, b, c, d) {
+        var e = Hc(a) ? Nf(a) : null, f2 = S(e, 0, null);
+        e = S(e, 1, null);
+        return v(f2) ? Of(["#:", B.g(f2)].join(""), e, b, c, d) : Of(null, a, b, c, d);
+      }
+      kk.prototype.ba = E;
+      kk.prototype.R = function(a, b, c) {
+        xb(b, "#object[cljs.core.Volatile ");
+        Df(new u(null, 1, [Vf, this.state], null), b, c);
+        return xb(b, "]");
+      };
+      G.prototype.ba = E;
+      G.prototype.R = function(a, b, c) {
+        return yf(b, Df, "(", " ", ")", c, this);
+      };
+      ld.prototype.ba = E;
+      ld.prototype.R = function(a, b, c) {
+        return yf(b, Df, "(", " ", ")", c, this);
+      };
+      xe.prototype.ba = E;
+      xe.prototype.R = function(a, b, c) {
+        return yf(b, Df, "[", " ", "]", c, this);
+      };
+      Xe.prototype.ba = E;
+      Xe.prototype.R = function(a, b, c) {
+        return yf(b, Df, "(", " ", ")", c, this);
+      };
+      ye.prototype.ba = E;
+      ye.prototype.R = function(a, b, c) {
+        return yf(b, Df, "(", " ", ")", c, this);
+      };
+      dc.prototype.ba = E;
+      dc.prototype.R = function(a, b, c) {
+        return yf(b, Df, "(", " ", ")", c, this);
+      };
+      de.prototype.ba = E;
+      de.prototype.R = function(a, b, c) {
+        return yf(b, Df, "(", " ", ")", c, this);
+      };
+      hd.prototype.ba = E;
+      hd.prototype.R = function(a, b, c) {
+        return yf(b, Df, "(", " ", ")", c, this);
+      };
+      wc.prototype.ba = E;
+      wc.prototype.R = function(a, b, c) {
+        return yf(b, Df, "(", " ", ")", c, this);
+      };
+      tf.prototype.ba = E;
+      tf.prototype.R = function(a, b, c) {
+        return yf(b, Df, "(", " ", ")", c, this);
+      };
+      ff2.prototype.ba = E;
+      ff2.prototype.R = function(a, b, c) {
+        return Ff(this, Df, b, c);
+      };
+      af.prototype.ba = E;
+      af.prototype.R = function(a, b, c) {
+        return yf(b, Df, "(", " ", ")", c, this);
+      };
+      he.prototype.ba = E;
+      he.prototype.R = function(a, b, c) {
+        return yf(b, Df, "[", " ", "]", c, this);
+      };
+      of.prototype.ba = E;
+      of.prototype.R = function(a, b, c) {
+        return yf(b, Df, "#{", " ", "}", c, this);
+      };
+      pd.prototype.ba = E;
+      pd.prototype.R = function(a, b, c) {
+        return yf(b, Df, "(", " ", ")", c, this);
+      };
+      Hd.prototype.ba = E;
+      Hd.prototype.R = function(a, b, c) {
+        xb(b, "#object[cljs.core.Atom ");
+        Df(new u(null, 1, [Vf, this.state], null), b, c);
+        return xb(b, "]");
+      };
+      lf.prototype.ba = E;
+      lf.prototype.R = function(a, b, c) {
+        return yf(b, Df, "(", " ", ")", c, this);
+      };
+      Jd.prototype.ba = E;
+      Jd.prototype.R = function(a, b, c) {
+        return yf(b, Df, "(", " ", ")", c, this);
+      };
+      W.prototype.ba = E;
+      W.prototype.R = function(a, b, c) {
+        return yf(b, Df, "[", " ", "]", c, this);
+      };
+      uk.prototype.ba = E;
+      uk.prototype.R = function(a, b, c) {
+        return yf(b, Df, "(", " ", ")", c, this);
+      };
+      gd.prototype.ba = E;
+      gd.prototype.R = function(a, b) {
+        return xb(b, "()");
+      };
+      vk.prototype.ba = E;
+      vk.prototype.R = function(a, b, c) {
+        return yf(b, Df, "#queue [", " ", "]", c, H(this));
+      };
+      u.prototype.ba = E;
+      u.prototype.R = function(a, b, c) {
+        return Ff(this, Df, b, c);
+      };
+      uf.prototype.ba = E;
+      uf.prototype.R = function(a, b, c) {
+        return yf(b, Df, "(", " ", ")", c, this);
+      };
+      jf.prototype.ba = E;
+      jf.prototype.R = function(a, b, c) {
+        return yf(b, Df, "(", " ", ")", c, this);
+      };
+      ed.prototype.ba = E;
+      ed.prototype.R = function(a, b, c) {
+        return yf(b, Df, "(", " ", ")", c, this);
+      };
+      F.prototype.wb = E;
+      F.prototype.xa = function(a, b) {
+        if (b instanceof F)
+          return Qg(this, b);
+        throw Error(["Cannot compare ", B.g(this), " to ", B.g(b)].join(""));
+      };
+      V.prototype.wb = E;
+      V.prototype.xa = function(a, b) {
+        if (b instanceof V)
+          return Rg(this, b);
+        throw Error(["Cannot compare ", B.g(this), " to ", B.g(b)].join(""));
+      };
+      he.prototype.wb = E;
+      he.prototype.xa = function(a, b) {
+        if (Jc(b))
+          return Rc(this, b);
+        throw Error(["Cannot compare ", B.g(this), " to ", B.g(b)].join(""));
+      };
+      W.prototype.wb = E;
+      W.prototype.xa = function(a, b) {
+        if (Jc(b))
+          return Rc(this, b);
+        throw Error(["Cannot compare ", B.g(this), " to ", B.g(b)].join(""));
+      };
+      xe.prototype.wb = E;
+      xe.prototype.xa = function(a, b) {
+        if (Jc(b))
+          return Rc(this, b);
+        throw Error(["Cannot compare ", B.g(this), " to ", B.g(b)].join(""));
+      };
+      function zg(a) {
+        this.f = a;
+        this.value = null;
+        this.m = 2147516416;
+        this.H = 1;
+      }
+      zg.prototype.xb = function() {
+        v(this.f) && (this.value = this.f.C ? this.f.C() : this.f.call(null), this.f = null);
+        return this.value;
+      };
+      zg.prototype.R = function(a, b, c) {
+        xb(b, "#object[cljs.core.Delay ");
+        Df(new u(null, 2, [Yf, this.f == null ? Tf : Qf, Vf, this.value], null), b, c);
+        return xb(b, "]");
+      };
+      function Gk(a) {
+        return a instanceof zg ? D(a) : a;
+      }
+      function Ri() {
+      }
+      function $i(a) {
+        if (a != null && a.Mb != null)
+          a = a.Mb(a);
+        else {
+          var b = $i[t(a == null ? null : a)];
+          if (b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else if (b = $i._, b != null)
+            a = b.g ? b.g(a) : b.call(null, a);
+          else
+            throw y("IEncodeJS.-clj->js", a);
+        }
+        return a;
+      }
+      function bj(a, b) {
+        return (a != null ? E === a.Lb || (a.Fd ? 0 : x(Ri, a)) : x(Ri, a)) ? $i(a) : typeof a === "string" || typeof a === "number" || a instanceof V || a instanceof F ? b.g ? b.g(a) : b.call(null, a) : Pi(vc([a]), Da());
+      }
+      var dj = function dj2(a) {
+        for (var c = [], d = arguments.length, e = 0; ; )
+          if (e < d)
+            c.push(arguments[e]), e += 1;
+          else
+            break;
+        return dj2.o(arguments[0], 1 < c.length ? new G(c.slice(1), 0, null) : null);
+      };
+      dj.o = function(a, b) {
+        b = Ig(b);
+        var c = T.j(b, Hj, qf), d = function h(f2) {
+          if (f2 == null)
+            return null;
+          if (f2 != null ? E === f2.Lb || (f2.Fd ? 0 : x(Ri, f2)) : x(Ri, f2))
+            return $i(f2);
+          if (f2 instanceof V)
+            return c.g ? c.g(f2) : c.call(null, f2);
+          if (f2 instanceof F)
+            return B.g(f2);
+          if (Hc(f2)) {
+            var k = {};
+            f2 = H(f2);
+            for (var l = null, m = 0, n2 = 0; ; )
+              if (n2 < m) {
+                var p = l.da(null, n2), q = S(p, 0, null);
+                p = S(p, 1, null);
+                q = bj(q, d);
+                p = h(p);
+                k[q] = p;
+                n2 += 1;
+              } else if (f2 = H(f2))
+                Kc(f2) ? (m = Hb(f2), f2 = Ib(f2), l = m, m = O2(m)) : (m = I(f2), l = S(m, 0, null), m = S(m, 1, null), l = bj(l, d), m = h(m), k[l] = m, f2 = N2(f2), l = null, m = 0), n2 = 0;
+              else
+                break;
+            return k;
+          }
+          if (Xi(f2)) {
+            k = [];
+            f2 = H(Y.h(h, f2));
+            l = null;
+            for (n2 = m = 0; ; )
+              if (n2 < m)
+                q = l.da(null, n2), k.push(q), n2 += 1;
+              else if (f2 = H(f2))
+                l = f2, Kc(l) ? (f2 = Hb(l), n2 = Ib(l), l = f2, m = O2(f2), f2 = n2) : (f2 = I(l), k.push(f2), f2 = N2(l), l = null, m = 0), n2 = 0;
+              else
+                break;
+            return k;
+          }
+          return f2;
+        };
+        return d(a);
+      };
+      dj.I = 1;
+      dj.J = function(a) {
+        var b = I(a);
+        a = N2(a);
+        return this.o(b, a);
+      };
+      function Hk(a) {
+        var b = jk(Cd);
+        return function() {
+          function c(e) {
+            var f2 = null;
+            if (0 < arguments.length) {
+              f2 = 0;
+              for (var h = Array(arguments.length - 0); f2 < h.length; )
+                h[f2] = arguments[f2 + 0], ++f2;
+              f2 = new G(h, 0, null);
+            }
+            return d.call(this, f2);
+          }
+          function d(e) {
+            var f2 = T.j(D(b), e, Oc);
+            return f2 === Oc ? (f2 = na(a, e), qg.K(b, If, e, f2), f2) : f2;
+          }
+          c.I = 0;
+          c.J = function(e) {
+            e = H(e);
+            return d(e);
+          };
+          c.o = d;
+          return c;
+        }();
+      }
+      var Ik = null;
+      function Jk() {
+        Ik == null && (Ik = jk(new u(null, 3, [Kk, Cd, Lk, Cd, Mk, Cd], null)));
+        return Ik;
+      }
+      function Nk(a, b, c) {
+        var d = P.h(b, c);
+        if (d)
+          return d;
+        d = Mk.g(a);
+        d = d.g ? d.g(b) : d.call(null, b);
+        if (!(d = Pc(d, c)) && (d = Jc(c)))
+          if (d = Jc(b))
+            if (d = O2(c) === O2(b)) {
+              d = true;
+              for (var e = 0; ; )
+                if (d && e !== O2(c))
+                  d = Nk(a, b.g ? b.g(e) : b.call(null, e), c.g ? c.g(e) : c.call(null, e)), e += 1;
+                else
+                  return d;
+            } else
+              return d;
+          else
+            return d;
+        else
+          return d;
+      }
+      function Ok(a) {
+        var b = D(Jk());
+        return fk(T.h(Kk.g(b), a));
+      }
+      function fl(a, b, c, d) {
+        qg.h(a, function() {
+          return D(b);
+        });
+        qg.h(c, function() {
+          return D(d);
+        });
+      }
+      var gl = function gl2(a, b, c) {
+        var e = function() {
+          var f2 = D(c);
+          return f2.g ? f2.g(a) : f2.call(null, a);
+        }();
+        e = v(v(e) ? e.g ? e.g(b) : e.call(null, b) : e) ? true : null;
+        if (v(e))
+          return e;
+        e = function() {
+          for (var f2 = Ok(b); ; )
+            if (0 < O2(f2)) {
+              var h = I(f2);
+              gl2.j ? gl2.j(a, h, c) : gl2.call(null, a, h, c);
+              f2 = ac(f2);
+            } else
+              return null;
+        }();
+        if (v(e))
+          return e;
+        e = function() {
+          for (var f2 = Ok(a); ; )
+            if (0 < O2(f2)) {
+              var h = I(f2);
+              gl2.j ? gl2.j(h, b, c) : gl2.call(null, h, b, c);
+              f2 = ac(f2);
+            } else
+              return null;
+        }();
+        return v(e) ? e : false;
+      };
+      function hl(a, b, c, d) {
+        c = gl(a, b, c);
+        return v(c) ? c : Nk(d, a, b);
+      }
+      var il = function il2(a, b, c, d, e, f2, h, k) {
+        var m = Vc.j(function(p, q) {
+          var r = S(q, 0, null);
+          S(q, 1, null);
+          if (Nk(D(c), b, r)) {
+            p = p == null || hl(r, I(p), e, D(c)) ? q : p;
+            if (!hl(I(p), r, e, D(c)))
+              throw Error(["Multiple methods in multimethod '", B.g(a), "' match dispatch value: ", B.g(b), " -> ", B.g(r), " and ", B.g(I(p)), ", and neither is preferred"].join(""));
+            return p;
+          }
+          return p;
+        }, null, D(d)), n2 = function() {
+          var p;
+          if (p = m == null)
+            p = D(d), p = p.g ? p.g(k) : p.call(null, k);
+          return v(p) ? new W(null, 2, 5, X2, [k, p], null) : m;
+        }();
+        if (v(n2)) {
+          if (P.h(D(h), D(c)))
+            return qg.K(f2, If, b, xc(n2)), xc(n2);
+          fl(f2, d, h, c);
+          return il2.va ? il2.va(a, b, c, d, e, f2, h, k) : il2.call(null, a, b, c, d, e, f2, h, k);
+        }
+        return null;
+      };
+      function jl(a, b) {
+        throw Error(["No method in multimethod '", B.g(a), "' for dispatch value: ", B.g(b)].join(""));
+      }
+      function kl() {
+        var a = Lf.h("cljs.tools.reader.impl.inspect", "inspect*"), b = ml, c = nl, d = ol, e = pl, f2 = rl, h = sl, k = tl;
+        this.name = a;
+        this.Xb = h;
+        this.re = k;
+        this.nd = b;
+        this.Gd = c;
+        this.ue = d;
+        this.od = e;
+        this.kd = f2;
+        this.m = 4194305;
+        this.H = 4352;
+      }
+      g = kl.prototype;
+      g.call = function(a) {
+        switch (arguments.length - 1) {
+          case 0:
+            return this.C();
+          case 1:
+            return this.g(arguments[1]);
+          case 2:
+            return this.h(arguments[1], arguments[2]);
+          case 3:
+            return this.j(arguments[1], arguments[2], arguments[3]);
+          case 4:
+            return this.K(arguments[1], arguments[2], arguments[3], arguments[4]);
+          case 5:
+            return this.N(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]);
+          case 6:
+            return this.ta(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6]);
+          case 7:
+            return this.La(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7]);
+          case 8:
+            return this.va(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8]);
+          case 9:
+            return this.Ma(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9]);
+          case 10:
+            return this.Aa(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10]);
+          case 11:
+            return this.Ba(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11]);
+          case 12:
+            return this.Ca(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12]);
+          case 13:
+            return this.Da(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12], arguments[13]);
+          case 14:
+            return this.Ea(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12], arguments[13], arguments[14]);
+          case 15:
+            return this.Fa(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12], arguments[13], arguments[14], arguments[15]);
+          case 16:
+            return this.Ga(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12], arguments[13], arguments[14], arguments[15], arguments[16]);
+          case 17:
+            return this.Ha(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12], arguments[13], arguments[14], arguments[15], arguments[16], arguments[17]);
+          case 18:
+            return this.Ia(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12], arguments[13], arguments[14], arguments[15], arguments[16], arguments[17], arguments[18]);
+          case 19:
+            return this.Ja(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12], arguments[13], arguments[14], arguments[15], arguments[16], arguments[17], arguments[18], arguments[19]);
+          case 20:
+            return this.Ka(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12], arguments[13], arguments[14], arguments[15], arguments[16], arguments[17], arguments[18], arguments[19], arguments[20]);
+          case 21:
+            return this.Kd(arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12], arguments[13], arguments[14], arguments[15], arguments[16], arguments[17], arguments[18], arguments[19], arguments[20], arguments[21]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length - 1)].join(""));
+        }
+      };
+      g.apply = function(a, b) {
+        return this.call.apply(this, [this].concat(Oa(b)));
+      };
+      g.C = function() {
+        var a = this.Xb.C ? this.Xb.C() : this.Xb.call(null), b = ul(this, a);
+        v(b) || jl(this.name, a);
+        return b.C ? b.C() : b.call(null);
+      };
+      g.g = function(a) {
+        var b = this.Xb.g ? this.Xb.g(a) : this.Xb.call(null, a), c = ul(this, b);
+        v(c) || jl(this.name, b);
+        return c.g ? c.g(a) : c.call(null, a);
+      };
+      g.h = function(a, b) {
+        var c = this.Xb.h ? this.Xb.h(a, b) : this.Xb.call(null, a, b), d = ul(this, c);
+        v(d) || jl(this.name, c);
+        return d.h ? d.h(a, b) : d.call(null, a, b);
+      };
+      g.j = function(a, b, c) {
+        var d = this.Xb.j ? this.Xb.j(a, b, c) : this.Xb.call(null, a, b, c), e = ul(this, d);
+        v(e) || jl(this.name, d);
+        return e.j ? e.j(a, b, c) : e.call(null, a, b, c);
+      };
+      g.K = function(a, b, c, d) {
+        var e = this.Xb.K ? this.Xb.K(a, b, c, d) : this.Xb.call(null, a, b, c, d), f2 = ul(this, e);
+        v(f2) || jl(this.name, e);
+        return f2.K ? f2.K(a, b, c, d) : f2.call(null, a, b, c, d);
+      };
+      g.N = function(a, b, c, d, e) {
+        var f2 = this.Xb.N ? this.Xb.N(a, b, c, d, e) : this.Xb.call(null, a, b, c, d, e), h = ul(this, f2);
+        v(h) || jl(this.name, f2);
+        return h.N ? h.N(a, b, c, d, e) : h.call(null, a, b, c, d, e);
+      };
+      g.ta = function(a, b, c, d, e, f2) {
+        var h = this.Xb.ta ? this.Xb.ta(a, b, c, d, e, f2) : this.Xb.call(null, a, b, c, d, e, f2), k = ul(this, h);
+        v(k) || jl(this.name, h);
+        return k.ta ? k.ta(a, b, c, d, e, f2) : k.call(null, a, b, c, d, e, f2);
+      };
+      g.La = function(a, b, c, d, e, f2, h) {
+        var k = this.Xb.La ? this.Xb.La(a, b, c, d, e, f2, h) : this.Xb.call(null, a, b, c, d, e, f2, h), l = ul(this, k);
+        v(l) || jl(this.name, k);
+        return l.La ? l.La(a, b, c, d, e, f2, h) : l.call(null, a, b, c, d, e, f2, h);
+      };
+      g.va = function(a, b, c, d, e, f2, h, k) {
+        var l = this.Xb.va ? this.Xb.va(a, b, c, d, e, f2, h, k) : this.Xb.call(null, a, b, c, d, e, f2, h, k), m = ul(this, l);
+        v(m) || jl(this.name, l);
+        return m.va ? m.va(a, b, c, d, e, f2, h, k) : m.call(null, a, b, c, d, e, f2, h, k);
+      };
+      g.Ma = function(a, b, c, d, e, f2, h, k, l) {
+        var m = this.Xb.Ma ? this.Xb.Ma(a, b, c, d, e, f2, h, k, l) : this.Xb.call(null, a, b, c, d, e, f2, h, k, l), n2 = ul(this, m);
+        v(n2) || jl(this.name, m);
+        return n2.Ma ? n2.Ma(a, b, c, d, e, f2, h, k, l) : n2.call(null, a, b, c, d, e, f2, h, k, l);
+      };
+      g.Aa = function(a, b, c, d, e, f2, h, k, l, m) {
+        var n2 = this.Xb.Aa ? this.Xb.Aa(a, b, c, d, e, f2, h, k, l, m) : this.Xb.call(null, a, b, c, d, e, f2, h, k, l, m), p = ul(this, n2);
+        v(p) || jl(this.name, n2);
+        return p.Aa ? p.Aa(a, b, c, d, e, f2, h, k, l, m) : p.call(null, a, b, c, d, e, f2, h, k, l, m);
+      };
+      g.Ba = function(a, b, c, d, e, f2, h, k, l, m, n2) {
+        var p = this.Xb.Ba ? this.Xb.Ba(a, b, c, d, e, f2, h, k, l, m, n2) : this.Xb.call(null, a, b, c, d, e, f2, h, k, l, m, n2), q = ul(this, p);
+        v(q) || jl(this.name, p);
+        return q.Ba ? q.Ba(a, b, c, d, e, f2, h, k, l, m, n2) : q.call(null, a, b, c, d, e, f2, h, k, l, m, n2);
+      };
+      g.Ca = function(a, b, c, d, e, f2, h, k, l, m, n2, p) {
+        var q = this.Xb.Ca ? this.Xb.Ca(a, b, c, d, e, f2, h, k, l, m, n2, p) : this.Xb.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p), r = ul(this, q);
+        v(r) || jl(this.name, q);
+        return r.Ca ? r.Ca(a, b, c, d, e, f2, h, k, l, m, n2, p) : r.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p);
+      };
+      g.Da = function(a, b, c, d, e, f2, h, k, l, m, n2, p, q) {
+        var r = this.Xb.Da ? this.Xb.Da(a, b, c, d, e, f2, h, k, l, m, n2, p, q) : this.Xb.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q), w = ul(this, r);
+        v(w) || jl(this.name, r);
+        return w.Da ? w.Da(a, b, c, d, e, f2, h, k, l, m, n2, p, q) : w.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q);
+      };
+      g.Ea = function(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r) {
+        var w = this.Xb.Ea ? this.Xb.Ea(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r) : this.Xb.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r), z = ul(this, w);
+        v(z) || jl(this.name, w);
+        return z.Ea ? z.Ea(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r) : z.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r);
+      };
+      g.Fa = function(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w) {
+        var z = this.Xb.Fa ? this.Xb.Fa(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w) : this.Xb.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w), A = ul(this, z);
+        v(A) || jl(this.name, z);
+        return A.Fa ? A.Fa(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w) : A.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w);
+      };
+      g.Ga = function(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z) {
+        var A = this.Xb.Ga ? this.Xb.Ga(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z) : this.Xb.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z), K2 = ul(this, A);
+        v(K2) || jl(this.name, A);
+        return K2.Ga ? K2.Ga(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z) : K2.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z);
+      };
+      g.Ha = function(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A) {
+        var K2 = this.Xb.Ha ? this.Xb.Ha(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A) : this.Xb.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A), M = ul(this, K2);
+        v(M) || jl(this.name, K2);
+        return M.Ha ? M.Ha(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A) : M.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A);
+      };
+      g.Ia = function(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2) {
+        var M = this.Xb.Ia ? this.Xb.Ia(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2) : this.Xb.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2), ca = ul(this, M);
+        v(ca) || jl(this.name, M);
+        return ca.Ia ? ca.Ia(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2) : ca.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2);
+      };
+      g.Ja = function(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M) {
+        var ca = this.Xb.Ja ? this.Xb.Ja(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M) : this.Xb.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M), la = ul(this, ca);
+        v(la) || jl(this.name, ca);
+        return la.Ja ? la.Ja(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M) : la.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M);
+      };
+      g.Ka = function(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca) {
+        var la = this.Xb.Ka ? this.Xb.Ka(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca) : this.Xb.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca), Ga = ul(this, la);
+        v(Ga) || jl(this.name, la);
+        return Ga.Ka ? Ga.Ka(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca) : Ga.call(null, a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca);
+      };
+      g.Kd = function(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca, la) {
+        var Ga = dk(this.Xb, a, b, c, d, vc([e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca, la])), qa = ul(this, Ga);
+        v(qa) || jl(this.name, Ga);
+        return dk(qa, a, b, c, d, vc([e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca, la]));
+      };
+      function xl(a, b) {
+        var c = ik;
+        qg.K(c.Gd, If, a, b);
+        fl(c.od, c.Gd, c.kd, c.nd);
+      }
+      function ul(a, b) {
+        P.h(D(a.kd), D(a.nd)) || fl(a.od, a.Gd, a.kd, a.nd);
+        var c = D(a.od);
+        c = c.g ? c.g(b) : c.call(null, b);
+        return v(c) ? c : il(a.name, b, a.nd, a.Gd, a.ue, a.od, a.kd, a.re);
+      }
+      g.ed = function() {
+        return Tj(this.name);
+      };
+      g.gd = function() {
+        return Uj(this.name);
+      };
+      g.V = function() {
+        return sa(this);
+      };
+      function Gg(a) {
+        this.ub = a;
+        this.D = null;
+        this.m = 2153775104;
+        this.H = 2048;
+      }
+      g = Gg.prototype;
+      g.Vc = E;
+      g.toString = function() {
+        return this.ub;
+      };
+      g.U = function(a, b) {
+        return (a = b != null ? E === b.Vc ? true : false : false) ? this.ub === b.ub : a;
+      };
+      g.R = function(a, b) {
+        return xb(b, ['#uuid "', B.g(this.ub), '"'].join(""));
+      };
+      g.V = function() {
+        this.D == null && (this.D = Wb(this.ub));
+        return this.D;
+      };
+      g.xa = function(a, b) {
+        if (b instanceof Gg)
+          return wa(this.ub, b.ub);
+        throw Error(["Cannot compare ", B.g(this), " to ", B.g(b)].join(""));
+      };
+      function $g() {
+        function a() {
+          return Math.floor(16 * Math.random()).toString(16);
+        }
+        var b = (8 | 3 & Math.floor(16 * Math.random())).toString(16);
+        return new Gg([B.g(a()), B.g(a()), B.g(a()), B.g(a()), B.g(a()), B.g(a()), B.g(a()), B.g(a()), "-", B.g(a()), B.g(a()), B.g(a()), B.g(a()), "-4", B.g(a()), B.g(a()), B.g(a()), "-", B.g(b), B.g(a()), B.g(a()), B.g(a()), "-", B.g(a()), B.g(a()), B.g(a()), B.g(a()), B.g(a()), B.g(a()), B.g(a()), B.g(a()), B.g(a()), B.g(a()), B.g(a()), B.g(a())].join("").toLowerCase());
+      }
+      function yl(a, b) {
+        var c = Error(a);
+        this.message = a;
+        this.data = b;
+        this.cause = null;
+        this.name = c.name;
+        this.description = c.description;
+        this.number = c.number;
+        this.fileName = c.fileName;
+        this.lineNumber = c.lineNumber;
+        this.columnNumber = c.columnNumber;
+        this.stack = c.stack;
+        return this;
+      }
+      yl.prototype.__proto__ = Error.prototype;
+      yl.prototype.ba = E;
+      yl.prototype.R = function(a, b, c) {
+        xb(b, "#error {:message ");
+        Df(this.message, b, c);
+        v(this.data) && (xb(b, ", :data "), Df(this.data, b, c));
+        v(this.cause) && (xb(b, ", :cause "), Df(this.cause, b, c));
+        return xb(b, "}");
+      };
+      yl.prototype.toString = function() {
+        return Nb(this);
+      };
+      function zl(a, b) {
+        return new yl(a, b);
+      }
+      function fh() {
+        v(dh) || (dh = function() {
+          for (var a = ch(function(e, f2) {
+            return f2.length - e.length;
+          }, ua(eh)), b = ""; ; )
+            if (H(a)) {
+              var c = N2(a), d = [function() {
+                var e = b;
+                return b !== "" ? [e, "|"].join("") : e;
+              }(), B.g(I(a))].join("");
+              a = c;
+              b = d;
+            } else
+              return [b, "|\\$"].join("");
+        }());
+        return dh;
+      }
+      function gh(a) {
+        var b = B.g(a);
+        if (b === "_DOT__DOT_")
+          var c = "..";
+        else
+          a: {
+            c = new RegExp(fh(), "g");
+            var d = b.length - 1;
+            d = 0 <= d && b.indexOf("$", d) == d;
+            b = v(d) ? b.substring(0, b.length - 1) : b;
+            d = "";
+            for (var e = 0; ; ) {
+              var f2 = c.exec(b);
+              if (v(f2))
+                f2 = S(f2, 0, null), d = [d, B.g(b.substring(e, c.lastIndex - f2.length)), B.g(f2 === "$" ? "/" : ja(eh, f2))].join(""), e = c.lastIndex;
+              else {
+                c = [d, B.g(b.substring(e, b.length))].join("");
+                break a;
+              }
+            }
+          }
+        a = a instanceof F ? Lf : B;
+        return a.g ? a.g(c) : a.call(null, c);
+      }
+      typeof console !== "undefined" && Oj();
+      ha = globalThis;
+      Oj();
+      var Al = new V(null, "nil", "nil", 99600501), Bl = new V(null, "async?", "async?", 1523057758), qe = new V(null, "size", "size", 1098693007), Cl = new V(null, "true-mos?", "true-mos?", 1663374015), Dl = new V(null, "string", "string", -1989541586), El = new V(null, "pattern", "pattern", 242135423), Fl = new V(null, "spying?", "spying?", 1753444487), Gl = new F(null, "js", "js", -886355190, null), gg = new F(null, "p1__9225#", "p1__9225#", 225913350, null), Hl = new F(null, "uuid", "uuid", -504564192, null), Xf = new F(null, "fn*", "fn*", -752876845, null), Ba = new V(null, "dup", "dup", 556298533), Il = new V(null, "enabled?", "enabled?", -1376075057), Yf = new V(null, "status", "status", -1997798413), ig = new V(null, "count", "count", 2139924085), ci = new V("cljs.spec.alpha", "nil", "cljs.spec.alpha/nil", 1733813950), Ai = new V("cljs.spec.alpha", "k", "cljs.spec.alpha/k", -1602615178), Jl = new V("rl", "reset", "rl/reset", -800926172), za = new V(null, "readably", "readably", 1129599760), Zf = new F("cljs.core", "count", "cljs.core/count", -921270233, null), Kl = new V(null, "any", "any", 1705907423), vf = new V(null, "period", "period", -352129191), li = new F("cljs.core", "map", "cljs.core/map", -338988913, null), $f = new F("cljs.core", "fn", "cljs.core/fn", -1065745098, null), Bi = new V("cljs.spec.alpha", "v", "cljs.spec.alpha/v", 552625740), Ll = new V(null, "fn", "fn", -1175266204), mi = new V(null, "amp", "amp", 271690571), Ml = new V(null, "?meta", "?meta", -793560773), kg = new V(null, "kind", "kind", -717265803), Kf = new V("cps", "normalized-by", "cps/normalized-by", 878262682), Nl = new V(null, "report", "report", 1394055010), Ol = new V(null, "qualifier", "qualifier", 125841738), Pl = new V(null, "appender", "appender", 1267426510), Pf = new V("cps", "size", "cps/size", 1098790769), Rf = new V(null, "cps", "cps", 685853525), Qf = new V(null, "pending", "pending", -220036727), lp = new V(null, "rotate", "rotate", 152705015), tl = new V(null, "default", "default", -1987822328), Ql = new V(null, "timestamp_", "timestamp_", -954533417), Rl = new V(null, "strable", "strable", 1877668047), Sl = new V(null, "days", "days", -1394072564), Tl = new V(null, "mins", "mins", 467369676), Ul = new V(null, "months", "months", -45571637), Vl = new V(null, "vargs", "vargs", -966597273), Wl = new V(null, "map", "map", 1371690461), Gh = new V(null, "conform-keys", "conform-keys", -1800041814), ej = new F(null, "set?", "set?", 1636014792, null), Xl = new V(null, "iso8601", "iso8601", 609352650), Yl = new V(null, "err", "err", -2089457205), Zl = new V(null, "whitelist", "whitelist", -979294437), $l = new V(null, "fatal", "fatal", 1874419888), Hh = new V("cljs.spec.alpha", "kfn", "cljs.spec.alpha/kfn", 672643897), Ih = new V(null, "gen-max", "gen-max", -793680445), am = new V(null, "hash_", "hash_", -827203612), bm = new V(null, "hash", "hash", -13781596), ki = new V(null, "max-count", "max-count", 1539185305), cm = new V(null, "msg_", "msg_", -1925147e3), Sf = new V(null, "bounded-ratio", "bounded-ratio", 1332865443), dm = new V(null, "error", "error", -978969032), em = new V(null, "println", "println", 1920840330), fm = new V(null, "waiting", "waiting", 895906735), gm = new V(null, "version", "version", 425292698), Yh = new V(null, "ps", "ps", 292358046), Uf = new V("erv.cps.core", "archi-factors", "erv.cps.core/archi-factors", 765622525), bg = new V(null, "bounding-period", "bounding-period", 1768663702), qh = new V("cljs.spec.alpha", "name", "cljs.spec.alpha/name", 205233570), hm = new V(null, "ms", "ms", -1152709733), im = new V(null, "?err", "?err", 549653299), mp = new V(null, "utils", "utils", -121060109), jm = new V(null, "cache?", "cache?", -1601953949), Th = new V(null, "p1", "p1", -936759954), Ph = new V(null, "p2", "p2", 905500641), ni = new V("cljs.spec.alpha", "describe", "cljs.spec.alpha/describe", 1883026911), km = new V(null, "list", "list", 765357683), lm = new V("edo", "degree", "edo/degree", 237203460), mm = new V(null, "config", "config", 994861415), Kk = new V(null, "parents", "parents", -2027538891), Lh = new V(null, "ret", "ret", -468222814), nm = new V(null, "rate-limit", "rate-limit", 1748082022), Zh = new V(null, "ks", "ks", 1900203942), di = new V("cljs.spec.alpha", "amp", "cljs.spec.alpha/amp", 831147508), om = new V(null, "?ns-str", "?ns-str", 2012733966), ug = new V(null, "graphs", "graphs", -1584479112), pm = new V(null, "min-level", "min-level", 1634684919), qm = new V("rl", "peek", "rl/peek", -291391771), rm = new V(null, "appender-id", "appender-id", -1917983538), Dg = new V(null, "scale", "scale", -230427353), Xh = new V("cljs.spec.alpha", "alt", "cljs.spec.alpha/alt", 523685437), sm = new V(null, "ns-blacklist", "ns-blacklist", 1957763142), tm = new V(null, "vargs_", "vargs_", 552132148), fj = new F("cljs.spec.alpha", "coll-of", "cljs.spec.alpha/coll-of", 1019430407, null), hj = new F("cljs.core", "->>", "cljs.core/->>", -1207871206, null), um = new V(null, "debug", "debug", -1608172596), Sh = new V(null, "id", "id", -1388402092), Hg = new V(null, "archi-set", "archi-set", 495795173), ag = new V(null, "set", "set", 304602554), vm = new V(null, "trace", "trace", -1082747415), Tf = new V(null, "ready", "ready", 1086465795), wm = new V(null, "?msg-fmt", "?msg-fmt", -852453891), xm = new F(null, "queue", "queue", -1198599890, null), ym = new V(null, "output_", "output_", -36797880), ri = new F("cljs.core", "set?", "cljs.core/set?", -1176684971, null), zm = new V("edo", "period", "edo/period", -352225367), Am = new V(null, "output-fn", "output-fn", 1600951539), Bm = new V(null, "?err_", "?err_", 789480858), Cm = new V(null, "level", "level", 1290497552), Aa = new V(null, "meta", "meta", 1499536964), Dm = new V(null, "deny", "deny", 1589338523), Gi = new F(null, "%", "%", -950237169, null), si = new F("cljs.core", "list?", "cljs.core/list?", -684796618, null), Ca = new V(null, "print-length", "print-length", 1931866356), Em = new V(null, "ns-filter", "ns-filter", 108598448), Fm = new V(null, "make", "make", -1284043325), oi = new V("cljs.spec.alpha", "kind-form", "cljs.spec.alpha/kind-form", -1047104697), Mk = new V(null, "ancestors", "ancestors", -776045424), Gm = new V(null, "p", "p", 151049309), Hm = new V(null, "hostname_", "hostname_", -2091647379), Im = new V(null, "moses", "moses", -780704400), Hi = new V("cljs.spec.alpha", "kvs->map", "cljs.spec.alpha/kvs->map", 579713455), Ii = new F(null, "k", "k", -505765866, null), Jg = new V("cps", "factors", "cps/factors", 1108767994), Jm = new V(null, "f", "f", -1597136552), cg = new F(null, "v", "v", 1661996586, null), Km = new V(null, "given", "given", 716253602), ui = new F("cljs.spec.alpha", "conformer", "cljs.spec.alpha/conformer", 2140085535, null), Lm = new V(null, "edo", "edo", 664006494), Mm = new V(null, "?line", "?line", -631853385), Nm = new V(null, "auto", "auto", -566279492), Om = new V("edo", "pattern", "edo/pattern", 242034639), Pm = new V(null, "hierarchy", "hierarchy", -1053470341), Qm = new V(null, "console", "console", 1228072057), Lg = new V(null, "ratio", "ratio", -926560044), pi = new V(null, "distinct", "distinct", -1788879121), Rm = new V(null, "inherit", "inherit", -1840815422), Jf = new V(null, "fallback-impl", "fallback-impl", -1501286995), Pg = new V(null, "full", "full", 436801220), Sm = new V(null, "warn", "warn", -436710552), Tm = new V(null, "ns-whitelist", "ns-whitelist", -1717299774), ei = new V("cljs.spec.alpha", "pcat", "cljs.spec.alpha/pcat", 26406623), kj = new V("erv.cps.core", "type", "erv.cps.core/type", -1302047896), Hj = new V(null, "keyword-fn", "keyword-fn", -64566675), np = new V(null, "ratioToCents", "ratioToCents", 2147177470), Um = new V(null, "middleware-fn", "middleware-fn", -61585752), Vm = new V(null, "deny-spec", "deny-spec", -1074984268), Wm = new V(null, "allow", "allow", -1857325745), Xm = new V(null, "years", "years", -1298579689), Ym = new F(null, "inst", "inst", -2008473268, null), qi = new V(null, "into", "into", -150836029), Oh = new V("cljs.spec.alpha", "rep", "cljs.spec.alpha/rep", 1483217317), oh = new V("cljs.spec.alpha", "op", "cljs.spec.alpha/op", -1269055252), ti = new V("cljs.spec.alpha", "cpred", "cljs.spec.alpha/cpred", -693471218), Zm = new V(null, "hours", "hours", 58380855), $m = new V(null, "secs", "secs", 1532330091), an = new V(null, "context", "context", -830191113), bn = new V(null, "instant", "instant", 655498374), Og = new F("cljs.core", "apply", "cljs.core/apply", 1757277831, null), lj = new V(null, "simple", "simple", -581868663), vi = new V(null, "min-count", "min-count", 1594709013), cn = new V(null, "raw-console?", "raw-console?", -2061489061), Lk = new V(null, "descendants", "descendants", 1824886031), mj = new V(null, "norm-fac", "norm-fac", 1175241557), nj = new V(null, "nodes", "nodes", -2099585805), dn = new V(null, "appenders", "appenders", 1245583998), en = new V(null, "mos", "mos", 1902052264), Rh = new V(null, "forms", "forms", 2045992350), ij = new V("erv.cps.core", "cps", "erv.cps.core/cps", 1942691201), fn = new V(null, "location", "location", 1815599388), Vf = new V(null, "val", "val", 128701612), gn = new V(null, "vector", "vector", 1902966158), hn = new V(null, "weeks", "weeks", 1844596125), gj = new V("erv.cps.core", "sub-cps-set", "erv.cps.core/sub-cps-set", -1884356686), wi = new F("cljs.core", "map?", "cljs.core/map?", -1390345523, null), ya = new V(null, "flush-on-newline", "flush-on-newline", -151457939), jn = new V(null, "min-version", "min-version", -1697197126), kn = new V(null, "blacklist", "blacklist", 1248093170), xi = new F("cljs.spec.alpha", "and", "cljs.spec.alpha/and", -2060279705, null), Kh = new V("cljs.spec.alpha", "accept", "cljs.spec.alpha/accept", 370988198), ln = new V(null, "fromPattern", "fromPattern", -381751332), mn = new V(null, "middleware", "middleware", 1462115504), nn = new V(null, "no-stacktrace?", "no-stacktrace?", 1701072694), on = new V(null, "msecs", "msecs", 1711980553), pn = new V(null, "allow-spec", "allow-spec", 448749872), dg = new F("cljs.core", "=", "cljs.core/=", -1891498332, null), Mi = new V("cljs.spec.alpha", "unknown", "cljs.spec.alpha/unknown", 651034818), qn = new V("rl", "all", "rl/all", 892118056), xf = new V(null, "more-marker", "more-marker", -14717935), rn = new V(null, "stacktrace-fonts", "stacktrace-fonts", 830799382), sn = new V("edo", "divisions", "edo/divisions", -1442383238), yo = new V(null, "req-id", "req-id", -471642231), oj = new V("cps", "type", "cps/type", 1175547714), zo = new V(null, "timestamp-opts", "timestamp-opts", -1359534807), Qh = new V(null, "splice", "splice", 449588165), Ao = new V(null, "?file", "?file", 1533429675), Bo = new V(null, "error-level?", "error-level?", 778415885), Ci = new F(null, "p1__8966#", "p1__8966#", -2146281877, null), fp = new V("edo", "original-degree", "edo/original-degree", -1225096234), yi = new F("cljs.core", "vector?", "cljs.core/vector?", -1550392028, null), Ni = new F("cljs.core", "zipmap", "cljs.core/zipmap", -1902130674, null), pj = new V(null, "type", "type", 1174270348), gp = new V(null, "your-version", "your-version", -351781765), Hf = new V(null, "alt-impl", "alt-impl", 670969595), hp = new V(null, "none", "none", 1333468478), zi = new V(null, "rep+", "rep+", -281382396), yh = new V("cljs.spec.alpha", "gfn", "cljs.spec.alpha/gfn", -593120375), Eh = new V("cljs.spec.alpha", "invalid", "cljs.spec.alpha/invalid", -1220295119), Di = new V("cljs.spec.alpha", "conform-all", "cljs.spec.alpha/conform-all", 45201917), Ei = new F(null, "p1__8967#", "p1__8967#", -1644498870, null);
+      var qj = function qj2(a) {
+        return new ld(null, function() {
+          var c = H(a);
+          if (c) {
+            var d = Sj.h;
+            var e = I(c);
+            c = ac(c);
+            c = qj2.g ? qj2.g(c) : qj2.call(null, c);
+            d = d.call(Sj, e, c);
+          } else
+            d = null;
+          return d;
+        }, null, null);
+      };
+      function rj(a) {
+        return H(a) ? na(cj, a) : true;
+      }
+      function sj(a, b) {
+        return new ld(null, function() {
+          return function f2(d, e) {
+            return U(yg(sk(d, 1, a + 1)), new ld(null, function() {
+              a:
+                if (e > a)
+                  var h = null;
+                else if (h = If.j(d, e, (d.g ? d.g(e) : d.call(null, e)) - 1), (h.g ? h.g(e) : h.call(null, e)) < e)
+                  h = new W(null, 2, 5, X2, [h, e + 1], null);
+                else
+                  for (var k = e; ; ) {
+                    if (P.h(k, 1)) {
+                      h = new W(null, 2, 5, X2, [h, k], null);
+                      break a;
+                    }
+                    h = If.j(h, k - 1, (h.g ? h.g(k) : h.call(null, k)) - 1);
+                    --k;
+                  }
+              return v(h) ? f2(h.g ? h.g(0) : h.call(null, 0), h.g ? h.g(1) : h.call(null, 1)) : null;
+            }, null, null));
+          }(ce(U(null, function() {
+            return function f2(e) {
+              return new ld(null, function() {
+                for (; ; ) {
+                  var h = H(e);
+                  if (h) {
+                    if (Kc(h)) {
+                      var k = Hb(h), l = O2(k), m = ma(l);
+                      a:
+                        for (var n2 = 0; ; )
+                          if (n2 < l) {
+                            var p = zc(k, n2);
+                            m.add(p + b + -(a + 1));
+                            n2 += 1;
+                          } else {
+                            k = true;
+                            break a;
+                          }
+                      return k ? qd(m.ha(), f2(Ib(h))) : qd(m.ha(), null);
+                    }
+                    m = I(h);
+                    return U(m + b + -(a + 1), f2(ac(h)));
+                  }
+                  return null;
+                }
+              }, null, null);
+            }(ll(1, a + 1));
+          }())), 1);
+        }, null, null);
+      }
+      function tj(a, b, c, d, e) {
+        for (; ; ) {
+          if (b >= O2(a))
+            return null;
+          var f2 = c - e, h = a.g ? a.g(b) : a.call(null, b);
+          if (f2 <= h)
+            return Z.h(d, new W(null, 3, 5, X2, [b, f2, c], null));
+          d = Z.h(d, new W(null, 3, 5, X2, [b, h, e + h], null));
+          b += 1;
+          e += h;
+        }
+      }
+      function uj(a, b) {
+        return function e(d) {
+          return U(d, new ld(null, function() {
+            a: {
+              var f2 = d == null ? null : Bg(d);
+              var h = S(f2, 0, null);
+              var k = S(f2, 1, null);
+              f2 = S(f2, 2, null);
+              if (h < O2(a) - 1)
+                h = P.h(k, 1) ? Z.h(da(d), new W(null, 3, 5, X2, [h + 1, 1, f2], null)) : Z.o(da(d), new W(null, 3, 5, X2, [h, k - 1, f2 - 1], null), vc([new W(null, 3, 5, X2, [h + 1, 1, f2], null)]));
+              else if (P.h(k, b))
+                h = null;
+              else
+                for (k = da(d); ; ) {
+                  var l = k == null ? null : Bg(k);
+                  h = S(l, 0, null);
+                  f2 = S(l, 1, null);
+                  l = S(l, 2, null);
+                  k = P.h(f2, 1) ? da(k) : Z.h(da(k), new W(null, 3, 5, X2, [h, f2 - 1, l - 1], null));
+                  if (b - (l - 1) <= na(wl, sk(a, h + 1, O2(a)))) {
+                    h = tj(a, h + 1, b, k, l - 1);
+                    break a;
+                  }
+                  if (!H(k)) {
+                    h = null;
+                    break a;
+                  }
+                }
+            }
+            return v(h) ? e(h) : null;
+          }, null, null));
+        }(tj(a, 0, b, be, 0));
+      }
+      function vj(a, b) {
+        var c = ql(a), d = ce(oe(a)), e = ll(0, O2(d)), f2 = ce(function() {
+          return function m(l) {
+            return new ld(null, function() {
+              for (; ; ) {
+                var n2 = H(l);
+                if (n2) {
+                  if (Kc(n2)) {
+                    var p = Hb(n2), q = O2(p), r = ma(q);
+                    return function() {
+                      for (var z = 0; ; )
+                        if (z < q) {
+                          var A = zc(p, z), K2 = r;
+                          A = d.g ? d.g(A) : d.call(null, A);
+                          A = c.g ? c.g(A) : c.call(null, A);
+                          K2.add(A);
+                          z += 1;
+                        } else
+                          return true;
+                    }() ? qd(r.ha(), m(Ib(n2))) : qd(r.ha(), null);
+                  }
+                  var w = I(n2);
+                  return U(function() {
+                    var z = d.g ? d.g(w) : d.call(null, w);
+                    return c.g ? c.g(z) : c.call(null, z);
+                  }(), m(ac(n2)));
+                }
+                return null;
+              }
+            }, null, null);
+          }(e);
+        }()), h = uj(f2, b);
+        return function m(l) {
+          return new ld(null, function() {
+            for (; ; ) {
+              var n2 = H(l);
+              if (n2) {
+                var p = n2;
+                if (Kc(p)) {
+                  var q = Hb(p), r = O2(q), w = ma(r);
+                  return function() {
+                    for (var A = 0; ; )
+                      if (A < r) {
+                        var K2 = zc(q, A);
+                        rd(w, qj(function() {
+                          return function(M, ca, la, Ga, qa, ba, Ra, Ea, Ia, ic, lb, jc) {
+                            return function Rk(Qk) {
+                              return new ld(null, function(Sk, Tk, Uk, Vk, Wk, Xk, Yk, Zk, $k) {
+                                return function() {
+                                  for (; ; ) {
+                                    var al = H(Qk);
+                                    if (al) {
+                                      if (Kc(al)) {
+                                        var bl = Hb(al), cl = O2(bl), dl = ma(cl);
+                                        a:
+                                          for (var el = 0; ; )
+                                            if (el < cl) {
+                                              var va = zc(bl, el), Wf = S(va, 0, null), yj = S(va, 1, null);
+                                              S(va, 2, null);
+                                              va = Ma(yj, $k.g ? $k.g(Wf) : $k.call(null, Wf));
+                                              dl.add(va);
+                                              el += 1;
+                                            } else {
+                                              bl = true;
+                                              break a;
+                                            }
+                                        return bl ? qd(dl.ha(), Rk(Ib(al))) : qd(dl.ha(), null);
+                                      }
+                                      dl = I(al);
+                                      bl = S(dl, 0, null);
+                                      cl = S(dl, 1, null);
+                                      S(dl, 2, null);
+                                      return U(Ma(cl, $k.g ? $k.g(bl) : $k.call(null, bl)), Rk(ac(al)));
+                                    }
+                                    return null;
+                                  }
+                                };
+                              }(M, ca, la, Ga, qa, ba, Ra, Ea, Ia, ic, lb, jc), null, null);
+                            };
+                          }(A, K2, q, r, w, p, n2, c, d, e, f2, h)(K2);
+                        }()));
+                        A += 1;
+                      } else
+                        return true;
+                  }() ? qd(w.ha(), m(Ib(p))) : qd(w.ha(), null);
+                }
+                var z = I(p);
+                return U(qj(function() {
+                  return function(A, K2, M, ca, la) {
+                    return function ba(qa) {
+                      return new ld(null, function() {
+                        for (; ; ) {
+                          var Ra = H(qa);
+                          if (Ra) {
+                            if (Kc(Ra)) {
+                              var Ea = Hb(Ra), Ia = O2(Ea), ic = ma(Ia);
+                              a:
+                                for (var lb = 0; ; )
+                                  if (lb < Ia) {
+                                    var jc = zc(Ea, lb), Pk = S(jc, 0, null), Qk = S(jc, 1, null);
+                                    S(jc, 2, null);
+                                    jc = Ma(Qk, la.g ? la.g(Pk) : la.call(null, Pk));
+                                    ic.add(jc);
+                                    lb += 1;
+                                  } else {
+                                    Ea = true;
+                                    break a;
+                                  }
+                              return Ea ? qd(ic.ha(), ba(Ib(Ra))) : qd(ic.ha(), null);
+                            }
+                            ic = I(Ra);
+                            Ea = S(ic, 0, null);
+                            Ia = S(ic, 1, null);
+                            S(ic, 2, null);
+                            return U(Ma(Ia, la.g ? la.g(Ea) : la.call(null, Ea)), ba(ac(Ra)));
+                          }
+                          return null;
+                        }
+                      }, null, null);
+                    };
+                  }(z, p, n2, c, d, e, f2, h)(z);
+                }()), m(ac(p)));
+              }
+              return null;
+            }
+          }, null, null);
+        }(h);
+      }
+      function wj(a, b) {
+        var c = ce(Ag(a));
+        if (b === 0)
+          return new ed(null, J, null, 1, null);
+        var d = O2(a);
+        return b > d ? null : P.h(b, 1) ? function h(f2) {
+          return new ld(null, function() {
+            for (; ; ) {
+              var k = H(f2);
+              if (k) {
+                if (Kc(k)) {
+                  var l = Hb(k), m = O2(l), n2 = ma(m);
+                  a:
+                    for (var p = 0; ; )
+                      if (p < m) {
+                        var q = zc(l, p);
+                        n2.add(new ed(null, q, null, 1, null));
+                        p += 1;
+                      } else {
+                        l = true;
+                        break a;
+                      }
+                  return l ? qd(n2.ha(), h(Ib(k))) : qd(n2.ha(), null);
+                }
+                n2 = I(k);
+                return U(new ed(null, n2, null, 1, null), h(ac(k)));
+              }
+              return null;
+            }
+          }, null, null);
+        }(oe(a)) : v(rj(a)) ? P.h(b, d) ? new ed(null, H(a), null, 1, null) : Y.h(function(f2) {
+          return Y.h(c, f2);
+        }, sj(b, d)) : vj(a, b);
+      }
+      ;
+      function xj(a, b) {
+        var c = oa(pe, a, b);
+        return U(c, Kd(function(d) {
+          return c === d;
+        }, b));
+      }
+      var zj = function zj2(a) {
+        switch (arguments.length) {
+          case 1:
+            return zj2.g(arguments[0]);
+          case 2:
+            return zj2.h(arguments[0], arguments[1]);
+          default:
+            for (var c = [], d = arguments.length, e = 0; ; )
+              if (e < d)
+                c.push(arguments[e]), e += 1;
+              else
+                break;
+            return zj2.o(arguments[0], arguments[1], new G(c.slice(2), 0, null));
+        }
+      };
+      zj.g = function(a) {
+        return a;
+      };
+      zj.h = function(a, b) {
+        for (; ; )
+          if (O2(b) < O2(a)) {
+            var c = a;
+            a = b;
+            b = c;
+          } else
+            return Vc.j(function(d, e) {
+              return function(f2, h) {
+                return Pc(e, h) ? f2 : ea.h(f2, h);
+              };
+            }(a, b), a, a);
+      };
+      zj.o = function(a, b, c) {
+        a = xj(function(d) {
+          return -O2(d);
+        }, Z.o(c, b, vc([a])));
+        return Vc.j(zj, I(a), ac(a));
+      };
+      zj.J = function(a) {
+        var b = I(a), c = N2(a);
+        a = I(c);
+        c = N2(c);
+        return this.o(b, a, c);
+      };
+      zj.I = 2;
+      function tn(a, b, c) {
+        var d = v(b.ignoreCase) ? "gi" : "g";
+        d = v(b.multiline) ? [d, "m"].join("") : d;
+        return a.replace(new RegExp(b.source, v(b.unicode) ? [d, "u"].join("") : d), c);
+      }
+      function un(a) {
+        return function() {
+          function b(d) {
+            var e = null;
+            if (0 < arguments.length) {
+              e = 0;
+              for (var f2 = Array(arguments.length - 0); e < f2.length; )
+                f2[e] = arguments[e + 0], ++e;
+              e = new G(f2, 0, null);
+            }
+            return c.call(this, e);
+          }
+          function c(d) {
+            d = nk(2, d);
+            if (P.h(O2(d), 1))
+              return d = I(d), a.g ? a.g(d) : a.call(null, d);
+            d = ce(d);
+            return a.g ? a.g(d) : a.call(null, d);
+          }
+          b.I = 0;
+          b.J = function(d) {
+            d = H(d);
+            return c(d);
+          };
+          b.o = c;
+          return b;
+        }();
+      }
+      function vn(a, b, c) {
+        if (typeof b === "string")
+          return a.replace(new RegExp(String(b).replace(/([-()\[\]{}+?*.$\^|,:#<!\\])/g, "\\$1").replace(/\x08/g, "\\x08"), "g"), c);
+        if (b instanceof RegExp)
+          return typeof c === "string" ? tn(a, b, c) : tn(a, b, un(c));
+        throw ["Invalid match arg: ", B.g(b)].join("");
+      }
+      function Kg(a) {
+        var b = new xa();
+        for (a = H(a); ; )
+          if (a != null)
+            b.append(B.g(I(a))), a = N2(a), a != null && b.append(".");
+          else
+            return b.toString();
+      }
+      function wn(a, b) {
+        if (0 >= b || b >= 2 + O2(a))
+          return Z.h(ce(U("", Y.h(B, H(a)))), "");
+        if (v(bk ? qb(1, b) : ak.call(null, 1, b)))
+          return new W(null, 1, 5, X2, [a], null);
+        if (v(bk ? qb(2, b) : ak.call(null, 2, b)))
+          return new W(null, 2, 5, X2, ["", a], null);
+        b -= 2;
+        return Z.h(ce(U("", sk(ce(Y.h(B, H(a))), 0, b))), a.substring(b));
+      }
+      function Mg(a, b, c) {
+        if (B.g(b) === "/(?:)/")
+          b = wn(a, c);
+        else if (1 > c)
+          b = ce(B.g(a).split(b));
+        else
+          a:
+            for (var d = c, e = be; ; ) {
+              if (d === 1) {
+                b = Z.h(e, a);
+                break a;
+              }
+              var f2 = Dk(b, a);
+              if (f2 != null) {
+                var h = a.indexOf(f2);
+                f2 = a.substring(h + O2(f2));
+                --d;
+                e = Z.h(e, a.substring(0, h));
+                a = f2;
+              } else {
+                b = Z.h(e, a);
+                break a;
+              }
+            }
+        if (c === 0 && 1 < O2(b))
+          a:
+            for (c = b; ; )
+              if ((c == null ? null : Bg(c)) === "")
+                c = da(c);
+              else
+                break a;
+        else
+          c = b;
+        return c;
+      }
+      ;
+      function ih(a, b) {
+        if (a != null && a.pb != null)
+          a = a.pb(a, b);
+        else {
+          var c = ih[t(a == null ? null : a)];
+          if (c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else if (c = ih._, c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else
+            throw y("Spec.conform*", a);
+        }
+        return a;
+      }
+      function jh(a, b) {
+        if (a != null && a.Qb != null)
+          a = a.Qb(a, b);
+        else {
+          var c = jh[t(a == null ? null : a)];
+          if (c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else if (c = jh._, c != null)
+            a = c.h ? c.h(a, b) : c.call(null, a, b);
+          else
+            throw y("Spec.with-gen*", a);
+        }
+        return a;
+      }
+      var kh = jk(Cd);
+      function lh(a) {
+        if (kd(a)) {
+          var b = D(kh);
+          a = T.h(b, a);
+          if (kd(a))
+            a:
+              for (; ; )
+                if (kd(a))
+                  a = T.h(b, a);
+                else {
+                  b = a;
+                  break a;
+                }
+          else
+            b = a;
+          return b;
+        }
+        return a;
+      }
+      function mh(a) {
+        if (kd(a)) {
+          var b = lh(a);
+          if (v(b))
+            return b;
+          throw Error(["Unable to resolve spec: ", B.g(a)].join(""));
+        }
+        return a;
+      }
+      function nh(a) {
+        return a != null && E === a.cc ? a : null;
+      }
+      function ph(a) {
+        var b = oh.g(a);
+        return v(b) ? a : b;
+      }
+      function rh(a, b) {
+        return kd(a) ? a : v(ph(a)) ? If.j(a, qh, b) : a != null && (a.m & 131072 || E === a.pc) ? Cc(a, If.j(Dc(a), qh, b)) : null;
+      }
+      function sh(a) {
+        return kd(a) ? a : v(ph(a)) ? qh.g(a) : a != null && (a.m & 131072 || E === a.pc) ? qh.g(Dc(a)) : null;
+      }
+      function uh(a) {
+        var b = function() {
+          var c = (c = kd(a)) ? lh(a) : c;
+          if (v(c))
+            return c;
+          c = nh(a);
+          if (v(c))
+            return c;
+          c = ph(a);
+          return v(c) ? c : null;
+        }();
+        return v(ph(b)) ? rh(th(b, null), sh(b)) : b;
+      }
+      function vh(a) {
+        var b = uh(a);
+        if (v(b))
+          return b;
+        if (kd(a))
+          throw Error(["Unable to resolve spec: ", B.g(a)].join(""));
+        return null;
+      }
+      function xh(a) {
+        if (ta(a == null ? "" : String(a)))
+          return null;
+        a = Y.h(gh, Mg(a, "$", 0));
+        if (2 <= O2(a) && Gd(function(c) {
+          return !ta(c == null ? "" : String(c));
+        }, a)) {
+          var b = wh.h(Zg, bh)(a);
+          a = S(b, 0, null);
+          b = S(b, 1, null);
+          return Lf.g([Kg(a), "/", B.g(b)].join(""));
+        }
+        return null;
+      }
+      var Fi = function() {
+        function a(d, e) {
+          var f2 = Qi[t(d == null ? null : d)];
+          if (f2 != null)
+            return f2.h ? f2.h(d, e) : f2.call(null, d, e);
+          f2 = Qi._;
+          if (f2 != null)
+            return f2.h ? f2.h(d, e) : f2.call(null, d, e);
+          throw y("Specize.specize*", d);
+        }
+        function b(d) {
+          var e = Qi[t(d == null ? null : d)];
+          if (e != null)
+            return e.g ? e.g(d) : e.call(null, d);
+          e = Qi._;
+          if (e != null)
+            return e.g ? e.g(d) : e.call(null, d);
+          throw y("Specize.specize*", d);
+        }
+        var c = null;
+        c = function(d, e) {
+          switch (arguments.length) {
+            case 1:
+              return b.call(this, d);
+            case 2:
+              return a.call(this, d, e);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        c.g = b;
+        c.h = a;
+        return c;
+      }(), Qi = function Qi2(a) {
+        switch (arguments.length) {
+          case 1:
+            return Qi2.g(arguments[0]);
+          case 2:
+            return Qi2.h(arguments[0], arguments[1]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      };
+      Qi.g = function(a) {
+        return a != null && a.gb != null ? a.gb(a) : Fi(a);
+      };
+      Qi.h = function(a, b) {
+        return a != null && a.hb != null ? a.hb(a, b) : Fi(a, b);
+      };
+      Qi.I = 2;
+      V.prototype.gb = function() {
+        return Qi(mh(this));
+      };
+      V.prototype.hb = function() {
+        return Qi(mh(this));
+      };
+      F.prototype.gb = function() {
+        return Qi(mh(this));
+      };
+      F.prototype.hb = function() {
+        return Qi(mh(this));
+      };
+      of.prototype.gb = function() {
+        return Ch(this, this, null, null, null);
+      };
+      of.prototype.hb = function(a, b) {
+        return Ch(b, this, null, null, null);
+      };
+      Qi._ = function() {
+        function a(c) {
+          var d = (d = Yg(c)) ? xh(c.name) : d;
+          return v(d) ? Ch(d, c, null, null, null) : Ch(Mi, c, null, null, null);
+        }
+        var b = null;
+        b = function(c, d) {
+          switch (arguments.length) {
+            case 1:
+              return a.call(this, c);
+            case 2:
+              return Ch(d, c, null, null, null);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        b.g = a;
+        b.h = function(c, d) {
+          return Ch(d, c, null, null, null);
+        };
+        return b;
+      }();
+      var zh = function zh2(a) {
+        switch (arguments.length) {
+          case 1:
+            return zh2.g(arguments[0]);
+          case 2:
+            return zh2.h(arguments[0], arguments[1]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      };
+      zh.g = function(a) {
+        var b = nh(a);
+        return v(b) ? b : Qi(a);
+      };
+      zh.h = function(a, b) {
+        var c = nh(a);
+        return v(c) ? c : Qi(a, b);
+      };
+      zh.I = 2;
+      function Ah(a, b) {
+        a = lh(a);
+        return v(ph(a)) ? If.j(a, yh, b) : jh(zh.g(a), b);
+      }
+      function Dh(a, b, c) {
+        if (c == null)
+          qg.j(kh, Bh, a);
+        else {
+          var d = nh(c);
+          v(d) || (d = ph(c), d = v(d) ? d : T.h(D(kh), c));
+          b = v(d) ? c : Ch(b, c, null, null, null);
+          qg.K(kh, If, a, rh(b, a));
+        }
+      }
+      function Fh(a, b, c) {
+        if (v(a)) {
+          var d = vh(a);
+          if (v(d))
+            return ih(zh.g(d), b);
+          if (Yg(a) || (a != null ? a.m & 1 || E === a.ud || (a.m ? 0 : x(Vg, a)) : x(Vg, a)))
+            return v(null) ? a.g ? a.g(b) : a.call(null, b) : v(a.g ? a.g(b) : a.call(null, b)) ? b : Eh;
+          throw Error([Pi(vc([c]), Da()), " is not a fn, expected predicate fn"].join(""));
+        }
+        return b;
+      }
+      function Zi(a, b) {
+        a = zh.g(a);
+        return !id(Eh, ih(a, b));
+      }
+      function Ji(a, b, c, d, e, f2) {
+        this.form = a;
+        this.lb = b;
+        this.rb = c;
+        this.qc = d;
+        this.Ac = e;
+        this.G = f2;
+        this.m = 393216;
+        this.H = 0;
+      }
+      g = Ji.prototype;
+      g.T = function(a, b) {
+        return new Ji(this.form, this.lb, this.rb, this.qc, this.Ac, b);
+      };
+      g.S = function() {
+        return this.G;
+      };
+      g.gb = function() {
+        return this;
+      };
+      g.hb = function() {
+        return this;
+      };
+      g.cc = E;
+      g.pb = function(a, b) {
+        a = this.lb.g ? this.lb.g(b) : this.lb.call(null, b);
+        return v(this.qc) ? a : v(a) ? b : Eh;
+      };
+      g.Qb = function(a, b) {
+        return Ch(this.form, this.lb, b, this.qc, this.Ac);
+      };
+      function Ch(a, b, c, d, e) {
+        return v(nh(b)) ? v(c) ? Ah(b, c) : b : v(ph(b)) ? th(b, c) : kd(b) ? (a = vh(b), v(c) ? Ah(a, c) : a) : new Ji(a, b, c, d, e, Cd);
+      }
+      function Jh(a, b, c) {
+        var d = H(b);
+        I(d);
+        N2(d);
+        d = H(c);
+        I(d);
+        N2(d);
+        for (d = c; ; ) {
+          c = a;
+          b = H(b);
+          a = I(b);
+          b = N2(b);
+          var e = H(d);
+          d = I(e);
+          e = N2(e);
+          var f2 = d;
+          d = e;
+          if (v(a)) {
+            c = Fh(a, c, f2);
+            if (id(Eh, c))
+              return Eh;
+            a = c;
+          } else
+            return c;
+        }
+      }
+      function Ki(a, b, c, d, e, f2) {
+        this.forms = a;
+        this.rc = b;
+        this.rb = c;
+        this.qd = d;
+        this.$b = e;
+        this.ua = f2;
+        this.m = 393216;
+        this.H = 0;
+      }
+      g = Ki.prototype;
+      g.T = function(a, b) {
+        return new Ki(this.forms, this.rc, this.rb, this.qd, this.$b, b);
+      };
+      g.S = function() {
+        return this.ua;
+      };
+      g.gb = function() {
+        return this;
+      };
+      g.hb = function() {
+        return this;
+      };
+      g.cc = E;
+      g.pb = function(a, b) {
+        return this.$b.g ? this.$b.g(b) : this.$b.call(null, b);
+      };
+      g.Qb = function(a, b) {
+        return jj.j ? jj.j(this.forms, this.rc, b) : jj.call(null, this.forms, this.rc, b);
+      };
+      function jj(a, b, c) {
+        var d = new zg(function() {
+          return Fe.h(be, Y.j(zh, b, a));
+        }), e = function() {
+          switch (O2(b)) {
+            case 2:
+              return function(f2) {
+                var h = D(d);
+                f2 = ih(h.g ? h.g(0) : h.call(null, 0), f2);
+                return id(Eh, f2) ? Eh : ih(h.g ? h.g(1) : h.call(null, 1), f2);
+              };
+            case 3:
+              return function(f2) {
+                var h = D(d);
+                f2 = ih(h.g ? h.g(0) : h.call(null, 0), f2);
+                if (id(Eh, f2))
+                  return Eh;
+                f2 = ih(h.g ? h.g(1) : h.call(null, 1), f2);
+                return id(Eh, f2) ? Eh : ih(h.g ? h.g(2) : h.call(null, 2), f2);
+              };
+            default:
+              return function(f2) {
+                for (var h = D(d), k = 0; ; )
+                  if (k < O2(h)) {
+                    f2 = ih(h.g ? h.g(k) : h.call(null, k), f2);
+                    if (id(Eh, f2))
+                      return Eh;
+                    k += 1;
+                  } else
+                    return f2;
+              };
+          }
+        }();
+        return new Ki(a, b, c, d, e, Cd);
+      }
+      var Si = new u(null, 4, [yi, be, ri, wg, si, J, wi, Cd], null);
+      function Li(a, b, c, d, e, f2, h, k, l, m, n2, p, q, r, w, z, A, K2, M, ca, la, Ga, qa, ba, Ra) {
+        this.form = a;
+        this.fd = b;
+        this.Dc = c;
+        this.rb = d;
+        this.bd = e;
+        this.se = f2;
+        this.lb = h;
+        this.dc = k;
+        this.Xc = l;
+        this.dd = m;
+        this.Cc = n2;
+        this.Zb = p;
+        this.Zc = q;
+        this.$c = r;
+        this.Fb = w;
+        this.zc = z;
+        this.cd = A;
+        this.ad = K2;
+        this.count = M;
+        this.md = ca;
+        this.xc = la;
+        this.kind = Ga;
+        this.wc = qa;
+        this.Wc = ba;
+        this.ya = Ra;
+        this.m = 393216;
+        this.H = 0;
+      }
+      g = Li.prototype;
+      g.T = function(a, b) {
+        return new Li(this.form, this.fd, this.Dc, this.rb, this.bd, this.se, this.lb, this.dc, this.Xc, this.dd, this.Cc, this.Zb, this.Zc, this.$c, this.Fb, this.zc, this.cd, this.ad, this.count, this.md, this.xc, this.kind, this.wc, this.Wc, b);
+      };
+      g.S = function() {
+        return this.ya;
+      };
+      g.gb = function() {
+        return this;
+      };
+      g.hb = function() {
+        return this;
+      };
+      g.cc = E;
+      g.pb = function(a, b) {
+        a = D(this.zc);
+        if (La(this.dc.g ? this.dc.g(b) : this.dc.call(null, b)))
+          return Eh;
+        if (v(this.wc)) {
+          var c = this.Zb.g ? this.Zb.g(b) : this.Zb.call(null, b), d = S(c, 0, null), e = S(c, 1, null);
+          c = S(c, 2, null);
+          var f2 = d.g ? d.g(b) : d.call(null, b);
+          d = 0;
+          var h = H(b);
+          b = H(h);
+          I(b);
+          N2(b);
+          for (b = f2; ; ) {
+            var k = h;
+            f2 = H(k);
+            h = I(f2);
+            f2 = N2(f2);
+            if (k) {
+              k = ih(a, h);
+              if (id(Eh, k))
+                return Eh;
+              b = e.K ? e.K(b, d, h, k) : e.call(null, b, d, h, k);
+              d += 1;
+              h = f2;
+            } else
+              return c.g ? c.g(b) : c.call(null, b);
+          }
+        } else if (rc(b))
+          for (e = ad(O2(b) / 101), e = 1 > e ? 1 : e, d = 0; ; ) {
+            if (d >= O2(b))
+              return b;
+            if (Zi(a, sc(b, d)))
+              d += e;
+            else
+              return Eh;
+          }
+        else
+          for (d = 0, e = H(b), c = H(e), I(c), N2(c); ; ) {
+            h = H(e);
+            c = I(h);
+            f2 = N2(h);
+            h = c;
+            k = e;
+            if (k == null || P.h(d, 101))
+              return b;
+            if (Zi(a, h))
+              e = f2, d += 1;
+            else
+              return Eh;
+          }
+      };
+      g.Qb = function(a, b) {
+        return aj(this.form, this.lb, this.xc, b);
+      };
+      function aj(a, b, c, d) {
+        function e(Ga, qa, ba, Ra) {
+          return Z.h(Ga, Ra);
+        }
+        var f2 = Ig(c), h = T.h(f2, ki), k = T.h(f2, oi), l = T.j(f2, Ih, 20), m = T.h(f2, ti), n2 = T.h(f2, Gh), p = T.h(f2, ni), q = T.h(f2, pi), r = T.h(f2, Hh), w = T.h(f2, ig), z = T.h(f2, vi), A = T.h(f2, kg), K2 = T.h(f2, Di), M = T.h(f2, qi), ca = v(M) ? yc(M) : T.h(Si, k), la = new zg(function() {
+          return zh.g(b);
+        });
+        return new Li(a, h, function(Ga) {
+          return Zi(D(la), Ga);
+        }, d, l, f2, b, m, n2, k, e, function(Ga) {
+          return Jc(Ga) && (La(M) || Jc(M)) ? new W(null, 3, 5, X2, [Zc, function(qa, ba, Ra, Ea) {
+            return Ra === Ea ? qa : If.j(qa, ba, Ea);
+          }, Zc], null) : v(function() {
+            var qa = Hc(Ga);
+            return qa ? (qa = v(A) ? La(M) : A, v(qa) ? qa : Hc(M)) : qa;
+          }()) ? new W(null, 3, 5, X2, [v(n2) ? yc : Zc, function(qa, ba, Ra, Ea) {
+            return Ra === Ea && La(n2) ? qa : If.j(qa, sc(v(n2) ? Ea : Ra, 0), sc(Ea, 1));
+          }, Zc], null) : fd(M) || Yi(M) || La(M) && (fd(Ga) || Yi(Ga)) ? new W(null, 3, 5, X2, [yc, e, Ag], null) : new W(null, 3, 5, X2, [function(qa) {
+            return yc(v(M) ? M : qa);
+          }, e, Zc], null);
+        }, p, q, c, la, function() {
+          return v(r) ? r : function(Ga) {
+            return Ga;
+          };
+        }(), ca, w, z, f2, A, K2, M, Cd);
+      }
+      function Mh(a) {
+        return new u(null, 2, [oh, Kh, Lh, a], null);
+      }
+      function Nh(a) {
+        a = Ig(a);
+        a = T.h(a, oh);
+        return P.h(Kh, a);
+      }
+      var Ti = function Ti2(a) {
+        var c = Ig(a), d = T.h(c, Yh);
+        a = H(d);
+        var e = I(a);
+        a = N2(a);
+        var f2 = T.h(c, Zh), h = H(f2), k = I(h);
+        h = N2(h);
+        var l = T.h(c, Rh), m = H(l);
+        I(m);
+        m = N2(m);
+        var n2 = T.h(c, Lh);
+        c = T.h(c, zi);
+        return Gd(Zc, d) ? Nh(e) ? (d = Lh.g(e), d = Z.h(n2, v(f2) ? Ee([k, d]) : d), a ? (a = new u(null, 4, [Yh, a, Zh, h, Rh, m, Lh, d], null), Ti2.g ? Ti2.g(a) : Ti2.call(null, a)) : Mh(d)) : new u(null, 6, [oh, ei, Yh, d, Lh, n2, Zh, f2, Rh, l, zi, c], null) : null;
+      };
+      function Uh(a, b, c, d, e) {
+        return v(a) ? (d = new u(null, 5, [oh, Oh, Ph, b, Qh, d, Rh, e, Sh, $g()], null), Nh(a) ? If.o(d, Th, b, vc([Lh, Z.h(c, Lh.g(a))])) : If.o(d, Th, a, vc([Lh, c]))) : null;
+      }
+      function Wh(a, b, c, d) {
+        return v(v(b) ? b : c) ? (a = hh(function(e) {
+          e = I(e);
+          return d.g ? d.g(e) : d.call(null, e);
+        }, Y.K(Vh, a, function() {
+          var e = H(b);
+          return e ? e : new Jd(null, -1, null, null);
+        }(), function() {
+          var e = H(c);
+          return e ? e : new Jd(null, -1, null, null);
+        }())), new W(null, 3, 5, X2, [H(Y.h(I, a)), v(b) ? H(Y.h(xc, a)) : null, v(c) ? H(Y.h(function(e) {
+          return sc(e, 2);
+        }, a)) : null], null)) : new W(null, 3, 5, X2, [H(hh(d, a)), b, c], null);
+      }
+      function $h(a, b, c) {
+        var d = Wh(a, b, c, Zc);
+        c = S(d, 0, null);
+        b = H(c);
+        a = I(b);
+        var e = N2(b), f2 = S(d, 1, null);
+        b = S(f2, 0, null);
+        d = S(d, 2, null);
+        return v(c) ? (c = new u(null, 4, [oh, Xh, Yh, c, Zh, f2, Rh, d], null), e == null ? v(b) && (Nh(a) ? (a = Lh.g(a), a = Mh(new xe(b, a))) : a = c) : a = c, a) : null;
+      }
+      function ai(a, b) {
+        return v(v(a) ? b : a) ? $h(vc([a, b]), null, null) : v(a) ? a : b;
+      }
+      var gi = function gi2(a) {
+        a = mh(a);
+        var c = Ig(a), d = T.h(c, oh), e = T.h(c, Yh);
+        a = T.h(c, Th);
+        var f2 = T.h(c, Ph);
+        c = T.h(c, Rh);
+        if (P.h(Kh, d))
+          return true;
+        if (P.h(null, d))
+          return null;
+        if (P.h(di, d))
+          return d = gi2.g ? gi2.g(a) : gi2.call(null, a), v(d) ? (a = Jh(bi(a), e, N2(c)), !id(Eh, a)) : d;
+        if (P.h(Oh, d))
+          return (e = a === f2) ? e : gi2.g ? gi2.g(a) : gi2.call(null, a);
+        if (P.h(ei, d))
+          return Gd(gi2, e);
+        if (P.h(Xh, d))
+          return Eg(gi2, e);
+        throw Error(["No matching clause: ", B.g(d)].join(""));
+      }, bi = function bi2(a) {
+        a = mh(a);
+        var c = Ig(a);
+        a = T.h(c, Yh);
+        var d = H(a), e = I(d);
+        N2(d);
+        var f2 = T.h(c, Zh), h = S(f2, 0, null), k = T.h(c, oh);
+        d = T.h(c, Th);
+        var l = T.h(c, Lh);
+        c = T.h(c, Rh);
+        if (P.h(Kh, k))
+          return l;
+        if (P.h(null, k))
+          return null;
+        if (P.h(di, k))
+          return e = bi2.g ? bi2.g(d) : bi2.call(null, d), (f2 = P.h(e, ci)) ? d = f2 : (d = oh.g(mh(d)), f2 = new of(null, new u(null, 2, [Oh, null, ei, null], null), null), d = f2.g ? f2.g(d) : f2.call(null, d), d = v(d) ? Ec(e) : d, d = v(d) ? d : null), v(d) ? ci : Jh(e, a, c);
+        if (P.h(Oh, k))
+          return fi(d, l, h);
+        if (P.h(ei, k))
+          return fi(e, l, h);
+        if (P.h(Xh, k))
+          return c = Wh(a, f2, c, gi), a = S(c, 0, null), a = S(a, 0, null), c = S(c, 1, null), c = S(c, 0, null), a = a == null ? ci : bi2.g ? bi2.g(a) : bi2.call(null, a), v(c) ? new xe(c, a) : a;
+        throw Error(["No matching clause: ", B.g(k)].join(""));
+      };
+      function fi(a, b, c) {
+        a = mh(a);
+        var d = Ig(a), e = T.h(d, oh);
+        T.h(d, Yh);
+        a = T.h(d, Qh);
+        if (P.h(null, e))
+          return b;
+        if (P.h(Xh, e) || P.h(Kh, e) || P.h(di, e))
+          return a = bi(d), P.h(a, ci) ? b : Z.h(b, v(c) ? Ee([c, a]) : a);
+        if (P.h(Oh, e) || P.h(ei, e))
+          return d = bi(d), Ec(d) || (c = v(c) ? Ee([c, d]) : d, a = v(a) ? Fe : Z, b = a.h ? a.h(b, c) : a.call(null, b, c)), b;
+        throw Error(["No matching clause: ", B.g(e)].join(""));
+      }
+      var hi = function hi2(a, b) {
+        a = mh(a);
+        var d = Ig(a), e = T.h(d, Rh), f2 = T.h(d, Ph);
+        a = T.h(d, Yh);
+        var h = H(a), k = I(h), l = N2(h), m = T.h(d, Lh);
+        h = T.h(d, oh);
+        var n2 = T.h(d, Qh), p = T.h(d, Zh), q = H(p), r = I(q), w = N2(q);
+        q = T.h(d, mi);
+        var z = T.h(d, Th);
+        if (v(d)) {
+          if (P.h(Kh, h))
+            return null;
+          if (P.h(null, h))
+            return a = Fh(d, b, d), id(Eh, a) ? null : Mh(a);
+          if (P.h(di, h))
+            return d = hi2.h ? hi2.h(z, b) : hi2.call(null, z, b), v(d) ? P.h(Kh, oh.g(d)) ? (a = Jh(bi(d), a, N2(e)), id(Eh, a) ? null : Mh(a)) : new u(null, 5, [oh, di, Th, d, mi, q, Yh, a, Rh, e], null) : null;
+          if (P.h(ei, h))
+            return ai(Ti(new u(null, 4, [Yh, U(hi2.h ? hi2.h(k, b) : hi2.call(null, k, b), l), Zh, p, Rh, e, Lh, m], null)), v(gi(k)) ? function() {
+              var A = Ti(new u(null, 4, [Yh, l, Zh, w, Rh, N2(e), Lh, fi(k, m, r)], null));
+              return hi2.h ? hi2.h(A, b) : hi2.call(null, A, b);
+            }() : null);
+          if (P.h(Xh, h))
+            return $h(Y.h(function(A) {
+              return hi2.h ? hi2.h(A, b) : hi2.call(null, A, b);
+            }, a), p, e);
+          if (P.h(Oh, h))
+            return ai(Uh(hi2.h ? hi2.h(z, b) : hi2.call(null, z, b), f2, m, n2, e), v(gi(z)) ? function() {
+              var A = Uh(f2, f2, fi(z, m, null), n2, e);
+              return hi2.h ? hi2.h(A, b) : hi2.call(null, A, b);
+            }() : null);
+          throw Error(["No matching clause: ", B.g(h)].join(""));
+        }
+        return null;
+      };
+      function ii(a, b) {
+        for (; ; ) {
+          var c = H(b), d = I(c);
+          c = N2(c);
+          if (Ec(b))
+            return v(gi(a)) ? (a = bi(a), P.h(a, ci) ? null : a) : Eh;
+          a = hi(a, d);
+          if (v(a))
+            b = c;
+          else
+            return Eh;
+        }
+      }
+      function Oi(a, b, c) {
+        this.ic = a;
+        this.rb = b;
+        this.ab = c;
+        this.m = 393216;
+        this.H = 0;
+      }
+      g = Oi.prototype;
+      g.T = function(a, b) {
+        return new Oi(this.ic, this.rb, b);
+      };
+      g.S = function() {
+        return this.ab;
+      };
+      g.gb = function() {
+        return this;
+      };
+      g.hb = function() {
+        return this;
+      };
+      g.cc = E;
+      g.pb = function(a, b) {
+        return b == null || Gc(b) ? ii(this.ic, H(b)) : Eh;
+      };
+      g.Qb = function(a, b) {
+        return th.h ? th.h(this.ic, b) : th.call(null, this.ic, b);
+      };
+      function th(a, b) {
+        return new Oi(a, b, Cd);
+      }
+      Dh(Hi, ji(ui, ji(Xf, new W(null, 1, 5, X2, [Ci], null), ji(Ni, ji(li, Ai, Ci), ji(li, Bi, Ci))), ji(Xf, new W(null, 1, 5, X2, [Ei], null), ji(li, ji($f, new W(null, 1, 5, X2, [new W(null, 2, 5, X2, [Ii, cg], null)], null), new u(null, 2, [Ai, Ii, Bi, cg], null)), Ei))), Ch(ji(ui, ji($f, new W(null, 1, 5, X2, [Gi], null), ji(Ni, ji(li, Ai, Gi), ji(li, Bi, Gi))), ji($f, new W(null, 1, 5, X2, [Gi], null), ji(li, ji($f, new W(null, 1, 5, X2, [new W(null, 2, 5, X2, [Ii, cg], null)], null), new u(null, 2, [Ai, Ii, Bi, cg], null)), Gi))), function(a) {
+        a: {
+          var b = Y.h(Ai, a), c = Y.h(Bi, a);
+          a = Ab(Cd);
+          b = H(b);
+          for (c = H(c); ; )
+            if (b && c) {
+              var d = I(b), e = I(c);
+              a = Db(a, d, e);
+              b = N2(b);
+              c = N2(c);
+            } else {
+              a = Cb(a);
+              break a;
+            }
+        }
+        return a;
+      }, null, true, function(a) {
+        return Y.h(function(b) {
+          var c = S(b, 0, null);
+          b = S(b, 1, null);
+          return new u(null, 2, [Ai, c, Bi, b], null);
+        }, a);
+      }));
+      function xn(a) {
+        var b = a;
+        a = 2;
+        for (var c = be; ; ) {
+          if (2 > b)
+            return c;
+          if (b - a * bd(b, a) === 0) {
+            b /= a;
+            var d = a;
+            c = Z.h(c, a);
+            a = d;
+          } else
+            d = c, a += 1, c = d;
+        }
+      }
+      var yn = function yn2(a) {
+        for (var c = [], d = arguments.length, e = 0; ; )
+          if (e < d)
+            c.push(arguments[e]), e += 1;
+          else
+            break;
+        return yn2.o(0 < c.length ? new G(c.slice(0), 0, null) : null);
+      };
+      yn.o = function(a) {
+        return Ec(na(zj, Y.h(ek.h(vl, xn), a)));
+      };
+      yn.I = 0;
+      yn.J = function(a) {
+        return this.o(H(a));
+      };
+      function zn(a, b) {
+        const c = Array.prototype.slice.call(arguments), d = c.shift();
+        if (typeof d == "undefined")
+          throw Error("[goog.string.format] Template required");
+        return d.replace(/%([0\- \+]*)(\d+)?(\.(\d+))?([%sfdiu])/g, function(e, f2, h, k, l, m, n2, p) {
+          if (m == "%")
+            return "%";
+          const q = c.shift();
+          if (typeof q == "undefined")
+            throw Error("[goog.string.format] Not enough arguments");
+          arguments[0] = q;
+          return zn.hc[m].apply(null, arguments);
+        });
+      }
+      zn.hc = {};
+      zn.hc.s = function(a, b, c) {
+        return isNaN(c) || c == "" || a.length >= Number(c) ? a : a = -1 < b.indexOf("-", 0) ? a + Kj(" ", Number(c) - a.length) : Kj(" ", Number(c) - a.length) + a;
+      };
+      zn.hc.f = function(a, b, c, d, e) {
+        d = a.toString();
+        isNaN(e) || e == "" || (d = parseFloat(a).toFixed(e));
+        let f2;
+        f2 = 0 > Number(a) ? "-" : 0 <= b.indexOf("+") ? "+" : 0 <= b.indexOf(" ") ? " " : "";
+        0 <= Number(a) && (d = f2 + d);
+        if (isNaN(c) || d.length >= Number(c))
+          return d;
+        d = isNaN(e) ? Math.abs(Number(a)).toString() : Math.abs(Number(a)).toFixed(e);
+        a = Number(c) - d.length - f2.length;
+        0 <= b.indexOf("-", 0) ? d = f2 + d + Kj(" ", a) : (b = 0 <= b.indexOf("0", 0) ? "0" : " ", d = f2 + Kj(b, a) + d);
+        return d;
+      };
+      zn.hc.d = function(a, b, c, d, e, f2, h, k) {
+        return zn.hc.f(parseInt(a, 10), b, c, d, 0, f2, h, k);
+      };
+      zn.hc.i = zn.hc.d;
+      zn.hc.u = zn.hc.d;
+      Dh(ij, ji(xi, ji(fj, ri, pi, true), ji(Xf, new W(null, 1, 5, X2, [gg], null), ji(hj, gg, ji(li, Zf), ji(Og, dg)))), jj(new W(null, 2, 5, X2, [ji(fj, ri, pi, true), ji($f, new W(null, 1, 5, X2, [Gi], null), ji(hj, Gi, ji(li, Zf), ji(Og, dg)))], null), new W(null, 2, 5, X2, [aj(ej, Fc, new u(null, 5, [Di, true, pi, true, oi, null, ni, ji(fj, ri, pi, true), ti, function(a) {
+        var b = Xi(a);
+        return b ? (b = Ec(a)) ? b : na(cj, a) : b;
+      }], null), null), function(a) {
+        return na(P, Y.h(O2, a));
+      }], null), null));
+      Dh(gj, ji(fj, ij, pi, true), aj(ij, ij, new u(null, 5, [Di, true, pi, true, oi, null, ni, ji(fj, ij, pi, true), ti, function(a) {
+        var b = Xi(a);
+        return b ? (b = Ec(a)) ? b : na(cj, a) : b;
+      }], null), null));
+      function Aj(a, b) {
+        return a > O2(b) ? Ui([wg]) : Cc(vl(Y.h(vl, wj(Fe.h(be, b), a))), new u(null, 2, [kj, [B.g(a), ")", B.g(O2(b))].join(""), Uf, Fe.h(Cd, Ja(function(c, d) {
+          var e = Ef.g, f2 = B, h = f2.g;
+          c = 65 + c;
+          if (typeof c === "number")
+            c = String.fromCharCode(c);
+          else if (typeof c !== "string" || c.length !== 1)
+            throw Error("Argument to char must be a character or number");
+          return Ee([d, e.call(Ef, h.call(f2, c).toLowerCase())]);
+        }, ch(Qc, b)))], null));
+      }
+      function Bj(a) {
+        var b = Uf.h(Dc(a), function() {
+          return null;
+        });
+        return Y.h(function(c) {
+          return new u(null, 2, [ag, c, Hg, vl(Y.h(b, c))], null);
+        }, a);
+      }
+      function Cj(a, b, c) {
+        return Y.h(function(d) {
+          var e = na(ka, d.g ? d.g(ag) : d.call(null, ag)) / b;
+          if (v(a)) {
+            var f2 = If.o, h;
+            a:
+              for (h = e; ; )
+                if (h > a)
+                  h /= a;
+                else if (1 > h)
+                  h *= a;
+                else {
+                  h = P.h(a, h) ? 1 : h;
+                  break a;
+                }
+            d = f2.call(If, d, Lg, e, vc([Sf, h, bg, a]));
+          } else
+            d = If.o(d, Lg, e, vc([Sf, e, bg, null]));
+          return d;
+        }, c);
+      }
+      function Dj(a) {
+        a = Fe.h(be, a);
+        for (var b = Cd; ; ) {
+          if (La(H(a)))
+            return b;
+          var c = ac(a), d = I(a), e = Y.h(function(h, k, l, m) {
+            return function(n2) {
+              return Z.o(be, m, vc([n2]));
+            };
+          }(a, b, c, d), hh(function(h, k, l, m) {
+            return function(n2) {
+              return P.h(O2(ag.g(n2)) - 1, O2(zj.h(ag.g(m), ag.g(n2))));
+            };
+          }(a, b, c, d), c)), f2 = c;
+          b = Vc.j(function() {
+            return function(h, k) {
+              var l = S(k, 0, null);
+              k = S(k, 1, null);
+              return Xd(Xd(h, l, ek.h(vl, Z), k), k, ek.h(vl, Z), l);
+            };
+          }(a, b, c, d, e), b, e);
+          a = f2;
+        }
+      }
+      function Ej(a) {
+        return Fe.h(Cd, Y.h(function(b) {
+          var c = S(b, 0, null);
+          b = S(b, 1, null);
+          return new W(null, 2, 5, X2, [c.g ? c.g(ag) : c.call(null, ag), vl(Y.h(ag, b))], null);
+        }, a));
+      }
+      function Fj(a) {
+        for (var b = [], c = arguments.length, d = 0; ; )
+          if (d < c)
+            b.push(arguments[d]), d += 1;
+          else
+            break;
+        c = arguments[0];
+        d = arguments[1];
+        var e = arguments[2], f2 = arguments[3];
+        b = Ig(4 < b.length ? new G(b.slice(4), 0, null) : null);
+        b = T.j(b, pj, [B.g(c), ")", B.g(O2(d))].join(""));
+        return Zj.o(vc([new u(null, 1, [Aa, new u(null, 7, [Dg, Rf, vf, bg.g(I(Dg.g(f2))), qe, O2(Dg.g(f2)), Pf, c, Jg, ch(Qc, Fe.h(be, d)), Kf, e, oj, b], null)], null), f2]));
+      }
+      var Gj = function Gj2(a) {
+        for (var c = [], d = arguments.length, e = 0; ; )
+          if (e < d)
+            c.push(arguments[e]), e += 1;
+          else
+            break;
+        return Gj2.o(arguments[0], arguments[1], 2 < c.length ? new G(c.slice(2), 0, null) : null);
+      };
+      Gj.o = function(a, b, c) {
+        c = Ig(c);
+        var d = T.j(c, vf, 2);
+        c = T.j(c, mj, 1);
+        d = Cj(d, c, Bj(Aj(a, b)));
+        var e = Dj(d);
+        d = new u(null, 3, [Dg, fa(Sf, d), nj, fa(Lg, d), ug, new u(null, 2, [Pg, e, lj, Ej(e)], null)], null);
+        return Fj(a, b, c, d);
+      };
+      Gj.I = 2;
+      Gj.J = function(a) {
+        var b = I(a), c = N2(a);
+        a = I(c);
+        c = N2(c);
+        return this.o(b, a, c);
+      };
+      function ip(a, b) {
+        return Y.h(function(c) {
+          return Math.pow(Math.exp(c / a), Math.log(b));
+        }, ll(0, a));
+      }
+      function jp(a) {
+        return Vc.j(function(b, c) {
+          return Z.h(b, bh(b) + c);
+        }, new W(null, 1, 5, X2, [0], null), nk(1, a));
+      }
+      var kp = function kp2(a) {
+        switch (arguments.length) {
+          case 1:
+            return kp2.g(arguments[0]);
+          case 2:
+            return kp2.h(arguments[0], arguments[1]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      };
+      kp.g = function(a) {
+        return kp.h(a, 2);
+      };
+      kp.h = function(a, b) {
+        var c = na(wl, a), d = ip(c, b), e = jp(a);
+        return new u(null, 4, [Om, a, sn, c, zm, b, Dg, Ja(function(f2, h) {
+          return new u(null, 4, [fp, h, lm, f2, Sf, sc(d, h), bg, b], null);
+        }, e)], null);
+      };
+      kp.I = 2;
+      kp.g(new W(null, 16, 5, X2, [2, 2, 5, 2, 5, 2, 5, 2, 2, 5, 2, 5, 2, 5, 2, 5], null));
+      var An = {
+        ce: ["BC", "AD"],
+        be: ["Before Christ", "Anno Domini"],
+        ee: "JFMAMJJASOND".split(""),
+        ke: "JFMAMJJASOND".split(""),
+        de: "January February March April May June July August September October November December".split(" "),
+        je: "January February March April May June July August September October November December".split(" "),
+        ge: "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" "),
+        me: "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" "),
+        pe: "Sunday Monday Tuesday Wednesday Thursday Friday Saturday".split(" "),
+        oe: "Sunday Monday Tuesday Wednesday Thursday Friday Saturday".split(" "),
+        ie: "Sun Mon Tue Wed Thu Fri Sat".split(" "),
+        ne: "Sun Mon Tue Wed Thu Fri Sat".split(" "),
+        ve: "SMTWTFS".split(""),
+        le: "SMTWTFS".split(""),
+        he: ["Q1", "Q2", "Q3", "Q4"],
+        fe: ["1st quarter", "2nd quarter", "3rd quarter", "4th quarter"],
+        Zd: ["AM", "PM"],
+        Jd: ["EEEE, MMMM d, y", "MMMM d, y", "MMM d, y", "M/d/yy"],
+        Vd: ["h:mm:ss\u202Fa zzzz", "h:mm:ss\u202Fa z", "h:mm:ss\u202Fa", "h:mm\u202Fa"],
+        $d: ["{1} 'at' {0}", "{1} 'at' {0}", "{1}, {0}", "{1}, {0}"],
+        Sd: 6,
+        xe: [5, 6],
+        Td: 5
+      }, Bn = An;
+      Bn = An;
+      function Cn(a, b, c, d, e) {
+        a = new Date(a, b, c);
+        e = e || 0;
+        return a.valueOf() + 864e5 * (((d !== void 0 ? d : 3) - e + 7) % 7 - ((a.getDay() + 6) % 7 - e + 7) % 7);
+      }
+      ;
+      function Dn() {
+      }
+      function En(a) {
+        if (typeof a == "number") {
+          var b = new Dn();
+          b.Xd = a;
+          var c = a;
+          if (c == 0)
+            c = "Etc/GMT";
+          else {
+            var d = ["Etc/GMT", 0 > c ? "-" : "+"];
+            c = Math.abs(c);
+            d.push(Math.floor(c / 60) % 100);
+            c %= 60;
+            c != 0 && d.push(":", Lj(c, 2));
+            c = d.join("");
+          }
+          b.Od = c;
+          c = a;
+          c == 0 ? c = "UTC" : (d = ["UTC", 0 > c ? "+" : "-"], c = Math.abs(c), d.push(Math.floor(c / 60) % 100), c %= 60, c != 0 && d.push(":", c), c = d.join(""));
+          a = Fn(a);
+          b.Pd = [c, c];
+          b.oc = { we: a, Ud: a };
+          b.Id = [];
+          return b;
+        }
+        b = new Dn();
+        b.Od = a.id;
+        b.Xd = -a.std_offset;
+        b.Pd = a.names;
+        b.oc = a.names_ext;
+        b.Id = a.transitions;
+        return b;
+      }
+      function Fn(a) {
+        var b = ["GMT"];
+        b.push(0 >= a ? "+" : "-");
+        a = Math.abs(a);
+        b.push(Lj(Math.floor(a / 60) % 100, 2), ":", Lj(a % 60, 2));
+        return b.join("");
+      }
+      function Gn(a, b) {
+        b = Date.UTC(b.getUTCFullYear(), b.getUTCMonth(), b.getUTCDate(), b.getUTCHours(), b.getUTCMinutes()) / 36e5;
+        for (var c = 0; c < a.Id.length && b >= a.Id[c]; )
+          c += 2;
+        return c == 0 ? 0 : a.Id[c - 1];
+      }
+      function Hn(a, b) {
+        a = a.Xd - Gn(a, b);
+        return a === -1440 ? 0 : a;
+      }
+      ;
+      function In(a) {
+        this.Hd = [];
+        this.Yb = Bn;
+        typeof a == "number" ? Jn(this, a) : Kn(this, a);
+      }
+      var Ln = [/^'(?:[^']|'')*('|$)/, /^(?:G+|y+|Y+|M+|k+|S+|E+|a+|b+|B+|h+|K+|H+|c+|L+|Q+|d+|m+|s+|v+|V+|w+|z+|Z+)/, /^[^'GyYMkSEabBhKHcLQdmsvVwzZ]+/];
+      function Mn(a) {
+        return a.getHours ? a.getHours() : 0;
+      }
+      function Kn(a, b) {
+        for (Nn && (b = b.replace(/\u200f/g, "")); b; ) {
+          const c = b;
+          for (let d = 0; d < Ln.length; ++d) {
+            const e = b.match(Ln[d]);
+            if (e) {
+              let f2 = e[0];
+              b = b.substring(f2.length);
+              d == 0 && (f2 == "''" ? f2 = "'" : (f2 = f2.substring(1, e[1] == "'" ? f2.length - 1 : f2.length), f2 = f2.replace(/''/g, "'")));
+              a.Hd.push({ text: f2, type: d });
+              break;
+            }
+          }
+          if (c === b)
+            throw Error("Malformed pattern part: " + b);
+        }
+      }
+      In.prototype.format = function(a, b) {
+        if (!a)
+          throw Error("The date to format must be non-null.");
+        var c = b ? 6e4 * (a.getTimezoneOffset() - Hn(b, a)) : 0;
+        let d = c ? new Date(a.getTime() + c) : a, e = d;
+        b && d.getTimezoneOffset() != a.getTimezoneOffset() && (d = new Date(d.getTime() + 6e4 * (d.getTimezoneOffset() - a.getTimezoneOffset())), e = new Date(a.getTime() + (c + (0 < c ? -864e5 : 864e5))));
+        c = [];
+        for (let f2 = 0; f2 < this.Hd.length; ++f2) {
+          const h = this.Hd[f2].text;
+          this.Hd[f2].type == 1 ? c.push(On(this, h, a, d, e, b)) : c.push(h);
+        }
+        return c.join("");
+      };
+      function Jn(a, b) {
+        let c;
+        if (4 > b)
+          c = a.Yb.Jd[b];
+        else if (8 > b)
+          c = a.Yb.Vd[b - 4];
+        else if (12 > b)
+          c = a.Yb.$d[b - 8], c = c.replace("{1}", a.Yb.Jd[b - 8]), c = c.replace("{0}", a.Yb.Vd[b - 8]);
+        else if (b === 12)
+          c = a.Yb.Jd[0].replace(/[^EMd]*yy*[^EMd]*/, "");
+        else {
+          Jn(a, 10);
+          return;
+        }
+        Kn(a, c);
+      }
+      function Pn(a, b) {
+        {
+          b = String(b);
+          const c = a.Yb || Bn;
+          if (c.qe !== void 0) {
+            a = [];
+            for (let d = 0; d < b.length; d++) {
+              const e = b.charCodeAt(d);
+              a.push(48 <= e && 57 >= e ? String.fromCharCode(c.qe + e - 48) : b.charAt(d));
+            }
+            b = a.join("");
+          }
+        }
+        return b;
+      }
+      var Nn = false;
+      function Qn(a) {
+        if (!(a.getHours && a.getSeconds && a.getMinutes))
+          throw Error("The date to format has no time (probably a goog.date.Date). Use Date or goog.date.DateTime, or use a pattern without time fields.");
+      }
+      function Rn(a, b) {
+        Qn(b);
+        b = Mn(b);
+        return a.Yb.Zd[12 <= b && 24 > b ? 1 : 0];
+      }
+      function On(a, b, c, d, e, f2) {
+        var h = b.length;
+        switch (b.charAt(0)) {
+          case "G":
+            return c = 0 < d.getFullYear() ? 1 : 0, 4 <= h ? a.Yb.be[c] : a.Yb.ce[c];
+          case "y":
+            return c = d.getFullYear(), 0 > c && (c = -c), h == 2 && (c %= 100), Pn(a, Lj(c, h));
+          case "Y":
+            return c = new Date(Cn(d.getFullYear(), d.getMonth(), d.getDate(), a.Yb.Td, a.Yb.Sd)).getFullYear(), 0 > c && (c = -c), h == 2 && (c %= 100), Pn(a, Lj(c, h));
+          case "M":
+            a:
+              switch (c = d.getMonth(), h) {
+                case 5:
+                  h = a.Yb.ee[c];
+                  break a;
+                case 4:
+                  h = a.Yb.de[c];
+                  break a;
+                case 3:
+                  h = a.Yb.ge[c];
+                  break a;
+                default:
+                  h = Pn(a, Lj(c + 1, h));
+              }
+            return h;
+          case "k":
+            return Qn(e), Pn(a, Lj(Mn(e) || 24, h));
+          case "S":
+            return Pn(a, (e.getMilliseconds() / 1e3).toFixed(Math.min(3, h)).slice(2) + (3 < h ? Lj(0, h - 3) : ""));
+          case "E":
+            return c = d.getDay(), 4 <= h ? a.Yb.pe[c] : a.Yb.ie[c];
+          case "a":
+            return Rn(a, e);
+          case "b":
+            return Rn(a, e);
+          case "B":
+            return Rn(a, e);
+          case "h":
+            return Qn(e), Pn(a, Lj(Mn(e) % 12 || 12, h));
+          case "K":
+            return Qn(e), Pn(a, Lj(Mn(e) % 12, h));
+          case "H":
+            return Qn(e), Pn(a, Lj(Mn(e), h));
+          case "c":
+            a:
+              switch (c = d.getDay(), h) {
+                case 5:
+                  h = a.Yb.le[c];
+                  break a;
+                case 4:
+                  h = a.Yb.oe[c];
+                  break a;
+                case 3:
+                  h = a.Yb.ne[c];
+                  break a;
+                default:
+                  h = Pn(a, Lj(c, 1));
+              }
+            return h;
+          case "L":
+            a:
+              switch (c = d.getMonth(), h) {
+                case 5:
+                  h = a.Yb.ke[c];
+                  break a;
+                case 4:
+                  h = a.Yb.je[c];
+                  break a;
+                case 3:
+                  h = a.Yb.me[c];
+                  break a;
+                default:
+                  h = Pn(a, Lj(c + 1, h));
+              }
+            return h;
+          case "Q":
+            return c = Math.floor(d.getMonth() / 3), 4 > h ? a.Yb.he[c] : a.Yb.fe[c];
+          case "d":
+            return Pn(a, Lj(d.getDate(), h));
+          case "m":
+            return Qn(e), Pn(a, Lj(e.getMinutes ? e.getMinutes() : 0, h));
+          case "s":
+            return Qn(e), Pn(a, Lj(e.getSeconds(), h));
+          case "v":
+            return h = f2 || En(c.getTimezoneOffset()), h.Od;
+          case "V":
+            return a = f2 || En(c.getTimezoneOffset()), 2 >= h ? a.Od : 0 < Gn(a, c) ? a.oc.ae !== void 0 ? a.oc.ae : a.oc.DST_GENERIC_LOCATION : a.oc.Ud !== void 0 ? a.oc.Ud : a.oc.STD_GENERIC_LOCATION;
+          case "w":
+            return c = Cn(e.getFullYear(), e.getMonth(), e.getDate(), a.Yb.Td, a.Yb.Sd), Pn(a, Lj(Math.floor(Math.round((c - new Date(new Date(c).getFullYear(), 0, 1).valueOf()) / 864e5) / 7) + 1, h));
+          case "z":
+            return a = f2 || En(c.getTimezoneOffset()), 4 > h ? a.Pd[0 < Gn(a, c) ? 2 : 0] : a.Pd[0 < Gn(a, c) ? 3 : 1];
+          case "Z":
+            return b = f2 || En(c.getTimezoneOffset()), 4 > h ? (h = -Hn(b, c), a = [0 > h ? "-" : "+"], h = Math.abs(h), a.push(Lj(Math.floor(h / 60) % 100, 2), Lj(h % 60, 2)), h = a.join("")) : h = Pn(a, Fn(Hn(b, c))), h;
+          default:
+            return "";
+        }
+      }
+      ;
+      function Sn(a, b, c, d) {
+        var e = O2(b);
+        a = v(a) ? 0 : 10 < e ? 10 : e;
+        b = Y.h(hk(), lk.h(a, b));
+        b = na(B, mk(1, ok.h(new Jd(null, -1, " ", null), b)));
+        e = a < e ? "..." : null;
+        return [B.g(c), B.g(b), e, B.g(d)].join("");
+      }
+      function sl(a, b) {
+        return b == null ? Al : typeof b === "string" ? Dl : b instanceof V ? Rl : typeof b === "number" ? Rl : b instanceof F ? Rl : Jc(b) ? gn : fd(b) ? km : Hc(b) ? Wl : Fc(b) ? ag : P.h(b, true) ? Rl : P.h(b, false) ? Rl : Pj(b);
+      }
+      var ik, nl = jk(Cd), ol = jk(Cd), pl = jk(Cd), rl = jk(Cd), ml = T.j(Cd, Pm, Jk.C ? Jk.C() : Jk.call(null));
+      ik = new kl();
+      xl(Dl, function(a, b) {
+        a = v(a) ? 5 : 20;
+        var c = b.length > a ? '..."' : '"', d = b.length;
+        return ['"', B.g(b.substring(0, a < d ? a : d)), c].join("");
+      });
+      xl(Rl, function(a, b) {
+        return B.g(b);
+      });
+      xl(G, function() {
+        return "<indexed seq>";
+      });
+      xl(ye, function() {
+        return "<map seq>";
+      });
+      xl(Xe, function() {
+        return "<map seq>";
+      });
+      xl(hd, function() {
+        return "<cons>";
+      });
+      xl(ld, function() {
+        return "<lazy seq>";
+      });
+      xl(Al, function() {
+        return "nil";
+      });
+      xl(km, function(a, b) {
+        return Sn(a, b, "(", ")");
+      });
+      xl(Wl, function(a, b) {
+        var c = O2(b), d = v(a) ? 0 : c;
+        b = na(Sj, lk.h(d, b));
+        return Sn(a, b, "{", c > d ? "...}" : "}");
+      });
+      xl(ag, function(a, b) {
+        return Sn(a, b, "#{", "}");
+      });
+      xl(gn, function(a, b) {
+        return Sn(a, b, "[", "]");
+      });
+      xl(tl, function(a, b) {
+        return Pi(vc([Pj(b)]), Da());
+      });
+      new xa();
+      var Tn = function() {
+        var a = new W(null, 13, 5, X2, [null, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31], null), b = new W(null, 13, 5, X2, [null, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31], null);
+        return function(c, d) {
+          return T.h(v(d) ? b : a, c);
+        };
+      }(), Un = /(\d\d\d\d)(?:-(\d\d)(?:-(\d\d)(?:[T](\d\d)(?::(\d\d)(?::(\d\d)(?:[.](\d+))?)?)?)?)?)?(?:[Z]|([-+])(\d\d):(\d\d))?/;
+      function Vn(a) {
+        a = parseInt(a, 10);
+        return La(isNaN(a)) ? a : null;
+      }
+      function Wn(a, b, c, d) {
+        if (!(a <= b && b <= c))
+          throw Error([B.g(d), " Failed:  ", B.g(a), "<=", B.g(b), "<=", B.g(c)].join(""));
+        return b;
+      }
+      function Xn(a) {
+        var b = Ck(Un, a);
+        S(b, 0, null);
+        var c = S(b, 1, null), d = S(b, 2, null), e = S(b, 3, null), f2 = S(b, 4, null), h = S(b, 5, null), k = S(b, 6, null), l = S(b, 7, null), m = S(b, 8, null), n2 = S(b, 9, null), p = S(b, 10, null);
+        if (La(b))
+          throw Error(["Unrecognized date/time syntax: ", B.g(a)].join(""));
+        a = Vn(c);
+        b = function() {
+          var A = Vn(d);
+          return v(A) ? A : 1;
+        }();
+        c = function() {
+          var A = Vn(e);
+          return v(A) ? A : 1;
+        }();
+        var q = function() {
+          var A = Vn(f2);
+          return v(A) ? A : 0;
+        }(), r = function() {
+          var A = Vn(h);
+          return v(A) ? A : 0;
+        }(), w = function() {
+          var A = Vn(k);
+          return v(A) ? A : 0;
+        }(), z = function() {
+          a:
+            if (P.h(3, O2(l)))
+              var A = l;
+            else if (3 < O2(l))
+              A = l.substring(0, 3);
+            else
+              for (A = new xa(l); ; )
+                if (3 > A.getLength())
+                  A = A.append("0");
+                else {
+                  A = A.toString();
+                  break a;
+                }
+          A = Vn(A);
+          return v(A) ? A : 0;
+        }();
+        m = (P.h(m, "-") ? -1 : 1) * (60 * function() {
+          var A = Vn(n2);
+          return v(A) ? A : 0;
+        }() + function() {
+          var A = Vn(p);
+          return v(A) ? A : 0;
+        }());
+        return new W(null, 8, 5, X2, [
+          a,
+          Wn(1, b, 12, "timestamp month field must be in range 1..12"),
+          Wn(1, c, Tn(b, (a % 4 + 4) % 4 === 0 && ((a % 100 + 100) % 100 !== 0 || (a % 400 + 400) % 400 === 0)), "timestamp day field must be in range 1..last day in month"),
+          Wn(0, q, 23, "timestamp hour field must be in range 0..23"),
+          Wn(0, r, 59, "timestamp minute field must be in range 0..59"),
+          Wn(0, w, P.h(r, 59) ? 60 : 59, "timestamp second field must be in range 0..60"),
+          Wn(0, z, 999, "timestamp millisecond field must be in range 0..999"),
+          m
+        ], null);
+      }
+      Zj.o(vc([new u(null, 4, [Ym, function(a) {
+        if (typeof a === "string") {
+          var b = Xn(a);
+          if (v(b)) {
+            a = S(b, 0, null);
+            var c = S(b, 1, null), d = S(b, 2, null), e = S(b, 3, null), f2 = S(b, 4, null), h = S(b, 5, null), k = S(b, 6, null);
+            b = S(b, 7, null);
+            b = new Date(Date.UTC(a, c - 1, d, e, f2, h, k) - 6e4 * b);
+          } else
+            throw Error(["Unrecognized date/time syntax: ", B.g(a)].join(""));
+          return b;
+        }
+        throw Error("Instance literal expects a string for its timestamp.");
+      }, Hl, function(a) {
+        if (typeof a === "string")
+          return new Gg(a.toLowerCase());
+        throw Error("UUID literal expects a string as its representation.");
+      }, xm, function(a) {
+        if (Jc(a))
+          return Fe.h(wk, a);
+        throw Error("Queue literal expects a vector for its elements.");
+      }, Gl, function(a) {
+        if (Jc(a)) {
+          var b = [];
+          a = H(a);
+          for (var c = null, d = 0, e = 0; ; )
+            if (e < d) {
+              var f2 = c.da(null, e);
+              b.push(f2);
+              e += 1;
+            } else if (a = H(a))
+              c = a, Kc(c) ? (a = Hb(c), e = Ib(c), c = a, d = O2(a), a = e) : (a = I(c), b.push(a), a = N2(c), c = null, d = 0), e = 0;
+            else
+              break;
+          return b;
+        }
+        if (Hc(a)) {
+          b = {};
+          a = H(a);
+          c = null;
+          for (e = d = 0; ; )
+            if (e < d) {
+              var h = c.da(null, e);
+              f2 = S(h, 0, null);
+              h = S(h, 1, null);
+              f2 = qf(f2);
+              b[f2] = h;
+              e += 1;
+            } else if (a = H(a))
+              Kc(a) ? (d = Hb(a), a = Ib(a), c = d, d = O2(d)) : (d = I(a), c = S(d, 0, null), d = S(d, 1, null), c = qf(c), b[c] = d, a = N2(a), c = null, d = 0), e = 0;
+            else
+              break;
+          return b;
+        }
+        throw Error("JS literal expects a vector or map containing only string or unqualified keyword keys");
+      }], null), Cd]));
+      function Yn() {
+        return Jj("iPhone") && !Jj("iPod") && !Jj("iPad");
+      }
+      ;
+      Jj("Opera");
+      Jj("Trident") || Jj("MSIE");
+      Jj("Edge");
+      !Jj("Gecko") || Ij().toLowerCase().indexOf("webkit") != -1 && !Jj("Edge") || Jj("Trident") || Jj("MSIE") || Jj("Edge");
+      Ij().toLowerCase().indexOf("webkit") != -1 && !Jj("Edge") && Jj("Mobile");
+      Jj("Macintosh");
+      Jj("Windows");
+      Jj("Linux") || Jj("CrOS");
+      var Zn = ha.navigator || null;
+      Zn && (Zn.appVersion || "").indexOf("X11");
+      Jj("Android");
+      Yn();
+      Jj("iPad");
+      Jj("iPod");
+      Yn() || Jj("iPad") || Jj("iPod");
+      Ij().toLowerCase().indexOf("kaios");
+      var $n = new W(null, 3, 5, X2, [3, 3, 0], null);
+      function ao(a) {
+        return typeof a === "string" ? P.h(a, "") ? null : a : null;
+      }
+      function bo(a) {
+        return typeof a === "number" ? ad(a) : typeof a === "string" ? (a = parseInt(a, 10), v(isNaN(a)) ? null : a) : null;
+      }
+      function co(a, b, c) {
+        return $c(Bk(), Xj(function(d, e) {
+          var f2 = S(e, 0, null);
+          e = S(e, 1, null);
+          return a.j ? a.j(d, f2, e) : a.call(null, d, f2, e);
+        }, Zc), b, c);
+      }
+      function eo(a, b) {
+        return Vc.j(function(c, d) {
+          c = a.g ? a.g(d) : a.call(null, d);
+          return v(c) ? new gc(c) : null;
+        }, null, b);
+      }
+      P.h("nodejs", "nodejs");
+      var fo = typeof window !== "undefined" ? window : null;
+      function go(a) {
+        a = Mg(B.g(a), /-/, 2);
+        var b = S(a, 0, null);
+        a = S(a, 1, null);
+        var c = /\d+/;
+        if (typeof b === "string")
+          b = Ek(c, b);
+        else
+          throw new TypeError("re-seq must match against a string.");
+        b = v(b) ? qk(bo, b) : null;
+        return new u(null, 2, [gm, b, Ol, v(a) ? a.toLowerCase() : null], null);
+      }
+      function ho(a) {
+        var b = S($n, 0, null), c = S($n, 1, null), d = S($n, 2, null), e = Jc(a) ? a : gm.g(go(a));
+        a = S(e, 0, null);
+        var f2 = S(e, 1, null);
+        e = S(e, 2, null);
+        e = qk(function(h) {
+          return v(h) ? h : 0;
+        }, new W(null, 3, 5, X2, [a, f2, e], null));
+        a = S(e, 0, null);
+        f2 = S(e, 1, null);
+        e = S(e, 2, null);
+        if (!(b > a || P.h(b, a) && (c > f2 || P.h(c, f2) && d >= e)))
+          throw zl("Insufficient `com.taoensso/encore` version, you may have a dependency conflict: see http://goo.gl/qBbLvC for solutions.", new u(null, 2, [jn, Kg(new W(null, 3, 5, X2, [a, f2, e], null)), gp, Kg(new W(null, 3, 5, X2, [b, c, d], null))], null));
+      }
+      var io = function io2(a) {
+        switch (arguments.length) {
+          case 3:
+            return io2.j(arguments[0], arguments[1], arguments[2]);
+          case 2:
+            return io2.h(arguments[0], arguments[1]);
+          default:
+            for (var c = [], d = arguments.length, e = 0; ; )
+              if (e < d)
+                c.push(arguments[e]), e += 1;
+              else
+                break;
+            return io2.o(arguments[0], arguments[1], arguments[2], new G(c.slice(3), 0, null));
+        }
+      };
+      io.j = function(a, b, c) {
+        return Pc(a, b) ? a : If.j(a, b, c);
+      };
+      io.o = function(a, b, c, d) {
+        return co(io, io.j(a, b, c), d);
+      };
+      io.J = function(a) {
+        var b = I(a), c = N2(a);
+        a = I(c);
+        var d = N2(c);
+        c = I(d);
+        d = N2(d);
+        return this.o(b, a, c, d);
+      };
+      io.h = function(a, b) {
+        return Yc(function(c, d, e) {
+          return Pc(c, d) ? c : If.j(c, d, e);
+        }, a == null ? Cd : a, b);
+      };
+      io.I = 3;
+      var jo = function jo2(a) {
+        switch (arguments.length) {
+          case 2:
+            return jo2.h(arguments[0], arguments[1]);
+          case 3:
+            return jo2.j(arguments[0], arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      };
+      jo.h = function(a, b) {
+        b = 0 > b ? 0 : b;
+        var c = O2(a);
+        return b >= c ? be : sk(a, b, c);
+      };
+      jo.j = function(a, b, c) {
+        b = 0 > b ? 0 : b;
+        var d = ad(O2(a));
+        c = c > d ? d : c;
+        return b >= c ? be : sk(a, b, c);
+      };
+      jo.I = 3;
+      var ko = function ko2(a) {
+        switch (arguments.length) {
+          case 2:
+            return ko2.h(arguments[0], arguments[1]);
+          case 3:
+            return ko2.j(arguments[0], arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      };
+      ko.h = function(a, b) {
+        var c = O2(a);
+        return 0 > b ? (b += c, sk(a, 0 > b ? 0 : b, c)) : b >= c ? be : sk(a, b, c);
+      };
+      ko.j = function(a, b, c) {
+        if (0 >= c)
+          return be;
+        var d = ad(O2(a));
+        if (0 > b)
+          return b += d, b = 0 > b ? 0 : b, c = b + c, sk(a, b, c > d ? d : c);
+        c = b + c;
+        d = c > d ? d : c;
+        return b >= d ? be : sk(a, b, d);
+      };
+      ko.I = 3;
+      function lo(a) {
+        return 1 < O2(a) ? sk(a, 1, O2(a)) : be;
+      }
+      (function() {
+        var a = ja(fo, qf("performance"), null);
+        if (v(a)) {
+          var b = function() {
+            var c = ja(a, qf("now"), null);
+            if (v(c))
+              return c;
+            c = ja(a, qf("mozNow"), null);
+            if (v(c))
+              return c;
+            c = ja(a, qf("msNow"), null);
+            if (v(c))
+              return c;
+            c = ja(a, qf("oNow"), null);
+            return v(c) ? c : ja(a, qf("webkitNow"), null);
+          }();
+          return v(b) ? function() {
+            return 1e6 * ad(b.call(a));
+          } : function() {
+            return 1e6 * new Date().getTime();
+          };
+        }
+        return function() {
+          return 1e6 * new Date().getTime();
+        };
+      })();
+      function mo(a, b) {
+        this.n = a;
+        this.Nd = b;
+      }
+      function no(a, b) {
+        this.n = a;
+        this.Qd = b;
+      }
+      function oo(a, b, c) {
+        this.Md = a;
+        this.Yd = b;
+        this.Rd = c;
+      }
+      function po(a) {
+        if (Hc(a))
+          return Yc(function(c, d, e) {
+            var f2 = S(e, 0, null);
+            e = S(e, 1, null);
+            return If.j(c, d, new mo(f2, e));
+          }, Cd, a);
+        if (Jc(a)) {
+          var b = new kk(-1);
+          return Vc.j(function(c, d) {
+            var e = S(d, 0, null), f2 = S(d, 1, null);
+            d = S(d, 2, null);
+            return If.j(c, v(d) ? d : b.ld(null, b.xb(null) + 1), new mo(e, f2));
+          }, Cd, a);
+        }
+        throw new yl("No matching `encore/cond!` clause", Cd);
+      }
+      function qo(a) {
+        function b(f2, h) {
+          var k = new Date().getTime();
+          La(h) && 625e-7 >= Math.random() && (Id(c, null), qg.h(d, function(p) {
+            return Cb(Yc(function(q, r, w) {
+              w = Yc(function(z, A, K2) {
+                var M = T.h(e, A);
+                return v(M) ? k >= K2.Qd + M.Nd ? Bh.h(z, A) : z : Bh.h(z, A);
+              }, w, w);
+              return Ec(w) ? Rj(q, r) : Db(q, r, w);
+            }, Ab(v(p) ? p : Cd), p));
+          }));
+          for (; ; ) {
+            var l = D(d), m = T.h(l, f2), n2 = m == null ? null : Yc(function(p, q, r, w, z, A) {
+              return function(K2, M, ca) {
+                var la = T.h(A, M);
+                if (v(la)) {
+                  if (ca.n < la.n)
+                    return K2;
+                  ca = ca.Qd + la.Nd - r;
+                  return 0 >= ca ? K2 : K2 == null ? new oo(Ee([M, ca]), M, ca) : ca > K2.Rd ? new oo(If.j(K2.Md, M, ca), M, ca) : new oo(If.j(K2.Md, M, ca), K2.Yd, K2.Rd);
+                }
+                return K2;
+              };
+            }(l, m, k, c, d, e), null, m);
+            if (v(v(h) ? h : n2))
+              return h = n2, v(h) ? (f2 = h, new W(null, 3, 5, X2, [f2.Yd, f2.Rd, f2.Md], null)) : null;
+            h = D(c);
+            v(h) || (m = Yc(function(p, q, r, w, z) {
+              return function(A, K2, M) {
+                var ca = If.j;
+                var la = T.h(r, K2);
+                if (v(la)) {
+                  var Ga = la.Qd;
+                  M = z >= Ga + M.Nd ? new no(1, z) : new no(la.n + 1, Ga);
+                } else
+                  M = new no(1, z);
+                return ca.call(If, A, K2, M);
+              };
+            }(h, l, m, n2, k, c, d, e), m, e), Id(d, If.j(l, f2, m)));
+            return null;
+          }
+        }
+        if (Ec(a))
+          return new W(null, 2, 5, X2, [null, gk()], null);
+        var c = jk(null), d = jk(null), e = po(a);
+        return new W(null, 2, 5, X2, [d, function() {
+          function f2(m, n2) {
+            if (v(id.h ? id.h(m, Jl) : id.call(null, m, Jl)))
+              return v(id.h ? id.h(n2, qn) : id.call(null, n2, qn)) ? Id(d, null) : qg.j(d, Bh, n2), null;
+            if (v(id.h ? id.h(m, qm) : id.call(null, m, qm)))
+              return b(n2, true);
+            throw zl("Unrecognized rate limiter command", new u(null, 2, [Km, m, yo, n2], null));
+          }
+          function h(m) {
+            return b(m, false);
+          }
+          function k() {
+            return b(null, false);
+          }
+          var l = null;
+          l = function(m, n2) {
+            switch (arguments.length) {
+              case 0:
+                return k.call(this);
+              case 1:
+                return h.call(this, m);
+              case 2:
+                return f2.call(this, m, n2);
+            }
+            throw Error("Invalid arity: " + arguments.length);
+          };
+          l.C = k;
+          l.g = h;
+          l.h = f2;
+          return l;
+        }()], null);
+      }
+      var ro = function() {
+        function a(d) {
+          return new xa(d);
+        }
+        function b() {
+          return new xa();
+        }
+        var c = null;
+        c = function(d) {
+          switch (arguments.length) {
+            case 0:
+              return b.call(this);
+            case 1:
+              return a.call(this, d);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        c.C = b;
+        c.g = a;
+        return c;
+      }(), so = function() {
+        function a(e, f2) {
+          e = e instanceof xa ? e : ro.g(B.g(e));
+          f2 = B.g(f2);
+          return e.append(f2);
+        }
+        function b(e) {
+          return e instanceof xa ? e : ro.g(B.g(e));
+        }
+        function c() {
+          return ro.C();
+        }
+        var d = null;
+        d = function(e, f2) {
+          switch (arguments.length) {
+            case 0:
+              return c.call(this);
+            case 1:
+              return b.call(this, e);
+            case 2:
+              return a.call(this, e, f2);
+          }
+          throw Error("Invalid arity: " + arguments.length);
+        };
+        d.C = c;
+        d.g = b;
+        d.h = a;
+        return d;
+      }();
+      function to(a, b) {
+        if (v(v(" ") ? !P.h(" ", "") : " ")) {
+          var c = pk(), d = Xj(so, B);
+          return v(a) ? Yj(ek.h(a, c), d, b) : Yj(c, d, b);
+        }
+        return v(a) ? Yj(a, Xj(so, B), b) : B.g(Vc.h(so, b));
+      }
+      var uo = function uo2(a) {
+        switch (arguments.length) {
+          case 2:
+            return uo2.h(arguments[0], arguments[1]);
+          case 3:
+            return uo2.j(arguments[0], arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      };
+      uo.h = function(a, b) {
+        return a.substring(b);
+      };
+      uo.j = function(a, b, c) {
+        return b >= c ? "" : a.substring(b, c);
+      };
+      uo.I = 3;
+      var vo = function vo2(a) {
+        switch (arguments.length) {
+          case 2:
+            return vo2.h(arguments[0], arguments[1]);
+          case 3:
+            return vo2.j(arguments[0], arguments[1], arguments[2]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      };
+      vo.h = function(a, b) {
+        return ao(a.substr(b));
+      };
+      vo.j = function(a, b, c) {
+        return ao(a.substr(b, c));
+      };
+      vo.I = 3;
+      function wo(a) {
+        return a === void 0 || a == null ? "nil" : a;
+      }
+      qk(B, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_");
+      var xo = function xo2(a) {
+        for (var c = [], d = arguments.length, e = 0; ; )
+          if (e < d)
+            c.push(arguments[e]), e += 1;
+          else
+            break;
+        return xo2.o(0 < c.length ? new G(c.slice(0), 0, null) : null);
+      };
+      xo.o = function(a) {
+        var b = Ig(a);
+        a = T.h(b, hm);
+        var c = T.h(b, hn), d = T.h(b, on), e = T.h(b, Ul), f2 = T.h(b, $m), h = T.h(b, Tl), k = T.h(b, Sl), l = T.h(b, Zm);
+        b = T.h(b, Xm);
+        return Math.round((v(b) ? 31536e6 * b : 0) + (v(e) ? 2551392e3 * e : 0) + (v(c) ? 6048e5 * c : 0) + (v(k) ? 864e5 * k : 0) + (v(l) ? 36e5 * l : 0) + (v(h) ? 6e4 * h : 0) + (v(f2) ? 1e3 * f2 : 0) + (v(d) ? d : 0) + (v(a) ? a : 0));
+      };
+      xo.I = 0;
+      xo.J = function(a) {
+        return this.o(H(a));
+      };
+      ek.h(function(a) {
+        return bd(ad(a), 1e3);
+      }, xo);
+      function op() {
+        return true;
+      }
+      function pp() {
+        return false;
+      }
+      function qp(a) {
+        var b = a.indexOf("*");
+        if (P.h(-1, b))
+          a = null;
+        else if (a = vn(vn(["^", B.g(a), "$"].join(""), ".", "\\."), "*", "(.*)"), !(a instanceof RegExp)) {
+          var c = Dk(/^\(\?([idmsux]*)\)/, a);
+          b = S(c, 0, null);
+          c = S(c, 1, null);
+          a = new RegExp(a.substring(b == null ? 0 : b.length), v(c) ? c : "");
+        }
+        return a;
+      }
+      function rp(a, b) {
+        for (; ; ) {
+          if (v(function() {
+            var m = new of(null, new u(null, 2, ["*", null, Kl, null], null), null);
+            return m.g ? m.g(a) : m.call(null, a);
+          }()))
+            return op;
+          if (v(function() {
+            var m = Ui([be, wg, hp]);
+            return m.g ? m.g(a) : m.call(null, a);
+          }()))
+            return pp;
+          if (a instanceof RegExp)
+            return function(m) {
+              return function(n2) {
+                return Dk(m, n2);
+              };
+            }(a, b, op, pp, qp);
+          if (typeof a === "string") {
+            var c = qp(a);
+            if (v(c)) {
+              var d = b;
+              a = c;
+              b = d;
+            } else
+              return function(m) {
+                return function(n2) {
+                  return P.h(n2, m);
+                };
+              }(a, b, c, op, pp, qp);
+          } else if (Jc(a) || Fc(a)) {
+            if (v(function() {
+              var m = vl(a);
+              return m.g ? m.g("*") : m.call(null, "*");
+            }()))
+              return op;
+            if (P.h(O2(a), 1))
+              c = I(a), d = b, a = c, b = d;
+            else {
+              var e = Vc.j(function(m, n2, p, q, r) {
+                return function(w, z) {
+                  var A = S(w, 0, null);
+                  w = S(w, 1, null);
+                  var K2 = z instanceof RegExp ? z : r(z);
+                  return v(K2) ? new W(null, 2, 5, X2, [A, Z.h(w, K2)], null) : new W(null, 2, 5, X2, [Z.h(A, z), w], null);
+                };
+              }(a, b, op, pp, qp), new W(null, 2, 5, X2, [wg, be], null), a), f2 = S(e, 0, null), h = S(e, 1, null), k = fk(f2), l = function() {
+                var m = fk(h);
+                return v(m) ? (m = function(n2, p, q, r, w, z, A, K2, M, ca, la) {
+                  return function(Ga) {
+                    return eo(function() {
+                      return function(qa) {
+                        return Dk(qa, Ga);
+                      };
+                    }(n2, p, q, r, w, z, A, K2, M, ca, la), q);
+                  };
+                }(a, b, m, m, e, f2, h, k, op, pp, qp), v(b) ? Hk(m) : m) : null;
+              }();
+              if (v(function() {
+                var m = k;
+                return v(m) ? l : m;
+              }()))
+                return function(m, n2, p, q, r, w, z) {
+                  return function(A) {
+                    var K2 = w.g ? w.g(A) : w.call(null, A);
+                    return v(K2) ? K2 : z.g ? z.g(A) : z.call(null, A);
+                  };
+                }(a, b, e, f2, h, k, l, op, pp, qp);
+              if (v(k))
+                return k;
+              if (v(l))
+                return l;
+              throw new yl("No matching `encore/cond!` clause", Cd);
+            }
+          } else
+            throw zl("Unexpected compile spec type", new u(null, 2, [Km, a, pj, Pj(a)], null));
+        }
+      }
+      function Co(a) {
+        for (; ; ) {
+          if (Hc(a)) {
+            var b = T.h(a, jm), c = function() {
+              var h = T.h(a, Wm);
+              return v(h) ? h : T.h(a, Zl);
+            }(), d = function() {
+              var h = T.h(a, Dm);
+              return v(h) ? h : T.h(a, kn);
+            }(), e = function() {
+              var h = c;
+              return v(h) ? rp(h, b) : null;
+            }(), f2 = function() {
+              var h = d;
+              return v(h) ? rp(h, b) : null;
+            }();
+            if (P.h(f2, op) || P.h(e, pp))
+              return pp;
+            if (v(function() {
+              var h = e;
+              return v(h) ? f2 : h;
+            }()))
+              return function(h, k, l, m, n2, p) {
+                return function(q) {
+                  q = B.g(q);
+                  return v(n2.g ? n2.g(q) : n2.call(null, q)) ? v(p.g ? p.g(q) : p.call(null, q)) ? false : true : false;
+                };
+              }(a, b, c, d, e, f2, op, pp, qp, rp);
+            if (v(e))
+              return P.h(e, op) ? op : function(h, k, l, m, n2) {
+                return function(p) {
+                  p = B.g(p);
+                  p = n2.g ? n2.g(p) : n2.call(null, p);
+                  return v(p) ? true : false;
+                };
+              }(a, b, c, d, e, f2, op, pp, qp, rp);
+            if (v(f2))
+              return P.h(f2, pp) ? op : function(h, k, l, m, n2, p) {
+                return function(q) {
+                  q = B.g(q);
+                  q = p.g ? p.g(q) : p.call(null, q);
+                  return v(q) ? true : false;
+                };
+              }(a, b, c, d, e, f2, op, pp, qp, rp);
+            throw zl("compile-str-filter: `allow-spec` and `deny-spec` cannot both be nil", new u(null, 2, [pn, c, Vm, d], null));
+          }
+          a = new u(null, 2, [Wm, a, Dm, null], null);
+        }
+      }
+      ek.h(fk, jo);
+      ek.h(fk, ko);
+      ek.h(ao, uo);
+      ek.h(ao, vo);
+      function Do(a) {
+        for (var b = [], c = arguments.length, d = 0; ; )
+          if (d < c)
+            b.push(arguments[d]), d += 1;
+          else
+            break;
+        return Eo(0 < b.length ? new G(b.slice(0), 0, null) : null);
+      }
+      function Eo(a) {
+        S(a, 0, null);
+        return new u(null, 6, [Il, true, Bl, false, pm, null, nm, null, Am, Rm, Ll, function(b) {
+          b = Ig(b);
+          b = T.h(b, ym);
+          b = vc([Gk(b)]);
+          var c = If.j(Da(), za, false);
+          Fk(Pi(b, c));
+          v(Nj) ? (b = Da(), Fk("\n"), b = (T.h(b, ya), null)) : b = null;
+          return b;
+        }], null);
+      }
+      function Fo(a) {
+        for (var b = [], c = arguments.length, d = 0; ; )
+          if (d < c)
+            b.push(arguments[d]), d += 1;
+          else
+            break;
+        return Go(0 < b.length ? new G(b.slice(0), 0, null) : null);
+      }
+      function Go(a) {
+        S(a, 0, null);
+        return new u(null, 6, [Il, true, Bl, false, pm, null, nm, null, Am, Rm, Ll, typeof console === "undefined" ? function() {
+          return null;
+        } : function() {
+          function b(c) {
+            var d = function() {
+              var e = c instanceof V ? c.Pa : null;
+              switch (e) {
+                case "trace":
+                  return console.trace;
+                case "debug":
+                  return console.debug;
+                case "info":
+                  return console.info;
+                case "warn":
+                  return console.warn;
+                case "error":
+                  return console.error;
+                case "fatal":
+                  return console.error;
+                case "report":
+                  return console.info;
+                default:
+                  throw Error(["No matching clause: ", B.g(e)].join(""));
+              }
+            }();
+            return v(d) ? d : console.log;
+          }
+          return function(c) {
+            var d = b(Cm.g(c));
+            if (v(d)) {
+              if (v(function() {
+                var h = T.h(c, cn);
+                return v(h) ? h : Vc.j(T, c, new W(null, 2, 5, X2, [Ml, cn], null));
+              }())) {
+                var e = function() {
+                  var h = If.o(c, cm, "", vc([im, null])), k = Am.g(c);
+                  return k.g ? k.g(h) : k.call(null, h);
+                }(), f2 = function() {
+                  var h = Vl.g(c), k = im.g(c);
+                  return v(k) ? U(e, U(k, h)) : U(e, h);
+                }();
+                return d.apply(console, Qj(f2));
+              }
+              return d.call(console, Gk(ym.g(c)));
+            }
+            return null;
+          };
+        }()], null);
+      }
+      ;
+      Jc($n) ? ho(new W(null, 3, 5, X2, [2, 126, 2], null)) : ho(2.126);
+      var Ho = new u(null, 1, [El, Xl], null), Io = function Io2(a) {
+        switch (arguments.length) {
+          case 1:
+            return Io2.g(arguments[0]);
+          case 2:
+            return Io2.h(arguments[0], arguments[1]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      };
+      Io.g = function(a) {
+        return Io.h(null, a);
+      };
+      Io.h = function(a, b) {
+        var c = Ig(a), d = T.h(c, nn);
+        T.h(c, rn);
+        var e = Ig(b);
+        b = T.h(e, Cm);
+        c = T.h(e, im);
+        var f2 = T.h(e, cm), h = T.h(e, om), k = T.h(e, Ao);
+        T.h(e, Hm);
+        var l = T.h(e, Ql);
+        e = T.h(e, Mm);
+        return [B.g(Gk(l)), " ", qf(b).toUpperCase(), " [", B.g(v(h) ? h : v(k) ? k : "?"), ":", B.g(v(e) ? e : "?"), "] - ", B.g(Gk(f2)), v(d) ? null : v(c) ? ["\n", B.g(Jo ? Jo(c, a) : Ko.call(null, c, a))].join("") : null].join("");
+      };
+      Io.I = 2;
+      var Lo = new u(null, 6, [pm, um, Em, new of(null, new u(null, 1, ["*", null], null), null), mn, be, zo, Ho, Am, Io, dn, typeof window !== "undefined" ? new u(null, 1, [Qm, Fo.g ? Fo.g(Cd) : Fo.call(null, Cd)], null) : new u(null, 1, [em, Do.g ? Do.g(Cd) : Do.call(null, Cd)], null)], null);
+      function Mo(a) {
+        switch (a instanceof V ? a.Pa : null) {
+          case "trace":
+            return 0;
+          case "debug":
+            return 1;
+          case "info":
+            return 2;
+          case "warn":
+            return 3;
+          case "error":
+            return 4;
+          case "fatal":
+            return 5;
+          case "report":
+            return 6;
+          default:
+            return null;
+        }
+      }
+      function No(a) {
+        if (v(Mo(a)))
+          return a;
+        throw zl("Invalid Timbre logging level: should be e/o #{:trace :debug :info :warn :error :fatal :report}", new u(null, 2, [Km, a, pj, Pj(a)], null));
+      }
+      function Oo(a) {
+        var b = Mo(a);
+        if (v(b))
+          return b;
+        throw zl("Invalid Timbre logging level: should be e/o #{:trace :debug :info :warn :error :fatal :report}", new u(null, 2, [Km, a, pj, Pj(a)], null));
+      }
+      function Po(a, b) {
+        return (Oo.g ? Oo.g(a) : Oo.call(null, a)) >= (Oo.g ? Oo.g(b) : Oo.call(null, b));
+      }
+      var Qo = Hk(function(a) {
+        return Co(a);
+      }), Ro = Hk(function(a, b) {
+        a = Qo(a);
+        return a.g ? a.g(b) : a.call(null, b);
+      });
+      function So(a, b) {
+        a = v(Yg.g ? Yg.g(a) : Yg.call(null, a)) ? a.g ? a.g(b) : a.call(null, b) : Ro(a, b);
+        return v(a) ? true : false;
+      }
+      var To = Hk(function(a, b) {
+        return eo(function(c) {
+          var d = S(c, 0, null);
+          c = S(c, 1, null);
+          return v(Ro(d, b)) ? No(c) : null;
+        }, a);
+      });
+      function Uo(a, b, c) {
+        b = Jc(b) ? To(b, c) : b;
+        a = v(b) ? b : a;
+        return No.g ? No.g(a) : No.call(null, a);
+      }
+      function Vo(a) {
+        if (v(a)) {
+          var b = Ui([be, wg]);
+          b = b.g ? b.g(a) : b.call(null, a);
+          a = v(b) ? null : a;
+        } else
+          a = null;
+        return a;
+      }
+      function Wo(a, b) {
+        a = Vo(a);
+        b = Vo(b);
+        return v(v(a) ? a : b) ? new u(null, 2, [Wm, a, Dm, b], null) : null;
+      }
+      function Xo(a, b) {
+        var c = v(b) ? b : Lo;
+        b = function() {
+          var d = T.h(c, pm);
+          d = v(d) ? d : T.h(c, Cm);
+          return Uo.j ? Uo.j(a, d, "erv.mos.mos") : Uo.call(null, a, d, "erv.mos.mos");
+        }();
+        return v(Po.h ? Po.h(Sm, b) : Po.call(null, Sm, b)) ? (b = function() {
+          var d = T.h(c, Em);
+          if (v(d))
+            return d;
+          d = T.h(c, Tm);
+          var e = T.h(c, sm);
+          return Wo.h ? Wo.h(d, e) : Wo.call(null, d, e);
+        }(), v(b) ? v(So.h ? So.h(b, "erv.mos.mos") : So.call(null, b, "erv.mos.mos")) ? true : false : true) : false;
+      }
+      function Yo(a) {
+        return to(Y.g(function(b) {
+          b = wo(b);
+          return Ic(b) ? Pi(vc([b]), Da()) : b;
+        }), a);
+      }
+      var Zo = Hk(function(a, b) {
+        a = qo(b);
+        S(a, 0, null);
+        return S(a, 1, null);
+      });
+      function $o(a) {
+        var b = id.h ? id.h(Nm, Nm) : id.call(null, Nm, Nm), c = id.h ? id.h(Gm, Jm) : id.call(null, Gm, Jm), d = S(a, 0, null);
+        if (v(v(b) ? d instanceof Error : b)) {
+          var e = d, f2 = null, h = lo(a);
+          a = v(c) ? S(h, 0, null) : null;
+          c = v(c) ? lo(h) : h;
+          return new W(null, 4, 5, X2, [e, f2, a, c], null);
+        }
+        f2 = v(function() {
+          var l = Hc(d);
+          return l ? Aa.g(Dc(d)) : l;
+        }()) ? d : null;
+        e = function() {
+          var l = Yl.g(f2);
+          return v(l) ? l : v(b) ? null : Nm;
+        }();
+        var k = Bh.h(f2, Yl);
+        h = v(k) ? lo(a) : a;
+        a = v(c) ? S(h, 0, null) : null;
+        c = v(c) ? lo(h) : h;
+        return new W(null, 4, 5, X2, [e, k, a, c], null);
+      }
+      function ap2(a) {
+        if (Xo(Nl, Lo)) {
+          var b = new Date();
+          a = D(a);
+          a = $o(a);
+          var c = S(a, 0, null), d = S(a, 1, null), e = S(a, 2, null);
+          a = S(a, 3, null);
+          b = Z.h(v(null) ? null : Cd, zk([bn, Fl, mm, Vl, Ao, Bo, om, Cm, im, an, Mm, Bm, Ml, wm], [b, null, Lo, a, null, function() {
+            var n2 = new of(null, new u(null, 2, [$l, null, dm, null], null), null);
+            return n2.g ? n2.g(Sm) : n2.call(null, Sm);
+          }(), "erv.mos.mos", Sm, c, null, 66, new zg(function() {
+            return c;
+          }), d, e]));
+          b = Vc.j(function(n2, p) {
+            n2 = p.g ? p.g(n2) : p.call(null, n2);
+            return n2 == null ? new gc(null) : n2;
+          }, b, mn.g(Lo));
+          if (v(b)) {
+            a = Ig(b);
+            var f2 = T.h(a, Vl);
+            b = If.j(b, tm, new zg(function() {
+              return f2;
+            }));
+            var h = io.o(b, cm, new zg(function() {
+              if (P.h(null, Gm))
+                return "";
+              if (P.h(Gm, Gm))
+                return Yo(f2);
+              if (P.h(Jm, Gm)) {
+                if (typeof e !== "string")
+                  throw zl("Timbre format-style logging call without a format pattern (string)", new u(null, 2, [Cm, Sm, fn, [B.g(v("erv.mos.mos") ? "erv.mos.mos" : v(null) ? null : "?"), ":", B.g(v(66) ? 66 : "?")].join("")], null));
+                var n2 = v(e) ? e : "", p = qk(wo, f2);
+                return oa(zn, n2, p);
+              }
+              throw Error(["No matching clause: ", B.g(Gm)].join(""));
+            }), vc([am, new zg(function() {
+              return Wb(new W(null, 3, 5, X2, [-413468157, e, T.j(d, bm, f2)], null));
+            })])), k = Hk(T.j(Lo, Am, Io)), l = Z.h(Ho, T.h(Lo, zo)), m = Hk(function(n2) {
+              return new zg(function() {
+                var p = T.h(h, bn), q = Ig(n2);
+                q = T.h(q, El);
+                return v(id.h ? id.h(q, Xl) : id.call(null, q, Xl)) ? new Date(p).toISOString() : new In(q).format(p);
+              });
+            });
+            Yc(function(n2, p, q) {
+              if (v(function() {
+                var M = Il.g(q);
+                return v(M) ? Xo(vm, q) : M;
+              }())) {
+                var r = nm.g(q);
+                if (function() {
+                  var M = Ec(r);
+                  if (M)
+                    return M;
+                  M = Zo(p, r);
+                  var ca = Gk(am.g(h));
+                  M = M.g ? M.g(ca) : M.call(null, ca);
+                  return La(M);
+                }()) {
+                  var w = Ig(q);
+                  n2 = T.h(w, Ll);
+                  T.h(w, Bl);
+                  var z = function() {
+                    var M = Am.g(q);
+                    var ca = (ca = M == null) ? ca : id.h ? id.h(M, Rm) : id.call(null, M, Rm);
+                    return v(ca) ? k : M;
+                  }(), A = function() {
+                    var M = zo.g(q);
+                    var ca = (ca = M == null) ? ca : id.h ? id.h(M, Rm) : id.call(null, M, Rm);
+                    return v(ca) ? m(l) : m(Z.h(l, M));
+                  }(), K2 = Z.h(h, new u(null, 5, [rm, p, Pl, q, Am, z, ym, new zg(function() {
+                    var M = If.j(h, Ql, A);
+                    return z.g ? z.g(M) : z.call(null, M);
+                  }), Ql, A], null));
+                  w = function() {
+                    var M = Um.g(q);
+                    return v(M) ? M.g ? M.g(K2) : M.call(null, K2) : K2;
+                  }();
+                  return v(w) ? n2.g ? n2.g(w) : n2.call(null, w) : null;
+                }
+              }
+              return null;
+            }, null, dn.g(Lo));
+          }
+        }
+      }
+      function Ko(a) {
+        switch (arguments.length) {
+          case 1:
+            return Jo(arguments[0], null);
+          case 2:
+            return Jo(arguments[0], arguments[1]);
+          default:
+            throw Error(["Invalid arity: ", B.g(arguments.length)].join(""));
+        }
+      }
+      function Jo(a) {
+        var b = a.stack;
+        return v(b) ? b : B.g(a);
+      }
+      ;
+      function bp(a) {
+        return qk(function(b) {
+          var c = S(b, 0, null);
+          return S(b, 1, null) - c;
+        }, rk(2, 1, a));
+      }
+      bp(ll(0, 12));
+      function cp(a, b) {
+        for (var c = new W(null, 1, 5, X2, [0], null); ; ) {
+          var d = ((bh(c) + b) % a + a) % a;
+          if (P.h(0, d))
+            return Z.h(c, a);
+          c = Z.h(c, d);
+        }
+      }
+      cp(12, 5);
+      function dp(a) {
+        return Z.h(Im.g(Vc.j(function(b, c) {
+          var d = Ig(b);
+          b = T.h(d, Im);
+          d = T.h(d, fm);
+          var e = Fe.h(be, ch(Qc, Sj.o(d, bh(b), vc([new W(null, 1, 5, X2, [c], null)])))), f2 = bp(e);
+          na(yn, mf(ql(f2)));
+          if (P.h(new of(null, new u(null, 2, [1, null, 2, null], null), null), vl(f2)))
+            c = new gc(new u(null, 2, [Im, Z.h(b, e), fm, be], null));
+          else {
+            var h = 2 >= O2(vl(f2));
+            f2 = h ? na(yn, mf(ql(f2))) : h;
+            c = v(f2) ? new u(null, 2, [Im, Z.h(b, e), fm, be], null) : new u(null, 2, [Im, b, fm, Z.h(d, c)], null);
+          }
+          return c;
+        }, new u(null, 2, [Im, be, fm, new W(null, 1, 5, X2, [bh(a)], null)], null), nk(1, a))), ll(0, O2(a)));
+      }
+      var ep = Hk(function(a, b) {
+        var c = yn.o(vc([a, b]));
+        c || ap2(new zg(function() {
+          return new W(null, 5, 5, X2, ["The generated data is not a true MOS because the period (", a, ") and generator (", b, ") are not coprime."], null);
+        }));
+        return Cc(qk(bp, dp(cp(a, b))), new u(null, 1, [Cl, c], null));
+      });
+      shadow$umd$export = dj(new u(null, 4, [Rf, new u(null, 1, [Fm, ek.h(dj, Gj)], null), en, new u(null, 1, [Fm, ek.h(dj, ep)], null), Lm, new u(null, 1, [ln, ek.h(dj, kp)], null), mp, new u(null, 2, [lp, ek.h(dj, function(a, b) {
+        var c = O2(a);
+        b = (((b % c + c) % c + c) % c + c) % c;
+        return Sj.h(mk(b, a), lk.h(b, a));
+      }), np, ek.h(dj, function(a) {
+        return Math.log(a) / Math.log(2) * 1200;
+      })], null)], null));
+      return shadow$umd$export;
+    });
+  }
+});
 
 // output/Data.Functor/foreign.js
-var arrayMap = function(f) {
+var arrayMap = function(f2) {
   return function(arr) {
     var l = arr.length;
     var result = new Array(l);
     for (var i = 0; i < l; i++) {
-      result[i] = f(arr[i]);
+      result[i] = f2(arr[i]);
     }
     return result;
   };
@@ -38,10 +12267,10 @@ var arrayMap = function(f) {
 
 // output/Control.Semigroupoid/index.js
 var semigroupoidFn = {
-  compose: function(f) {
+  compose: function(f2) {
     return function(g) {
       return function(x) {
-        return f(g(x));
+        return f2(g(x));
       };
     };
   }
@@ -67,10 +12296,10 @@ var categoryFn = {
 var otherwise = true;
 
 // output/Data.Function/index.js
-var flip = function(f) {
+var flip = function(f2) {
   return function(b) {
     return function(a) {
-      return f(a)(b);
+      return f2(a)(b);
     };
   };
 };
@@ -83,6 +12312,15 @@ var $$const = function(a) {
 // output/Data.Unit/foreign.js
 var unit = void 0;
 
+// output/Type.Proxy/index.js
+var $$Proxy = /* @__PURE__ */ function() {
+  function $$Proxy2() {
+  }
+  ;
+  $$Proxy2.value = new $$Proxy2();
+  return $$Proxy2;
+}();
+
 // output/Data.Functor/index.js
 var map = function(dict) {
   return dict.map;
@@ -91,10 +12329,10 @@ var $$void = function(dictFunctor) {
   return map(dictFunctor)($$const(unit));
 };
 var voidLeft = function(dictFunctor) {
-  var map111 = map(dictFunctor);
-  return function(f) {
+  var map112 = map(dictFunctor);
+  return function(f2) {
     return function(x) {
-      return map111($$const(x))(f);
+      return map112($$const(x))(f2);
     };
   };
 };
@@ -113,6 +12351,18 @@ var concatArray = function(xs) {
     if (ys.length === 0)
       return xs;
     return xs.concat(ys);
+  };
+};
+
+// output/Data.Symbol/index.js
+var reflectSymbol = function(dict) {
+  return dict.reflectSymbol;
+};
+
+// output/Record.Unsafe/foreign.js
+var unsafeGet = function(label) {
+  return function(rec) {
+    return rec[label];
   };
 };
 
@@ -155,55 +12405,13 @@ var applySecond = function(dictApply) {
 var lift2 = function(dictApply) {
   var apply1 = apply(dictApply);
   var map24 = map(dictApply.Functor0());
-  return function(f) {
+  return function(f2) {
     return function(a) {
       return function(b) {
-        return apply1(map24(f)(a))(b);
+        return apply1(map24(f2)(a))(b);
       };
     };
   };
-};
-
-// output/Control.Applicative/index.js
-var pure = function(dict) {
-  return dict.pure;
-};
-var liftA1 = function(dictApplicative) {
-  var apply4 = apply(dictApplicative.Apply0());
-  var pure12 = pure(dictApplicative);
-  return function(f) {
-    return function(a) {
-      return apply4(pure12(f))(a);
-    };
-  };
-};
-
-// output/Control.Bind/index.js
-var identity3 = /* @__PURE__ */ identity(categoryFn);
-var discard = function(dict) {
-  return dict.discard;
-};
-var bind = function(dict) {
-  return dict.bind;
-};
-var bindFlipped = function(dictBind) {
-  return flip(bind(dictBind));
-};
-var discardUnit = {
-  discard: function(dictBind) {
-    return bind(dictBind);
-  }
-};
-var join = function(dictBind) {
-  var bind12 = bind(dictBind);
-  return function(m) {
-    return bind12(m)(identity3);
-  };
-};
-
-// output/Control.Plus/index.js
-var empty = function(dict) {
-  return dict.empty;
 };
 
 // output/Data.Bounded/foreign.js
@@ -241,13 +12449,13 @@ var eqIntImpl = refEq;
 var eqNumberImpl = refEq;
 var eqCharImpl = refEq;
 var eqStringImpl = refEq;
-var eqArrayImpl = function(f) {
+var eqArrayImpl = function(f2) {
   return function(xs) {
     return function(ys) {
       if (xs.length !== ys.length)
         return false;
       for (var i = 0; i < xs.length; i++) {
-        if (!f(xs[i])(ys[i]))
+        if (!f2(xs[i])(ys[i]))
           return false;
       }
       return true;
@@ -526,6 +12734,13 @@ var bottom = function(dict) {
 };
 
 // output/Data.Show/foreign.js
+var showIntImpl = function(n2) {
+  return n2.toString();
+};
+var showNumberImpl = function(n2) {
+  var str = n2.toString();
+  return isNaN(str + ".0") ? str : str + ".0";
+};
 var showCharImpl = function(c) {
   var code = c.charCodeAt(0);
   if (code < 32 || code === 127) {
@@ -572,15 +12787,15 @@ var showStringImpl = function(s) {
         return "\\v";
     }
     var k = i + 1;
-    var empty4 = k < l && s[k] >= "0" && s[k] <= "9" ? "\\&" : "";
-    return "\\" + c.charCodeAt(0).toString(10) + empty4;
+    var empty5 = k < l && s[k] >= "0" && s[k] <= "9" ? "\\&" : "";
+    return "\\" + c.charCodeAt(0).toString(10) + empty5;
   }) + '"';
 };
-var showArrayImpl = function(f) {
+var showArrayImpl = function(f2) {
   return function(xs) {
     var ss = [];
     for (var i = 0, l = xs.length; i < l; i++) {
-      ss[i] = f(xs[i]);
+      ss[i] = f2(xs[i]);
     }
     return "[" + ss.join(",") + "]";
   };
@@ -589,6 +12804,27 @@ var showArrayImpl = function(f) {
 // output/Data.Show/index.js
 var showString = {
   show: showStringImpl
+};
+var showRecordFields = function(dict) {
+  return dict.showRecordFields;
+};
+var showRecord = function() {
+  return function() {
+    return function(dictShowRecordFields) {
+      var showRecordFields1 = showRecordFields(dictShowRecordFields);
+      return {
+        show: function(record) {
+          return "{" + (showRecordFields1($$Proxy.value)(record) + "}");
+        }
+      };
+    };
+  };
+};
+var showNumber = {
+  show: showNumberImpl
+};
+var showInt = {
+  show: showIntImpl
 };
 var showChar = {
   show: showCharImpl
@@ -601,9 +12837,57 @@ var showArray = function(dictShow) {
     show: showArrayImpl(show(dictShow))
   };
 };
+var showRecordFieldsCons = function(dictIsSymbol) {
+  var reflectSymbol2 = reflectSymbol(dictIsSymbol);
+  return function(dictShowRecordFields) {
+    var showRecordFields1 = showRecordFields(dictShowRecordFields);
+    return function(dictShow) {
+      var show13 = show(dictShow);
+      return {
+        showRecordFields: function(v) {
+          return function(record) {
+            var tail2 = showRecordFields1($$Proxy.value)(record);
+            var key = reflectSymbol2($$Proxy.value);
+            var focus = unsafeGet(key)(record);
+            return " " + (key + (": " + (show13(focus) + ("," + tail2))));
+          };
+        }
+      };
+    };
+  };
+};
+var showRecordFieldsConsNil = function(dictIsSymbol) {
+  var reflectSymbol2 = reflectSymbol(dictIsSymbol);
+  return function(dictShow) {
+    var show13 = show(dictShow);
+    return {
+      showRecordFields: function(v) {
+        return function(record) {
+          var key = reflectSymbol2($$Proxy.value);
+          var focus = unsafeGet(key)(record);
+          return " " + (key + (": " + (show13(focus) + " ")));
+        };
+      }
+    };
+  };
+};
+
+// output/Control.Applicative/index.js
+var pure = function(dict) {
+  return dict.pure;
+};
+var liftA1 = function(dictApplicative) {
+  var apply4 = apply(dictApplicative.Apply0());
+  var pure12 = pure(dictApplicative);
+  return function(f2) {
+    return function(a) {
+      return apply4(pure12(f2))(a);
+    };
+  };
+};
 
 // output/Data.Maybe/index.js
-var identity4 = /* @__PURE__ */ identity(categoryFn);
+var identity3 = /* @__PURE__ */ identity(categoryFn);
 var Nothing = /* @__PURE__ */ function() {
   function Nothing2() {
   }
@@ -651,7 +12935,7 @@ var functorMaybe = {
 };
 var map2 = /* @__PURE__ */ map(functorMaybe);
 var fromMaybe = function(a) {
-  return maybe(a)(identity4);
+  return maybe(a)(identity3);
 };
 var fromJust = function() {
   return function(v) {
@@ -747,6 +13031,60 @@ var Right = /* @__PURE__ */ function() {
   return Right2;
 }();
 
+// output/Data.Foldable/foreign.js
+var foldrArray = function(f2) {
+  return function(init3) {
+    return function(xs) {
+      var acc = init3;
+      var len = xs.length;
+      for (var i = len - 1; i >= 0; i--) {
+        acc = f2(xs[i])(acc);
+      }
+      return acc;
+    };
+  };
+};
+var foldlArray = function(f2) {
+  return function(init3) {
+    return function(xs) {
+      var acc = init3;
+      var len = xs.length;
+      for (var i = 0; i < len; i++) {
+        acc = f2(acc)(xs[i]);
+      }
+      return acc;
+    };
+  };
+};
+
+// output/Control.Bind/index.js
+var identity4 = /* @__PURE__ */ identity(categoryFn);
+var discard = function(dict) {
+  return dict.discard;
+};
+var bind = function(dict) {
+  return dict.bind;
+};
+var bindFlipped = function(dictBind) {
+  return flip(bind(dictBind));
+};
+var discardUnit = {
+  discard: function(dictBind) {
+    return bind(dictBind);
+  }
+};
+var join = function(dictBind) {
+  var bind12 = bind(dictBind);
+  return function(m) {
+    return bind12(m)(identity4);
+  };
+};
+
+// output/Control.Plus/index.js
+var empty = function(dict) {
+  return dict.empty;
+};
+
 // output/Control.Lazy/index.js
 var $runtime_lazy = function(name2, moduleName, init3) {
   var state2 = 0;
@@ -767,10 +13105,10 @@ var defer = function(dict) {
 };
 var fix = function(dictLazy) {
   var defer1 = defer(dictLazy);
-  return function(f) {
+  return function(f2) {
     var $lazy_go = $runtime_lazy("go", "Control.Lazy", function() {
       return defer1(function(v) {
-        return f($lazy_go(25));
+        return f2($lazy_go(25));
       });
     });
     var go = $lazy_go(25);
@@ -838,30 +13176,30 @@ var heytingAlgebraFunction = function(dictHeytingAlgebra) {
     tt: function(v) {
       return tt1;
     },
-    implies: function(f) {
+    implies: function(f2) {
       return function(g) {
         return function(a) {
-          return implies1(f(a))(g(a));
+          return implies1(f2(a))(g(a));
         };
       };
     },
-    conj: function(f) {
+    conj: function(f2) {
       return function(g) {
         return function(a) {
-          return conj1(f(a))(g(a));
+          return conj1(f2(a))(g(a));
         };
       };
     },
-    disj: function(f) {
+    disj: function(f2) {
       return function(g) {
         return function(a) {
-          return disj1(f(a))(g(a));
+          return disj1(f2(a))(g(a));
         };
       };
     },
-    not: function(f) {
+    not: function(f2) {
       return function(a) {
-        return not12(f(a));
+        return not12(f2(a));
       };
     }
   };
@@ -1048,10 +13386,10 @@ var foldMapDefaultR = function(dictFoldable) {
   return function(dictMonoid) {
     var append5 = append(dictMonoid.Semigroup0());
     var mempty2 = mempty(dictMonoid);
-    return function(f) {
+    return function(f2) {
       return foldr22(function(x) {
         return function(acc) {
-          return append5(f(x))(acc);
+          return append5(f2(x))(acc);
         };
       })(mempty2);
     };
@@ -1088,9 +13426,9 @@ var Identity = function(x) {
   return x;
 };
 var functorIdentity = {
-  map: function(f) {
+  map: function(f2) {
     return function(m) {
-      return f(m);
+      return f2(m);
     };
   }
 };
@@ -1106,8 +13444,8 @@ var applyIdentity = {
 };
 var bindIdentity = {
   bind: function(v) {
-    return function(f) {
-      return f(v);
+    return function(f2) {
+      return f2(v);
     };
   },
   Apply0: function() {
@@ -1159,18 +13497,18 @@ var traverseArrayImpl = function() {
   return function(apply4) {
     return function(map24) {
       return function(pure9) {
-        return function(f) {
+        return function(f2) {
           return function(array) {
             function go(bot, top3) {
               switch (top3 - bot) {
                 case 0:
                   return pure9([]);
                 case 1:
-                  return map24(array1)(f(array[bot]));
+                  return map24(array1)(f2(array[bot]));
                 case 2:
-                  return apply4(map24(array2)(f(array[bot])))(f(array[bot + 1]));
+                  return apply4(map24(array2)(f2(array[bot])))(f2(array[bot + 1]));
                 case 3:
-                  return apply4(apply4(map24(array3)(f(array[bot])))(f(array[bot + 1])))(f(array[bot + 2]));
+                  return apply4(apply4(map24(array3)(f2(array[bot])))(f2(array[bot + 1])))(f2(array[bot + 2]));
                 default:
                   var pivot = bot + Math.floor((top3 - bot) / 4) * 2;
                   return apply4(map24(concat22)(go(bot, pivot)))(go(pivot, top3));
@@ -1189,23 +13527,23 @@ var stateL = function(v) {
   return v;
 };
 var functorStateL = {
-  map: function(f) {
+  map: function(f2) {
     return function(k) {
       return function(s) {
         var v = stateL(k)(s);
         return {
           accum: v.accum,
-          value: f(v.value)
+          value: f2(v.value)
         };
       };
     };
   }
 };
 var applyStateL = {
-  apply: function(f) {
+  apply: function(f2) {
     return function(x) {
       return function(s) {
-        var v = stateL(f)(s);
+        var v = stateL(f2)(s);
         var v1 = stateL(x)(v.accum);
         return {
           accum: v1.accum,
@@ -1260,12 +13598,12 @@ var traversableArray = {
 };
 var mapAccumL = function(dictTraversable) {
   var traverse2 = traverse(dictTraversable)(applicativeStateL);
-  return function(f) {
+  return function(f2) {
     return function(s0) {
       return function(xs) {
         return stateL(traverse2(function(a) {
           return function(s) {
-            return f(s)(a);
+            return f2(s)(a);
           };
         })(xs))(s0);
       };
@@ -1274,12 +13612,12 @@ var mapAccumL = function(dictTraversable) {
 };
 var scanl = function(dictTraversable) {
   var mapAccumL1 = mapAccumL(dictTraversable);
-  return function(f) {
+  return function(f2) {
     return function(b0) {
       return function(xs) {
         return mapAccumL1(function(b) {
           return function(a) {
-            var b$prime = f(b)(a);
+            var b$prime = f2(b)(a);
             return {
               accum: b$prime,
               value: b$prime
@@ -1301,12 +13639,12 @@ var unfoldrArrayImpl = function(isNothing2) {
   return function(fromJust8) {
     return function(fst2) {
       return function(snd2) {
-        return function(f) {
+        return function(f2) {
           return function(b) {
             var result = [];
             var value2 = b;
             while (true) {
-              var maybe2 = f(value2);
+              var maybe2 = f2(value2);
               if (isNothing2(maybe2))
                 return result;
               var tuple = fromJust8(maybe2);
@@ -1325,12 +13663,12 @@ var unfoldr1ArrayImpl = function(isNothing2) {
   return function(fromJust8) {
     return function(fst2) {
       return function(snd2) {
-        return function(f) {
+        return function(f2) {
           return function(b) {
             var result = [];
             var value2 = b;
             while (true) {
-              var tuple = f(value2);
+              var tuple = f2(value2);
               result.push(fst2(tuple));
               var maybe2 = snd2(tuple);
               if (isNothing2(maybe2))
@@ -1399,7 +13737,7 @@ var Cons = /* @__PURE__ */ function() {
   };
   return Cons3;
 }();
-var listMap = function(f) {
+var listMap = function(f2) {
   var chunkedRevMap = function($copy_v) {
     return function($copy_v1) {
       var $tco_var_v = $copy_v;
@@ -1414,11 +13752,11 @@ var listMap = function(f) {
         ;
         var unrolledMap = function(v2) {
           if (v2 instanceof Cons && (v2.value1 instanceof Cons && v2.value1.value1 instanceof Nil)) {
-            return new Cons(f(v2.value0), new Cons(f(v2.value1.value0), Nil.value));
+            return new Cons(f2(v2.value0), new Cons(f2(v2.value1.value0), Nil.value));
           }
           ;
           if (v2 instanceof Cons && v2.value1 instanceof Nil) {
-            return new Cons(f(v2.value0), Nil.value);
+            return new Cons(f2(v2.value0), Nil.value);
           }
           ;
           return Nil.value;
@@ -1431,7 +13769,7 @@ var listMap = function(f) {
             function $tco_loop2(v2, v3) {
               if (v2 instanceof Cons && (v2.value0 instanceof Cons && (v2.value0.value1 instanceof Cons && v2.value0.value1.value1 instanceof Cons))) {
                 $tco_var_v2 = v2.value1;
-                $copy_v3 = new Cons(f(v2.value0.value0), new Cons(f(v2.value0.value1.value0), new Cons(f(v2.value0.value1.value1.value0), v3)));
+                $copy_v3 = new Cons(f2(v2.value0.value0), new Cons(f2(v2.value0.value1.value0), new Cons(f2(v2.value0.value1.value1.value0), v3)));
                 return;
               }
               ;
@@ -1464,7 +13802,7 @@ var functorList = {
 };
 var map3 = /* @__PURE__ */ map(functorList);
 var foldableList = {
-  foldr: function(f) {
+  foldr: function(f2) {
     return function(b) {
       var rev = function() {
         var go = function($copy_v) {
@@ -1496,13 +13834,13 @@ var foldableList = {
         };
         return go(Nil.value);
       }();
-      var $284 = foldl(foldableList)(flip(f))(b);
+      var $284 = foldl(foldableList)(flip(f2))(b);
       return function($285) {
         return $284(rev($285));
       };
     };
   },
-  foldl: function(f) {
+  foldl: function(f2) {
     var go = function($copy_b) {
       return function($copy_v) {
         var $tco_var_b = $copy_b;
@@ -1515,7 +13853,7 @@ var foldableList = {
           }
           ;
           if (v instanceof Cons) {
-            $tco_var_b = f(b)(v.value0);
+            $tco_var_b = f2(b)(v.value0);
             $copy_v = v.value1;
             return;
           }
@@ -1535,11 +13873,11 @@ var foldableList = {
   foldMap: function(dictMonoid) {
     var append22 = append(dictMonoid.Semigroup0());
     var mempty2 = mempty(dictMonoid);
-    return function(f) {
+    return function(f2) {
       return foldl(foldableList)(function(acc) {
         var $286 = append22(acc);
         return function($287) {
-          return $286(f($287));
+          return $286(f2($287));
         };
       })(mempty2);
     };
@@ -1558,15 +13896,15 @@ var append1 = /* @__PURE__ */ append(semigroupList);
 var traversableList = {
   traverse: function(dictApplicative) {
     var Apply0 = dictApplicative.Apply0();
-    var map111 = map(Apply0.Functor0());
+    var map112 = map(Apply0.Functor0());
     var lift22 = lift2(Apply0);
     var pure12 = pure(dictApplicative);
-    return function(f) {
-      var $301 = map111(foldl2(flip(Cons.create))(Nil.value));
+    return function(f2) {
+      var $301 = map112(foldl2(flip(Cons.create))(Nil.value));
       var $302 = foldl2(function(acc) {
         var $304 = lift22(flip(Cons.create))(acc);
         return function($305) {
-          return $304(f($305));
+          return $304(f2($305));
         };
       })(pure12(Nil.value));
       return function($303) {
@@ -1585,7 +13923,7 @@ var traversableList = {
   }
 };
 var unfoldable1List = {
-  unfoldr1: function(f) {
+  unfoldr1: function(f2) {
     return function(b) {
       var go = function($copy_source) {
         return function($copy_memo) {
@@ -1593,7 +13931,7 @@ var unfoldable1List = {
           var $tco_done = false;
           var $tco_result;
           function $tco_loop(source2, memo) {
-            var v = f(source2);
+            var v = f2(source2);
             if (v.value1 instanceof Just) {
               $tco_var_source = v.value1.value0;
               $copy_memo = new Cons(v.value0, memo);
@@ -1620,7 +13958,7 @@ var unfoldable1List = {
   }
 };
 var unfoldableList = {
-  unfoldr: function(f) {
+  unfoldr: function(f2) {
     return function(b) {
       var go = function($copy_source) {
         return function($copy_memo) {
@@ -1628,7 +13966,7 @@ var unfoldableList = {
           var $tco_done = false;
           var $tco_result;
           function $tco_loop(source2, memo) {
-            var v = f(source2);
+            var v = f2(source2);
             if (v instanceof Nothing) {
               $tco_done = true;
               return foldl2(flip(Cons.create))(Nil.value)(memo);
@@ -1847,7 +14185,7 @@ var unsafeNode = function(k, v, l, r) {
 var toMapIter = /* @__PURE__ */ function() {
   return flip(IterNode.create)(IterLeaf.value);
 }();
-var stepWith = function(f) {
+var stepWith = function(f2) {
   return function(next) {
     return function(done) {
       var go = function($copy_v) {
@@ -1865,7 +14203,7 @@ var stepWith = function(f) {
           }
           ;
           if (v instanceof IterNode) {
-            $copy_v = f(v.value1)(v.value0);
+            $copy_v = f2(v.value1)(v.value0);
             return;
           }
           ;
@@ -2181,14 +14519,14 @@ var intersectionWith = function(dictOrd) {
   };
 };
 var functorMap = {
-  map: function(f) {
+  map: function(f2) {
     var go = function(v) {
       if (v instanceof Leaf) {
         return Leaf.value;
       }
       ;
       if (v instanceof Node) {
-        return new Node(v.value0, v.value1, v.value2, f(v.value3), go(v.value4), go(v.value5));
+        return new Node(v.value0, v.value1, v.value2, f2(v.value3), go(v.value4), go(v.value5));
       }
       ;
       throw new Error("Failed pattern match at Data.Map.Internal (line 145, column 10 - line 148, column 39): " + [v.constructor.name]);
@@ -2197,14 +14535,14 @@ var functorMap = {
   }
 };
 var functorWithIndexMap = {
-  mapWithIndex: function(f) {
+  mapWithIndex: function(f2) {
     var go = function(v) {
       if (v instanceof Leaf) {
         return Leaf.value;
       }
       ;
       if (v instanceof Node) {
-        return new Node(v.value0, v.value1, v.value2, f(v.value2)(v.value3), go(v.value4), go(v.value5));
+        return new Node(v.value0, v.value1, v.value2, f2(v.value2)(v.value3), go(v.value4), go(v.value5));
       }
       ;
       throw new Error("Failed pattern match at Data.Map.Internal (line 153, column 10 - line 156, column 41): " + [v.constructor.name]);
@@ -2216,7 +14554,7 @@ var functorWithIndexMap = {
   }
 };
 var foldableMap = {
-  foldr: function(f) {
+  foldr: function(f2) {
     return function(z) {
       var $lazy_go = $runtime_lazy2("go", "Data.Map.Internal", function() {
         return function(m$prime, z$prime) {
@@ -2225,7 +14563,7 @@ var foldableMap = {
           }
           ;
           if (m$prime instanceof Node) {
-            return $lazy_go(170)(m$prime.value4, f(m$prime.value3)($lazy_go(170)(m$prime.value5, z$prime)));
+            return $lazy_go(170)(m$prime.value4, f2(m$prime.value3)($lazy_go(170)(m$prime.value5, z$prime)));
           }
           ;
           throw new Error("Failed pattern match at Data.Map.Internal (line 167, column 26 - line 170, column 43): " + [m$prime.constructor.name]);
@@ -2237,7 +14575,7 @@ var foldableMap = {
       };
     };
   },
-  foldl: function(f) {
+  foldl: function(f2) {
     return function(z) {
       var $lazy_go = $runtime_lazy2("go", "Data.Map.Internal", function() {
         return function(z$prime, m$prime) {
@@ -2246,7 +14584,7 @@ var foldableMap = {
           }
           ;
           if (m$prime instanceof Node) {
-            return $lazy_go(176)(f($lazy_go(176)(z$prime, m$prime.value4))(m$prime.value3), m$prime.value5);
+            return $lazy_go(176)(f2($lazy_go(176)(z$prime, m$prime.value4))(m$prime.value3), m$prime.value5);
           }
           ;
           throw new Error("Failed pattern match at Data.Map.Internal (line 173, column 26 - line 176, column 43): " + [m$prime.constructor.name]);
@@ -2261,14 +14599,14 @@ var foldableMap = {
   foldMap: function(dictMonoid) {
     var mempty2 = mempty(dictMonoid);
     var append12 = append(dictMonoid.Semigroup0());
-    return function(f) {
+    return function(f2) {
       var go = function(v) {
         if (v instanceof Leaf) {
           return mempty2;
         }
         ;
         if (v instanceof Node) {
-          return append12(go(v.value4))(append12(f(v.value3))(go(v.value5)));
+          return append12(go(v.value4))(append12(f2(v.value3))(go(v.value5)));
         }
         ;
         throw new Error("Failed pattern match at Data.Map.Internal (line 179, column 10 - line 182, column 28): " + [v.constructor.name]);
@@ -2278,7 +14616,7 @@ var foldableMap = {
   }
 };
 var foldableWithIndexMap = {
-  foldrWithIndex: function(f) {
+  foldrWithIndex: function(f2) {
     return function(z) {
       var $lazy_go = $runtime_lazy2("go", "Data.Map.Internal", function() {
         return function(m$prime, z$prime) {
@@ -2287,7 +14625,7 @@ var foldableWithIndexMap = {
           }
           ;
           if (m$prime instanceof Node) {
-            return $lazy_go(190)(m$prime.value4, f(m$prime.value2)(m$prime.value3)($lazy_go(190)(m$prime.value5, z$prime)));
+            return $lazy_go(190)(m$prime.value4, f2(m$prime.value2)(m$prime.value3)($lazy_go(190)(m$prime.value5, z$prime)));
           }
           ;
           throw new Error("Failed pattern match at Data.Map.Internal (line 187, column 26 - line 190, column 45): " + [m$prime.constructor.name]);
@@ -2299,7 +14637,7 @@ var foldableWithIndexMap = {
       };
     };
   },
-  foldlWithIndex: function(f) {
+  foldlWithIndex: function(f2) {
     return function(z) {
       var $lazy_go = $runtime_lazy2("go", "Data.Map.Internal", function() {
         return function(z$prime, m$prime) {
@@ -2308,7 +14646,7 @@ var foldableWithIndexMap = {
           }
           ;
           if (m$prime instanceof Node) {
-            return $lazy_go(196)(f(m$prime.value2)($lazy_go(196)(z$prime, m$prime.value4))(m$prime.value3), m$prime.value5);
+            return $lazy_go(196)(f2(m$prime.value2)($lazy_go(196)(z$prime, m$prime.value4))(m$prime.value3), m$prime.value5);
           }
           ;
           throw new Error("Failed pattern match at Data.Map.Internal (line 193, column 26 - line 196, column 45): " + [m$prime.constructor.name]);
@@ -2323,14 +14661,14 @@ var foldableWithIndexMap = {
   foldMapWithIndex: function(dictMonoid) {
     var mempty2 = mempty(dictMonoid);
     var append12 = append(dictMonoid.Semigroup0());
-    return function(f) {
+    return function(f2) {
       var go = function(v) {
         if (v instanceof Leaf) {
           return mempty2;
         }
         ;
         if (v instanceof Node) {
-          return append12(go(v.value4))(append12(f(v.value2)(v.value3))(go(v.value5)));
+          return append12(go(v.value4))(append12(f2(v.value2)(v.value3))(go(v.value5)));
         }
         ;
         throw new Error("Failed pattern match at Data.Map.Internal (line 199, column 10 - line 202, column 30): " + [v.constructor.name]);
@@ -2347,21 +14685,21 @@ var traversableMap = {
     var pure9 = pure(dictApplicative);
     var Apply0 = dictApplicative.Apply0();
     var apply4 = apply(Apply0);
-    var map111 = map(Apply0.Functor0());
-    return function(f) {
+    var map112 = map(Apply0.Functor0());
+    return function(f2) {
       var go = function(v) {
         if (v instanceof Leaf) {
           return pure9(Leaf.value);
         }
         ;
         if (v instanceof Node) {
-          return apply4(apply4(map111(function(l$prime) {
+          return apply4(apply4(map112(function(l$prime) {
             return function(v$prime) {
               return function(r$prime) {
                 return new Node(v.value0, v.value1, v.value2, v$prime, l$prime, r$prime);
               };
             };
-          })(go(v.value4)))(f(v.value3)))(go(v.value5));
+          })(go(v.value4)))(f2(v.value3)))(go(v.value5));
         }
         ;
         throw new Error("Failed pattern match at Data.Map.Internal (line 207, column 10 - line 213, column 19): " + [v.constructor.name]);
@@ -2384,21 +14722,21 @@ var traversableWithIndexMap = {
     var pure9 = pure(dictApplicative);
     var Apply0 = dictApplicative.Apply0();
     var apply4 = apply(Apply0);
-    var map111 = map(Apply0.Functor0());
-    return function(f) {
+    var map112 = map(Apply0.Functor0());
+    return function(f2) {
       var go = function(v) {
         if (v instanceof Leaf) {
           return pure9(Leaf.value);
         }
         ;
         if (v instanceof Node) {
-          return apply4(apply4(map111(function(l$prime) {
+          return apply4(apply4(map112(function(l$prime) {
             return function(v$prime) {
               return function(r$prime) {
                 return new Node(v.value0, v.value1, v.value2, v$prime, l$prime, r$prime);
               };
             };
-          })(go(v.value4)))(f(v.value2)(v.value3)))(go(v.value5));
+          })(go(v.value4)))(f2(v.value2)(v.value3)))(go(v.value5));
         }
         ;
         throw new Error("Failed pattern match at Data.Map.Internal (line 219, column 10 - line 225, column 19): " + [v.constructor.name]);
@@ -2420,14 +14758,14 @@ var values = /* @__PURE__ */ function() {
   return foldr(foldableMap)(Cons.create)(Nil.value);
 }();
 var filterWithKey = function(dictOrd) {
-  return function(f) {
+  return function(f2) {
     var go = function(v) {
       if (v instanceof Leaf) {
         return Leaf.value;
       }
       ;
       if (v instanceof Node) {
-        if (f(v.value2)(v.value3)) {
+        if (f2(v.value2)(v.value3)) {
           return unsafeBalancedNode(v.value2, v.value3, go(v.value4), go(v.value5));
         }
         ;
@@ -2455,6 +14793,23 @@ var unions = function(dictOrd) {
   var union1 = union(dictOrd);
   return function(dictFoldable) {
     return foldl(dictFoldable)(union1)(empty2);
+  };
+};
+var altMap = function(dictOrd) {
+  return {
+    alt: union(dictOrd),
+    Functor0: function() {
+      return functorMap;
+    }
+  };
+};
+var plusMap = function(dictOrd) {
+  var altMap1 = altMap(dictOrd);
+  return {
+    empty: empty2,
+    Alt0: function() {
+      return altMap1;
+    }
   };
 };
 
@@ -2864,15 +15219,15 @@ var fromFoldableImpl = function() {
 var length = function(xs) {
   return xs.length;
 };
-var unconsImpl = function(empty4, next, xs) {
-  return xs.length === 0 ? empty4({}) : next(xs[0])(xs.slice(1));
+var unconsImpl = function(empty5, next, xs) {
+  return xs.length === 0 ? empty5({}) : next(xs[0])(xs.slice(1));
 };
 var indexImpl = function(just, nothing, xs, i) {
   return i < 0 || i >= xs.length ? nothing : just(xs[i]);
 };
-var findIndexImpl = function(just, nothing, f, xs) {
+var findIndexImpl = function(just, nothing, f2, xs) {
   for (var i = 0, l = xs.length; i < l; i++) {
-    if (f(xs[i]))
+    if (f2(xs[i]))
       return just(i);
   }
   return nothing;
@@ -2893,8 +15248,8 @@ var concat = function(xss) {
   }
   return result;
 };
-var filterImpl = function(f, xs) {
-  return xs.filter(f);
+var filterImpl = function(f2, xs) {
+  return xs.filter(f2);
 };
 var sortByImpl = function() {
   function mergeFromTo(compare4, fromOrdering, xs1, xs2, from2, to) {
@@ -2944,11 +15299,11 @@ var sortByImpl = function() {
 var sliceImpl = function(s, e, l) {
   return l.slice(s, e);
 };
-var zipWithImpl = function(f, xs, ys) {
+var zipWithImpl = function(f2, xs, ys) {
   var l = xs.length < ys.length ? xs.length : ys.length;
   var result = new Array(l);
   for (var i = 0; i < l; i++) {
-    result[i] = f(xs[i])(ys[i]);
+    result[i] = f2(xs[i])(ys[i]);
   }
   return result;
 };
@@ -2960,9 +15315,9 @@ var unsafeIndexImpl = function(xs, n2) {
 var ap = function(dictMonad) {
   var bind12 = bind(dictMonad.Bind1());
   var pure9 = pure(dictMonad.Applicative0());
-  return function(f) {
+  return function(f2) {
     return function(a) {
-      return bind12(f)(function(f$prime2) {
+      return bind12(f2)(function(f$prime2) {
         return bind12(a)(function(a$prime) {
           return pure9(f$prime2(a$prime));
         });
@@ -2978,9 +15333,9 @@ var pureE = function(a) {
   };
 };
 var bindE = function(a) {
-  return function(f) {
+  return function(f2) {
     return function() {
-      return f(a())();
+      return f2(a())();
     };
   };
 };
@@ -3081,13 +15436,13 @@ var Done = /* @__PURE__ */ function() {
 var tailRecM = function(dict) {
   return dict.tailRecM;
 };
-var tailRec = function(f) {
+var tailRec = function(f2) {
   var go = function($copy_v) {
     var $tco_done = false;
     var $tco_result;
     function $tco_loop(v) {
       if (v instanceof Loop) {
-        $copy_v = f(v.value0);
+        $copy_v = f2(v.value0);
         return;
       }
       ;
@@ -3106,16 +15461,16 @@ var tailRec = function(f) {
     return $tco_result;
   };
   return function($85) {
-    return go(f($85));
+    return go(f2($85));
   };
 };
 var monadRecIdentity = {
-  tailRecM: function(f) {
+  tailRecM: function(f2) {
     var runIdentity = function(v) {
       return v;
     };
     var $86 = tailRec(function($88) {
-      return runIdentity(f($88));
+      return runIdentity(f2($88));
     });
     return function($87) {
       return Identity($86($87));
@@ -3220,11 +15575,11 @@ var runSTFn2 = function runSTFn22(fn) {
 // output/Data.Array.ST/index.js
 var unsafeFreeze = /* @__PURE__ */ runSTFn1(unsafeFreezeImpl);
 var thaw = /* @__PURE__ */ runSTFn1(thawImpl);
-var withArray = function(f) {
+var withArray = function(f2) {
   return function(xs) {
     return function __do2() {
       var result = thaw(xs)();
-      f(result)();
+      f2(result)();
       return unsafeFreeze(result)();
     };
   };
@@ -3779,6 +16134,35 @@ var $lazy_enumCodePoint = /* @__PURE__ */ $runtime_lazy4("enumCodePoint", "Data.
 });
 
 // output/AST/index.js
+var CPSet = /* @__PURE__ */ function() {
+  function CPSet2(value0, value1, value2) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+  }
+  ;
+  CPSet2.create = function(value0) {
+    return function(value1) {
+      return function(value2) {
+        return new CPSet2(value0, value1, value2);
+      };
+    };
+  };
+  return CPSet2;
+}();
+var EDO = /* @__PURE__ */ function() {
+  function EDO2(value0, value1) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+  ;
+  EDO2.create = function(value0) {
+    return function(value1) {
+      return new EDO2(value0, value1);
+    };
+  };
+  return EDO2;
+}();
 var XTempo = /* @__PURE__ */ function() {
   function XTempo2() {
   }
@@ -4232,6 +16616,22 @@ var Dastgah = /* @__PURE__ */ function() {
   };
   return Dastgah2;
 }();
+var Xeno = /* @__PURE__ */ function() {
+  function Xeno2(value0, value1, value2) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+  }
+  ;
+  Xeno2.create = function(value0) {
+    return function(value1) {
+      return function(value2) {
+        return new Xeno2(value0, value1, value2);
+      };
+    };
+  };
+  return Xeno2;
+}();
 var Structure = /* @__PURE__ */ function() {
   function Structure2(value0, value1) {
     this.value0 = value0;
@@ -4422,6 +16822,46 @@ var Replica = /* @__PURE__ */ function() {
   };
   return Replica2;
 }();
+var Voice = /* @__PURE__ */ function() {
+  function Voice2(value0, value1) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+  ;
+  Voice2.create = function(value0) {
+    return function(value1) {
+      return new Voice2(value0, value1);
+    };
+  };
+  return Voice2;
+}();
+var Build = /* @__PURE__ */ function() {
+  function Build2(value0) {
+    this.value0 = value0;
+  }
+  ;
+  Build2.create = function(value0) {
+    return new Build2(value0);
+  };
+  return Build2;
+}();
+var Move = /* @__PURE__ */ function() {
+  function Move2(value0) {
+    this.value0 = value0;
+  }
+  ;
+  Move2.create = function(value0) {
+    return new Move2(value0);
+  };
+  return Move2;
+}();
+var Remove = /* @__PURE__ */ function() {
+  function Remove2() {
+  }
+  ;
+  Remove2.value = new Remove2();
+  return Remove2;
+}();
 var TimeExpression = /* @__PURE__ */ function() {
   function TimeExpression2(value0) {
     this.value0 = value0;
@@ -4442,18 +16882,25 @@ var AuralExpression = /* @__PURE__ */ function() {
   };
   return AuralExpression2;
 }();
-var Voice = /* @__PURE__ */ function() {
-  function Voice2(value0, value1) {
+var AnchorExpression = /* @__PURE__ */ function() {
+  function AnchorExpression2(value0) {
     this.value0 = value0;
-    this.value1 = value1;
   }
   ;
-  Voice2.create = function(value0) {
-    return function(value1) {
-      return new Voice2(value0, value1);
-    };
+  AnchorExpression2.create = function(value0) {
+    return new AnchorExpression2(value0);
   };
-  return Voice2;
+  return AnchorExpression2;
+}();
+var XenoPitchExpression = /* @__PURE__ */ function() {
+  function XenoPitchExpression2(value0) {
+    this.value0 = value0;
+  }
+  ;
+  XenoPitchExpression2.create = function(value0) {
+    return new XenoPitchExpression2(value0);
+  };
+  return XenoPitchExpression2;
 }();
 
 // output/Data.List/index.js
@@ -4559,7 +17006,7 @@ var unsnoc = function(lst) {
     };
   })(go(lst)(Nil.value));
 };
-var zipWith2 = function(f) {
+var zipWith2 = function(f2) {
   return function(xs) {
     return function(ys) {
       var go = function($copy_v) {
@@ -4583,7 +17030,7 @@ var zipWith2 = function(f) {
               if (v instanceof Cons && v1 instanceof Cons) {
                 $tco_var_v = v.value1;
                 $tco_var_v1 = v1.value1;
-                $copy_v2 = new Cons(f(v.value0)(v1.value0), v2);
+                $copy_v2 = new Cons(f2(v.value0)(v1.value0), v2);
                 return;
               }
               ;
@@ -4657,17 +17104,58 @@ var range3 = function(start) {
     throw new Error("Failed pattern match at Data.List (line 144, column 1 - line 144, column 32): " + [start.constructor.name, end2.constructor.name]);
   };
 };
+var mapMaybe = function(f2) {
+  var go = function($copy_v) {
+    return function($copy_v1) {
+      var $tco_var_v = $copy_v;
+      var $tco_done = false;
+      var $tco_result;
+      function $tco_loop(v, v1) {
+        if (v1 instanceof Nil) {
+          $tco_done = true;
+          return reverse2(v);
+        }
+        ;
+        if (v1 instanceof Cons) {
+          var v2 = f2(v1.value0);
+          if (v2 instanceof Nothing) {
+            $tco_var_v = v;
+            $copy_v1 = v1.value1;
+            return;
+          }
+          ;
+          if (v2 instanceof Just) {
+            $tco_var_v = new Cons(v2.value0, v);
+            $copy_v1 = v1.value1;
+            return;
+          }
+          ;
+          throw new Error("Failed pattern match at Data.List (line 419, column 5 - line 421, column 32): " + [v2.constructor.name]);
+        }
+        ;
+        throw new Error("Failed pattern match at Data.List (line 417, column 3 - line 417, column 27): " + [v.constructor.name, v1.constructor.name]);
+      }
+      ;
+      while (!$tco_done) {
+        $tco_result = $tco_loop($tco_var_v, $copy_v1);
+      }
+      ;
+      return $tco_result;
+    };
+  };
+  return go(Nil.value);
+};
 var manyRec = function(dictMonadRec) {
   var bind12 = bind(dictMonadRec.Monad0().Bind1());
   var tailRecM5 = tailRecM(dictMonadRec);
   return function(dictAlternative) {
     var Alt0 = dictAlternative.Plus1().Alt0();
     var alt9 = alt(Alt0);
-    var map111 = map(Alt0.Functor0());
+    var map112 = map(Alt0.Functor0());
     var pure9 = pure(dictAlternative.Applicative0());
     return function(p) {
       var go = function(acc) {
-        return bind12(alt9(map111(Loop.create)(p))(pure9(new Done(unit))))(function(aa) {
+        return bind12(alt9(map112(Loop.create)(p))(pure9(new Done(unit))))(function(aa) {
           return pure9(bimap2(function(v) {
             return new Cons(v, acc);
           })(function(v) {
@@ -4681,11 +17169,11 @@ var manyRec = function(dictMonadRec) {
 };
 var some2 = function(dictAlternative) {
   var apply4 = apply(dictAlternative.Applicative0().Apply0());
-  var map111 = map(dictAlternative.Plus1().Alt0().Functor0());
+  var map112 = map(dictAlternative.Plus1().Alt0().Functor0());
   return function(dictLazy) {
     var defer4 = defer(dictLazy);
     return function(v) {
-      return apply4(map111(Cons.create)(v))(defer4(function(v1) {
+      return apply4(map112(Cons.create)(v))(defer4(function(v1) {
         return many2(dictAlternative)(dictLazy)(v);
       }));
     };
@@ -4756,3200 +17244,6 @@ var concat2 = function(v) {
   return bind2(v)(identity8);
 };
 
-// output/DurationAndIndex/index.js
-var append3 = /* @__PURE__ */ append(semigroupArray);
-var map6 = /* @__PURE__ */ map(functorArray);
-var add1 = /* @__PURE__ */ add(semiringNumber);
-var min3 = /* @__PURE__ */ min(ordInt);
-var fromFoldable3 = /* @__PURE__ */ fromFoldable2(foldableArray);
-var sum2 = /* @__PURE__ */ sum(foldableList)(semiringNumber);
-var map1 = /* @__PURE__ */ map(functorList);
-var foldl4 = /* @__PURE__ */ foldl(foldableArray);
-var foldl12 = /* @__PURE__ */ foldl(foldableList);
-var scanl2 = /* @__PURE__ */ scanl(traversableList);
-var fromFoldable1 = /* @__PURE__ */ fromFoldable(foldableList);
-var right = function(v) {
-  var splitted = splitAt(v.value0.value0)(v.value1.value1);
-  return new Tuple(new Tuple(v.value0.value0, v.value0.value1 - v.value0.value0 | 0), new Tuple(zipWith(append3)(v.value1.value0)(splitted.before), splitted.after));
-};
-var onsetsFromBlock = function(onsets) {
-  return function(block) {
-    return function(dur) {
-      return map6(function(v) {
-        return new Onset(v.value0, block + v.value1 * dur);
-      })(onsets);
-    };
-  };
-};
-var onsetsFromBlocks = function(blocks) {
-  return function(onsets) {
-    return function(dur) {
-      return concat(map6(function(block) {
-        return onsetsFromBlock(onsets)(block)(dur);
-      })(blocks));
-    };
-  };
-};
-var nLastBlock = function(we) {
-  return function(x1) {
-    return function(dur) {
-      var wEndBlocks = (we - x1) / dur;
-      var nOfLastBlock = function() {
-        if (wEndBlocks < 0) {
-          return Nothing.value;
-        }
-        ;
-        if (otherwise) {
-          return new Just(floor2(wEndBlocks));
-        }
-        ;
-        throw new Error("Failed pattern match at DurationAndIndex (line 227, column 9 - line 229, column 48): " + []);
-      }();
-      return nOfLastBlock;
-    };
-  };
-};
-var nFirstBlock = function(v) {
-  return function(v1) {
-    return function(v2) {
-      if (v2 === 0) {
-        return 0;
-      }
-      ;
-      var xwsB = (v - v1) / v2;
-      var nOfNxBlock = function() {
-        if (xwsB <= 0) {
-          return 0;
-        }
-        ;
-        if (otherwise) {
-          return ceil2(xwsB);
-        }
-        ;
-        throw new Error("Failed pattern match at DurationAndIndex (line 220, column 9 - line 222, column 34): " + []);
-      }();
-      return nOfNxBlock;
-    };
-  };
-};
-var left = function(v) {
-  var splitted = splitAt(v.value0.value1)(v.value1.value0);
-  return new Tuple(new Tuple(v.value0.value1, v.value0.value0 - v.value0.value1 | 0), new Tuple(zipWith(append3)(splitted.before)(v.value1.value1), splitted.after));
-};
-var getVoiceIndex = function(xws) {
-  return function(we) {
-    return function(x1) {
-      return function(dur) {
-        var nOfLstBlock = nLastBlock(we)(x1)(dur);
-        var nOfFstBlock = nFirstBlock(xws)(x1)(dur);
-        var nOfBlocks = function() {
-          if (nOfLstBlock instanceof Nothing) {
-            return [];
-          }
-          ;
-          if (nOfLstBlock instanceof Just) {
-            return range2(nOfFstBlock)(nOfLstBlock.value0);
-          }
-          ;
-          throw new Error("Failed pattern match at DurationAndIndex (line 197, column 19 - line 199, column 49): " + [nOfLstBlock.constructor.name]);
-        }();
-        return nOfBlocks;
-      };
-    };
-  };
-};
-var getDur = function(v) {
-  return v.value1;
-};
-var getBool = function(v) {
-  return v.value0;
-};
-var funquilla = function(voicesIndexes) {
-  return function(onsetIndexes) {
-    return function(lenOnsets) {
-      var funquilla$prime = function(onsetIndexes1) {
-        return function(lenOnsets1) {
-          return function(voiceIndex) {
-            return map6(function(onsetIndex) {
-              return (voiceIndex * lenOnsets1 | 0) + onsetIndex | 0;
-            })(onsetIndexes1);
-          };
-        };
-      };
-      return map6(function(voiceIndex) {
-        return funquilla$prime(onsetIndexes)(lenOnsets)(voiceIndex);
-      })(voicesIndexes);
-    };
-  };
-};
-var bpmToFreq = function(bpm2) {
-  return bpm2 / 60;
-};
-var bpmToDur = function(bpm2) {
-  return 1 / bpmToFreq(bpm2);
-};
-var durInSecs = function(dur) {
-  return function(bpm2) {
-    return dur * bpmToDur(bpm2);
-  };
-};
-var blockToPos = function(is) {
-  return function(x1) {
-    return function(dur) {
-      return map6(function(i) {
-        return x1 + toNumber2(i) * dur;
-      })(is);
-    };
-  };
-};
-var getBlocks = function(xws) {
-  return function(we) {
-    return function(x1) {
-      return function(dur) {
-        var nOfLstBlock = nLastBlock(we)(x1)(dur);
-        var nOfFstBlock = nFirstBlock(xws)(x1)(dur);
-        var nsOfBlocks = function() {
-          if (nOfLstBlock instanceof Nothing) {
-            return [];
-          }
-          ;
-          if (nOfLstBlock instanceof Just) {
-            return range2(nOfFstBlock)(nOfLstBlock.value0);
-          }
-          ;
-          throw new Error("Failed pattern match at DurationAndIndex (line 207, column 20 - line 209, column 49): " + [nOfLstBlock.constructor.name]);
-        }();
-        return blockToPos(nsOfBlocks)(x1)(dur);
-      };
-    };
-  };
-};
-var blRotated = function(rot) {
-  return function(patt) {
-    var x = splitAt(rot)(patt);
-    return append3(x.after)(x.before);
-  };
-};
-var bjorklund$prime = function($copy_v) {
-  var $tco_done = false;
-  var $tco_result;
-  function $tco_loop(v) {
-    var $88 = min3(v.value0.value0)(v.value0.value1) <= 1;
-    if ($88) {
-      $tco_done = true;
-      return new Tuple(v.value0, v.value1);
-    }
-    ;
-    $copy_v = function() {
-      var $89 = v.value0.value0 > v.value0.value1;
-      if ($89) {
-        return left(new Tuple(v.value0, v.value1));
-      }
-      ;
-      return right(new Tuple(v.value0, v.value1));
-    }();
-    return;
-  }
-  ;
-  while (!$tco_done) {
-    $tco_result = $tco_loop($copy_v);
-  }
-  ;
-  return $tco_result;
-};
-var bjorklund = function(v) {
-  var x = replicate(v.value0)([true]);
-  var j = v.value1 - v.value0 | 0;
-  var y = replicate(j)([false]);
-  var v1 = bjorklund$prime(new Tuple(new Tuple(v.value0, j), new Tuple(x, y)));
-  return append3(concat(v1.value1.value0))(concat(v1.value1.value1));
-};
-var simplifyBjorklund = function(v) {
-  return function(v1) {
-    return function(v2) {
-      return function(v3) {
-        if (v instanceof Simple) {
-          var xs = fromFoldable3(map6(function(r) {
-            var $106 = r === true;
-            if ($106) {
-              return X.value;
-            }
-            ;
-            return O.value;
-          })(blRotated(v3)(bjorklund(new Tuple(v1, v2)))));
-          return new Rhythmics(xs);
-        }
-        ;
-        if (v instanceof K) {
-          var xs = fromFoldable3(map6(function(r) {
-            var $107 = r === true;
-            if ($107) {
-              return v.value0;
-            }
-            ;
-            return O.value;
-          })(blRotated(v3)(bjorklund(new Tuple(v1, v2)))));
-          return new Rhythmics(xs);
-        }
-        ;
-        if (v instanceof InvK) {
-          var xs = fromFoldable3(map6(function(r) {
-            var $109 = r === true;
-            if ($109) {
-              return O.value;
-            }
-            ;
-            return v.value0;
-          })(blRotated(v3)(bjorklund(new Tuple(v1, v2)))));
-          return new Rhythmics(xs);
-        }
-        ;
-        if (v instanceof Full) {
-          var xs = fromFoldable3(map6(function(r) {
-            var $111 = r === true;
-            if ($111) {
-              return v.value0;
-            }
-            ;
-            return v.value1;
-          })(blRotated(v3)(bjorklund(new Tuple(v1, v2)))));
-          return new Rhythmics(xs);
-        }
-        ;
-        throw new Error("Failed pattern match at DurationAndIndex (line 142, column 1 - line 142, column 63): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
-      };
-    };
-  };
-};
-var durFromRhythmic = function(v) {
-  return function(v1) {
-    if (v instanceof X) {
-      return durInSecs(1)(v1);
-    }
-    ;
-    if (v instanceof O) {
-      return durInSecs(1)(v1);
-    }
-    ;
-    if (v instanceof Sd) {
-      return durInSecs(1)(v1);
-    }
-    ;
-    if (v instanceof Repeat) {
-      return durFromRhythmic(v.value0)(v1) * toNumber2(v.value1);
-    }
-    ;
-    if (v instanceof Rhythmics) {
-      return sum2(map1(function(x) {
-        return durFromRhythmic(x)(v1);
-      })(v.value0));
-    }
-    ;
-    if (v instanceof Bjorklund) {
-      return durFromRhythmic(simplifyBjorklund(v.value0)(v.value1)(v.value2)(v.value3))(v1);
-    }
-    ;
-    throw new Error("Failed pattern match at DurationAndIndex (line 46, column 1 - line 46, column 47): " + [v.constructor.name, v1.constructor.name]);
-  };
-};
-var onsetDurations$prime = function(v) {
-  return function(v1) {
-    if (v1 instanceof X) {
-      return fromFoldable3([new Onset(true, v)]);
-    }
-    ;
-    if (v1 instanceof O) {
-      return fromFoldable3([new Onset(false, v)]);
-    }
-    ;
-    if (v1 instanceof Sd) {
-      return onsetDurations$prime(v)(v1.value0);
-    }
-    ;
-    if (v1 instanceof Repeat) {
-      var newDur = v / toNumber2(v1.value1);
-      return concat2(map1(function(x) {
-        return onsetDurations$prime(newDur)(x);
-      })(fromFoldable3(replicate(v1.value1)(v1.value0))));
-    }
-    ;
-    if (v1 instanceof Bjorklund) {
-      return onsetDurations(v)(simplifyBjorklund(v1.value0)(v1.value1)(v1.value2)(v1.value3));
-    }
-    ;
-    if (v1 instanceof Rhythmics) {
-      var newDur = v / toNumber2(length4(v1.value0));
-      return concat2(map1(function(x) {
-        return onsetDurations$prime(newDur)(x);
-      })(v1.value0));
-    }
-    ;
-    throw new Error("Failed pattern match at DurationAndIndex (line 79, column 1 - line 79, column 51): " + [v.constructor.name, v1.constructor.name]);
-  };
-};
-var onsetDurations = function(v) {
-  return function(v1) {
-    if (v1 instanceof X) {
-      return fromFoldable3([new Onset(true, v)]);
-    }
-    ;
-    if (v1 instanceof O) {
-      return fromFoldable3([new Onset(false, v)]);
-    }
-    ;
-    if (v1 instanceof Sd) {
-      return onsetDurations$prime(v)(v1.value0);
-    }
-    ;
-    if (v1 instanceof Repeat) {
-      return concat2(map1(function(x) {
-        return onsetDurations(v)(x);
-      })(fromFoldable3(replicate(v1.value1)(v1.value0))));
-    }
-    ;
-    if (v1 instanceof Bjorklund) {
-      return onsetDurations(v)(simplifyBjorklund(v1.value0)(v1.value1)(v1.value2)(v1.value3));
-    }
-    ;
-    if (v1 instanceof Rhythmics) {
-      return concat2(map1(function(x) {
-        return onsetDurations(v)(x);
-      })(v1.value0));
-    }
-    ;
-    throw new Error("Failed pattern match at DurationAndIndex (line 71, column 1 - line 71, column 50): " + [v.constructor.name, v1.constructor.name]);
-  };
-};
-var rhythmicToVoiceDuration = function(v) {
-  if (v instanceof X) {
-    return 1;
-  }
-  ;
-  if (v instanceof O) {
-    return 1;
-  }
-  ;
-  if (v instanceof Sd) {
-    return 1;
-  }
-  ;
-  if (v instanceof Repeat) {
-    var x = replicate(v.value1)(rhythmicToVoiceDuration(v.value0));
-    return foldl4(add1)(0)(x);
-  }
-  ;
-  if (v instanceof Bjorklund) {
-    return rhythmicToVoiceDuration(simplifyBjorklund(v.value0)(v.value1)(v.value2)(v.value3));
-  }
-  ;
-  if (v instanceof Rhythmics) {
-    var x = map1(function(x1) {
-      return rhythmicToVoiceDuration(x1);
-    })(v.value0);
-    return foldl12(add1)(0)(x);
-  }
-  ;
-  throw new Error("Failed pattern match at DurationAndIndex (line 54, column 1 - line 54, column 45): " + [v.constructor.name]);
-};
-var rhythmicToOnsets = function(rhy) {
-  var voiceDur = rhythmicToVoiceDuration(rhy);
-  var rhythmicSegments = onsetDurations(1)(rhy);
-  var durInPercentOfEvents = new Cons(0, fromMaybe(fromFoldable3([]))(init(scanl2(add1)(0)(map1(function(x) {
-    return x / voiceDur;
-  })(map1(getDur)(rhythmicSegments))))));
-  return zipWith2(function(x) {
-    return function(y) {
-      return new Onset(x, y);
-    };
-  })(map1(getBool)(rhythmicSegments))(durInPercentOfEvents);
-};
-var simplifyRepeat = function($copy_v) {
-  return function($copy_v1) {
-    var $tco_var_v = $copy_v;
-    var $tco_done = false;
-    var $tco_result;
-    function $tco_loop(v, v1) {
-      if (v instanceof X) {
-        $tco_done = true;
-        return new Rhythmics(fromFoldable3(replicate(v1)(X.value)));
-      }
-      ;
-      if (v instanceof O) {
-        $tco_done = true;
-        return new Rhythmics(fromFoldable3(replicate(v1)(O.value)));
-      }
-      ;
-      if (v instanceof Sd) {
-        $tco_done = true;
-        return new Rhythmics(map1(function(r) {
-          return new Sd(r);
-        })(fromFoldable3(replicate(v1)(v.value0))));
-      }
-      ;
-      if (v instanceof Repeat) {
-        var n2 = round2(toNumber2(v1) * toNumber2(v.value1));
-        $tco_var_v = v.value0;
-        $copy_v1 = n2;
-        return;
-      }
-      ;
-      if (v instanceof Bjorklund) {
-        $tco_var_v = simplifyBjorklund(v.value0)(v.value1)(v.value2)(v.value3);
-        $copy_v1 = v1;
-        return;
-      }
-      ;
-      if (v instanceof Rhythmics) {
-        $tco_done = true;
-        return new Rhythmics(fromFoldable3(concat(replicate(v1)(fromFoldable1(v.value0)))));
-      }
-      ;
-      throw new Error("Failed pattern match at DurationAndIndex (line 183, column 1 - line 183, column 45): " + [v.constructor.name, v1.constructor.name]);
-    }
-    ;
-    while (!$tco_done) {
-      $tco_result = $tco_loop($tco_var_v, $copy_v1);
-    }
-    ;
-    return $tco_result;
-  };
-};
-var rhythmicStructIndex$prime = function(v) {
-  return function(v1) {
-    if (v instanceof X) {
-      return [v1];
-    }
-    ;
-    if (v instanceof O) {
-      return [v1];
-    }
-    ;
-    if (v instanceof Rhythmics) {
-      var zipped = zip(fromFoldable1(v.value0))(range2(0)(length4(v.value0) - 1 | 0));
-      return concat(map6(function(v2) {
-        return rhythmicStructIndex$prime(v2.value0)(snoc(v1)(v2.value1));
-      })(zipped));
-    }
-    ;
-    if (v instanceof Sd) {
-      return rhythmicStructIndex$prime(v.value0)(v1);
-    }
-    ;
-    if (v instanceof Repeat) {
-      return rhythmicStructIndex$prime(simplifyRepeat(v.value0)(v.value1))(v1);
-    }
-    ;
-    if (v instanceof Bjorklund) {
-      return rhythmicStructIndex$prime(simplifyBjorklund(v.value0)(v.value1)(v.value2)(v.value3))(v1);
-    }
-    ;
-    throw new Error("Failed pattern match at DurationAndIndex (line 126, column 1 - line 126, column 66): " + [v.constructor.name, v1.constructor.name]);
-  };
-};
-var rhythmicStructIndex = function(v) {
-  return function(v1) {
-    if (v instanceof X) {
-      return [v1];
-    }
-    ;
-    if (v instanceof O) {
-      return [v1];
-    }
-    ;
-    if (v instanceof Rhythmics) {
-      var zipped = zip(fromFoldable1(v.value0))(range2(0)(length4(v.value0) - 1 | 0));
-      return concat(map6(function(v2) {
-        return rhythmicStructIndex(v2.value0)([v2.value1]);
-      })(zipped));
-    }
-    ;
-    if (v instanceof Repeat) {
-      return rhythmicStructIndex(simplifyRepeat(v.value0)(v.value1))(v1);
-    }
-    ;
-    if (v instanceof Sd) {
-      return rhythmicStructIndex$prime(v.value0)(v1);
-    }
-    ;
-    if (v instanceof Bjorklund) {
-      return rhythmicStructIndex(simplifyBjorklund(v.value0)(v.value1)(v.value2)(v.value3))(v1);
-    }
-    ;
-    throw new Error("Failed pattern match at DurationAndIndex (line 117, column 1 - line 117, column 65): " + [v.constructor.name, v1.constructor.name]);
-  };
-};
-var assambleIndex = function(vs) {
-  return function(st) {
-    return function(es) {
-      var xs = map6(function(e) {
-        return zip(st)(e);
-      })(es);
-      var f = function(v) {
-        return function(xs1) {
-          return map6(function(x) {
-            return new Index(v, fst(x), snd(x));
-          })(xs1);
-        };
-      };
-      return concat(zipWith(f)(vs)(xs));
-    };
-  };
-};
-var getIndexes = function(rhythmic2) {
-  return function(xws) {
-    return function(we) {
-      return function(x1) {
-        return function(dur) {
-          var voiceIndexes = getVoiceIndex(xws)(we)(x1)(dur);
-          var structIndexes = rhythmicStructIndex(rhythmic2)([0]);
-          var lenOnset = length4(rhythmicToOnsets(rhythmic2));
-          var eventIndexesPerVoice = range2(0)(lenOnset - 1 | 0);
-          var eventIndexes = funquilla(voiceIndexes)(eventIndexesPerVoice)(lenOnset);
-          return assambleIndex(voiceIndexes)(structIndexes)(eventIndexes);
-        };
-      };
-    };
-  };
-};
-
-// output/Data.Date/foreign.js
-var createDate = function(y, m, d) {
-  var date2 = new Date(Date.UTC(y, m, d));
-  if (y >= 0 && y < 100) {
-    date2.setUTCFullYear(y);
-  }
-  return date2;
-};
-function canonicalDateImpl(ctor, y, m, d) {
-  var date2 = createDate(y, m - 1, d);
-  return ctor(date2.getUTCFullYear())(date2.getUTCMonth() + 1)(date2.getUTCDate());
-}
-
-// output/Data.Date.Component/index.js
-var $runtime_lazy5 = function(name2, moduleName, init3) {
-  var state2 = 0;
-  var val;
-  return function(lineNumber) {
-    if (state2 === 2)
-      return val;
-    if (state2 === 1)
-      throw new ReferenceError(name2 + " was needed before it finished initializing (module " + moduleName + ", line " + lineNumber + ")", moduleName, lineNumber);
-    state2 = 1;
-    val = init3();
-    state2 = 2;
-    return val;
-  };
-};
-var January = /* @__PURE__ */ function() {
-  function January2() {
-  }
-  ;
-  January2.value = new January2();
-  return January2;
-}();
-var February = /* @__PURE__ */ function() {
-  function February2() {
-  }
-  ;
-  February2.value = new February2();
-  return February2;
-}();
-var March = /* @__PURE__ */ function() {
-  function March2() {
-  }
-  ;
-  March2.value = new March2();
-  return March2;
-}();
-var April = /* @__PURE__ */ function() {
-  function April2() {
-  }
-  ;
-  April2.value = new April2();
-  return April2;
-}();
-var May = /* @__PURE__ */ function() {
-  function May2() {
-  }
-  ;
-  May2.value = new May2();
-  return May2;
-}();
-var June = /* @__PURE__ */ function() {
-  function June2() {
-  }
-  ;
-  June2.value = new June2();
-  return June2;
-}();
-var July = /* @__PURE__ */ function() {
-  function July2() {
-  }
-  ;
-  July2.value = new July2();
-  return July2;
-}();
-var August = /* @__PURE__ */ function() {
-  function August2() {
-  }
-  ;
-  August2.value = new August2();
-  return August2;
-}();
-var September = /* @__PURE__ */ function() {
-  function September2() {
-  }
-  ;
-  September2.value = new September2();
-  return September2;
-}();
-var October = /* @__PURE__ */ function() {
-  function October2() {
-  }
-  ;
-  October2.value = new October2();
-  return October2;
-}();
-var November = /* @__PURE__ */ function() {
-  function November2() {
-  }
-  ;
-  November2.value = new November2();
-  return November2;
-}();
-var December = /* @__PURE__ */ function() {
-  function December2() {
-  }
-  ;
-  December2.value = new December2();
-  return December2;
-}();
-var ordYear = ordInt;
-var ordDay = ordInt;
-var eqYear = eqInt;
-var eqMonth = {
-  eq: function(x) {
-    return function(y) {
-      if (x instanceof January && y instanceof January) {
-        return true;
-      }
-      ;
-      if (x instanceof February && y instanceof February) {
-        return true;
-      }
-      ;
-      if (x instanceof March && y instanceof March) {
-        return true;
-      }
-      ;
-      if (x instanceof April && y instanceof April) {
-        return true;
-      }
-      ;
-      if (x instanceof May && y instanceof May) {
-        return true;
-      }
-      ;
-      if (x instanceof June && y instanceof June) {
-        return true;
-      }
-      ;
-      if (x instanceof July && y instanceof July) {
-        return true;
-      }
-      ;
-      if (x instanceof August && y instanceof August) {
-        return true;
-      }
-      ;
-      if (x instanceof September && y instanceof September) {
-        return true;
-      }
-      ;
-      if (x instanceof October && y instanceof October) {
-        return true;
-      }
-      ;
-      if (x instanceof November && y instanceof November) {
-        return true;
-      }
-      ;
-      if (x instanceof December && y instanceof December) {
-        return true;
-      }
-      ;
-      return false;
-    };
-  }
-};
-var ordMonth = {
-  compare: function(x) {
-    return function(y) {
-      if (x instanceof January && y instanceof January) {
-        return EQ.value;
-      }
-      ;
-      if (x instanceof January) {
-        return LT.value;
-      }
-      ;
-      if (y instanceof January) {
-        return GT.value;
-      }
-      ;
-      if (x instanceof February && y instanceof February) {
-        return EQ.value;
-      }
-      ;
-      if (x instanceof February) {
-        return LT.value;
-      }
-      ;
-      if (y instanceof February) {
-        return GT.value;
-      }
-      ;
-      if (x instanceof March && y instanceof March) {
-        return EQ.value;
-      }
-      ;
-      if (x instanceof March) {
-        return LT.value;
-      }
-      ;
-      if (y instanceof March) {
-        return GT.value;
-      }
-      ;
-      if (x instanceof April && y instanceof April) {
-        return EQ.value;
-      }
-      ;
-      if (x instanceof April) {
-        return LT.value;
-      }
-      ;
-      if (y instanceof April) {
-        return GT.value;
-      }
-      ;
-      if (x instanceof May && y instanceof May) {
-        return EQ.value;
-      }
-      ;
-      if (x instanceof May) {
-        return LT.value;
-      }
-      ;
-      if (y instanceof May) {
-        return GT.value;
-      }
-      ;
-      if (x instanceof June && y instanceof June) {
-        return EQ.value;
-      }
-      ;
-      if (x instanceof June) {
-        return LT.value;
-      }
-      ;
-      if (y instanceof June) {
-        return GT.value;
-      }
-      ;
-      if (x instanceof July && y instanceof July) {
-        return EQ.value;
-      }
-      ;
-      if (x instanceof July) {
-        return LT.value;
-      }
-      ;
-      if (y instanceof July) {
-        return GT.value;
-      }
-      ;
-      if (x instanceof August && y instanceof August) {
-        return EQ.value;
-      }
-      ;
-      if (x instanceof August) {
-        return LT.value;
-      }
-      ;
-      if (y instanceof August) {
-        return GT.value;
-      }
-      ;
-      if (x instanceof September && y instanceof September) {
-        return EQ.value;
-      }
-      ;
-      if (x instanceof September) {
-        return LT.value;
-      }
-      ;
-      if (y instanceof September) {
-        return GT.value;
-      }
-      ;
-      if (x instanceof October && y instanceof October) {
-        return EQ.value;
-      }
-      ;
-      if (x instanceof October) {
-        return LT.value;
-      }
-      ;
-      if (y instanceof October) {
-        return GT.value;
-      }
-      ;
-      if (x instanceof November && y instanceof November) {
-        return EQ.value;
-      }
-      ;
-      if (x instanceof November) {
-        return LT.value;
-      }
-      ;
-      if (y instanceof November) {
-        return GT.value;
-      }
-      ;
-      if (x instanceof December && y instanceof December) {
-        return EQ.value;
-      }
-      ;
-      throw new Error("Failed pattern match at Data.Date.Component (line 0, column 0 - line 0, column 0): " + [x.constructor.name, y.constructor.name]);
-    };
-  },
-  Eq0: function() {
-    return eqMonth;
-  }
-};
-var eqDay = eqInt;
-var boundedYear = /* @__PURE__ */ function() {
-  return {
-    bottom: -271820 | 0,
-    top: 275759,
-    Ord0: function() {
-      return ordYear;
-    }
-  };
-}();
-var boundedMonth = /* @__PURE__ */ function() {
-  return {
-    bottom: January.value,
-    top: December.value,
-    Ord0: function() {
-      return ordMonth;
-    }
-  };
-}();
-var boundedEnumYear = {
-  cardinality: 547580,
-  toEnum: function(n2) {
-    if (n2 >= (-271820 | 0) && n2 <= 275759) {
-      return new Just(n2);
-    }
-    ;
-    if (otherwise) {
-      return Nothing.value;
-    }
-    ;
-    throw new Error("Failed pattern match at Data.Date.Component (line 35, column 1 - line 40, column 24): " + [n2.constructor.name]);
-  },
-  fromEnum: function(v) {
-    return v;
-  },
-  Bounded0: function() {
-    return boundedYear;
-  },
-  Enum1: function() {
-    return $lazy_enumYear(0);
-  }
-};
-var $lazy_enumYear = /* @__PURE__ */ $runtime_lazy5("enumYear", "Data.Date.Component", function() {
-  return {
-    succ: function() {
-      var $55 = toEnum(boundedEnumYear);
-      var $56 = fromEnum(boundedEnumYear);
-      return function($57) {
-        return $55(function(v) {
-          return v + 1 | 0;
-        }($56($57)));
-      };
-    }(),
-    pred: function() {
-      var $58 = toEnum(boundedEnumYear);
-      var $59 = fromEnum(boundedEnumYear);
-      return function($60) {
-        return $58(function(v) {
-          return v - 1 | 0;
-        }($59($60)));
-      };
-    }(),
-    Ord0: function() {
-      return ordYear;
-    }
-  };
-});
-var boundedEnumMonth = {
-  cardinality: 12,
-  toEnum: function(v) {
-    if (v === 1) {
-      return new Just(January.value);
-    }
-    ;
-    if (v === 2) {
-      return new Just(February.value);
-    }
-    ;
-    if (v === 3) {
-      return new Just(March.value);
-    }
-    ;
-    if (v === 4) {
-      return new Just(April.value);
-    }
-    ;
-    if (v === 5) {
-      return new Just(May.value);
-    }
-    ;
-    if (v === 6) {
-      return new Just(June.value);
-    }
-    ;
-    if (v === 7) {
-      return new Just(July.value);
-    }
-    ;
-    if (v === 8) {
-      return new Just(August.value);
-    }
-    ;
-    if (v === 9) {
-      return new Just(September.value);
-    }
-    ;
-    if (v === 10) {
-      return new Just(October.value);
-    }
-    ;
-    if (v === 11) {
-      return new Just(November.value);
-    }
-    ;
-    if (v === 12) {
-      return new Just(December.value);
-    }
-    ;
-    return Nothing.value;
-  },
-  fromEnum: function(v) {
-    if (v instanceof January) {
-      return 1;
-    }
-    ;
-    if (v instanceof February) {
-      return 2;
-    }
-    ;
-    if (v instanceof March) {
-      return 3;
-    }
-    ;
-    if (v instanceof April) {
-      return 4;
-    }
-    ;
-    if (v instanceof May) {
-      return 5;
-    }
-    ;
-    if (v instanceof June) {
-      return 6;
-    }
-    ;
-    if (v instanceof July) {
-      return 7;
-    }
-    ;
-    if (v instanceof August) {
-      return 8;
-    }
-    ;
-    if (v instanceof September) {
-      return 9;
-    }
-    ;
-    if (v instanceof October) {
-      return 10;
-    }
-    ;
-    if (v instanceof November) {
-      return 11;
-    }
-    ;
-    if (v instanceof December) {
-      return 12;
-    }
-    ;
-    throw new Error("Failed pattern match at Data.Date.Component (line 87, column 14 - line 99, column 19): " + [v.constructor.name]);
-  },
-  Bounded0: function() {
-    return boundedMonth;
-  },
-  Enum1: function() {
-    return $lazy_enumMonth(0);
-  }
-};
-var $lazy_enumMonth = /* @__PURE__ */ $runtime_lazy5("enumMonth", "Data.Date.Component", function() {
-  return {
-    succ: function() {
-      var $67 = toEnum(boundedEnumMonth);
-      var $68 = fromEnum(boundedEnumMonth);
-      return function($69) {
-        return $67(function(v) {
-          return v + 1 | 0;
-        }($68($69)));
-      };
-    }(),
-    pred: function() {
-      var $70 = toEnum(boundedEnumMonth);
-      var $71 = fromEnum(boundedEnumMonth);
-      return function($72) {
-        return $70(function(v) {
-          return v - 1 | 0;
-        }($71($72)));
-      };
-    }(),
-    Ord0: function() {
-      return ordMonth;
-    }
-  };
-});
-var boundedDay = {
-  bottom: 1,
-  top: 31,
-  Ord0: function() {
-    return ordDay;
-  }
-};
-var boundedEnumDay = {
-  cardinality: 31,
-  toEnum: function(n2) {
-    if (n2 >= 1 && n2 <= 31) {
-      return new Just(n2);
-    }
-    ;
-    if (otherwise) {
-      return Nothing.value;
-    }
-    ;
-    throw new Error("Failed pattern match at Data.Date.Component (line 133, column 1 - line 138, column 23): " + [n2.constructor.name]);
-  },
-  fromEnum: function(v) {
-    return v;
-  },
-  Bounded0: function() {
-    return boundedDay;
-  },
-  Enum1: function() {
-    return $lazy_enumDay(0);
-  }
-};
-var $lazy_enumDay = /* @__PURE__ */ $runtime_lazy5("enumDay", "Data.Date.Component", function() {
-  return {
-    succ: function() {
-      var $73 = toEnum(boundedEnumDay);
-      var $74 = fromEnum(boundedEnumDay);
-      return function($75) {
-        return $73(function(v) {
-          return v + 1 | 0;
-        }($74($75)));
-      };
-    }(),
-    pred: function() {
-      var $76 = toEnum(boundedEnumDay);
-      var $77 = fromEnum(boundedEnumDay);
-      return function($78) {
-        return $76(function(v) {
-          return v - 1 | 0;
-        }($77($78)));
-      };
-    }(),
-    Ord0: function() {
-      return ordDay;
-    }
-  };
-});
-
-// output/Data.Time.Duration/index.js
-var over2 = /* @__PURE__ */ over()();
-var identity9 = /* @__PURE__ */ identity(categoryFn);
-var Seconds = function(x) {
-  return x;
-};
-var Milliseconds = function(x) {
-  return x;
-};
-var toDuration = function(dict) {
-  return dict.toDuration;
-};
-var fromDuration = function(dict) {
-  return dict.fromDuration;
-};
-var durationSeconds = {
-  fromDuration: /* @__PURE__ */ over2(Seconds)(function(v) {
-    return v * 1e3;
-  }),
-  toDuration: /* @__PURE__ */ over2(Milliseconds)(function(v) {
-    return v / 1e3;
-  })
-};
-var durationMilliseconds = {
-  fromDuration: identity9,
-  toDuration: identity9
-};
-
-// output/Data.Date/index.js
-var fromEnum3 = /* @__PURE__ */ fromEnum(boundedEnumMonth);
-var fromJust4 = /* @__PURE__ */ fromJust();
-var eq12 = /* @__PURE__ */ eq(eqYear);
-var eq2 = /* @__PURE__ */ eq(eqMonth);
-var eq3 = /* @__PURE__ */ eq(eqDay);
-var toEnum2 = /* @__PURE__ */ toEnum(boundedEnumMonth);
-var $$Date = /* @__PURE__ */ function() {
-  function $$Date2(value0, value1, value2) {
-    this.value0 = value0;
-    this.value1 = value1;
-    this.value2 = value2;
-  }
-  ;
-  $$Date2.create = function(value0) {
-    return function(value1) {
-      return function(value2) {
-        return new $$Date2(value0, value1, value2);
-      };
-    };
-  };
-  return $$Date2;
-}();
-var year = function(v) {
-  return v.value0;
-};
-var month = function(v) {
-  return v.value1;
-};
-var eqDate = {
-  eq: function(x) {
-    return function(y) {
-      return eq12(x.value0)(y.value0) && eq2(x.value1)(y.value1) && eq3(x.value2)(y.value2);
-    };
-  }
-};
-var eq4 = /* @__PURE__ */ eq(eqDate);
-var day = function(v) {
-  return v.value2;
-};
-var canonicalDate = function(y) {
-  return function(m) {
-    return function(d) {
-      var mkDate = function(y$prime) {
-        return function(m$prime) {
-          return function(d$prime) {
-            return new $$Date(y$prime, fromJust4(toEnum2(m$prime)), d$prime);
-          };
-        };
-      };
-      return canonicalDateImpl(mkDate, y, fromEnum3(m), d);
-    };
-  };
-};
-var exactDate = function(y) {
-  return function(m) {
-    return function(d) {
-      var dt = new $$Date(y, m, d);
-      var $144 = eq4(canonicalDate(y)(m)(d))(dt);
-      if ($144) {
-        return new Just(dt);
-      }
-      ;
-      return Nothing.value;
-    };
-  };
-};
-
-// output/Data.DateTime/foreign.js
-var createUTC = function(y, mo, d, h, m, s, ms) {
-  var date2 = new Date(Date.UTC(y, mo, d, h, m, s, ms));
-  if (y >= 0 && y < 100) {
-    date2.setUTCFullYear(y);
-  }
-  return date2.getTime();
-};
-function calcDiff2(rec1, rec2) {
-  var msUTC1 = createUTC(rec1.year, rec1.month - 1, rec1.day, rec1.hour, rec1.minute, rec1.second, rec1.millisecond);
-  var msUTC2 = createUTC(rec2.year, rec2.month - 1, rec2.day, rec2.hour, rec2.minute, rec2.second, rec2.millisecond);
-  return msUTC1 - msUTC2;
-}
-function adjustImpl(just) {
-  return function(nothing) {
-    return function(offset) {
-      return function(rec) {
-        var msUTC = createUTC(rec.year, rec.month - 1, rec.day, rec.hour, rec.minute, rec.second, rec.millisecond);
-        var dt = new Date(msUTC + offset);
-        return isNaN(dt.getTime()) ? nothing : just({
-          year: dt.getUTCFullYear(),
-          month: dt.getUTCMonth() + 1,
-          day: dt.getUTCDate(),
-          hour: dt.getUTCHours(),
-          minute: dt.getUTCMinutes(),
-          second: dt.getUTCSeconds(),
-          millisecond: dt.getUTCMilliseconds()
-        });
-      };
-    };
-  };
-}
-
-// output/Data.Time.Component/index.js
-var $runtime_lazy6 = function(name2, moduleName, init3) {
-  var state2 = 0;
-  var val;
-  return function(lineNumber) {
-    if (state2 === 2)
-      return val;
-    if (state2 === 1)
-      throw new ReferenceError(name2 + " was needed before it finished initializing (module " + moduleName + ", line " + lineNumber + ")", moduleName, lineNumber);
-    state2 = 1;
-    val = init3();
-    state2 = 2;
-    return val;
-  };
-};
-var ordSecond = ordInt;
-var ordMinute = ordInt;
-var ordMillisecond = ordInt;
-var ordHour = ordInt;
-var boundedSecond = {
-  bottom: 0,
-  top: 59,
-  Ord0: function() {
-    return ordSecond;
-  }
-};
-var boundedMinute = {
-  bottom: 0,
-  top: 59,
-  Ord0: function() {
-    return ordMinute;
-  }
-};
-var boundedMillisecond = {
-  bottom: 0,
-  top: 999,
-  Ord0: function() {
-    return ordMillisecond;
-  }
-};
-var boundedHour = {
-  bottom: 0,
-  top: 23,
-  Ord0: function() {
-    return ordHour;
-  }
-};
-var boundedEnumSecond = {
-  cardinality: 60,
-  toEnum: function(n2) {
-    if (n2 >= 0 && n2 <= 59) {
-      return new Just(n2);
-    }
-    ;
-    if (otherwise) {
-      return Nothing.value;
-    }
-    ;
-    throw new Error("Failed pattern match at Data.Time.Component (line 90, column 1 - line 95, column 26): " + [n2.constructor.name]);
-  },
-  fromEnum: function(v) {
-    return v;
-  },
-  Bounded0: function() {
-    return boundedSecond;
-  },
-  Enum1: function() {
-    return $lazy_enumSecond(0);
-  }
-};
-var $lazy_enumSecond = /* @__PURE__ */ $runtime_lazy6("enumSecond", "Data.Time.Component", function() {
-  return {
-    succ: function() {
-      var $36 = toEnum(boundedEnumSecond);
-      var $37 = fromEnum(boundedEnumSecond);
-      return function($38) {
-        return $36(function(v) {
-          return v + 1 | 0;
-        }($37($38)));
-      };
-    }(),
-    pred: function() {
-      var $39 = toEnum(boundedEnumSecond);
-      var $40 = fromEnum(boundedEnumSecond);
-      return function($41) {
-        return $39(function(v) {
-          return v - 1 | 0;
-        }($40($41)));
-      };
-    }(),
-    Ord0: function() {
-      return ordSecond;
-    }
-  };
-});
-var boundedEnumMinute = {
-  cardinality: 60,
-  toEnum: function(n2) {
-    if (n2 >= 0 && n2 <= 59) {
-      return new Just(n2);
-    }
-    ;
-    if (otherwise) {
-      return Nothing.value;
-    }
-    ;
-    throw new Error("Failed pattern match at Data.Time.Component (line 61, column 1 - line 66, column 26): " + [n2.constructor.name]);
-  },
-  fromEnum: function(v) {
-    return v;
-  },
-  Bounded0: function() {
-    return boundedMinute;
-  },
-  Enum1: function() {
-    return $lazy_enumMinute(0);
-  }
-};
-var $lazy_enumMinute = /* @__PURE__ */ $runtime_lazy6("enumMinute", "Data.Time.Component", function() {
-  return {
-    succ: function() {
-      var $42 = toEnum(boundedEnumMinute);
-      var $43 = fromEnum(boundedEnumMinute);
-      return function($44) {
-        return $42(function(v) {
-          return v + 1 | 0;
-        }($43($44)));
-      };
-    }(),
-    pred: function() {
-      var $45 = toEnum(boundedEnumMinute);
-      var $46 = fromEnum(boundedEnumMinute);
-      return function($47) {
-        return $45(function(v) {
-          return v - 1 | 0;
-        }($46($47)));
-      };
-    }(),
-    Ord0: function() {
-      return ordMinute;
-    }
-  };
-});
-var boundedEnumMillisecond = {
-  cardinality: 1e3,
-  toEnum: function(n2) {
-    if (n2 >= 0 && n2 <= 999) {
-      return new Just(n2);
-    }
-    ;
-    if (otherwise) {
-      return Nothing.value;
-    }
-    ;
-    throw new Error("Failed pattern match at Data.Time.Component (line 120, column 1 - line 125, column 31): " + [n2.constructor.name]);
-  },
-  fromEnum: function(v) {
-    return v;
-  },
-  Bounded0: function() {
-    return boundedMillisecond;
-  },
-  Enum1: function() {
-    return $lazy_enumMillisecond(0);
-  }
-};
-var $lazy_enumMillisecond = /* @__PURE__ */ $runtime_lazy6("enumMillisecond", "Data.Time.Component", function() {
-  return {
-    succ: function() {
-      var $48 = toEnum(boundedEnumMillisecond);
-      var $49 = fromEnum(boundedEnumMillisecond);
-      return function($50) {
-        return $48(function(v) {
-          return v + 1 | 0;
-        }($49($50)));
-      };
-    }(),
-    pred: function() {
-      var $51 = toEnum(boundedEnumMillisecond);
-      var $52 = fromEnum(boundedEnumMillisecond);
-      return function($53) {
-        return $51(function(v) {
-          return v - 1 | 0;
-        }($52($53)));
-      };
-    }(),
-    Ord0: function() {
-      return ordMillisecond;
-    }
-  };
-});
-var boundedEnumHour = {
-  cardinality: 24,
-  toEnum: function(n2) {
-    if (n2 >= 0 && n2 <= 23) {
-      return new Just(n2);
-    }
-    ;
-    if (otherwise) {
-      return Nothing.value;
-    }
-    ;
-    throw new Error("Failed pattern match at Data.Time.Component (line 32, column 1 - line 37, column 24): " + [n2.constructor.name]);
-  },
-  fromEnum: function(v) {
-    return v;
-  },
-  Bounded0: function() {
-    return boundedHour;
-  },
-  Enum1: function() {
-    return $lazy_enumHour(0);
-  }
-};
-var $lazy_enumHour = /* @__PURE__ */ $runtime_lazy6("enumHour", "Data.Time.Component", function() {
-  return {
-    succ: function() {
-      var $54 = toEnum(boundedEnumHour);
-      var $55 = fromEnum(boundedEnumHour);
-      return function($56) {
-        return $54(function(v) {
-          return v + 1 | 0;
-        }($55($56)));
-      };
-    }(),
-    pred: function() {
-      var $57 = toEnum(boundedEnumHour);
-      var $58 = fromEnum(boundedEnumHour);
-      return function($59) {
-        return $57(function(v) {
-          return v - 1 | 0;
-        }($58($59)));
-      };
-    }(),
-    Ord0: function() {
-      return ordHour;
-    }
-  };
-});
-
-// output/Data.Time/index.js
-var Time = /* @__PURE__ */ function() {
-  function Time2(value0, value1, value2, value3) {
-    this.value0 = value0;
-    this.value1 = value1;
-    this.value2 = value2;
-    this.value3 = value3;
-  }
-  ;
-  Time2.create = function(value0) {
-    return function(value1) {
-      return function(value2) {
-        return function(value3) {
-          return new Time2(value0, value1, value2, value3);
-        };
-      };
-    };
-  };
-  return Time2;
-}();
-var second = function(v) {
-  return v.value2;
-};
-var minute = function(v) {
-  return v.value1;
-};
-var millisecond = function(v) {
-  return v.value3;
-};
-var hour = function(v) {
-  return v.value0;
-};
-
-// output/Data.DateTime/index.js
-var fromEnum4 = /* @__PURE__ */ fromEnum(boundedEnumYear);
-var fromEnum1 = /* @__PURE__ */ fromEnum(boundedEnumMonth);
-var fromEnum22 = /* @__PURE__ */ fromEnum(boundedEnumDay);
-var fromEnum32 = /* @__PURE__ */ fromEnum(boundedEnumHour);
-var fromEnum42 = /* @__PURE__ */ fromEnum(boundedEnumMinute);
-var fromEnum5 = /* @__PURE__ */ fromEnum(boundedEnumSecond);
-var fromEnum6 = /* @__PURE__ */ fromEnum(boundedEnumMillisecond);
-var bind3 = /* @__PURE__ */ bind(bindMaybe);
-var apply2 = /* @__PURE__ */ apply(applyMaybe);
-var map7 = /* @__PURE__ */ map(functorMaybe);
-var join2 = /* @__PURE__ */ join(bindMaybe);
-var toEnum3 = /* @__PURE__ */ toEnum(boundedEnumYear);
-var toEnum1 = /* @__PURE__ */ toEnum(boundedEnumMonth);
-var toEnum22 = /* @__PURE__ */ toEnum(boundedEnumDay);
-var toEnum32 = /* @__PURE__ */ toEnum(boundedEnumHour);
-var toEnum4 = /* @__PURE__ */ toEnum(boundedEnumMinute);
-var toEnum5 = /* @__PURE__ */ toEnum(boundedEnumSecond);
-var toEnum6 = /* @__PURE__ */ toEnum(boundedEnumMillisecond);
-var DateTime = /* @__PURE__ */ function() {
-  function DateTime2(value0, value1) {
-    this.value0 = value0;
-    this.value1 = value1;
-  }
-  ;
-  DateTime2.create = function(value0) {
-    return function(value1) {
-      return new DateTime2(value0, value1);
-    };
-  };
-  return DateTime2;
-}();
-var toRecord = function(v) {
-  return {
-    year: fromEnum4(year(v.value0)),
-    month: fromEnum1(month(v.value0)),
-    day: fromEnum22(day(v.value0)),
-    hour: fromEnum32(hour(v.value1)),
-    minute: fromEnum42(minute(v.value1)),
-    second: fromEnum5(second(v.value1)),
-    millisecond: fromEnum6(millisecond(v.value1))
-  };
-};
-var diff = function(dictDuration) {
-  var toDuration2 = toDuration(dictDuration);
-  return function(dt1) {
-    return function(dt2) {
-      return toDuration2(calcDiff2(toRecord(dt1), toRecord(dt2)));
-    };
-  };
-};
-var adjust = function(dictDuration) {
-  var fromDuration2 = fromDuration(dictDuration);
-  return function(d) {
-    return function(dt) {
-      return bind3(adjustImpl(Just.create)(Nothing.value)(fromDuration2(d))(toRecord(dt)))(function(rec) {
-        return apply2(map7(DateTime.create)(join2(apply2(apply2(map7(exactDate)(toEnum3(rec.year)))(toEnum1(rec.month)))(toEnum22(rec.day)))))(apply2(apply2(apply2(map7(Time.create)(toEnum32(rec.hour)))(toEnum4(rec.minute)))(toEnum5(rec.second)))(toEnum6(rec.millisecond)));
-      });
-    };
-  };
-};
-
-// output/Data.DateTime.Instant/foreign.js
-var createDateTime = function(y, m, d, h, mi, s, ms) {
-  var dateTime = new Date(Date.UTC(y, m, d, h, mi, s, ms));
-  if (y >= 0 && y < 100) {
-    dateTime.setUTCFullYear(y);
-  }
-  return dateTime;
-};
-function fromDateTimeImpl(y, mo, d, h, mi, s, ms) {
-  return createDateTime(y, mo - 1, d, h, mi, s, ms).getTime();
-}
-function toDateTimeImpl(ctor) {
-  return function(instant2) {
-    var dt = new Date(instant2);
-    return ctor(dt.getUTCFullYear())(dt.getUTCMonth() + 1)(dt.getUTCDate())(dt.getUTCHours())(dt.getUTCMinutes())(dt.getUTCSeconds())(dt.getUTCMilliseconds());
-  };
-}
-
-// output/Data.DateTime.Instant/index.js
-var fromJust5 = /* @__PURE__ */ fromJust();
-var toEnum7 = /* @__PURE__ */ toEnum(boundedEnumMonth);
-var fromEnum7 = /* @__PURE__ */ fromEnum(boundedEnumMonth);
-var unInstant = function(v) {
-  return v;
-};
-var toDateTime = /* @__PURE__ */ function() {
-  var mkDateTime = function(y) {
-    return function(mo) {
-      return function(d) {
-        return function(h) {
-          return function(mi) {
-            return function(s) {
-              return function(ms) {
-                return new DateTime(canonicalDate(y)(fromJust5(toEnum7(mo)))(d), new Time(h, mi, s, ms));
-              };
-            };
-          };
-        };
-      };
-    };
-  };
-  return toDateTimeImpl(mkDateTime);
-}();
-var instant = function(v) {
-  if (v >= -86399778816e5 && v <= 8639977881599999) {
-    return new Just(v);
-  }
-  ;
-  if (otherwise) {
-    return Nothing.value;
-  }
-  ;
-  throw new Error("Failed pattern match at Data.DateTime.Instant (line 44, column 1 - line 44, column 41): " + [v.constructor.name]);
-};
-var fromDateTime = function(v) {
-  return fromDateTimeImpl(year(v.value0), fromEnum7(month(v.value0)), day(v.value0), hour(v.value1), minute(v.value1), second(v.value1), millisecond(v.value1));
-};
-
-// output/Effect.Now/foreign.js
-function now() {
-  return Date.now();
-}
-
-// output/Effect.Now/index.js
-var map8 = /* @__PURE__ */ map(functorEffect);
-var nowDateTime = /* @__PURE__ */ map8(toDateTime)(now);
-
-// output/Data.Tempo/index.js
-var unwrap2 = /* @__PURE__ */ unwrap();
-var diff2 = /* @__PURE__ */ diff(durationMilliseconds);
-var toRational2 = /* @__PURE__ */ toRational(toRationalInt);
-var add12 = /* @__PURE__ */ add(semiringRational);
-var mul1 = /* @__PURE__ */ mul(semiringRational);
-var div1 = /* @__PURE__ */ div(euclideanRingRational);
-var identity10 = /* @__PURE__ */ identity(categoryFn);
-var adjust2 = /* @__PURE__ */ adjust(durationSeconds);
-var fromJust6 = /* @__PURE__ */ fromJust();
-var toRational1 = /* @__PURE__ */ toRational(toRationalBigInt);
-var timeToCount = function(x) {
-  return function(t) {
-    var d = unwrap2(diff2(t)(x.time));
-    var d$prime = toRational2(floor2(d))(1e3);
-    return add12(mul1(d$prime)(x.freq))(x.count);
-  };
-};
-var origin = function(x) {
-  var increment = div1(mul1(x.count)(fromInt2(-1 | 0)))(x.freq);
-  return maybe(x.time)(identity10)(adjust2(toNumber3(increment))(x.time));
-};
-var newTempo = function(freq) {
-  return function __do2() {
-    var time3 = nowDateTime();
-    return {
-      freq,
-      time: time3,
-      count: fromInt2(0)
-    };
-  };
-};
-var fromForeignTempo = function(x) {
-  var time3 = toDateTime(fromJust6(instant(x.time * 1e3)));
-  var freq = toRational1(x.freqNumerator)(x.freqDenominator);
-  var count = toRational1(x.countNumerator)(x.countDenominator);
-  return {
-    freq,
-    time: time3,
-    count
-  };
-};
-
-// output/TimePacketOps/index.js
-var unwrap3 = /* @__PURE__ */ unwrap();
-var fromDateTimeToPosix = function(x) {
-  return unwrap3(unInstant(fromDateTime(x))) / 1e3;
-};
-var secsFromOriginAtEval = function(tp) {
-  var oPosix = fromDateTimeToPosix(tp.origin);
-  var $$eval = fromDateTimeToPosix(tp["eval"]);
-  return $$eval - oPosix;
-};
-var secsFromOriginAtWE = function(tp) {
-  var we = fromDateTimeToPosix(tp.we);
-  var oPosix = fromDateTimeToPosix(tp.origin);
-  return we - oPosix;
-};
-var secsFromOriginAtWS = function(tp) {
-  var ws = fromDateTimeToPosix(tp.ws);
-  var oPosix = fromDateTimeToPosix(tp.origin);
-  return ws - oPosix;
-};
-
-// output/TestOpsAndDefs/index.js
-var toRational3 = /* @__PURE__ */ toRational(toRationalInt);
-var defTemporal = /* @__PURE__ */ function() {
-  return new Temporal(new Kairos(0, new CPM(toRational3(120)(1))), O.value, false);
-}();
-var defConvergeTo = /* @__PURE__ */ function() {
-  return new ProcessTo(0, Origin.value);
-}();
-var defConvergeFrom = /* @__PURE__ */ function() {
-  return new Process(0);
-}();
-
-// output/AuralSpecs/index.js
-var map9 = /* @__PURE__ */ map(functorArray);
-var fromFoldable12 = /* @__PURE__ */ fromFoldable(foldableList);
-var mod3 = /* @__PURE__ */ mod(euclideanRingInt);
-var map12 = /* @__PURE__ */ map(functorList);
-var scanl3 = /* @__PURE__ */ scanl(traversableArray);
-var add13 = /* @__PURE__ */ add(semiringNumber);
-var bind4 = /* @__PURE__ */ bind(bindMaybe);
-var lookup2 = /* @__PURE__ */ lookup(ordString);
-var spreadSpeed = function(percenPos) {
-  return function(v) {
-    var $131 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
-    if ($131) {
-      return new Just(v.value0);
-    }
-    ;
-    return Nothing.value;
-  };
-};
-var spreadSpeeds = function(percenPos) {
-  return function(spLimits) {
-    return map9(function(sLimit) {
-      return spreadSpeed(percenPos)(sLimit);
-    })(spLimits);
-  };
-};
-var spreadSound = function(percenPos) {
-  return function(v) {
-    var $136 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
-    if ($136) {
-      return new Just(v.value0);
-    }
-    ;
-    return Nothing.value;
-  };
-};
-var spreadSounds = function(percenPos) {
-  return function(soundLimits) {
-    return map9(function(sLimit) {
-      return spreadSound(percenPos)(sLimit);
-    })(soundLimits);
-  };
-};
-var spreadPan = function(percenPos) {
-  return function(v) {
-    var $141 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
-    if ($141) {
-      return new Just(v.value0);
-    }
-    ;
-    return Nothing.value;
-  };
-};
-var spreadPans = function(percenPos) {
-  return function(pLimits) {
-    return map9(function(sLimit) {
-      return spreadPan(percenPos)(sLimit);
-    })(pLimits);
-  };
-};
-var spreadNote = function(percenPos) {
-  return function(v) {
-    var $146 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
-    if ($146) {
-      return new Just(v.value0);
-    }
-    ;
-    return Nothing.value;
-  };
-};
-var spreadNotes = function(percenPos) {
-  return function(bLimits) {
-    return map9(function(sLimit) {
-      return spreadNote(percenPos)(sLimit);
-    })(bLimits);
-  };
-};
-var spreadN = function(percenPos) {
-  return function(v) {
-    var $151 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
-    if ($151) {
-      return new Just(v.value0);
-    }
-    ;
-    return Nothing.value;
-  };
-};
-var spreadNs = function(percenPos) {
-  return function(nLimits) {
-    return map9(function(sLimit) {
-      return spreadN(percenPos)(sLimit);
-    })(nLimits);
-  };
-};
-var spreadG = function(percenPos) {
-  return function(v) {
-    var $156 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
-    if ($156) {
-      return new Just(v.value0);
-    }
-    ;
-    return Nothing.value;
-  };
-};
-var spreadGains = function(percenPos) {
-  return function(gLimits) {
-    return map9(function(sLimit) {
-      return spreadG(percenPos)(sLimit);
-    })(gLimits);
-  };
-};
-var spreadEnd = function(percenPos) {
-  return function(v) {
-    var $161 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
-    if ($161) {
-      return new Just(v.value0);
-    }
-    ;
-    return Nothing.value;
-  };
-};
-var spreadEnds = function(percenPos) {
-  return function(bLimits) {
-    return map9(function(sLimit) {
-      return spreadEnd(percenPos)(sLimit);
-    })(bLimits);
-  };
-};
-var spreadBegin = function(percenPos) {
-  return function(v) {
-    var $166 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
-    if ($166) {
-      return new Just(v.value0);
-    }
-    ;
-    return Nothing.value;
-  };
-};
-var spreadBegins = function(percenPos) {
-  return function(bLimits) {
-    return map9(function(sLimit) {
-      return spreadBegin(percenPos)(sLimit);
-    })(bLimits);
-  };
-};
-var isSpeed = function(v) {
-  if (v instanceof Speed) {
-    return true;
-  }
-  ;
-  if (v instanceof TransposedSpeed) {
-    return true;
-  }
-  ;
-  return false;
-};
-var isSound = function(v) {
-  if (v instanceof Sound) {
-    return true;
-  }
-  ;
-  if (v instanceof TransposedSound) {
-    return true;
-  }
-  ;
-  return false;
-};
-var isPan = function(v) {
-  if (v instanceof Pan) {
-    return true;
-  }
-  ;
-  if (v instanceof TransposedPan) {
-    return true;
-  }
-  ;
-  return false;
-};
-var isN = function(v) {
-  if (v instanceof N) {
-    return true;
-  }
-  ;
-  if (v instanceof TransposedN) {
-    return true;
-  }
-  ;
-  if (v instanceof TransposedNWith) {
-    return true;
-  }
-  ;
-  return false;
-};
-var isGain = function(v) {
-  if (v instanceof Gain) {
-    return true;
-  }
-  ;
-  if (v instanceof TransposedGain) {
-    return true;
-  }
-  ;
-  return false;
-};
-var isEnd = function(v) {
-  if (v instanceof End) {
-    return true;
-  }
-  ;
-  if (v instanceof TransposedEnd) {
-    return true;
-  }
-  ;
-  return false;
-};
-var isDastgah = function(v) {
-  if (v instanceof Dastgah) {
-    return true;
-  }
-  ;
-  return false;
-};
-var isBegin = function(v) {
-  if (v instanceof Begin) {
-    return true;
-  }
-  ;
-  if (v instanceof TransposedBegin) {
-    return true;
-  }
-  ;
-  return false;
-};
-var getStructureIndex = function(v) {
-  return fromMaybe(0)(head(v.value1.value1));
-};
-var getSpeed = function(aural2) {
-  return head(filter2(isSpeed)(fromFoldable12(aural2)));
-};
-var getSound = function(aural2) {
-  return head(filter2(isSound)(fromFoldable12(aural2)));
-};
-var getPan = function(aural2) {
-  return head(filter2(isPan)(fromFoldable12(aural2)));
-};
-var getN = function(aural2) {
-  return head(filter2(isN)(fromFoldable12(aural2)));
-};
-var getGain = function(aural2) {
-  return head(filter2(isGain)(fromFoldable12(aural2)));
-};
-var getEventIndex = function(v) {
-  return v.value1.value2;
-};
-var getEnd = function(aural2) {
-  return head(filter2(isEnd)(fromFoldable12(aural2)));
-};
-var getDastgah = function(aural2) {
-  return head(filter2(isDastgah)(fromFoldable12(aural2)));
-};
-var getBlockIndex = function(v) {
-  return v.value1.value0;
-};
-var spanBegin = function(v) {
-  return function(v1) {
-    return function(v2) {
-      return function(v3) {
-        if (v instanceof CycleEvent) {
-          var processBn = function(xs1) {
-            return function(w) {
-              var bn = fromMaybe(0.0666)(index(xs1)(mod3(getEventIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: w.gain,
-                pan: w.pan,
-                speed: w.speed,
-                begin: bn
-              };
-            };
-          };
-          return map9(processBn(v1))(v2);
-        }
-        ;
-        if (v instanceof CycleBlock) {
-          var processBn = function(xs1) {
-            return function(w) {
-              var bn = fromMaybe(0.0666)(index(xs1)(mod3(getBlockIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: w.gain,
-                pan: w.pan,
-                speed: w.speed,
-                begin: bn
-              };
-            };
-          };
-          return map9(processBn(v1))(v2);
-        }
-        ;
-        if (v instanceof CycleInBlock) {
-          var processBn = function(xs1) {
-            return function(w) {
-              var bn = fromMaybe(0.0666)(index(xs1)(mod3(getStructureIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: w.gain,
-                pan: w.pan,
-                speed: w.speed,
-                begin: bn
-              };
-            };
-          };
-          return map9(processBn(v1))(v2);
-        }
-        ;
-        if (v instanceof SpreadBlock) {
-          var processBn = function(xs1) {
-            return function(w) {
-              var segment = 1 / toNumber2(length(xs1));
-              var percenPositions = map12(function(v4) {
-                return v4.value1;
-              })(rhythmicToOnsets(v3));
-              var modIndex = mod3(getEventIndex(w.event))(length(fromFoldable12(percenPositions)));
-              var percenPos = fromMaybe(0)(index(fromFoldable12(percenPositions))(modIndex));
-              var limitsSnd = snoc(scanl3(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
-              var limitsFst = cons(0)(scanl3(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
-              var limits = zip(limitsFst)(limitsSnd);
-              var bnLimits = zip(xs1)(limits);
-              var bn = function() {
-                var f = function(v4) {
-                  if (v4 instanceof Just) {
-                    return v4.value0;
-                  }
-                  ;
-                  if (v4 instanceof Nothing) {
-                    return 0.0666;
-                  }
-                  ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 253, column 31 - line 253, column 45): " + [v4.constructor.name]);
-                };
-                return fromMaybe(0.0666)(head(map9(f)(filter2(isJust)(spreadBegins(percenPos)(bnLimits)))));
-              }();
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: w.gain,
-                pan: w.pan,
-                speed: w.speed,
-                begin: bn
-              };
-            };
-          };
-          return map9(processBn(v1))(v2);
-        }
-        ;
-        throw new Error("Failed pattern match at AuralSpecs (line 232, column 1 - line 232, column 243): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
-      };
-    };
-  };
-};
-var spanDastgah = function(v) {
-  return function(v1) {
-    return function(v2) {
-      return function(v3) {
-        if (v instanceof CycleEvent) {
-          var processDastgah = function(xs1) {
-            return function(w) {
-              var note = fromMaybe(0.9666)(index(xs1)(mod3(getEventIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: w.gain,
-                pan: w.pan,
-                speed: w.speed,
-                begin: w.begin,
-                end: w.end,
-                note
-              };
-            };
-          };
-          return map9(processDastgah(v1))(v2);
-        }
-        ;
-        if (v instanceof CycleBlock) {
-          var processDastgah = function(xs1) {
-            return function(w) {
-              var note = fromMaybe(0.9666)(index(xs1)(mod3(getBlockIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: w.gain,
-                pan: w.pan,
-                speed: w.speed,
-                begin: w.begin,
-                end: w.end,
-                note
-              };
-            };
-          };
-          return map9(processDastgah(v1))(v2);
-        }
-        ;
-        if (v instanceof CycleInBlock) {
-          var processDastgah = function(xs1) {
-            return function(w) {
-              var note = fromMaybe(0.9666)(index(xs1)(mod3(getStructureIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: w.gain,
-                pan: w.pan,
-                speed: w.speed,
-                begin: w.begin,
-                end: w.end,
-                note
-              };
-            };
-          };
-          return map9(processDastgah(v1))(v2);
-        }
-        ;
-        if (v instanceof SpreadBlock) {
-          var processDastgah = function(xs1) {
-            return function(w) {
-              var segment = 1 / toNumber2(length(xs1));
-              var percenPositions = map12(function(v4) {
-                return v4.value1;
-              })(rhythmicToOnsets(v3));
-              var modIndex = mod3(getEventIndex(w.event))(length(fromFoldable12(percenPositions)));
-              var percenPos = fromMaybe(0)(index(fromFoldable12(percenPositions))(modIndex));
-              var limitsSnd = snoc(scanl3(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
-              var limitsFst = cons(0)(scanl3(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
-              var limits = zip(limitsFst)(limitsSnd);
-              var noteLimits = zip(xs1)(limits);
-              var note = function() {
-                var f = function(v4) {
-                  if (v4 instanceof Just) {
-                    return v4.value0;
-                  }
-                  ;
-                  if (v4 instanceof Nothing) {
-                    return 0.9666;
-                  }
-                  ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 155, column 31 - line 155, column 45): " + [v4.constructor.name]);
-                };
-                return fromMaybe(0.9666)(head(map9(f)(filter2(isJust)(spreadNotes(percenPos)(noteLimits)))));
-              }();
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: w.gain,
-                pan: w.pan,
-                speed: w.speed,
-                begin: w.begin,
-                end: w.end,
-                note
-              };
-            };
-          };
-          return map9(processDastgah(v1))(v2);
-        }
-        ;
-        throw new Error("Failed pattern match at AuralSpecs (line 134, column 1 - line 134, column 304): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
-      };
-    };
-  };
-};
-var spanEnd = function(v) {
-  return function(v1) {
-    return function(v2) {
-      return function(v3) {
-        if (v instanceof CycleEvent) {
-          var processEnd1 = function(xs1) {
-            return function(w) {
-              var end2 = fromMaybe(0.9666)(index(xs1)(mod3(getEventIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: w.gain,
-                pan: w.pan,
-                speed: w.speed,
-                begin: w.begin,
-                end: end2
-              };
-            };
-          };
-          return map9(processEnd1(v1))(v2);
-        }
-        ;
-        if (v instanceof CycleBlock) {
-          var processEnd1 = function(xs1) {
-            return function(w) {
-              var end2 = fromMaybe(0.9666)(index(xs1)(mod3(getBlockIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: w.gain,
-                pan: w.pan,
-                speed: w.speed,
-                begin: w.begin,
-                end: end2
-              };
-            };
-          };
-          return map9(processEnd1(v1))(v2);
-        }
-        ;
-        if (v instanceof CycleInBlock) {
-          var processEnd1 = function(xs1) {
-            return function(w) {
-              var end2 = fromMaybe(0.9666)(index(xs1)(mod3(getStructureIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: w.gain,
-                pan: w.pan,
-                speed: w.speed,
-                begin: w.begin,
-                end: end2
-              };
-            };
-          };
-          return map9(processEnd1(v1))(v2);
-        }
-        ;
-        if (v instanceof SpreadBlock) {
-          var processEnd1 = function(xs1) {
-            return function(w) {
-              var segment = 1 / toNumber2(length(xs1));
-              var percenPositions = map12(function(v4) {
-                return v4.value1;
-              })(rhythmicToOnsets(v3));
-              var modIndex = mod3(getEventIndex(w.event))(length(fromFoldable12(percenPositions)));
-              var percenPos = fromMaybe(0)(index(fromFoldable12(percenPositions))(modIndex));
-              var limitsSnd = snoc(scanl3(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
-              var limitsFst = cons(0)(scanl3(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
-              var limits = zip(limitsFst)(limitsSnd);
-              var endLimits = zip(xs1)(limits);
-              var end2 = function() {
-                var f = function(v4) {
-                  if (v4 instanceof Just) {
-                    return v4.value0;
-                  }
-                  ;
-                  if (v4 instanceof Nothing) {
-                    return 0.9666;
-                  }
-                  ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 201, column 31 - line 201, column 45): " + [v4.constructor.name]);
-                };
-                return fromMaybe(0.9666)(head(map9(f)(filter2(isJust)(spreadEnds(percenPos)(endLimits)))));
-              }();
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: w.gain,
-                pan: w.pan,
-                speed: w.speed,
-                begin: w.begin,
-                end: end2
-              };
-            };
-          };
-          return map9(processEnd1(v1))(v2);
-        }
-        ;
-        throw new Error("Failed pattern match at AuralSpecs (line 180, column 1 - line 180, column 271): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
-      };
-    };
-  };
-};
-var spanGain = function(v) {
-  return function(v1) {
-    return function(v2) {
-      return function(v3) {
-        if (v instanceof CycleEvent) {
-          var processG = function(xs1) {
-            return function(w) {
-              var g = fromMaybe(0.02666)(index(xs1)(mod3(getEventIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: g
-              };
-            };
-          };
-          return map9(processG(v1))(v2);
-        }
-        ;
-        if (v instanceof CycleBlock) {
-          var processG = function(xs1) {
-            return function(w) {
-              var g = fromMaybe(0.02666)(index(xs1)(mod3(getBlockIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: g
-              };
-            };
-          };
-          return map9(processG(v1))(v2);
-        }
-        ;
-        if (v instanceof CycleInBlock) {
-          var processG = function(xs1) {
-            return function(w) {
-              var g = fromMaybe(0.02666)(index(xs1)(mod3(getStructureIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: g
-              };
-            };
-          };
-          return map9(processG(v1))(v2);
-        }
-        ;
-        if (v instanceof SpreadBlock) {
-          var processG = function(xs1) {
-            return function(w) {
-              var segment = 1 / toNumber2(length(xs1));
-              var percenPositions = map12(function(v4) {
-                return v4.value1;
-              })(rhythmicToOnsets(v3));
-              var modIndex = mod3(getEventIndex(w.event))(length(fromFoldable12(percenPositions)));
-              var percenPos = fromMaybe(0)(index(fromFoldable12(percenPositions))(modIndex));
-              var limitsSnd = snoc(scanl3(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
-              var limitsFst = cons(0)(scanl3(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
-              var limits = zip(limitsFst)(limitsSnd);
-              var gLimits = zip(xs1)(limits);
-              var g = function() {
-                var f = function(v4) {
-                  if (v4 instanceof Just) {
-                    return v4.value0;
-                  }
-                  ;
-                  if (v4 instanceof Nothing) {
-                    return 0.02666;
-                  }
-                  ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 405, column 31 - line 405, column 45): " + [v4.constructor.name]);
-                };
-                return fromMaybe(0.02666)(head(map9(f)(filter2(isJust)(spreadGains(percenPos)(gLimits)))));
-              }();
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: g
-              };
-            };
-          };
-          return map9(processG(v1))(v2);
-        }
-        ;
-        throw new Error("Failed pattern match at AuralSpecs (line 384, column 1 - line 384, column 151): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
-      };
-    };
-  };
-};
-var spanN = function(v) {
-  return function(v1) {
-    return function(v2) {
-      return function(v3) {
-        if (v instanceof CycleEvent) {
-          var processN1 = function(xs1) {
-            return function(w) {
-              var n$prime = fromMaybe(2666)(index(xs1)(mod3(getEventIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: n$prime
-              };
-            };
-          };
-          return map9(processN1(v1))(v2);
-        }
-        ;
-        if (v instanceof CycleBlock) {
-          var processN1 = function(xs1) {
-            return function(w) {
-              var n$prime = fromMaybe(2666)(index(xs1)(mod3(getBlockIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: n$prime
-              };
-            };
-          };
-          return map9(processN1(v1))(v2);
-        }
-        ;
-        if (v instanceof CycleInBlock) {
-          var processN1 = function(xs1) {
-            return function(w) {
-              var n$prime = fromMaybe(2666)(index(xs1)(mod3(getStructureIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: n$prime
-              };
-            };
-          };
-          return map9(processN1(v1))(v2);
-        }
-        ;
-        if (v instanceof SpreadBlock) {
-          var processN1 = function(xs1) {
-            return function(w) {
-              var segment = 1 / toNumber2(length(xs1));
-              var percenPositions = map12(function(v4) {
-                return v4.value1;
-              })(rhythmicToOnsets(v3));
-              var modIndex = mod3(getEventIndex(w.event))(length(fromFoldable12(percenPositions)));
-              var percenPos = fromMaybe(0)(index(fromFoldable12(percenPositions))(modIndex));
-              var limitsSnd = snoc(scanl3(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
-              var limitsFst = cons(0)(scanl3(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
-              var limits = zip(limitsFst)(limitsSnd);
-              var nLimits = zip(xs1)(limits);
-              var n$prime = function() {
-                var f = function(v4) {
-                  if (v4 instanceof Just) {
-                    return v4.value0;
-                  }
-                  ;
-                  if (v4 instanceof Nothing) {
-                    return 2666;
-                  }
-                  ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 490, column 31 - line 490, column 45): " + [v4.constructor.name]);
-                };
-                return fromMaybe(2666)(head(map9(f)(filter2(isJust)(spreadNs(percenPos)(nLimits)))));
-              }();
-              return {
-                event: w.event,
-                s: w.s,
-                n: n$prime
-              };
-            };
-          };
-          return map9(processN1(v1))(v2);
-        }
-        ;
-        throw new Error("Failed pattern match at AuralSpecs (line 469, column 1 - line 469, column 121): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
-      };
-    };
-  };
-};
-var spanPan = function(v) {
-  return function(v1) {
-    return function(v2) {
-      return function(v3) {
-        if (v instanceof CycleEvent) {
-          var processP = function(xs1) {
-            return function(w) {
-              var p = fromMaybe(0.5666)(index(xs1)(mod3(getEventIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: w.gain,
-                pan: p
-              };
-            };
-          };
-          return map9(processP(v1))(v2);
-        }
-        ;
-        if (v instanceof CycleBlock) {
-          var processP = function(xs1) {
-            return function(w) {
-              var p = fromMaybe(0.5666)(index(xs1)(mod3(getBlockIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: w.gain,
-                pan: p
-              };
-            };
-          };
-          return map9(processP(v1))(v2);
-        }
-        ;
-        if (v instanceof CycleInBlock) {
-          var processP = function(xs1) {
-            return function(w) {
-              var p = fromMaybe(0.5666)(index(xs1)(mod3(getStructureIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: w.gain,
-                pan: p
-              };
-            };
-          };
-          return map9(processP(v1))(v2);
-        }
-        ;
-        if (v instanceof SpreadBlock) {
-          var processP = function(xs1) {
-            return function(w) {
-              var segment = 1 / toNumber2(length(xs1));
-              var percenPositions = map12(function(v4) {
-                return v4.value1;
-              })(rhythmicToOnsets(v3));
-              var modIndex = mod3(getEventIndex(w.event))(length(fromFoldable12(percenPositions)));
-              var percenPos = fromMaybe(0)(index(fromFoldable12(percenPositions))(modIndex));
-              var limitsSnd = snoc(scanl3(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
-              var limitsFst = cons(0)(scanl3(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
-              var limits = zip(limitsFst)(limitsSnd);
-              var pLimits = zip(xs1)(limits);
-              var p = function() {
-                var f = function(v4) {
-                  if (v4 instanceof Just) {
-                    return v4.value0;
-                  }
-                  ;
-                  if (v4 instanceof Nothing) {
-                    return 0.5666;
-                  }
-                  ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 355, column 31 - line 355, column 45): " + [v4.constructor.name]);
-                };
-                return fromMaybe(0.5666)(head(map9(f)(filter2(isJust)(spreadPans(percenPos)(pLimits)))));
-              }();
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: w.gain,
-                pan: p
-              };
-            };
-          };
-          return map9(processP(v1))(v2);
-        }
-        ;
-        throw new Error("Failed pattern match at AuralSpecs (line 334, column 1 - line 334, column 179): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
-      };
-    };
-  };
-};
-var spanSound = function(v) {
-  return function(v1) {
-    return function(v2) {
-      return function(v3) {
-        if (v instanceof CycleEvent) {
-          var processSound1 = function(xs1) {
-            return function(event$prime) {
-              var sound$prime = fromMaybe("error assigning sound")(index(xs1)(mod3(getEventIndex(event$prime))(length(xs1))));
-              return {
-                event: event$prime,
-                s: sound$prime
-              };
-            };
-          };
-          return map9(processSound1(v1))(v2);
-        }
-        ;
-        if (v instanceof CycleBlock) {
-          var processSound1 = function(xs1) {
-            return function(event$prime) {
-              var sound$prime = fromMaybe("error assigning sound")(index(xs1)(mod3(getBlockIndex(event$prime))(length(xs1))));
-              return {
-                event: event$prime,
-                s: sound$prime
-              };
-            };
-          };
-          return map9(processSound1(v1))(v2);
-        }
-        ;
-        if (v instanceof CycleInBlock) {
-          var processSound1 = function(xs1) {
-            return function(event$prime) {
-              var sound$prime = fromMaybe("error assigning sound")(index(xs1)(mod3(getStructureIndex(event$prime))(length(xs1))));
-              return {
-                event: event$prime,
-                s: sound$prime
-              };
-            };
-          };
-          return map9(processSound1(v1))(v2);
-        }
-        ;
-        if (v instanceof SpreadBlock) {
-          var processSound1 = function(xs1) {
-            return function(event$prime) {
-              var segment = 1 / toNumber2(length(xs1));
-              var percenPositions = map12(function(v4) {
-                return v4.value1;
-              })(rhythmicToOnsets(v3));
-              var modIndex = mod3(getEventIndex(event$prime))(length(fromFoldable12(percenPositions)));
-              var percenPos = fromMaybe(0)(index(fromFoldable12(percenPositions))(modIndex));
-              var limitsSnd = snoc(scanl3(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
-              var limitsFst = cons(0)(scanl3(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
-              var limits = zip(limitsFst)(limitsSnd);
-              var soundLimits = zip(xs1)(limits);
-              var sound$prime = function() {
-                var f = function(v4) {
-                  if (v4 instanceof Just) {
-                    return v4.value0;
-                  }
-                  ;
-                  if (v4 instanceof Nothing) {
-                    return "error thingy";
-                  }
-                  ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 547, column 31 - line 547, column 45): " + [v4.constructor.name]);
-                };
-                return fromMaybe("error assigning sound SpreadBlock")(head(map9(f)(filter2(isJust)(spreadSounds(percenPos)(soundLimits)))));
-              }();
-              return {
-                event: event$prime,
-                s: sound$prime
-              };
-            };
-          };
-          return map9(processSound1(v1))(v2);
-        }
-        ;
-        throw new Error("Failed pattern match at AuralSpecs (line 526, column 1 - line 526, column 97): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
-      };
-    };
-  };
-};
-var spanSpeed = function(v) {
-  return function(v1) {
-    return function(v2) {
-      return function(v3) {
-        if (v instanceof CycleEvent) {
-          var processSp = function(xs1) {
-            return function(w) {
-              var sp = fromMaybe(1.0666)(index(xs1)(mod3(getEventIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: w.gain,
-                pan: w.pan,
-                speed: sp
-              };
-            };
-          };
-          return map9(processSp(v1))(v2);
-        }
-        ;
-        if (v instanceof CycleBlock) {
-          var processSp = function(xs1) {
-            return function(w) {
-              var sp = fromMaybe(1.0666)(index(xs1)(mod3(getBlockIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: w.gain,
-                pan: w.pan,
-                speed: sp
-              };
-            };
-          };
-          return map9(processSp(v1))(v2);
-        }
-        ;
-        if (v instanceof CycleInBlock) {
-          var processSp = function(xs1) {
-            return function(w) {
-              var sp = fromMaybe(1.0666)(index(xs1)(mod3(getStructureIndex(w.event))(length(xs1))));
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: w.gain,
-                pan: w.pan,
-                speed: sp
-              };
-            };
-          };
-          return map9(processSp(v1))(v2);
-        }
-        ;
-        if (v instanceof SpreadBlock) {
-          var processSp = function(xs1) {
-            return function(w) {
-              var segment = 1 / toNumber2(length(xs1));
-              var percenPositions = map12(function(v4) {
-                return v4.value1;
-              })(rhythmicToOnsets(v3));
-              var modIndex = mod3(getEventIndex(w.event))(length(fromFoldable12(percenPositions)));
-              var percenPos = fromMaybe(0)(index(fromFoldable12(percenPositions))(modIndex));
-              var limitsSnd = snoc(scanl3(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
-              var limitsFst = cons(0)(scanl3(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
-              var limits = zip(limitsFst)(limitsSnd);
-              var spLimits = zip(xs1)(limits);
-              var sp = function() {
-                var f = function(v4) {
-                  if (v4 instanceof Just) {
-                    return v4.value0;
-                  }
-                  ;
-                  if (v4 instanceof Nothing) {
-                    return 1.0666;
-                  }
-                  ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 305, column 31 - line 305, column 45): " + [v4.constructor.name]);
-                };
-                return fromMaybe(1.0666)(head(map9(f)(filter2(isJust)(spreadSpeeds(percenPos)(spLimits)))));
-              }();
-              return {
-                event: w.event,
-                s: w.s,
-                n: w.n,
-                gain: w.gain,
-                pan: w.pan,
-                speed: sp
-              };
-            };
-          };
-          return map9(processSp(v1))(v2);
-        }
-        ;
-        throw new Error("Failed pattern match at AuralSpecs (line 284, column 1 - line 284, column 211): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
-      };
-    };
-  };
-};
-var getBegin = function(aural2) {
-  return head(filter2(isBegin)(fromFoldable12(aural2)));
-};
-var dToList = function(v) {
-  var f = function(n2) {
-    var v1 = mod3(n2 - 1 | 0)(8);
-    if (v1 === 0) {
-      return 0;
-    }
-    ;
-    if (v1 === 1) {
-      return 1.82;
-    }
-    ;
-    if (v1 === 2) {
-      return 2.96;
-    }
-    ;
-    if (v1 === 3) {
-      return 5;
-    }
-    ;
-    if (v1 === 4) {
-      return 7.04;
-    }
-    ;
-    if (v1 === 5) {
-      return 7.94;
-    }
-    ;
-    if (v1 === 6) {
-      return 9.98;
-    }
-    ;
-    if (v1 === 7) {
-      return 12;
-    }
-    ;
-    return 0;
-  };
-  return map12(f)(v.value0);
-};
-var processNote = function(v) {
-  return function(v1) {
-    return function(v2) {
-      return function(v3) {
-        if (v3.length === 0) {
-          return [];
-        }
-        ;
-        if (v2 instanceof Nothing) {
-          return map9(function(w) {
-            return {
-              event: w.event,
-              s: w.s,
-              n: w.n,
-              gain: w.gain,
-              pan: w.pan,
-              speed: w.speed,
-              begin: w.begin,
-              end: 1,
-              note: 0
-            };
-          })(v3);
-        }
-        ;
-        if (v2 instanceof Just && v2.value0 instanceof Dastgah) {
-          return spanDastgah(v2.value0.value0)(fromFoldable12(dToList(v2.value0.value1)))(v3)(v1);
-        }
-        ;
-        return [];
-      };
-    };
-  };
-};
-var cycleAurals = function(n2) {
-  return function(mVoice) {
-    return bind4(mVoice)(function(voice) {
-      var aurals = function(v) {
-        return v.value1;
-      }(voice);
-      var len = length4(aurals);
-      return bind4(index(fromFoldable12(aurals))(mod3(n2)(len)))(function(newVal) {
-        return getEnd(newVal);
-      });
-    });
-  };
-};
-var processGain = function(v) {
-  return function(v1) {
-    return function(v2) {
-      return function(v3) {
-        if (v3.length === 0) {
-          return [];
-        }
-        ;
-        if (v2 instanceof Nothing) {
-          return map9(function(w) {
-            return {
-              event: w.event,
-              s: w.s,
-              n: w.n,
-              gain: 1
-            };
-          })(v3);
-        }
-        ;
-        if (v2 instanceof Just && v2.value0 instanceof TransposedGain) {
-          return findOtherVoiceGain(v1)(v3)(new Tuple(v2.value0.value0, v2.value0.value1))(v);
-        }
-        ;
-        if (v2 instanceof Just && v2.value0 instanceof Gain) {
-          return spanGain(v2.value0.value0)(fromFoldable12(v2.value0.value1))(v3)(v1);
-        }
-        ;
-        return [];
-      };
-    };
-  };
-};
-var findOtherVoiceGain = function(r) {
-  return function(ws) {
-    return function(v) {
-      return function(mapa) {
-        var newVal = cycleAurals(v.value1)(lookup2(v.value0)(mapa));
-        return processGain(mapa)(r)(newVal)(ws);
-      };
-    };
-  };
-};
-var processN = function(v) {
-  return function(v1) {
-    return function(v2) {
-      return function(v3) {
-        if (v3.length === 0) {
-          return [];
-        }
-        ;
-        if (v2 instanceof Nothing) {
-          return map9(function(w) {
-            return {
-              event: w.event,
-              s: w.s,
-              n: 0
-            };
-          })(v3);
-        }
-        ;
-        if (v2 instanceof Just && v2.value0 instanceof TransposedN) {
-          return findOtherVoiceN(v1)(v3)(new Tuple(v2.value0.value0, v2.value0.value1))(v);
-        }
-        ;
-        if (v2 instanceof Just && v2.value0 instanceof N) {
-          return spanN(v2.value0.value0)(fromFoldable12(v2.value0.value1))(v3)(v1);
-        }
-        ;
-        return [];
-      };
-    };
-  };
-};
-var findOtherVoiceN = function(r) {
-  return function(ws) {
-    return function(v) {
-      return function(mapa) {
-        var newVal = cycleAurals(v.value1)(lookup2(v.value0)(mapa));
-        return processN(mapa)(r)(newVal)(ws);
-      };
-    };
-  };
-};
-var processPan = function(v) {
-  return function(v1) {
-    return function(v2) {
-      return function(v3) {
-        if (v3.length === 0) {
-          return [];
-        }
-        ;
-        if (v2 instanceof Nothing) {
-          return map9(function(w) {
-            return {
-              event: w.event,
-              s: w.s,
-              n: w.n,
-              gain: w.gain,
-              pan: 0.5
-            };
-          })(v3);
-        }
-        ;
-        if (v2 instanceof Just && v2.value0 instanceof TransposedPan) {
-          return findOtherVoicePan(v1)(v3)(new Tuple(v2.value0.value0, v2.value0.value1))(v);
-        }
-        ;
-        if (v2 instanceof Just && v2.value0 instanceof Pan) {
-          return spanPan(v2.value0.value0)(fromFoldable12(v2.value0.value1))(v3)(v1);
-        }
-        ;
-        return [];
-      };
-    };
-  };
-};
-var findOtherVoicePan = function(r) {
-  return function(ws) {
-    return function(v) {
-      return function(mapa) {
-        var newVal = cycleAurals(v.value1)(lookup2(v.value0)(mapa));
-        return processPan(mapa)(r)(newVal)(ws);
-      };
-    };
-  };
-};
-var processSound = function(v) {
-  return function(v1) {
-    return function(v2) {
-      return function(v3) {
-        if (v2 instanceof Nothing) {
-          return [];
-        }
-        ;
-        if (v2 instanceof Just && v2.value0 instanceof TransposedSound) {
-          return findOtherVoiceSound(v1)(v3)(new Tuple(v2.value0.value0, v2.value0.value1))(v);
-        }
-        ;
-        if (v2 instanceof Just && v2.value0 instanceof Sound) {
-          return spanSound(v2.value0.value0)(fromFoldable12(v2.value0.value1))(v3)(v1);
-        }
-        ;
-        return [];
-      };
-    };
-  };
-};
-var findOtherVoiceSound = function(r) {
-  return function(ws) {
-    return function(v) {
-      return function(mapa) {
-        var newVal = cycleAurals(v.value1)(lookup2(v.value0)(mapa));
-        return processSound(mapa)(r)(newVal)(ws);
-      };
-    };
-  };
-};
-var processSpeed = function(v) {
-  return function(v1) {
-    return function(v2) {
-      return function(v3) {
-        if (v3.length === 0) {
-          return [];
-        }
-        ;
-        if (v2 instanceof Nothing) {
-          return map9(function(w) {
-            return {
-              event: w.event,
-              s: w.s,
-              n: w.n,
-              gain: w.gain,
-              pan: w.pan,
-              speed: 1
-            };
-          })(v3);
-        }
-        ;
-        if (v2 instanceof Just && v2.value0 instanceof TransposedSpeed) {
-          return findOtherVoiceSpeed(v1)(v3)(new Tuple(v2.value0.value0, v2.value0.value1))(v);
-        }
-        ;
-        if (v2 instanceof Just && v2.value0 instanceof Speed) {
-          return spanSpeed(v2.value0.value0)(fromFoldable12(v2.value0.value1))(v3)(v1);
-        }
-        ;
-        return [];
-      };
-    };
-  };
-};
-var findOtherVoiceSpeed = function(r) {
-  return function(ws) {
-    return function(v) {
-      return function(mapa) {
-        var newVal = cycleAurals(v.value1)(lookup2(v.value0)(mapa));
-        return processSpeed(mapa)(r)(newVal)(ws);
-      };
-    };
-  };
-};
-var processBegin = function(v) {
-  return function(v1) {
-    return function(v2) {
-      return function(v3) {
-        if (v3.length === 0) {
-          return [];
-        }
-        ;
-        if (v2 instanceof Nothing) {
-          return map9(function(w) {
-            return {
-              event: w.event,
-              s: w.s,
-              n: w.n,
-              gain: w.gain,
-              pan: w.pan,
-              speed: w.speed,
-              begin: 0
-            };
-          })(v3);
-        }
-        ;
-        if (v2 instanceof Just && v2.value0 instanceof TransposedBegin) {
-          return findReferredBegin(v1)(v3)(new Tuple(v2.value0.value0, v2.value0.value1))(v);
-        }
-        ;
-        if (v2 instanceof Just && v2.value0 instanceof Begin) {
-          return spanBegin(v2.value0.value0)(fromFoldable12(v2.value0.value1))(v3)(v1);
-        }
-        ;
-        return [];
-      };
-    };
-  };
-};
-var findReferredBegin = function(r) {
-  return function(ws) {
-    return function(v) {
-      return function(mapa) {
-        var newVal = cycleAurals(v.value1)(lookup2(v.value0)(mapa));
-        return processBegin(mapa)(r)(newVal)(ws);
-      };
-    };
-  };
-};
-var processEnd = function(v) {
-  return function(v1) {
-    return function(v2) {
-      return function(v3) {
-        if (v3.length === 0) {
-          return [];
-        }
-        ;
-        if (v2 instanceof Nothing) {
-          return map9(function(w) {
-            return {
-              event: w.event,
-              s: w.s,
-              n: w.n,
-              gain: w.gain,
-              pan: w.pan,
-              speed: w.speed,
-              begin: w.begin,
-              end: 1
-            };
-          })(v3);
-        }
-        ;
-        if (v2 instanceof Just && v2.value0 instanceof TransposedEnd) {
-          return findReferredEnd(v1)(v3)(new Tuple(v2.value0.value0, v2.value0.value1))(v);
-        }
-        ;
-        if (v2 instanceof Just && v2.value0 instanceof End) {
-          return spanEnd(v2.value0.value0)(fromFoldable12(v2.value0.value1))(v3)(v1);
-        }
-        ;
-        return [];
-      };
-    };
-  };
-};
-var findReferredEnd = function(r) {
-  return function(ws) {
-    return function(v) {
-      return function(mapa) {
-        var newVal = cycleAurals(v.value1)(lookup2(v.value0)(mapa));
-        return processEnd(mapa)(r)(newVal)(ws);
-      };
-    };
-  };
-};
-var auralSpecs$prime = function(m) {
-  return function(rhy) {
-    return function(aural2) {
-      return function(events) {
-        var sounds = processSound(m)(rhy)(getSound(aural2))(events);
-        var nS = processN(m)(rhy)(getN(aural2))(sounds);
-        var gainNS = processGain(m)(rhy)(getGain(aural2))(nS);
-        var panGNS = processPan(m)(rhy)(getPan(aural2))(gainNS);
-        var speedPGNS = processSpeed(m)(rhy)(getSpeed(aural2))(panGNS);
-        var beginSpPGNS = processBegin(m)(rhy)(getBegin(aural2))(speedPGNS);
-        var endBSpPGNS = processEnd(m)(rhy)(getEnd(aural2))(beginSpPGNS);
-        var noteEBSpPGNS = processNote(m)(rhy)(getDastgah(aural2))(endBSpPGNS);
-        return noteEBSpPGNS;
-      };
-    };
-  };
-};
-var auralSpecs = function(m) {
-  return function(rhy) {
-    return function(aurals) {
-      return function(events) {
-        return concat(map9(function(a) {
-          return auralSpecs$prime(m)(rhy)(a)(events);
-        })(fromFoldable12(aurals)));
-      };
-    };
-  };
-};
-
 // output/Control.Monad.Error.Class/index.js
 var throwError = function(dict) {
   return dict.throwError;
@@ -7971,7 +17265,7 @@ var force = function(l) {
 };
 
 // output/Parsing/index.js
-var $runtime_lazy7 = function(name2, moduleName, init3) {
+var $runtime_lazy5 = function(name2, moduleName, init3) {
   var state2 = 0;
   var val;
   return function(lineNumber) {
@@ -7985,7 +17279,7 @@ var $runtime_lazy7 = function(name2, moduleName, init3) {
     return val;
   };
 };
-var unwrap4 = /* @__PURE__ */ unwrap();
+var unwrap2 = /* @__PURE__ */ unwrap();
 var ParseState = /* @__PURE__ */ function() {
   function ParseState2(value0, value1, value2) {
     this.value0 = value0;
@@ -8049,8 +17343,8 @@ var Stop = /* @__PURE__ */ function() {
   return Stop2;
 }();
 var lazyParserT = {
-  defer: function(f) {
-    var m = defer2(f);
+  defer: function(f2) {
+    var m = defer2(f2);
     return function(state1, more, lift1, $$throw, done) {
       var v = force(m);
       return v(state1, more, lift1, $$throw, done);
@@ -8058,13 +17352,13 @@ var lazyParserT = {
   }
 };
 var functorParserT = {
-  map: function(f) {
+  map: function(f2) {
     return function(v) {
       return function(state1, more, lift1, $$throw, done) {
         return more(function(v1) {
           return v(state1, more, lift1, $$throw, function(state2, a) {
             return more(function(v2) {
-              return done(state2, f(a));
+              return done(state2, f2(a));
             });
           });
         });
@@ -8077,11 +17371,11 @@ var applyParserT = {
     return function(v1) {
       return function(state1, more, lift1, $$throw, done) {
         return more(function(v2) {
-          return v(state1, more, lift1, $$throw, function(state2, f) {
+          return v(state1, more, lift1, $$throw, function(state2, f2) {
             return more(function(v3) {
               return v1(state2, more, lift1, $$throw, function(state3, a) {
                 return more(function(v4) {
-                  return done(state3, f(a));
+                  return done(state3, f2(a));
                 });
               });
             });
@@ -8136,7 +17430,7 @@ var monadRecParserT = {
   tailRecM: function(next) {
     return function(initArg) {
       return function(state1, more, lift1, $$throw, done) {
-        var $lazy_loop = $runtime_lazy7("loop", "Parsing", function() {
+        var $lazy_loop = $runtime_lazy5("loop", "Parsing", function() {
           return function(state2, arg, gas) {
             var v = next(arg);
             return v(state2, more, lift1, $$throw, function(state3, step2) {
@@ -8278,7 +17572,7 @@ var runParserT1 = /* @__PURE__ */ runParserT(monadRecIdentity);
 var runParser = function(s) {
   var $281 = runParserT1(s);
   return function($282) {
-    return unwrap4($281($282));
+    return unwrap2($281($282));
   };
 };
 var failWithPosition = function(message2) {
@@ -8321,11 +17615,11 @@ var voidLeft2 = /* @__PURE__ */ voidLeft(functorParserT);
 var pure2 = /* @__PURE__ */ pure(applicativeParserT);
 var applySecond2 = /* @__PURE__ */ applySecond(applyParserT);
 var tailRecM3 = /* @__PURE__ */ tailRecM(monadRecParserT);
-var bind5 = /* @__PURE__ */ bind(bindParserT);
-var map10 = /* @__PURE__ */ map(functorParserT);
+var bind3 = /* @__PURE__ */ bind(bindParserT);
+var map6 = /* @__PURE__ */ map(functorParserT);
 var manyRec2 = /* @__PURE__ */ manyRec(monadRecParserT)(alternativeParserT);
 var $$void2 = /* @__PURE__ */ $$void(functorParserT);
-var apply3 = /* @__PURE__ */ apply(applyParserT);
+var apply2 = /* @__PURE__ */ apply(applyParserT);
 var applyFirst2 = /* @__PURE__ */ applyFirst(applyParserT);
 var empty3 = /* @__PURE__ */ empty(plusParserT);
 var withLazyErrorMessage = function(p) {
@@ -8358,8 +17652,8 @@ var skipMany = function(p) {
 };
 var sepBy1 = function(p) {
   return function(sep) {
-    return bind5(p)(function(a) {
-      return bind5(manyRec2(applySecond2(sep)(p)))(function(as) {
+    return bind3(p)(function(a) {
+      return bind3(manyRec2(applySecond2(sep)(p)))(function(as) {
         return pure2(cons$prime(a)(as));
       });
     });
@@ -8367,7 +17661,7 @@ var sepBy1 = function(p) {
 };
 var sepBy = function(p) {
   return function(sep) {
-    return alt2(map10(toList)(sepBy1(p)(sep)))(pure2(Nil.value));
+    return alt2(map6(toList)(sepBy1(p)(sep)))(pure2(Nil.value));
   };
 };
 var optional = function(p) {
@@ -8382,7 +17676,7 @@ var notFollowedBy = function(p) {
   return $$try(alt2(applySecond2($$try(p))(fail("Negated parser succeeded")))(pure2(unit)));
 };
 var many1 = function(p) {
-  return apply3(map10(cons$prime)(p))(manyRec2(p));
+  return apply2(map6(cons$prime)(p))(manyRec2(p));
 };
 var choice = function(dictFoldable) {
   var go = function(p1) {
@@ -8440,9 +17734,9 @@ var traverse1Impl = function() {
     }
     return arr;
   }
-  return function(apply4, map24, f) {
+  return function(apply4, map24, f2) {
     var buildFrom = function(x, ys) {
-      return apply4(map24(consList)(f(x)))(ys);
+      return apply4(map24(consList)(f2(x)))(ys);
     };
     var go = function(acc, currentLen, xs) {
       if (currentLen === 0) {
@@ -8456,7 +17750,7 @@ var traverse1Impl = function() {
       }
     };
     return function(array) {
-      var acc = map24(finalCell)(f(array[array.length - 1]));
+      var acc = map24(finalCell)(f2(array[array.length - 1]));
       var result = go(acc, array.length - 1, array);
       while (result instanceof Cont) {
         result = result.fn();
@@ -8467,32 +17761,32 @@ var traverse1Impl = function() {
 }();
 
 // output/Parsing.Combinators.Array/index.js
-var bind6 = /* @__PURE__ */ bind(bindParserT);
+var bind4 = /* @__PURE__ */ bind(bindParserT);
 var tailRecM4 = /* @__PURE__ */ tailRecM(monadRecParserT);
 var alt3 = /* @__PURE__ */ alt(altParserT);
 var pure3 = /* @__PURE__ */ pure(applicativeParserT);
-var fromFoldable5 = /* @__PURE__ */ fromFoldable(foldableList);
+var fromFoldable3 = /* @__PURE__ */ fromFoldable(foldableList);
 var many3 = function(p) {
-  return bind6(flip(tailRecM4)(Nil.value)(function(xs) {
-    return alt3(bind6($$try(p))(function(x) {
+  return bind4(flip(tailRecM4)(Nil.value)(function(xs) {
+    return alt3(bind4($$try(p))(function(x) {
       return pure3(new Loop(new Cons(x, xs)));
     }))(pure3(new Done(xs)));
   }))(function(rlist) {
-    return pure3(reverse(fromFoldable5(rlist)));
+    return pure3(reverse(fromFoldable3(rlist)));
   });
 };
 
 // output/Parsing.String/index.js
-var fromEnum8 = /* @__PURE__ */ fromEnum(boundedEnumCodePoint);
-var mod4 = /* @__PURE__ */ mod(euclideanRingInt);
-var fromJust7 = /* @__PURE__ */ fromJust();
-var toEnum8 = /* @__PURE__ */ toEnum(boundedEnumChar);
+var fromEnum3 = /* @__PURE__ */ fromEnum(boundedEnumCodePoint);
+var mod3 = /* @__PURE__ */ mod(euclideanRingInt);
+var fromJust4 = /* @__PURE__ */ fromJust();
+var toEnum2 = /* @__PURE__ */ toEnum(boundedEnumChar);
 var show1 = /* @__PURE__ */ show(showString);
 var show2 = /* @__PURE__ */ show(showChar);
 var updatePosSingle = function(v) {
   return function(cp) {
     return function(after) {
-      var v1 = fromEnum8(cp);
+      var v1 = fromEnum3(cp);
       if (v1 === 10) {
         return {
           index: v.index + 1 | 0,
@@ -8503,7 +17797,7 @@ var updatePosSingle = function(v) {
       ;
       if (v1 === 13) {
         var v2 = codePointAt(0)(after);
-        if (v2 instanceof Just && fromEnum8(v2.value0) === 10) {
+        if (v2 instanceof Just && fromEnum3(v2.value0) === 10) {
           return {
             index: v.index + 1 | 0,
             line: v.line,
@@ -8522,7 +17816,7 @@ var updatePosSingle = function(v) {
         return {
           index: v.index + 1 | 0,
           line: v.line,
-          column: (v.column + 8 | 0) - mod4(v.column - 1 | 0)(8) | 0
+          column: (v.column + 8 | 0) - mod3(v.column - 1 | 0)(8) | 0
         };
       }
       ;
@@ -8577,7 +17871,7 @@ var updatePosString = function($copy_pos) {
     };
   };
 };
-var satisfyCodePoint = function(f) {
+var satisfyCodePoint = function(f2) {
   return mkFn5(function(v) {
     return function(v1) {
       return function(v2) {
@@ -8589,7 +17883,7 @@ var satisfyCodePoint = function(f) {
             }
             ;
             if (v3 instanceof Just) {
-              var $76 = f(v3.value0.head);
+              var $76 = f2(v3.value0.head);
               if ($76) {
                 return done(new ParseState(v3.value0.tail, updatePosSingle(v.value1)(v3.value0.head)(v3.value0.tail), true), v3.value0.head);
               }
@@ -8604,7 +17898,7 @@ var satisfyCodePoint = function(f) {
     };
   });
 };
-var satisfy = function(f) {
+var satisfy = function(f2) {
   return mkFn5(function(v) {
     return function(v1) {
       return function(v2) {
@@ -8616,14 +17910,14 @@ var satisfy = function(f) {
             }
             ;
             if (v3 instanceof Just) {
-              var cp = fromEnum8(v3.value0.head);
+              var cp = fromEnum3(v3.value0.head);
               var $85 = cp < 0 || cp > 65535;
               if ($85) {
                 return $$throw(v, new ParseError("Expected Char", v.value1));
               }
               ;
-              var ch = fromJust7(toEnum8(cp));
-              var $86 = f(ch);
+              var ch = fromJust4(toEnum2(cp));
+              var $86 = f2(ch);
               if ($86) {
                 return done(new ParseState(v3.value0.tail, updatePosSingle(v.value1)(v3.value0.head)(v3.value0.tail), true), ch);
               }
@@ -8654,13 +17948,13 @@ var eof = /* @__PURE__ */ mkFn5(function(v) {
     };
   };
 });
-var consumeWith = function(f) {
+var consumeWith = function(f2) {
   return mkFn5(function(v) {
     return function(v1) {
       return function(v2) {
         return function($$throw) {
           return function(done) {
-            var v3 = f(v.value0);
+            var v3 = f2(v.value0);
             if (v3 instanceof Left) {
               return $$throw(v, new ParseError(v3.value0, v.value1));
             }
@@ -16452,7 +25746,7 @@ var getRule = function(blocks) {
     };
   };
 };
-var caseConv = function(f) {
+var caseConv = function(f2) {
   return function($$char2) {
     var maybeConversionRule = getRule(convchars)($$char2)(numConvBlocks);
     if (maybeConversionRule instanceof Nothing) {
@@ -16460,7 +25754,7 @@ var caseConv = function(f) {
     }
     ;
     if (maybeConversionRule instanceof Just) {
-      return $$char2 + f(maybeConversionRule.value0) | 0;
+      return $$char2 + f2(maybeConversionRule.value0) | 0;
     }
     ;
     throw new Error("Failed pattern match at Data.CodePoint.Unicode.Internal (line 5727, column 5 - line 5729, column 53): " + [maybeConversionRule.constructor.name]);
@@ -30099,15 +39393,15 @@ var uIswalpha = /* @__PURE__ */ checkAttr([gencatLL, gencatLU, gencatLT, gencatL
 var uIswupper = /* @__PURE__ */ checkAttr([gencatLU, gencatLT]);
 
 // output/Data.CodePoint.Unicode/index.js
-var fromEnum9 = /* @__PURE__ */ fromEnum(boundedEnumCodePoint);
+var fromEnum4 = /* @__PURE__ */ fromEnum(boundedEnumCodePoint);
 var modify3 = unsafeCoerce2;
 var toLowerSimple = /* @__PURE__ */ modify3(uTowlower);
 var toUpperSimple = /* @__PURE__ */ modify3(uTowupper);
 var isUpper = function($66) {
-  return uIswupper(fromEnum9($66));
+  return uIswupper(fromEnum4($66));
 };
 var isSpace = function(c) {
-  var uc = fromEnum9(c);
+  var uc = fromEnum4(c);
   var $28 = uc <= 823;
   if ($28) {
     return uc === 32 || (uc >= 9 && uc <= 13 || uc === 160);
@@ -30116,32 +39410,32 @@ var isSpace = function(c) {
   return uIswspace(uc);
 };
 var isOctDigit = function(c) {
-  var diff3 = fromEnum9(c) - toCharCode2("0") | 0;
+  var diff3 = fromEnum4(c) - toCharCode2("0") | 0;
   return diff3 <= 7 && diff3 >= 0;
 };
 var isDecDigit = function(c) {
-  var diff3 = fromEnum9(c) - toCharCode2("0") | 0;
+  var diff3 = fromEnum4(c) - toCharCode2("0") | 0;
   return diff3 <= 9 && diff3 >= 0;
 };
 var isHexDigit = function(c) {
   return isDecDigit(c) || (function() {
-    var diff3 = fromEnum9(c) - toCharCode2("A") | 0;
+    var diff3 = fromEnum4(c) - toCharCode2("A") | 0;
     return diff3 <= 5 && diff3 >= 0;
   }() || function() {
-    var diff3 = fromEnum9(c) - toCharCode2("a") | 0;
+    var diff3 = fromEnum4(c) - toCharCode2("a") | 0;
     return diff3 <= 5 && diff3 >= 0;
   }());
 };
 var isAlphaNum = function($70) {
-  return uIswalnum(fromEnum9($70));
+  return uIswalnum(fromEnum4($70));
 };
 var isAlpha = function($71) {
-  return uIswalpha(fromEnum9($71));
+  return uIswalpha(fromEnum4($71));
 };
 var hexDigitToInt = function(c) {
-  var hexUpper = fromEnum9(c) - toCharCode2("A") | 0;
-  var hexLower = fromEnum9(c) - toCharCode2("a") | 0;
-  var dec = fromEnum9(c) - toCharCode2("0") | 0;
+  var hexUpper = fromEnum4(c) - toCharCode2("A") | 0;
+  var hexLower = fromEnum4(c) - toCharCode2("a") | 0;
+  var dec = fromEnum4(c) - toCharCode2("0") | 0;
   var result = function() {
     if (dec <= 9 && dec >= 0) {
       return new Just(dec);
@@ -30192,9 +39486,9 @@ var digit = /* @__PURE__ */ withErrorMessage(/* @__PURE__ */ satisfyCP(isDecDigi
 var alphaNum = /* @__PURE__ */ withErrorMessage(/* @__PURE__ */ satisfyCP(isAlphaNum))("letter or digit");
 
 // output/Data.String.Unicode/index.js
-var map11 = /* @__PURE__ */ map(functorArray);
-var convert = function(f) {
-  var $6 = map11(f);
+var map7 = /* @__PURE__ */ map(functorArray);
+var convert = function(f2) {
+  var $6 = map7(f2);
   return function($7) {
     return fromCodePointArray($6(toCodePointArray($7)));
   };
@@ -30203,22 +39497,22 @@ var toLowerSimple2 = /* @__PURE__ */ convert(toLowerSimple);
 var toUpperSimple2 = /* @__PURE__ */ convert(toUpperSimple);
 
 // output/Parsing.Token/index.js
-var bind7 = /* @__PURE__ */ bind(bindParserT);
+var bind5 = /* @__PURE__ */ bind(bindParserT);
 var pure4 = /* @__PURE__ */ pure(applicativeParserT);
 var sort2 = /* @__PURE__ */ sort(ordString);
-var map13 = /* @__PURE__ */ map(functorArray);
+var map8 = /* @__PURE__ */ map(functorArray);
 var applySecond3 = /* @__PURE__ */ applySecond(applyParserT);
 var compare3 = /* @__PURE__ */ compare(ordString);
-var append4 = /* @__PURE__ */ append(semigroupArray);
+var append3 = /* @__PURE__ */ append(semigroupArray);
 var fix2 = /* @__PURE__ */ fix(lazyParserT);
 var alt4 = /* @__PURE__ */ alt(altParserT);
 var $$void3 = /* @__PURE__ */ $$void(functorParserT);
 var voidLeft3 = /* @__PURE__ */ voidLeft(functorParserT);
-var identity11 = /* @__PURE__ */ identity(categoryFn);
+var identity9 = /* @__PURE__ */ identity(categoryFn);
 var many4 = /* @__PURE__ */ many(alternativeParserT)(lazyParserT);
-var map14 = /* @__PURE__ */ map(functorMaybe);
+var map1 = /* @__PURE__ */ map(functorMaybe);
 var some3 = /* @__PURE__ */ some(alternativeParserT)(lazyParserT);
-var foldl5 = /* @__PURE__ */ foldl(foldableArray);
+var foldl4 = /* @__PURE__ */ foldl(foldableArray);
 var applyFirst3 = /* @__PURE__ */ applyFirst(applyParserT);
 var show3 = /* @__PURE__ */ show(showString);
 var bind1 = /* @__PURE__ */ bind(bindMaybe);
@@ -30238,7 +39532,7 @@ var theReservedNames = function(v) {
   }
   ;
   if (otherwise) {
-    return sort2(map13(toLower)(v.reservedNames));
+    return sort2(map8(toLower)(v.reservedNames));
   }
   ;
   throw new Error("Failed pattern match at Parsing.Token (line 825, column 1 - line 825, column 70): " + [v.constructor.name]);
@@ -30309,7 +39603,7 @@ var isReservedName = function(v) {
   };
 };
 var inCommentSingle = function(v) {
-  var startEnd = append4(toCharArray(v.commentEnd))(toCharArray(v.commentStart));
+  var startEnd = append3(toCharArray(v.commentEnd))(toCharArray(v.commentStart));
   return fix2(function(p) {
     return alt4($$void3($$try(string(v.commentEnd))))(alt4(applySecond3(skipMany1(noneOf(startEnd)))(p))(withErrorMessage(applySecond3(oneOf2(startEnd))(p))("end of comment")));
   });
@@ -30318,7 +39612,7 @@ var multiLineComment = function(v) {
   return applySecond3($$try(string(v.commentStart)))(inComment(v));
 };
 var inCommentMulti = function(v) {
-  var startEnd = append4(toCharArray(v.commentEnd))(toCharArray(v.commentStart));
+  var startEnd = append3(toCharArray(v.commentEnd))(toCharArray(v.commentStart));
   return fix2(function(p) {
     return alt4($$void3($$try(string(v.commentEnd))))(alt4(applySecond3(multiLineComment(v))(p))(alt4(applySecond3(skipMany1(noneOf(startEnd)))(p))(withErrorMessage(applySecond3(oneOf2(startEnd))(p))("end of comment"))));
   });
@@ -30354,12 +39648,12 @@ var makeTokenParser = function(v) {
     return c !== '"' && (c !== "\\" && c > "");
   });
   var sign2 = function(dictRing) {
-    return alt4(voidLeft3($$char("-"))(negate(dictRing)))(alt4(voidLeft3($$char("+"))(identity11))(pure4(identity11)));
+    return alt4(voidLeft3($$char("-"))(negate(dictRing)))(alt4(voidLeft3($$char("+"))(identity9))(pure4(identity9)));
   };
   var sign1 = sign2(ringInt);
   var oper = function() {
-    var go = bind7(v.opStart)(function(c) {
-      return bind7(many4(v.opLetter))(function(cs) {
+    var go = bind5(v.opStart)(function(c) {
+      return bind5(many4(v.opLetter))(function(cs) {
         return pure4(singleton4(c) + fromCharArray(cs));
       });
     });
@@ -30374,7 +39668,7 @@ var makeTokenParser = function(v) {
           }
           ;
           if (v1 instanceof Just) {
-            return map14(function(v3) {
+            return map1(function(v3) {
               return (base * v1.value0 | 0) + v3 | 0;
             })(hexDigitToInt(codePointFromChar(v2)));
           }
@@ -30382,8 +39676,8 @@ var makeTokenParser = function(v) {
           throw new Error("Failed pattern match at Parsing.Token (line 704, column 5 - line 704, column 45): " + [v1.constructor.name, v2.constructor.name]);
         };
       };
-      return bind7(some3(baseDigit))(function(digits) {
-        return maybe(fail("not digits"))(pure4)(foldl5(folder)(new Just(0))(digits));
+      return bind5(some3(baseDigit))(function(digits) {
+        return maybe(fail("not digits"))(pure4)(foldl4(folder)(new Just(0))(digits));
       });
     };
   };
@@ -30392,7 +39686,7 @@ var makeTokenParser = function(v) {
     return applyFirst3(p)(whiteSpace$prime(v));
   };
   var reservedOp3 = function(name2) {
-    var go = bind7(string(name2))(function() {
+    var go = bind5(string(name2))(function() {
       return withErrorMessage(notFollowedBy(v.opLetter))("end of " + name2);
     });
     return lexeme($$try(go));
@@ -30414,7 +39708,7 @@ var makeTokenParser = function(v) {
     return isReserved(sort2(v.reservedOpNames))(name2);
   };
   var operator = function() {
-    var go = bind7(oper)(function(name2) {
+    var go = bind5(oper)(function(name2) {
       var $114 = isReservedOp(name2);
       if ($114) {
         return fail("reserved operator " + name2);
@@ -30425,15 +39719,15 @@ var makeTokenParser = function(v) {
     return lexeme($$try(go));
   }();
   var ident = function() {
-    var go = bind7(v.identStart)(function(c) {
-      return bind7(many4(v.identLetter))(function(cs) {
+    var go = bind5(v.identStart)(function(c) {
+      return bind5(many4(v.identLetter))(function(cs) {
         return pure4(singleton4(c) + fromCharArray(cs));
       });
     });
     return withErrorMessage(go)("identifier");
   }();
   var identifier3 = function() {
-    var go = bind7(ident)(function(name2) {
+    var go = bind5(ident)(function(name2) {
       var $115 = isReservedName(v)(name2);
       if ($115) {
         return fail("reserved word " + show3(name2));
@@ -30460,8 +39754,8 @@ var makeTokenParser = function(v) {
         throw new Error("Failed pattern match at Parsing.Token (line 651, column 5 - line 651, column 47): " + [v1.constructor.name, v2.constructor.name]);
       };
     };
-    return asErrorMessage("fraction")(bind7($$char("."))(function() {
-      return bind7(withErrorMessage(some3(digit))("fraction"))(function(digits) {
+    return asErrorMessage("fraction")(bind5($$char("."))(function() {
+      return bind5(withErrorMessage(some3(digit))("fraction"))(function(digits) {
         return maybe(fail("not digit"))(pure4)(foldr3(op)(new Just(0))(digits));
       });
     }));
@@ -30483,20 +39777,20 @@ var makeTokenParser = function(v) {
       ;
       throw new Error("Failed pattern match at Parsing.Token (line 664, column 5 - line 664, column 27): " + [e.constructor.name]);
     };
-    return asErrorMessage("exponent")(bind7(oneOf2(["e", "E"]))(function() {
-      return bind7(sign1)(function(f) {
-        return bind7(withErrorMessage(decimal2)("exponent"))(function(e) {
-          return pure4(power(f(e)));
+    return asErrorMessage("exponent")(bind5(oneOf2(["e", "E"]))(function() {
+      return bind5(sign1)(function(f2) {
+        return bind5(withErrorMessage(decimal2)("exponent"))(function(e) {
+          return pure4(power(f2(e)));
         });
       });
     }));
   }();
   var fractExponent = function(n2) {
-    var justExponent = bind7(exponent$prime)(function(expo) {
+    var justExponent = bind5(exponent$prime)(function(expo) {
       return pure4(toNumber2(n2) * expo);
     });
-    var fractExponent$prime = bind7(fraction)(function(fract) {
-      return bind7(option(1)(exponent$prime))(function(expo) {
+    var fractExponent$prime = bind5(fraction)(function(fract) {
+      return bind5(option(1)(exponent$prime))(function(expo) {
         return pure4((toNumber2(n2) + fract) * expo);
       });
     });
@@ -30505,32 +39799,32 @@ var makeTokenParser = function(v) {
   var fractFloat = function(n2) {
     return map22(Right.create)(fractExponent(n2));
   };
-  var decimalFloat = bind7(decimal2)(function(n2) {
+  var decimalFloat = bind5(decimal2)(function(n2) {
     return option(new Left(n2))(fractFloat(n2));
   });
   var zeroNumFloat = alt4(map22(Left.create)(alt4(hexadecimal2)(octal2)))(alt4(decimalFloat)(alt4(fractFloat(0))(pure4(new Left(0)))));
   var natFloat = alt4(applySecond3($$char("0"))(zeroNumFloat))(decimalFloat);
   var naturalOrFloat3 = withErrorMessage(lexeme(natFloat))("number");
-  var floating = bind7(decimal2)(fractExponent);
+  var floating = bind5(decimal2)(fractExponent);
   var $$float = withErrorMessage(lexeme(floating))("float");
   var zeroNumber = withErrorMessage(applySecond3($$char("0"))(alt4(hexadecimal2)(alt4(octal2)(alt4(decimal2)(pure4(0))))))("");
   var nat = alt4(zeroNumber)(decimal2);
-  var $$int = bind7(lexeme(sign1))(function(f) {
-    return bind7(nat)(function(n2) {
-      return pure4(f(n2));
+  var $$int = bind5(lexeme(sign1))(function(f2) {
+    return bind5(nat)(function(n2) {
+      return pure4(f2(n2));
     });
   });
   var integer2 = withErrorMessage(lexeme($$int))("integer");
   var natural4 = withErrorMessage(lexeme(nat))("natural");
-  var comma2 = symbol(",");
+  var comma3 = symbol(",");
   var commaSep = function(p) {
-    return sepBy(p)(comma2);
+    return sepBy(p)(comma3);
   };
   var commaSep1 = function(p) {
-    return sepBy1(p)(comma2);
+    return sepBy1(p)(comma3);
   };
   var colon = symbol(":");
-  var charNum = bind7(alt4(decimal2)(alt4(applySecond3($$char("o"))(number(8)(octDigit)))(applySecond3($$char("x"))(number(16)(hexDigit)))))(function(code) {
+  var charNum = bind5(alt4(decimal2)(alt4(applySecond3($$char("o"))(number(8)(octDigit)))(applySecond3($$char("x"))(number(16)(hexDigit)))))(function(code) {
     var $120 = code > 1114111;
     if ($120) {
       return fail("invalid escape sequence");
@@ -30554,10 +39848,10 @@ var makeTokenParser = function(v) {
     var parseEsc = function(v1) {
       return voidLeft3($$char(v1.value0))(v1.value1);
     };
-    return choice2(map13(parseEsc)(escMap));
+    return choice2(map8(parseEsc)(escMap));
   }();
-  var charControl = bind7($$char("^"))(function() {
-    return bind7(upper2)(function(code) {
+  var charControl = bind5($$char("^"))(function() {
+    return bind5(upper2)(function(code) {
       var v1 = fromCharCode3((toCharCode2(code) - toCharCode2("A") | 0) + 1 | 0);
       if (v1 instanceof Just) {
         return pure4(v1.value0);
@@ -30626,19 +39920,19 @@ var makeTokenParser = function(v) {
   var brackets2 = function(p) {
     return between(symbol("["))(symbol("]"))(p);
   };
-  var braces = function(p) {
+  var braces2 = function(p) {
     return between(symbol("{"))(symbol("}"))(p);
   };
   var ascii3codes = ["NUL", "SOH", "STX", "ETX", "EOT", "ENQ", "ACK", "BEL", "DLE", "DC1", "DC2", "DC3", "DC4", "NAK", "SYN", "ETB", "CAN", "SUB", "ESC", "DEL"];
   var ascii3 = ["\0", "", "", "", "", "", "", "\x07", "", "", "", "", "", "", "", "", "", "", "\x1B", "\x7F"];
   var ascii2codes = ["BS", "HT", "LF", "VT", "FF", "CR", "SO", "SI", "EM", "FS", "GS", "RS", "US", "SP"];
   var ascii2 = ["\b", "	", "\n", "\v", "\f", "\r", "", "", "", "", "", "", "", " "];
-  var asciiMap = zip(append4(ascii3codes)(ascii2codes))(append4(ascii3)(ascii2));
+  var asciiMap = zip(append3(ascii3codes)(ascii2codes))(append3(ascii3)(ascii2));
   var charAscii = function() {
     var parseAscii = function(v1) {
       return $$try(voidLeft3(string(v1.value0))(v1.value1));
     };
-    return choice2(map13(parseAscii)(asciiMap));
+    return choice2(map8(parseAscii)(asciiMap));
   }();
   var escapeCode = alt4(charEsc)(alt4(charNum)(alt4(charAscii)(withErrorMessage(charControl)("escape code"))));
   var charEscape = applySecond3($$char("\\"))(escapeCode);
@@ -30647,7 +39941,7 @@ var makeTokenParser = function(v) {
     var go = between($$char("'"))(withErrorMessage($$char("'"))("end of character"))(characterChar);
     return withErrorMessage(lexeme(go))("character");
   }();
-  var stringEscape = bind7($$char("\\"))(function() {
+  var stringEscape = bind5($$char("\\"))(function() {
     return alt4(voidLeft3(escapeGap)(Nothing.value))(alt4(voidLeft3(escapeEmpty)(Nothing.value))(map22(Just.create)(escapeCode)));
   });
   var stringChar = alt4(map22(Just.create)(stringLetter))(withErrorMessage(stringEscape)("string character"));
@@ -30665,7 +39959,7 @@ var makeTokenParser = function(v) {
         throw new Error("Failed pattern match at Parsing.Token (line 455, column 5 - line 455, column 51): " + [v1.constructor.name, v2.constructor.name]);
       };
     };
-    var go = bind7(between($$char('"'))(withErrorMessage($$char('"'))("end of string"))(many12(stringChar)))(function(maybeChars) {
+    var go = bind5(between($$char('"'))(withErrorMessage($$char('"'))("end of string"))(many12(stringChar)))(function(maybeChars) {
       return pure4(fromCharArray(toUnfoldable4(foldr12(folder)(Nil.value)(maybeChars))));
     });
     return lexeme(withErrorMessage(go)("literal string"));
@@ -30691,11 +39985,11 @@ var makeTokenParser = function(v) {
     lexeme,
     whiteSpace: whiteSpace$prime(v),
     parens: parens4,
-    braces,
+    braces: braces2,
     angles,
     brackets: brackets2,
     semi: semi2,
-    comma: comma2,
+    comma: comma3,
     colon,
     dot,
     semiSep,
@@ -30742,16 +40036,35 @@ var haskellStyle = /* @__PURE__ */ function() {
 }();
 
 // output/Aural/index.js
-var fromFoldable6 = /* @__PURE__ */ fromFoldable2(foldableArray);
-var bind8 = /* @__PURE__ */ bind(bindParserT);
+var empty4 = /* @__PURE__ */ empty(/* @__PURE__ */ plusMap(ordString));
+var map9 = /* @__PURE__ */ map(functorList);
+var toUnfoldable5 = /* @__PURE__ */ toUnfoldable(unfoldableList);
+var unions2 = /* @__PURE__ */ unions(ordString)(foldableList);
+var fromFoldable4 = /* @__PURE__ */ fromFoldable2(foldableArray);
+var bind6 = /* @__PURE__ */ bind(bindParserT);
 var pure5 = /* @__PURE__ */ pure(applicativeParserT);
 var discard2 = /* @__PURE__ */ discard(discardUnit)(bindParserT);
-var map15 = /* @__PURE__ */ map(functorList);
 var choice3 = /* @__PURE__ */ choice(foldableArray);
 var applySecond4 = /* @__PURE__ */ applySecond(applyParserT);
-var map16 = /* @__PURE__ */ map(functorParserT);
-var fromFoldable13 = /* @__PURE__ */ fromFoldable(foldableList);
+var map12 = /* @__PURE__ */ map(functorParserT);
+var fromFoldable1 = /* @__PURE__ */ fromFoldable(foldableList);
+var lookup2 = /* @__PURE__ */ lookup(ordString);
+var elem3 = /* @__PURE__ */ elem(foldableList)(eqBoolean);
 var alt6 = /* @__PURE__ */ alt(altParserT);
+var unexpressPitch = function(v) {
+  if (v instanceof XenoPitchExpression) {
+    return v.value0;
+  }
+  ;
+  return empty4;
+};
+var unexpressAural = function(v) {
+  if (v instanceof AuralExpression) {
+    return v.value0;
+  }
+  ;
+  return empty4;
+};
 var tokenParser = /* @__PURE__ */ makeTokenParser(haskellStyle);
 var whitespace = /* @__PURE__ */ function() {
   return tokenParser.whiteSpace;
@@ -30768,10 +40081,23 @@ var toNumber$prime = function(v) {
     return v.value0;
   }
   ;
-  throw new Error("Failed pattern match at Aural (line 371, column 1 - line 371, column 40): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Aural (line 381, column 1 - line 381, column 40): " + [v.constructor.name]);
+};
+var toListAurals = function(mapas) {
+  var vals = concat2(map9(toUnfoldable5)(mapas));
+  var toAurals = function(key) {
+    return function(vals1) {
+      return singleton3(key)(map9(snd)(filter3(function(v) {
+        return fst(v) === key;
+      })(vals1)));
+    };
+  };
+  return unions2(map9(function(k) {
+    return toAurals(k)(vals);
+  })(map9(fst)(vals)));
 };
 var stringToSamples = function(s) {
-  return fromFoldable6(split(" ")(trim(s)));
+  return fromFoldable4(split(" ")(trim(s)));
 };
 var stringLit = /* @__PURE__ */ function() {
   return tokenParser.stringLiteral;
@@ -30781,12 +40107,12 @@ var specialRange = function(v) {
     var n2 = toNumber2(v1.value0) * 10 + toNumber2(v1.value1);
     var n1 = toNumber2(v.value0) * 10 + toNumber2(v.value1);
     var rangeInts = range3(floor2(n1))(floor2(n2));
-    return map15(function(rangeInt) {
+    return map9(function(rangeInt) {
       return toNumber2(rangeInt) / 10;
     })(rangeInts);
   };
 };
-var sampleParser = /* @__PURE__ */ bind8(stringLit)(function(sampleNames) {
+var sampleParser = /* @__PURE__ */ bind6(stringLit)(function(sampleNames) {
   return pure5(stringToSamples(sampleNames));
 });
 var reservedOp = /* @__PURE__ */ function() {
@@ -30795,8 +40121,8 @@ var reservedOp = /* @__PURE__ */ function() {
 var reserved = /* @__PURE__ */ function() {
   return tokenParser.reserved;
 }();
-var parseSpan = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(choice3([applySecond4(reserved("-_"))(pure5(CycleInBlock.value)), $$try(applySecond4(reserved("_-"))(pure5(CycleBlock.value))), $$try(applySecond4(reserved("_-_"))(pure5(SpreadBlock.value))), applySecond4(reserved("_"))(pure5(CycleEvent.value))]))(function(x) {
+var parseSpan = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(choice3([applySecond4(reserved("-_"))(pure5(CycleInBlock.value)), $$try(applySecond4(reserved("_-"))(pure5(CycleBlock.value))), $$try(applySecond4(reserved("_-_"))(pure5(SpreadBlock.value))), applySecond4(reserved("_"))(pure5(CycleEvent.value))]))(function(x) {
     return pure5(x);
   });
 });
@@ -30809,241 +40135,3640 @@ var naturalOrFloat = /* @__PURE__ */ function() {
 var natural = /* @__PURE__ */ function() {
   return tokenParser.natural;
 }();
-var parseRangeInt = /* @__PURE__ */ bind8(natural)(function(x) {
-  return bind8(reservedOp(".."))(function() {
-    return bind8(natural)(function(y) {
+var parseRangeInt = /* @__PURE__ */ bind6(natural)(function(x) {
+  return bind6(reservedOp(".."))(function() {
+    return bind6(natural)(function(y) {
       return pure5(range3(x)(y));
     });
   });
 });
-var makeSound = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(parseSpan)(function(sp) {
-    return bind8(sampleParser)(function(strList) {
+var makeSound = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(parseSpan)(function(sp) {
+    return bind6(sampleParser)(function(strList) {
       return pure5(new Sound(sp, strList));
     });
   });
 });
-var makeShur = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(parseSpan)(function(sp) {
-    return bind8(choice3([$$try(map16(fromFoldable13)(parseRangeInt)), many3(natural)]))(function(shurList) {
-      return pure5(new Dastgah(sp, new Shur(fromFoldable6(shurList))));
+var makeShur = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(parseSpan)(function(sp) {
+    return bind6(choice3([$$try(map12(fromFoldable1)(parseRangeInt)), many3(natural)]))(function(shurList) {
+      return pure5(new Dastgah(sp, new Shur(fromFoldable4(shurList))));
     });
   });
 });
-var shur = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(choice3([reserved("shur")]))(function() {
-    return bind8(reservedOp("="))(function() {
-      return bind8(makeShur)(function(shur1) {
+var shur = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(choice3([reserved("shur")]))(function() {
+    return bind6(reservedOp("="))(function() {
+      return bind6(makeShur)(function(shur1) {
         return pure5(shur1);
       });
     });
   });
 });
-var mayeh = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
+var mayeh = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
   return choice3([$$try(shur)]);
 });
-var makeN = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(parseSpan)(function(sp) {
-    return bind8(choice3([$$try(map16(fromFoldable13)(parseRangeInt)), many3(natural)]))(function(strList) {
-      return pure5(new N(sp, fromFoldable6(strList)));
+var makeN = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(parseSpan)(function(sp) {
+    return bind6(choice3([$$try(map12(fromFoldable1)(parseRangeInt)), many3(natural)]))(function(strList) {
+      return pure5(new N(sp, fromFoldable4(strList)));
     });
   });
 });
+var keepXeno = function(v) {
+  if (v instanceof Xeno) {
+    return new Just(v.value0);
+  }
+  ;
+  return Nothing.value;
+};
 var identifier = /* @__PURE__ */ function() {
   return tokenParser.identifier;
 }();
-var voiceId = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(identifier)(function(x) {
+var voiceId = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(identifier)(function(x) {
     return pure5(x);
   });
 });
+var getXenoIDs = function(aurals) {
+  var noteIDs = mapMaybe(keepXeno)(concat2(concat2(values(aurals))));
+  return noteIDs;
+};
+var getXPitchMap = function(program) {
+  var isXPitch = function(v) {
+    if (v instanceof XenoPitchExpression) {
+      return true;
+    }
+    ;
+    return false;
+  };
+  return unions2(map9(unexpressPitch)(filter3(function(expression2) {
+    return isXPitch(expression2);
+  })(program)));
+};
+var getAuralMap = function(program) {
+  var isAural = function(v) {
+    if (v instanceof AuralExpression) {
+      return true;
+    }
+    ;
+    return false;
+  };
+  return toListAurals(map9(unexpressAural)(filter3(function(expression2) {
+    return isAural(expression2);
+  })(program)));
+};
+var f = function(v) {
+  return function(v1) {
+    if (v instanceof CPSet && v.value2 instanceof Just) {
+      return v1 <= length(v.value2.value0);
+    }
+    ;
+    return false;
+  };
+};
+var func = function(v) {
+  return function(v1) {
+    if (v1.value1 instanceof Nothing) {
+      var v2 = lookup2(v1.value0)(v);
+      if (v2 instanceof Nothing) {
+        return false;
+      }
+      ;
+      if (v2 instanceof Just) {
+        return true;
+      }
+      ;
+      throw new Error("Failed pattern match at Aural (line 464, column 31 - line 466, column 48): " + [v2.constructor.name]);
+    }
+    ;
+    if (v1.value1 instanceof Just) {
+      var v2 = lookup2(v1.value0)(v);
+      if (v2 instanceof Nothing) {
+        return false;
+      }
+      ;
+      if (v2 instanceof Just) {
+        return f(v2.value0)(v1.value1.value0);
+      }
+      ;
+      throw new Error("Failed pattern match at Aural (line 467, column 32 - line 469, column 50): " + [v2.constructor.name]);
+    }
+    ;
+    throw new Error("Failed pattern match at Aural (line 463, column 1 - line 463, column 67): " + [v.constructor.name, v1.constructor.name]);
+  };
+};
+var checkXPitch = function(expressions) {
+  var listOfPitchID = getXenoIDs(getAuralMap(expressions));
+  var aXenoPitchMap = getXPitchMap(expressions);
+  return !elem3(false)(map9(function(kn) {
+    return func(aXenoPitchMap)(kn);
+  })(listOfPitchID));
+};
 var charWS = function(x) {
-  return bind8(pure5(1))(function() {
-    return bind8($$char(x))(function(x1) {
+  return bind6(pure5(1))(function() {
+    return bind6($$char(x))(function(x1) {
       return discard2(whitespace)(function() {
         return pure5(x1);
       });
     });
   });
 };
-var negNum = /* @__PURE__ */ bind8(/* @__PURE__ */ charWS("-"))(function() {
-  return bind8(naturalOrFloat)(function(x) {
+var negNum = /* @__PURE__ */ bind6(/* @__PURE__ */ charWS("-"))(function() {
+  return bind6(naturalOrFloat)(function(x) {
     return pure5(-1 * toNumber$prime(x));
   });
 });
-var parseNumber = /* @__PURE__ */ choice3([/* @__PURE__ */ $$try(/* @__PURE__ */ parens(/* @__PURE__ */ map16(toNumber$prime)(naturalOrFloat))), /* @__PURE__ */ $$try(/* @__PURE__ */ map16(toNumber$prime)(naturalOrFloat)), negNum]);
-var parseSpecialNum$prime = /* @__PURE__ */ bind8(natural)(function(x) {
-  return bind8(charWS("."))(function() {
-    return bind8(natural)(function(y) {
+var parseNumber = /* @__PURE__ */ choice3([/* @__PURE__ */ $$try(/* @__PURE__ */ parens(/* @__PURE__ */ map12(toNumber$prime)(naturalOrFloat))), /* @__PURE__ */ $$try(/* @__PURE__ */ map12(toNumber$prime)(naturalOrFloat)), negNum]);
+var parseSpecialNum$prime = /* @__PURE__ */ bind6(natural)(function(x) {
+  return bind6(charWS("."))(function() {
+    return bind6(natural)(function(y) {
       return pure5(new Tuple(x, y));
     });
   });
 });
-var parseSpecialNum = /* @__PURE__ */ choice3([/* @__PURE__ */ $$try(parseSpecialNum$prime), /* @__PURE__ */ map16(toSpecial)(natural)]);
-var parseRangeNum = /* @__PURE__ */ bind8(parseSpecialNum)(function(x) {
-  return bind8(reservedOp(".."))(function() {
-    return bind8(parseSpecialNum)(function(y) {
+var parseSpecialNum = /* @__PURE__ */ choice3([/* @__PURE__ */ $$try(parseSpecialNum$prime), /* @__PURE__ */ map12(toSpecial)(natural)]);
+var parseRangeNum = /* @__PURE__ */ bind6(parseSpecialNum)(function(x) {
+  return bind6(reservedOp(".."))(function() {
+    return bind6(parseSpecialNum)(function(y) {
       return pure5(specialRange(x)(y));
     });
   });
 });
-var makeBegin = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(parseSpan)(function(sp) {
-    return bind8(choice3([$$try(map16(fromFoldable13)(parseRangeNum)), many3(parseNumber)]))(function(panList) {
-      return pure5(new Begin(sp, fromFoldable6(panList)));
+var makeBegin = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(parseSpan)(function(sp) {
+    return bind6(choice3([$$try(map12(fromFoldable1)(parseRangeNum)), many3(parseNumber)]))(function(panList) {
+      return pure5(new Begin(sp, fromFoldable4(panList)));
     });
   });
 });
-var makeEnd = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(parseSpan)(function(sp) {
-    return bind8(choice3([$$try(map16(fromFoldable13)(parseRangeNum)), many3(parseNumber)]))(function(spdList) {
-      return pure5(new End(sp, fromFoldable6(spdList)));
+var makeEnd = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(parseSpan)(function(sp) {
+    return bind6(choice3([$$try(map12(fromFoldable1)(parseRangeNum)), many3(parseNumber)]))(function(spdList) {
+      return pure5(new End(sp, fromFoldable4(spdList)));
     });
   });
 });
-var makeGain = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(parseSpan)(function(sp) {
-    return bind8(choice3([$$try(map16(fromFoldable13)(parseRangeNum)), many3(parseNumber)]))(function(gainList) {
-      return pure5(new Gain(sp, fromFoldable6(gainList)));
+var makeGain = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(parseSpan)(function(sp) {
+    return bind6(choice3([$$try(map12(fromFoldable1)(parseRangeNum)), many3(parseNumber)]))(function(gainList) {
+      return pure5(new Gain(sp, fromFoldable4(gainList)));
     });
   });
 });
-var makePan = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(parseSpan)(function(sp) {
-    return bind8(choice3([$$try(map16(fromFoldable13)(parseRangeNum)), many3(parseNumber)]))(function(panList) {
-      return pure5(new Pan(sp, fromFoldable6(panList)));
+var makePan = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(parseSpan)(function(sp) {
+    return bind6(choice3([$$try(map12(fromFoldable1)(parseRangeNum)), many3(parseNumber)]))(function(panList) {
+      return pure5(new Pan(sp, fromFoldable4(panList)));
     });
   });
 });
-var makeSpeed = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(parseSpan)(function(sp) {
-    return bind8(choice3([$$try(map16(fromFoldable13)(parseRangeNum)), many3(parseNumber)]))(function(spdList) {
-      return pure5(new Speed(sp, fromFoldable6(spdList)));
+var makeSpeed = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(parseSpan)(function(sp) {
+    return bind6(choice3([$$try(map12(fromFoldable1)(parseRangeNum)), many3(parseNumber)]))(function(spdList) {
+      return pure5(new Speed(sp, fromFoldable4(spdList)));
     });
   });
 });
 var brackets = /* @__PURE__ */ function() {
   return tokenParser.brackets;
 }();
-var transposeBegin = /* @__PURE__ */ bind8(voiceId)(function(id) {
-  return bind8(alt6(brackets(natural))(pure5(0)))(function(n1) {
+var transposeBegin = /* @__PURE__ */ bind6(voiceId)(function(id) {
+  return bind6(alt6(brackets(natural))(pure5(0)))(function(n1) {
     return pure5(new TransposedBegin(id, n1));
   });
 });
-var transposeEnd = /* @__PURE__ */ bind8(voiceId)(function(id) {
-  return bind8(alt6(brackets(natural))(pure5(0)))(function(n1) {
+var transposeEnd = /* @__PURE__ */ bind6(voiceId)(function(id) {
+  return bind6(alt6(brackets(natural))(pure5(0)))(function(n1) {
     return pure5(new TransposedEnd(id, n1));
   });
 });
-var end = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(choice3([reserved("end")]))(function() {
-    return bind8(reservedOp("="))(function() {
-      return bind8(choice3([$$try(makeEnd), transposeEnd]))(function(end1) {
+var end = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(choice3([reserved("end")]))(function() {
+    return bind6(reservedOp("="))(function() {
+      return bind6(choice3([$$try(makeEnd), transposeEnd]))(function(end1) {
         return pure5(end1);
       });
     });
   });
 });
-var transposeGain = /* @__PURE__ */ bind8(voiceId)(function(id) {
-  return bind8(alt6(brackets(natural))(pure5(0)))(function(n1) {
+var transposeGain = /* @__PURE__ */ bind6(voiceId)(function(id) {
+  return bind6(alt6(brackets(natural))(pure5(0)))(function(n1) {
     return pure5(new TransposedGain(id, n1));
   });
 });
-var gain = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(choice3([reserved("gain")]))(function() {
-    return bind8(reservedOp("="))(function() {
-      return bind8(choice3([$$try(makeGain), transposeGain]))(function(n1) {
+var gain = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(choice3([reserved("gain")]))(function() {
+    return bind6(reservedOp("="))(function() {
+      return bind6(choice3([$$try(makeGain), transposeGain]))(function(n1) {
         return pure5(n1);
       });
     });
   });
 });
-var transposeN = /* @__PURE__ */ bind8(voiceId)(function(id) {
-  return bind8(alt6(brackets(natural))(pure5(0)))(function(n1) {
+var transposeN = /* @__PURE__ */ bind6(voiceId)(function(id) {
+  return bind6(alt6(brackets(natural))(pure5(0)))(function(n1) {
     return pure5(new TransposedN(id, n1));
   });
 });
-var n = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(choice3([reserved("n")]))(function() {
-    return bind8(reservedOp("="))(function() {
-      return bind8(choice3([$$try(makeN), transposeN]))(function(n1) {
+var n = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(choice3([reserved("n")]))(function() {
+    return bind6(reservedOp("="))(function() {
+      return bind6(choice3([$$try(makeN), transposeN]))(function(n1) {
         return pure5(n1);
       });
     });
   });
 });
-var transposePan = /* @__PURE__ */ bind8(voiceId)(function(id) {
-  return bind8(alt6(brackets(natural))(pure5(0)))(function(n1) {
+var transposePan = /* @__PURE__ */ bind6(voiceId)(function(id) {
+  return bind6(alt6(brackets(natural))(pure5(0)))(function(n1) {
     return pure5(new TransposedPan(id, n1));
   });
 });
-var pan = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(choice3([$$try(reserved("pan")), reserved("pan")]))(function() {
-    return bind8(reservedOp("="))(function() {
-      return bind8(choice3([$$try(makePan), transposePan]))(function(sound1) {
+var pan = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(choice3([$$try(reserved("pan")), reserved("pan")]))(function() {
+    return bind6(reservedOp("="))(function() {
+      return bind6(choice3([$$try(makePan), transposePan]))(function(sound1) {
         return pure5(sound1);
       });
     });
   });
 });
-var transposeSound = /* @__PURE__ */ bind8(voiceId)(function(id) {
-  return bind8(alt6(brackets(natural))(pure5(0)))(function(n1) {
+var transposeSound = /* @__PURE__ */ bind6(voiceId)(function(id) {
+  return bind6(alt6(brackets(natural))(pure5(0)))(function(n1) {
     return pure5(new TransposedSound(id, n1));
   });
 });
-var sound = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(choice3([$$try(reserved("sound")), reserved("s")]))(function() {
-    return bind8(reservedOp("="))(function() {
-      return bind8(choice3([$$try(makeSound), transposeSound]))(function(sound1) {
+var sound = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(choice3([$$try(reserved("sound")), reserved("s")]))(function() {
+    return bind6(reservedOp("="))(function() {
+      return bind6(choice3([$$try(makeSound), transposeSound]))(function(sound1) {
         return pure5(sound1);
       });
     });
   });
 });
-var transposeSpeed = /* @__PURE__ */ bind8(voiceId)(function(id) {
-  return bind8(alt6(brackets(natural))(pure5(0)))(function(n1) {
+var transposeSpeed = /* @__PURE__ */ bind6(voiceId)(function(id) {
+  return bind6(alt6(brackets(natural))(pure5(0)))(function(n1) {
     return pure5(new TransposedSpeed(id, n1));
   });
 });
-var speed = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(choice3([reserved("speed")]))(function() {
-    return bind8(reservedOp("="))(function() {
-      return bind8(choice3([$$try(makeSpeed), transposeSpeed]))(function(n1) {
+var speed = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(choice3([reserved("speed")]))(function() {
+    return bind6(reservedOp("="))(function() {
+      return bind6(choice3([$$try(makeSpeed), transposeSpeed]))(function(n1) {
         return pure5(n1);
       });
     });
   });
 });
-var begin = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(choice3([$$try(reserved("begin")), reserved("begin")]))(function() {
-    return bind8(reservedOp("="))(function() {
-      return bind8(choice3([$$try(makeBegin), transposeBegin]))(function(sound1) {
+var xeno = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(identifier)(function(id) {
+    return bind6(alt6(map12(Just.create)(brackets(natural)))(pure5(Nothing.value)))(function(n1) {
+      return bind6(reservedOp("="))(function() {
+        return bind6(parseSpan)(function(sp) {
+          return bind6(choice3([$$try(map12(fromFoldable1)(parseRangeInt)), many3(natural)]))(function(xnL) {
+            return pure5(new Xeno(new Tuple(id, n1), sp, fromFoldable4(xnL)));
+          });
+        });
+      });
+    });
+  });
+});
+var begin = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(choice3([$$try(reserved("begin")), reserved("begin")]))(function() {
+    return bind6(reservedOp("="))(function() {
+      return bind6(choice3([$$try(makeBegin), transposeBegin]))(function(sound1) {
         return pure5(sound1);
       });
     });
   });
 });
-var value = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(reservedOp("."))(function() {
-    return bind8(choice3([$$try(sound), $$try(n), $$try(gain), $$try(pan), $$try(speed), $$try(begin), $$try(end), mayeh]))(function(valType) {
+var value = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(reservedOp("."))(function() {
+    return bind6(choice3([$$try(sound), $$try(n), $$try(gain), $$try(pan), $$try(speed), $$try(begin), $$try(end), $$try(mayeh), xeno]))(function(valType) {
       return pure5(valType);
     });
   });
 });
-var values2 = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(voiceId)(function(id) {
-    return bind8(many3(value))(function(xs) {
-      return pure5(singleton3(id)(fromFoldable6(xs)));
+var parseValues = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(voiceId)(function(id) {
+    return bind6(many3(value))(function(xs) {
+      return pure5(singleton3(id)(fromFoldable4(xs)));
     });
   });
 });
-var aural = /* @__PURE__ */ bind8(/* @__PURE__ */ pure5(1))(function() {
-  return bind8(values2)(function(x) {
-    return bind8(reserved(";"))(function() {
+var aural = /* @__PURE__ */ bind6(/* @__PURE__ */ pure5(1))(function() {
+  return bind6(parseValues)(function(x) {
+    return bind6(reserved(";"))(function() {
       return pure5(new AuralExpression(x));
     });
   });
 });
+
+// output/DurationAndIndex/index.js
+var append4 = /* @__PURE__ */ append(semigroupArray);
+var map10 = /* @__PURE__ */ map(functorArray);
+var add1 = /* @__PURE__ */ add(semiringNumber);
+var min3 = /* @__PURE__ */ min(ordInt);
+var fromFoldable5 = /* @__PURE__ */ fromFoldable2(foldableArray);
+var foldl5 = /* @__PURE__ */ foldl(foldableArray);
+var map13 = /* @__PURE__ */ map(functorList);
+var foldl12 = /* @__PURE__ */ foldl(foldableList);
+var scanl3 = /* @__PURE__ */ scanl(traversableList);
+var sum2 = /* @__PURE__ */ sum(foldableList)(semiringNumber);
+var fromFoldable12 = /* @__PURE__ */ fromFoldable(foldableList);
+var right = function(v) {
+  var splitted = splitAt(v.value0.value0)(v.value1.value1);
+  return new Tuple(new Tuple(v.value0.value0, v.value0.value1 - v.value0.value0 | 0), new Tuple(zipWith(append4)(v.value1.value0)(splitted.before), splitted.after));
+};
+var onsetsFromBlock = function(onsets) {
+  return function(block) {
+    return function(dur) {
+      return map10(function(v) {
+        return new Onset(v.value0, block + v.value1 * dur);
+      })(onsets);
+    };
+  };
+};
+var onsetsFromBlocks = function(blocks) {
+  return function(onsets) {
+    return function(dur) {
+      return concat(map10(function(block) {
+        return onsetsFromBlock(onsets)(block)(dur);
+      })(blocks));
+    };
+  };
+};
+var nLastBlock = function(we) {
+  return function(x1) {
+    return function(dur) {
+      var wEndBlocks = (we - x1) / dur;
+      var nOfLastBlock = function() {
+        if (wEndBlocks < 0) {
+          return Nothing.value;
+        }
+        ;
+        if (otherwise) {
+          return new Just(floor2(wEndBlocks));
+        }
+        ;
+        throw new Error("Failed pattern match at DurationAndIndex (line 229, column 9 - line 231, column 48): " + []);
+      }();
+      return nOfLastBlock;
+    };
+  };
+};
+var nFirstBlock = function(v) {
+  return function(v1) {
+    return function(v2) {
+      if (v2 === 0) {
+        return 0;
+      }
+      ;
+      var xwsB = (v - v1) / v2;
+      var nOfNxBlock = function() {
+        if (xwsB <= 0) {
+          return 0;
+        }
+        ;
+        if (otherwise) {
+          return ceil2(xwsB);
+        }
+        ;
+        throw new Error("Failed pattern match at DurationAndIndex (line 222, column 9 - line 224, column 34): " + []);
+      }();
+      return nOfNxBlock;
+    };
+  };
+};
+var left = function(v) {
+  var splitted = splitAt(v.value0.value1)(v.value1.value0);
+  return new Tuple(new Tuple(v.value0.value1, v.value0.value0 - v.value0.value1 | 0), new Tuple(zipWith(append4)(splitted.before)(v.value1.value1), splitted.after));
+};
+var getVoiceIndex = function(xws) {
+  return function(we) {
+    return function(x1) {
+      return function(dur) {
+        var nOfLstBlock = nLastBlock(we)(x1)(dur);
+        var nOfFstBlock = nFirstBlock(xws)(x1)(dur);
+        var nOfBlocks = function() {
+          if (nOfLstBlock instanceof Nothing) {
+            return [];
+          }
+          ;
+          if (nOfLstBlock instanceof Just) {
+            return range2(nOfFstBlock)(nOfLstBlock.value0);
+          }
+          ;
+          throw new Error("Failed pattern match at DurationAndIndex (line 199, column 19 - line 201, column 49): " + [nOfLstBlock.constructor.name]);
+        }();
+        return nOfBlocks;
+      };
+    };
+  };
+};
+var getDur = function(v) {
+  return v.value1;
+};
+var getBool = function(v) {
+  return v.value0;
+};
+var funquilla = function(voicesIndexes) {
+  return function(onsetIndexes) {
+    return function(lenOnsets) {
+      var funquilla$prime = function(onsetIndexes1) {
+        return function(lenOnsets1) {
+          return function(voiceIndex) {
+            return map10(function(onsetIndex) {
+              return (voiceIndex * lenOnsets1 | 0) + onsetIndex | 0;
+            })(onsetIndexes1);
+          };
+        };
+      };
+      return map10(function(voiceIndex) {
+        return funquilla$prime(onsetIndexes)(lenOnsets)(voiceIndex);
+      })(voicesIndexes);
+    };
+  };
+};
+var bpmToFreq = function(bpm2) {
+  return bpm2 / 60;
+};
+var bpmToDur = function(bpm2) {
+  return 1 / bpmToFreq(bpm2);
+};
+var durInSecs = function(dur) {
+  return function(bpm2) {
+    return dur * bpmToDur(bpm2);
+  };
+};
+var blockToPos = function(is) {
+  return function(x1) {
+    return function(dur) {
+      return map10(function(i) {
+        return x1 + toNumber2(i) * dur;
+      })(is);
+    };
+  };
+};
+var getBlocks = function(xws) {
+  return function(we) {
+    return function(x1) {
+      return function(dur) {
+        var nOfLstBlock = nLastBlock(we)(x1)(dur);
+        var nOfFstBlock = nFirstBlock(xws)(x1)(dur);
+        var nsOfBlocks = function() {
+          if (nOfLstBlock instanceof Nothing) {
+            return [];
+          }
+          ;
+          if (nOfLstBlock instanceof Just) {
+            return range2(nOfFstBlock)(nOfLstBlock.value0);
+          }
+          ;
+          throw new Error("Failed pattern match at DurationAndIndex (line 209, column 20 - line 211, column 49): " + [nOfLstBlock.constructor.name]);
+        }();
+        return blockToPos(nsOfBlocks)(x1)(dur);
+      };
+    };
+  };
+};
+var blRotated = function(rot) {
+  return function(patt) {
+    var x = splitAt(rot)(patt);
+    return append4(x.after)(x.before);
+  };
+};
+var bjorklund$prime = function($copy_v) {
+  var $tco_done = false;
+  var $tco_result;
+  function $tco_loop(v) {
+    var $88 = min3(v.value0.value0)(v.value0.value1) <= 1;
+    if ($88) {
+      $tco_done = true;
+      return new Tuple(v.value0, v.value1);
+    }
+    ;
+    $copy_v = function() {
+      var $89 = v.value0.value0 > v.value0.value1;
+      if ($89) {
+        return left(new Tuple(v.value0, v.value1));
+      }
+      ;
+      return right(new Tuple(v.value0, v.value1));
+    }();
+    return;
+  }
+  ;
+  while (!$tco_done) {
+    $tco_result = $tco_loop($copy_v);
+  }
+  ;
+  return $tco_result;
+};
+var bjorklund = function(v) {
+  var x = replicate(v.value0)([true]);
+  var j = v.value1 - v.value0 | 0;
+  var y = replicate(j)([false]);
+  var v1 = bjorklund$prime(new Tuple(new Tuple(v.value0, j), new Tuple(x, y)));
+  return append4(concat(v1.value1.value0))(concat(v1.value1.value1));
+};
+var simplifyBjorklund = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v instanceof Simple) {
+          var xs = fromFoldable5(map10(function(r) {
+            var $106 = r === true;
+            if ($106) {
+              return X.value;
+            }
+            ;
+            return O.value;
+          })(blRotated(v3)(bjorklund(new Tuple(v1, v2)))));
+          return new Rhythmics(xs);
+        }
+        ;
+        if (v instanceof K) {
+          var patto = new Rhythmics(fromFoldable5(replicate(length4(rhythmicToOnsets(v.value0)))(O.value)));
+          var xs = fromFoldable5(map10(function(r) {
+            var $107 = r === true;
+            if ($107) {
+              return v.value0;
+            }
+            ;
+            return patto;
+          })(blRotated(v3)(bjorklund(new Tuple(v1, v2)))));
+          return new Rhythmics(xs);
+        }
+        ;
+        if (v instanceof InvK) {
+          var patto = new Rhythmics(fromFoldable5(replicate(length4(rhythmicToOnsets(v.value0)))(O.value)));
+          var xs = fromFoldable5(map10(function(r) {
+            var $109 = r === true;
+            if ($109) {
+              return patto;
+            }
+            ;
+            return v.value0;
+          })(blRotated(v3)(bjorklund(new Tuple(v1, v2)))));
+          return new Rhythmics(xs);
+        }
+        ;
+        if (v instanceof Full) {
+          var xs = fromFoldable5(map10(function(r) {
+            var $111 = r === true;
+            if ($111) {
+              return v.value0;
+            }
+            ;
+            return v.value1;
+          })(blRotated(v3)(bjorklund(new Tuple(v1, v2)))));
+          return new Rhythmics(xs);
+        }
+        ;
+        throw new Error("Failed pattern match at DurationAndIndex (line 142, column 1 - line 142, column 63): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+      };
+    };
+  };
+};
+var rhythmicToVoiceDuration = function(v) {
+  if (v instanceof X) {
+    return 1;
+  }
+  ;
+  if (v instanceof O) {
+    return 1;
+  }
+  ;
+  if (v instanceof Sd) {
+    return 1;
+  }
+  ;
+  if (v instanceof Repeat) {
+    var x = replicate(v.value1)(rhythmicToVoiceDuration(v.value0));
+    return foldl5(add1)(0)(x);
+  }
+  ;
+  if (v instanceof Bjorklund) {
+    return rhythmicToVoiceDuration(simplifyBjorklund(v.value0)(v.value1)(v.value2)(v.value3));
+  }
+  ;
+  if (v instanceof Rhythmics) {
+    var x = map13(function(x1) {
+      return rhythmicToVoiceDuration(x1);
+    })(v.value0);
+    return foldl12(add1)(0)(x);
+  }
+  ;
+  throw new Error("Failed pattern match at DurationAndIndex (line 54, column 1 - line 54, column 45): " + [v.constructor.name]);
+};
+var rhythmicToOnsets = function(rhy) {
+  var voiceDur = rhythmicToVoiceDuration(rhy);
+  var rhythmicSegments = onsetDurations(1)(rhy);
+  var durInPercentOfEvents = new Cons(0, fromMaybe(fromFoldable5([]))(init(scanl3(add1)(0)(map13(function(x) {
+    return x / voiceDur;
+  })(map13(getDur)(rhythmicSegments))))));
+  return zipWith2(function(x) {
+    return function(y) {
+      return new Onset(x, y);
+    };
+  })(map13(getBool)(rhythmicSegments))(durInPercentOfEvents);
+};
+var onsetDurations$prime = function(v) {
+  return function(v1) {
+    if (v1 instanceof X) {
+      return fromFoldable5([new Onset(true, v)]);
+    }
+    ;
+    if (v1 instanceof O) {
+      return fromFoldable5([new Onset(false, v)]);
+    }
+    ;
+    if (v1 instanceof Sd) {
+      return onsetDurations$prime(v)(v1.value0);
+    }
+    ;
+    if (v1 instanceof Repeat) {
+      var newDur = v / toNumber2(v1.value1);
+      return concat2(map13(function(x) {
+        return onsetDurations$prime(newDur)(x);
+      })(fromFoldable5(replicate(v1.value1)(v1.value0))));
+    }
+    ;
+    if (v1 instanceof Bjorklund) {
+      return onsetDurations(v)(simplifyBjorklund(v1.value0)(v1.value1)(v1.value2)(v1.value3));
+    }
+    ;
+    if (v1 instanceof Rhythmics) {
+      var newDur = v / toNumber2(length4(v1.value0));
+      return concat2(map13(function(x) {
+        return onsetDurations$prime(newDur)(x);
+      })(v1.value0));
+    }
+    ;
+    throw new Error("Failed pattern match at DurationAndIndex (line 79, column 1 - line 79, column 51): " + [v.constructor.name, v1.constructor.name]);
+  };
+};
+var onsetDurations = function(v) {
+  return function(v1) {
+    if (v1 instanceof X) {
+      return fromFoldable5([new Onset(true, v)]);
+    }
+    ;
+    if (v1 instanceof O) {
+      return fromFoldable5([new Onset(false, v)]);
+    }
+    ;
+    if (v1 instanceof Sd) {
+      return onsetDurations$prime(v)(v1.value0);
+    }
+    ;
+    if (v1 instanceof Repeat) {
+      return concat2(map13(function(x) {
+        return onsetDurations(v)(x);
+      })(fromFoldable5(replicate(v1.value1)(v1.value0))));
+    }
+    ;
+    if (v1 instanceof Bjorklund) {
+      return onsetDurations(v)(simplifyBjorklund(v1.value0)(v1.value1)(v1.value2)(v1.value3));
+    }
+    ;
+    if (v1 instanceof Rhythmics) {
+      return concat2(map13(function(x) {
+        return onsetDurations(v)(x);
+      })(v1.value0));
+    }
+    ;
+    throw new Error("Failed pattern match at DurationAndIndex (line 71, column 1 - line 71, column 50): " + [v.constructor.name, v1.constructor.name]);
+  };
+};
+var durFromRhythmic = function(v) {
+  return function(v1) {
+    if (v instanceof X) {
+      return durInSecs(1)(v1);
+    }
+    ;
+    if (v instanceof O) {
+      return durInSecs(1)(v1);
+    }
+    ;
+    if (v instanceof Sd) {
+      return durInSecs(1)(v1);
+    }
+    ;
+    if (v instanceof Repeat) {
+      return durFromRhythmic(v.value0)(v1) * toNumber2(v.value1);
+    }
+    ;
+    if (v instanceof Rhythmics) {
+      return sum2(map13(function(x) {
+        return durFromRhythmic(x)(v1);
+      })(v.value0));
+    }
+    ;
+    if (v instanceof Bjorklund) {
+      return durFromRhythmic(simplifyBjorklund(v.value0)(v.value1)(v.value2)(v.value3))(v1);
+    }
+    ;
+    throw new Error("Failed pattern match at DurationAndIndex (line 46, column 1 - line 46, column 47): " + [v.constructor.name, v1.constructor.name]);
+  };
+};
+var simplifyRepeat = function($copy_v) {
+  return function($copy_v1) {
+    var $tco_var_v = $copy_v;
+    var $tco_done = false;
+    var $tco_result;
+    function $tco_loop(v, v1) {
+      if (v instanceof X) {
+        $tco_done = true;
+        return new Rhythmics(fromFoldable5(replicate(v1)(X.value)));
+      }
+      ;
+      if (v instanceof O) {
+        $tco_done = true;
+        return new Rhythmics(fromFoldable5(replicate(v1)(O.value)));
+      }
+      ;
+      if (v instanceof Sd) {
+        $tco_done = true;
+        return new Rhythmics(map13(function(r) {
+          return new Sd(r);
+        })(fromFoldable5(replicate(v1)(v.value0))));
+      }
+      ;
+      if (v instanceof Repeat) {
+        var n2 = round2(toNumber2(v1) * toNumber2(v.value1));
+        $tco_var_v = v.value0;
+        $copy_v1 = n2;
+        return;
+      }
+      ;
+      if (v instanceof Bjorklund) {
+        $tco_var_v = simplifyBjorklund(v.value0)(v.value1)(v.value2)(v.value3);
+        $copy_v1 = v1;
+        return;
+      }
+      ;
+      if (v instanceof Rhythmics) {
+        $tco_done = true;
+        return new Rhythmics(fromFoldable5(concat(replicate(v1)(fromFoldable12(v.value0)))));
+      }
+      ;
+      throw new Error("Failed pattern match at DurationAndIndex (line 185, column 1 - line 185, column 45): " + [v.constructor.name, v1.constructor.name]);
+    }
+    ;
+    while (!$tco_done) {
+      $tco_result = $tco_loop($tco_var_v, $copy_v1);
+    }
+    ;
+    return $tco_result;
+  };
+};
+var rhythmicStructIndex$prime = function(v) {
+  return function(v1) {
+    if (v instanceof X) {
+      return [v1];
+    }
+    ;
+    if (v instanceof O) {
+      return [v1];
+    }
+    ;
+    if (v instanceof Rhythmics) {
+      var zipped = zip(fromFoldable12(v.value0))(range2(0)(length4(v.value0) - 1 | 0));
+      return concat(map10(function(v2) {
+        return rhythmicStructIndex$prime(v2.value0)(snoc(v1)(v2.value1));
+      })(zipped));
+    }
+    ;
+    if (v instanceof Sd) {
+      return rhythmicStructIndex$prime(v.value0)(v1);
+    }
+    ;
+    if (v instanceof Repeat) {
+      return rhythmicStructIndex$prime(simplifyRepeat(v.value0)(v.value1))(v1);
+    }
+    ;
+    if (v instanceof Bjorklund) {
+      return rhythmicStructIndex$prime(simplifyBjorklund(v.value0)(v.value1)(v.value2)(v.value3))(v1);
+    }
+    ;
+    throw new Error("Failed pattern match at DurationAndIndex (line 126, column 1 - line 126, column 66): " + [v.constructor.name, v1.constructor.name]);
+  };
+};
+var rhythmicStructIndex = function(v) {
+  return function(v1) {
+    if (v instanceof X) {
+      return [v1];
+    }
+    ;
+    if (v instanceof O) {
+      return [v1];
+    }
+    ;
+    if (v instanceof Rhythmics) {
+      var zipped = zip(fromFoldable12(v.value0))(range2(0)(length4(v.value0) - 1 | 0));
+      return concat(map10(function(v2) {
+        return rhythmicStructIndex(v2.value0)([v2.value1]);
+      })(zipped));
+    }
+    ;
+    if (v instanceof Repeat) {
+      return rhythmicStructIndex(simplifyRepeat(v.value0)(v.value1))(v1);
+    }
+    ;
+    if (v instanceof Sd) {
+      return rhythmicStructIndex$prime(v.value0)(v1);
+    }
+    ;
+    if (v instanceof Bjorklund) {
+      return rhythmicStructIndex(simplifyBjorklund(v.value0)(v.value1)(v.value2)(v.value3))(v1);
+    }
+    ;
+    throw new Error("Failed pattern match at DurationAndIndex (line 117, column 1 - line 117, column 65): " + [v.constructor.name, v1.constructor.name]);
+  };
+};
+var assambleIndex = function(vs) {
+  return function(st) {
+    return function(es) {
+      var xs = map10(function(e) {
+        return zip(st)(e);
+      })(es);
+      var f2 = function(v) {
+        return function(xs1) {
+          return map10(function(x) {
+            return new Index(v, fst(x), snd(x));
+          })(xs1);
+        };
+      };
+      return concat(zipWith(f2)(vs)(xs));
+    };
+  };
+};
+var getIndexes = function(rhythmic2) {
+  return function(xws) {
+    return function(we) {
+      return function(x1) {
+        return function(dur) {
+          var voiceIndexes = getVoiceIndex(xws)(we)(x1)(dur);
+          var structIndexes = rhythmicStructIndex(rhythmic2)([0]);
+          var lenOnset = length4(rhythmicToOnsets(rhythmic2));
+          var eventIndexesPerVoice = range2(0)(lenOnset - 1 | 0);
+          var eventIndexes = funquilla(voiceIndexes)(eventIndexesPerVoice)(lenOnset);
+          return assambleIndex(voiceIndexes)(structIndexes)(eventIndexes);
+        };
+      };
+    };
+  };
+};
+
+// output/Data.Date/foreign.js
+var createDate = function(y, m, d) {
+  var date2 = new Date(Date.UTC(y, m, d));
+  if (y >= 0 && y < 100) {
+    date2.setUTCFullYear(y);
+  }
+  return date2;
+};
+function canonicalDateImpl(ctor, y, m, d) {
+  var date2 = createDate(y, m - 1, d);
+  return ctor(date2.getUTCFullYear())(date2.getUTCMonth() + 1)(date2.getUTCDate());
+}
+
+// output/Data.Date.Component/index.js
+var $runtime_lazy6 = function(name2, moduleName, init3) {
+  var state2 = 0;
+  var val;
+  return function(lineNumber) {
+    if (state2 === 2)
+      return val;
+    if (state2 === 1)
+      throw new ReferenceError(name2 + " was needed before it finished initializing (module " + moduleName + ", line " + lineNumber + ")", moduleName, lineNumber);
+    state2 = 1;
+    val = init3();
+    state2 = 2;
+    return val;
+  };
+};
+var January = /* @__PURE__ */ function() {
+  function January2() {
+  }
+  ;
+  January2.value = new January2();
+  return January2;
+}();
+var February = /* @__PURE__ */ function() {
+  function February2() {
+  }
+  ;
+  February2.value = new February2();
+  return February2;
+}();
+var March = /* @__PURE__ */ function() {
+  function March2() {
+  }
+  ;
+  March2.value = new March2();
+  return March2;
+}();
+var April = /* @__PURE__ */ function() {
+  function April2() {
+  }
+  ;
+  April2.value = new April2();
+  return April2;
+}();
+var May = /* @__PURE__ */ function() {
+  function May2() {
+  }
+  ;
+  May2.value = new May2();
+  return May2;
+}();
+var June = /* @__PURE__ */ function() {
+  function June2() {
+  }
+  ;
+  June2.value = new June2();
+  return June2;
+}();
+var July = /* @__PURE__ */ function() {
+  function July2() {
+  }
+  ;
+  July2.value = new July2();
+  return July2;
+}();
+var August = /* @__PURE__ */ function() {
+  function August2() {
+  }
+  ;
+  August2.value = new August2();
+  return August2;
+}();
+var September = /* @__PURE__ */ function() {
+  function September2() {
+  }
+  ;
+  September2.value = new September2();
+  return September2;
+}();
+var October = /* @__PURE__ */ function() {
+  function October2() {
+  }
+  ;
+  October2.value = new October2();
+  return October2;
+}();
+var November = /* @__PURE__ */ function() {
+  function November2() {
+  }
+  ;
+  November2.value = new November2();
+  return November2;
+}();
+var December = /* @__PURE__ */ function() {
+  function December2() {
+  }
+  ;
+  December2.value = new December2();
+  return December2;
+}();
+var ordYear = ordInt;
+var ordDay = ordInt;
+var eqYear = eqInt;
+var eqMonth = {
+  eq: function(x) {
+    return function(y) {
+      if (x instanceof January && y instanceof January) {
+        return true;
+      }
+      ;
+      if (x instanceof February && y instanceof February) {
+        return true;
+      }
+      ;
+      if (x instanceof March && y instanceof March) {
+        return true;
+      }
+      ;
+      if (x instanceof April && y instanceof April) {
+        return true;
+      }
+      ;
+      if (x instanceof May && y instanceof May) {
+        return true;
+      }
+      ;
+      if (x instanceof June && y instanceof June) {
+        return true;
+      }
+      ;
+      if (x instanceof July && y instanceof July) {
+        return true;
+      }
+      ;
+      if (x instanceof August && y instanceof August) {
+        return true;
+      }
+      ;
+      if (x instanceof September && y instanceof September) {
+        return true;
+      }
+      ;
+      if (x instanceof October && y instanceof October) {
+        return true;
+      }
+      ;
+      if (x instanceof November && y instanceof November) {
+        return true;
+      }
+      ;
+      if (x instanceof December && y instanceof December) {
+        return true;
+      }
+      ;
+      return false;
+    };
+  }
+};
+var ordMonth = {
+  compare: function(x) {
+    return function(y) {
+      if (x instanceof January && y instanceof January) {
+        return EQ.value;
+      }
+      ;
+      if (x instanceof January) {
+        return LT.value;
+      }
+      ;
+      if (y instanceof January) {
+        return GT.value;
+      }
+      ;
+      if (x instanceof February && y instanceof February) {
+        return EQ.value;
+      }
+      ;
+      if (x instanceof February) {
+        return LT.value;
+      }
+      ;
+      if (y instanceof February) {
+        return GT.value;
+      }
+      ;
+      if (x instanceof March && y instanceof March) {
+        return EQ.value;
+      }
+      ;
+      if (x instanceof March) {
+        return LT.value;
+      }
+      ;
+      if (y instanceof March) {
+        return GT.value;
+      }
+      ;
+      if (x instanceof April && y instanceof April) {
+        return EQ.value;
+      }
+      ;
+      if (x instanceof April) {
+        return LT.value;
+      }
+      ;
+      if (y instanceof April) {
+        return GT.value;
+      }
+      ;
+      if (x instanceof May && y instanceof May) {
+        return EQ.value;
+      }
+      ;
+      if (x instanceof May) {
+        return LT.value;
+      }
+      ;
+      if (y instanceof May) {
+        return GT.value;
+      }
+      ;
+      if (x instanceof June && y instanceof June) {
+        return EQ.value;
+      }
+      ;
+      if (x instanceof June) {
+        return LT.value;
+      }
+      ;
+      if (y instanceof June) {
+        return GT.value;
+      }
+      ;
+      if (x instanceof July && y instanceof July) {
+        return EQ.value;
+      }
+      ;
+      if (x instanceof July) {
+        return LT.value;
+      }
+      ;
+      if (y instanceof July) {
+        return GT.value;
+      }
+      ;
+      if (x instanceof August && y instanceof August) {
+        return EQ.value;
+      }
+      ;
+      if (x instanceof August) {
+        return LT.value;
+      }
+      ;
+      if (y instanceof August) {
+        return GT.value;
+      }
+      ;
+      if (x instanceof September && y instanceof September) {
+        return EQ.value;
+      }
+      ;
+      if (x instanceof September) {
+        return LT.value;
+      }
+      ;
+      if (y instanceof September) {
+        return GT.value;
+      }
+      ;
+      if (x instanceof October && y instanceof October) {
+        return EQ.value;
+      }
+      ;
+      if (x instanceof October) {
+        return LT.value;
+      }
+      ;
+      if (y instanceof October) {
+        return GT.value;
+      }
+      ;
+      if (x instanceof November && y instanceof November) {
+        return EQ.value;
+      }
+      ;
+      if (x instanceof November) {
+        return LT.value;
+      }
+      ;
+      if (y instanceof November) {
+        return GT.value;
+      }
+      ;
+      if (x instanceof December && y instanceof December) {
+        return EQ.value;
+      }
+      ;
+      throw new Error("Failed pattern match at Data.Date.Component (line 0, column 0 - line 0, column 0): " + [x.constructor.name, y.constructor.name]);
+    };
+  },
+  Eq0: function() {
+    return eqMonth;
+  }
+};
+var eqDay = eqInt;
+var boundedYear = /* @__PURE__ */ function() {
+  return {
+    bottom: -271820 | 0,
+    top: 275759,
+    Ord0: function() {
+      return ordYear;
+    }
+  };
+}();
+var boundedMonth = /* @__PURE__ */ function() {
+  return {
+    bottom: January.value,
+    top: December.value,
+    Ord0: function() {
+      return ordMonth;
+    }
+  };
+}();
+var boundedEnumYear = {
+  cardinality: 547580,
+  toEnum: function(n2) {
+    if (n2 >= (-271820 | 0) && n2 <= 275759) {
+      return new Just(n2);
+    }
+    ;
+    if (otherwise) {
+      return Nothing.value;
+    }
+    ;
+    throw new Error("Failed pattern match at Data.Date.Component (line 35, column 1 - line 40, column 24): " + [n2.constructor.name]);
+  },
+  fromEnum: function(v) {
+    return v;
+  },
+  Bounded0: function() {
+    return boundedYear;
+  },
+  Enum1: function() {
+    return $lazy_enumYear(0);
+  }
+};
+var $lazy_enumYear = /* @__PURE__ */ $runtime_lazy6("enumYear", "Data.Date.Component", function() {
+  return {
+    succ: function() {
+      var $55 = toEnum(boundedEnumYear);
+      var $56 = fromEnum(boundedEnumYear);
+      return function($57) {
+        return $55(function(v) {
+          return v + 1 | 0;
+        }($56($57)));
+      };
+    }(),
+    pred: function() {
+      var $58 = toEnum(boundedEnumYear);
+      var $59 = fromEnum(boundedEnumYear);
+      return function($60) {
+        return $58(function(v) {
+          return v - 1 | 0;
+        }($59($60)));
+      };
+    }(),
+    Ord0: function() {
+      return ordYear;
+    }
+  };
+});
+var boundedEnumMonth = {
+  cardinality: 12,
+  toEnum: function(v) {
+    if (v === 1) {
+      return new Just(January.value);
+    }
+    ;
+    if (v === 2) {
+      return new Just(February.value);
+    }
+    ;
+    if (v === 3) {
+      return new Just(March.value);
+    }
+    ;
+    if (v === 4) {
+      return new Just(April.value);
+    }
+    ;
+    if (v === 5) {
+      return new Just(May.value);
+    }
+    ;
+    if (v === 6) {
+      return new Just(June.value);
+    }
+    ;
+    if (v === 7) {
+      return new Just(July.value);
+    }
+    ;
+    if (v === 8) {
+      return new Just(August.value);
+    }
+    ;
+    if (v === 9) {
+      return new Just(September.value);
+    }
+    ;
+    if (v === 10) {
+      return new Just(October.value);
+    }
+    ;
+    if (v === 11) {
+      return new Just(November.value);
+    }
+    ;
+    if (v === 12) {
+      return new Just(December.value);
+    }
+    ;
+    return Nothing.value;
+  },
+  fromEnum: function(v) {
+    if (v instanceof January) {
+      return 1;
+    }
+    ;
+    if (v instanceof February) {
+      return 2;
+    }
+    ;
+    if (v instanceof March) {
+      return 3;
+    }
+    ;
+    if (v instanceof April) {
+      return 4;
+    }
+    ;
+    if (v instanceof May) {
+      return 5;
+    }
+    ;
+    if (v instanceof June) {
+      return 6;
+    }
+    ;
+    if (v instanceof July) {
+      return 7;
+    }
+    ;
+    if (v instanceof August) {
+      return 8;
+    }
+    ;
+    if (v instanceof September) {
+      return 9;
+    }
+    ;
+    if (v instanceof October) {
+      return 10;
+    }
+    ;
+    if (v instanceof November) {
+      return 11;
+    }
+    ;
+    if (v instanceof December) {
+      return 12;
+    }
+    ;
+    throw new Error("Failed pattern match at Data.Date.Component (line 87, column 14 - line 99, column 19): " + [v.constructor.name]);
+  },
+  Bounded0: function() {
+    return boundedMonth;
+  },
+  Enum1: function() {
+    return $lazy_enumMonth(0);
+  }
+};
+var $lazy_enumMonth = /* @__PURE__ */ $runtime_lazy6("enumMonth", "Data.Date.Component", function() {
+  return {
+    succ: function() {
+      var $67 = toEnum(boundedEnumMonth);
+      var $68 = fromEnum(boundedEnumMonth);
+      return function($69) {
+        return $67(function(v) {
+          return v + 1 | 0;
+        }($68($69)));
+      };
+    }(),
+    pred: function() {
+      var $70 = toEnum(boundedEnumMonth);
+      var $71 = fromEnum(boundedEnumMonth);
+      return function($72) {
+        return $70(function(v) {
+          return v - 1 | 0;
+        }($71($72)));
+      };
+    }(),
+    Ord0: function() {
+      return ordMonth;
+    }
+  };
+});
+var boundedDay = {
+  bottom: 1,
+  top: 31,
+  Ord0: function() {
+    return ordDay;
+  }
+};
+var boundedEnumDay = {
+  cardinality: 31,
+  toEnum: function(n2) {
+    if (n2 >= 1 && n2 <= 31) {
+      return new Just(n2);
+    }
+    ;
+    if (otherwise) {
+      return Nothing.value;
+    }
+    ;
+    throw new Error("Failed pattern match at Data.Date.Component (line 133, column 1 - line 138, column 23): " + [n2.constructor.name]);
+  },
+  fromEnum: function(v) {
+    return v;
+  },
+  Bounded0: function() {
+    return boundedDay;
+  },
+  Enum1: function() {
+    return $lazy_enumDay(0);
+  }
+};
+var $lazy_enumDay = /* @__PURE__ */ $runtime_lazy6("enumDay", "Data.Date.Component", function() {
+  return {
+    succ: function() {
+      var $73 = toEnum(boundedEnumDay);
+      var $74 = fromEnum(boundedEnumDay);
+      return function($75) {
+        return $73(function(v) {
+          return v + 1 | 0;
+        }($74($75)));
+      };
+    }(),
+    pred: function() {
+      var $76 = toEnum(boundedEnumDay);
+      var $77 = fromEnum(boundedEnumDay);
+      return function($78) {
+        return $76(function(v) {
+          return v - 1 | 0;
+        }($77($78)));
+      };
+    }(),
+    Ord0: function() {
+      return ordDay;
+    }
+  };
+});
+
+// output/Data.Time.Duration/index.js
+var over2 = /* @__PURE__ */ over()();
+var identity10 = /* @__PURE__ */ identity(categoryFn);
+var Seconds = function(x) {
+  return x;
+};
+var Milliseconds = function(x) {
+  return x;
+};
+var toDuration = function(dict) {
+  return dict.toDuration;
+};
+var fromDuration = function(dict) {
+  return dict.fromDuration;
+};
+var durationSeconds = {
+  fromDuration: /* @__PURE__ */ over2(Seconds)(function(v) {
+    return v * 1e3;
+  }),
+  toDuration: /* @__PURE__ */ over2(Milliseconds)(function(v) {
+    return v / 1e3;
+  })
+};
+var durationMilliseconds = {
+  fromDuration: identity10,
+  toDuration: identity10
+};
+
+// output/Data.Date/index.js
+var fromEnum5 = /* @__PURE__ */ fromEnum(boundedEnumMonth);
+var fromJust5 = /* @__PURE__ */ fromJust();
+var eq12 = /* @__PURE__ */ eq(eqYear);
+var eq2 = /* @__PURE__ */ eq(eqMonth);
+var eq3 = /* @__PURE__ */ eq(eqDay);
+var toEnum22 = /* @__PURE__ */ toEnum(boundedEnumMonth);
+var $$Date = /* @__PURE__ */ function() {
+  function $$Date2(value0, value1, value2) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+  }
+  ;
+  $$Date2.create = function(value0) {
+    return function(value1) {
+      return function(value2) {
+        return new $$Date2(value0, value1, value2);
+      };
+    };
+  };
+  return $$Date2;
+}();
+var year = function(v) {
+  return v.value0;
+};
+var month = function(v) {
+  return v.value1;
+};
+var eqDate = {
+  eq: function(x) {
+    return function(y) {
+      return eq12(x.value0)(y.value0) && eq2(x.value1)(y.value1) && eq3(x.value2)(y.value2);
+    };
+  }
+};
+var eq4 = /* @__PURE__ */ eq(eqDate);
+var day = function(v) {
+  return v.value2;
+};
+var canonicalDate = function(y) {
+  return function(m) {
+    return function(d) {
+      var mkDate = function(y$prime) {
+        return function(m$prime) {
+          return function(d$prime) {
+            return new $$Date(y$prime, fromJust5(toEnum22(m$prime)), d$prime);
+          };
+        };
+      };
+      return canonicalDateImpl(mkDate, y, fromEnum5(m), d);
+    };
+  };
+};
+var exactDate = function(y) {
+  return function(m) {
+    return function(d) {
+      var dt = new $$Date(y, m, d);
+      var $144 = eq4(canonicalDate(y)(m)(d))(dt);
+      if ($144) {
+        return new Just(dt);
+      }
+      ;
+      return Nothing.value;
+    };
+  };
+};
+
+// output/Data.DateTime/foreign.js
+var createUTC = function(y, mo, d, h, m, s, ms) {
+  var date2 = new Date(Date.UTC(y, mo, d, h, m, s, ms));
+  if (y >= 0 && y < 100) {
+    date2.setUTCFullYear(y);
+  }
+  return date2.getTime();
+};
+function calcDiff2(rec1, rec2) {
+  var msUTC1 = createUTC(rec1.year, rec1.month - 1, rec1.day, rec1.hour, rec1.minute, rec1.second, rec1.millisecond);
+  var msUTC2 = createUTC(rec2.year, rec2.month - 1, rec2.day, rec2.hour, rec2.minute, rec2.second, rec2.millisecond);
+  return msUTC1 - msUTC2;
+}
+function adjustImpl(just) {
+  return function(nothing) {
+    return function(offset) {
+      return function(rec) {
+        var msUTC = createUTC(rec.year, rec.month - 1, rec.day, rec.hour, rec.minute, rec.second, rec.millisecond);
+        var dt = new Date(msUTC + offset);
+        return isNaN(dt.getTime()) ? nothing : just({
+          year: dt.getUTCFullYear(),
+          month: dt.getUTCMonth() + 1,
+          day: dt.getUTCDate(),
+          hour: dt.getUTCHours(),
+          minute: dt.getUTCMinutes(),
+          second: dt.getUTCSeconds(),
+          millisecond: dt.getUTCMilliseconds()
+        });
+      };
+    };
+  };
+}
+
+// output/Data.Time.Component/index.js
+var $runtime_lazy7 = function(name2, moduleName, init3) {
+  var state2 = 0;
+  var val;
+  return function(lineNumber) {
+    if (state2 === 2)
+      return val;
+    if (state2 === 1)
+      throw new ReferenceError(name2 + " was needed before it finished initializing (module " + moduleName + ", line " + lineNumber + ")", moduleName, lineNumber);
+    state2 = 1;
+    val = init3();
+    state2 = 2;
+    return val;
+  };
+};
+var ordSecond = ordInt;
+var ordMinute = ordInt;
+var ordMillisecond = ordInt;
+var ordHour = ordInt;
+var boundedSecond = {
+  bottom: 0,
+  top: 59,
+  Ord0: function() {
+    return ordSecond;
+  }
+};
+var boundedMinute = {
+  bottom: 0,
+  top: 59,
+  Ord0: function() {
+    return ordMinute;
+  }
+};
+var boundedMillisecond = {
+  bottom: 0,
+  top: 999,
+  Ord0: function() {
+    return ordMillisecond;
+  }
+};
+var boundedHour = {
+  bottom: 0,
+  top: 23,
+  Ord0: function() {
+    return ordHour;
+  }
+};
+var boundedEnumSecond = {
+  cardinality: 60,
+  toEnum: function(n2) {
+    if (n2 >= 0 && n2 <= 59) {
+      return new Just(n2);
+    }
+    ;
+    if (otherwise) {
+      return Nothing.value;
+    }
+    ;
+    throw new Error("Failed pattern match at Data.Time.Component (line 90, column 1 - line 95, column 26): " + [n2.constructor.name]);
+  },
+  fromEnum: function(v) {
+    return v;
+  },
+  Bounded0: function() {
+    return boundedSecond;
+  },
+  Enum1: function() {
+    return $lazy_enumSecond(0);
+  }
+};
+var $lazy_enumSecond = /* @__PURE__ */ $runtime_lazy7("enumSecond", "Data.Time.Component", function() {
+  return {
+    succ: function() {
+      var $36 = toEnum(boundedEnumSecond);
+      var $37 = fromEnum(boundedEnumSecond);
+      return function($38) {
+        return $36(function(v) {
+          return v + 1 | 0;
+        }($37($38)));
+      };
+    }(),
+    pred: function() {
+      var $39 = toEnum(boundedEnumSecond);
+      var $40 = fromEnum(boundedEnumSecond);
+      return function($41) {
+        return $39(function(v) {
+          return v - 1 | 0;
+        }($40($41)));
+      };
+    }(),
+    Ord0: function() {
+      return ordSecond;
+    }
+  };
+});
+var boundedEnumMinute = {
+  cardinality: 60,
+  toEnum: function(n2) {
+    if (n2 >= 0 && n2 <= 59) {
+      return new Just(n2);
+    }
+    ;
+    if (otherwise) {
+      return Nothing.value;
+    }
+    ;
+    throw new Error("Failed pattern match at Data.Time.Component (line 61, column 1 - line 66, column 26): " + [n2.constructor.name]);
+  },
+  fromEnum: function(v) {
+    return v;
+  },
+  Bounded0: function() {
+    return boundedMinute;
+  },
+  Enum1: function() {
+    return $lazy_enumMinute(0);
+  }
+};
+var $lazy_enumMinute = /* @__PURE__ */ $runtime_lazy7("enumMinute", "Data.Time.Component", function() {
+  return {
+    succ: function() {
+      var $42 = toEnum(boundedEnumMinute);
+      var $43 = fromEnum(boundedEnumMinute);
+      return function($44) {
+        return $42(function(v) {
+          return v + 1 | 0;
+        }($43($44)));
+      };
+    }(),
+    pred: function() {
+      var $45 = toEnum(boundedEnumMinute);
+      var $46 = fromEnum(boundedEnumMinute);
+      return function($47) {
+        return $45(function(v) {
+          return v - 1 | 0;
+        }($46($47)));
+      };
+    }(),
+    Ord0: function() {
+      return ordMinute;
+    }
+  };
+});
+var boundedEnumMillisecond = {
+  cardinality: 1e3,
+  toEnum: function(n2) {
+    if (n2 >= 0 && n2 <= 999) {
+      return new Just(n2);
+    }
+    ;
+    if (otherwise) {
+      return Nothing.value;
+    }
+    ;
+    throw new Error("Failed pattern match at Data.Time.Component (line 120, column 1 - line 125, column 31): " + [n2.constructor.name]);
+  },
+  fromEnum: function(v) {
+    return v;
+  },
+  Bounded0: function() {
+    return boundedMillisecond;
+  },
+  Enum1: function() {
+    return $lazy_enumMillisecond(0);
+  }
+};
+var $lazy_enumMillisecond = /* @__PURE__ */ $runtime_lazy7("enumMillisecond", "Data.Time.Component", function() {
+  return {
+    succ: function() {
+      var $48 = toEnum(boundedEnumMillisecond);
+      var $49 = fromEnum(boundedEnumMillisecond);
+      return function($50) {
+        return $48(function(v) {
+          return v + 1 | 0;
+        }($49($50)));
+      };
+    }(),
+    pred: function() {
+      var $51 = toEnum(boundedEnumMillisecond);
+      var $52 = fromEnum(boundedEnumMillisecond);
+      return function($53) {
+        return $51(function(v) {
+          return v - 1 | 0;
+        }($52($53)));
+      };
+    }(),
+    Ord0: function() {
+      return ordMillisecond;
+    }
+  };
+});
+var boundedEnumHour = {
+  cardinality: 24,
+  toEnum: function(n2) {
+    if (n2 >= 0 && n2 <= 23) {
+      return new Just(n2);
+    }
+    ;
+    if (otherwise) {
+      return Nothing.value;
+    }
+    ;
+    throw new Error("Failed pattern match at Data.Time.Component (line 32, column 1 - line 37, column 24): " + [n2.constructor.name]);
+  },
+  fromEnum: function(v) {
+    return v;
+  },
+  Bounded0: function() {
+    return boundedHour;
+  },
+  Enum1: function() {
+    return $lazy_enumHour(0);
+  }
+};
+var $lazy_enumHour = /* @__PURE__ */ $runtime_lazy7("enumHour", "Data.Time.Component", function() {
+  return {
+    succ: function() {
+      var $54 = toEnum(boundedEnumHour);
+      var $55 = fromEnum(boundedEnumHour);
+      return function($56) {
+        return $54(function(v) {
+          return v + 1 | 0;
+        }($55($56)));
+      };
+    }(),
+    pred: function() {
+      var $57 = toEnum(boundedEnumHour);
+      var $58 = fromEnum(boundedEnumHour);
+      return function($59) {
+        return $57(function(v) {
+          return v - 1 | 0;
+        }($58($59)));
+      };
+    }(),
+    Ord0: function() {
+      return ordHour;
+    }
+  };
+});
+
+// output/Data.Time/index.js
+var Time = /* @__PURE__ */ function() {
+  function Time2(value0, value1, value2, value3) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+    this.value3 = value3;
+  }
+  ;
+  Time2.create = function(value0) {
+    return function(value1) {
+      return function(value2) {
+        return function(value3) {
+          return new Time2(value0, value1, value2, value3);
+        };
+      };
+    };
+  };
+  return Time2;
+}();
+var second = function(v) {
+  return v.value2;
+};
+var minute = function(v) {
+  return v.value1;
+};
+var millisecond = function(v) {
+  return v.value3;
+};
+var hour = function(v) {
+  return v.value0;
+};
+
+// output/Data.DateTime/index.js
+var fromEnum6 = /* @__PURE__ */ fromEnum(boundedEnumYear);
+var fromEnum1 = /* @__PURE__ */ fromEnum(boundedEnumMonth);
+var fromEnum22 = /* @__PURE__ */ fromEnum(boundedEnumDay);
+var fromEnum32 = /* @__PURE__ */ fromEnum(boundedEnumHour);
+var fromEnum42 = /* @__PURE__ */ fromEnum(boundedEnumMinute);
+var fromEnum52 = /* @__PURE__ */ fromEnum(boundedEnumSecond);
+var fromEnum62 = /* @__PURE__ */ fromEnum(boundedEnumMillisecond);
+var bind7 = /* @__PURE__ */ bind(bindMaybe);
+var apply3 = /* @__PURE__ */ apply(applyMaybe);
+var map11 = /* @__PURE__ */ map(functorMaybe);
+var join2 = /* @__PURE__ */ join(bindMaybe);
+var toEnum3 = /* @__PURE__ */ toEnum(boundedEnumYear);
+var toEnum1 = /* @__PURE__ */ toEnum(boundedEnumMonth);
+var toEnum23 = /* @__PURE__ */ toEnum(boundedEnumDay);
+var toEnum32 = /* @__PURE__ */ toEnum(boundedEnumHour);
+var toEnum4 = /* @__PURE__ */ toEnum(boundedEnumMinute);
+var toEnum5 = /* @__PURE__ */ toEnum(boundedEnumSecond);
+var toEnum6 = /* @__PURE__ */ toEnum(boundedEnumMillisecond);
+var DateTime = /* @__PURE__ */ function() {
+  function DateTime2(value0, value1) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+  ;
+  DateTime2.create = function(value0) {
+    return function(value1) {
+      return new DateTime2(value0, value1);
+    };
+  };
+  return DateTime2;
+}();
+var toRecord = function(v) {
+  return {
+    year: fromEnum6(year(v.value0)),
+    month: fromEnum1(month(v.value0)),
+    day: fromEnum22(day(v.value0)),
+    hour: fromEnum32(hour(v.value1)),
+    minute: fromEnum42(minute(v.value1)),
+    second: fromEnum52(second(v.value1)),
+    millisecond: fromEnum62(millisecond(v.value1))
+  };
+};
+var diff = function(dictDuration) {
+  var toDuration2 = toDuration(dictDuration);
+  return function(dt1) {
+    return function(dt2) {
+      return toDuration2(calcDiff2(toRecord(dt1), toRecord(dt2)));
+    };
+  };
+};
+var adjust = function(dictDuration) {
+  var fromDuration2 = fromDuration(dictDuration);
+  return function(d) {
+    return function(dt) {
+      return bind7(adjustImpl(Just.create)(Nothing.value)(fromDuration2(d))(toRecord(dt)))(function(rec) {
+        return apply3(map11(DateTime.create)(join2(apply3(apply3(map11(exactDate)(toEnum3(rec.year)))(toEnum1(rec.month)))(toEnum23(rec.day)))))(apply3(apply3(apply3(map11(Time.create)(toEnum32(rec.hour)))(toEnum4(rec.minute)))(toEnum5(rec.second)))(toEnum6(rec.millisecond)));
+      });
+    };
+  };
+};
+
+// output/Data.DateTime.Instant/foreign.js
+var createDateTime = function(y, m, d, h, mi, s, ms) {
+  var dateTime = new Date(Date.UTC(y, m, d, h, mi, s, ms));
+  if (y >= 0 && y < 100) {
+    dateTime.setUTCFullYear(y);
+  }
+  return dateTime;
+};
+function fromDateTimeImpl(y, mo, d, h, mi, s, ms) {
+  return createDateTime(y, mo - 1, d, h, mi, s, ms).getTime();
+}
+function toDateTimeImpl(ctor) {
+  return function(instant2) {
+    var dt = new Date(instant2);
+    return ctor(dt.getUTCFullYear())(dt.getUTCMonth() + 1)(dt.getUTCDate())(dt.getUTCHours())(dt.getUTCMinutes())(dt.getUTCSeconds())(dt.getUTCMilliseconds());
+  };
+}
+
+// output/Data.DateTime.Instant/index.js
+var fromJust6 = /* @__PURE__ */ fromJust();
+var toEnum7 = /* @__PURE__ */ toEnum(boundedEnumMonth);
+var fromEnum7 = /* @__PURE__ */ fromEnum(boundedEnumMonth);
+var unInstant = function(v) {
+  return v;
+};
+var toDateTime = /* @__PURE__ */ function() {
+  var mkDateTime = function(y) {
+    return function(mo) {
+      return function(d) {
+        return function(h) {
+          return function(mi) {
+            return function(s) {
+              return function(ms) {
+                return new DateTime(canonicalDate(y)(fromJust6(toEnum7(mo)))(d), new Time(h, mi, s, ms));
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+  return toDateTimeImpl(mkDateTime);
+}();
+var instant = function(v) {
+  if (v >= -86399778816e5 && v <= 8639977881599999) {
+    return new Just(v);
+  }
+  ;
+  if (otherwise) {
+    return Nothing.value;
+  }
+  ;
+  throw new Error("Failed pattern match at Data.DateTime.Instant (line 44, column 1 - line 44, column 41): " + [v.constructor.name]);
+};
+var fromDateTime = function(v) {
+  return fromDateTimeImpl(year(v.value0), fromEnum7(month(v.value0)), day(v.value0), hour(v.value1), minute(v.value1), second(v.value1), millisecond(v.value1));
+};
+
+// output/Effect.Now/foreign.js
+function now() {
+  return Date.now();
+}
+
+// output/Effect.Now/index.js
+var map14 = /* @__PURE__ */ map(functorEffect);
+var nowDateTime = /* @__PURE__ */ map14(toDateTime)(now);
+
+// output/Data.Tempo/index.js
+var unwrap3 = /* @__PURE__ */ unwrap();
+var diff2 = /* @__PURE__ */ diff(durationMilliseconds);
+var toRational2 = /* @__PURE__ */ toRational(toRationalInt);
+var add12 = /* @__PURE__ */ add(semiringRational);
+var mul1 = /* @__PURE__ */ mul(semiringRational);
+var div1 = /* @__PURE__ */ div(euclideanRingRational);
+var identity11 = /* @__PURE__ */ identity(categoryFn);
+var adjust2 = /* @__PURE__ */ adjust(durationSeconds);
+var fromJust7 = /* @__PURE__ */ fromJust();
+var toRational1 = /* @__PURE__ */ toRational(toRationalBigInt);
+var timeToCount = function(x) {
+  return function(t) {
+    var d = unwrap3(diff2(t)(x.time));
+    var d$prime = toRational2(floor2(d))(1e3);
+    return add12(mul1(d$prime)(x.freq))(x.count);
+  };
+};
+var origin = function(x) {
+  var increment = div1(mul1(x.count)(fromInt2(-1 | 0)))(x.freq);
+  return maybe(x.time)(identity11)(adjust2(toNumber3(increment))(x.time));
+};
+var newTempo = function(freq) {
+  return function __do2() {
+    var time3 = nowDateTime();
+    return {
+      freq,
+      time: time3,
+      count: fromInt2(0)
+    };
+  };
+};
+var fromForeignTempo = function(x) {
+  var time3 = toDateTime(fromJust7(instant(x.time * 1e3)));
+  var freq = toRational1(x.freqNumerator)(x.freqDenominator);
+  var count = toRational1(x.countNumerator)(x.countDenominator);
+  return {
+    freq,
+    time: time3,
+    count
+  };
+};
+
+// output/TimePacketOps/index.js
+var unwrap4 = /* @__PURE__ */ unwrap();
+var fromDateTimeToPosix = function(x) {
+  return unwrap4(unInstant(fromDateTime(x))) / 1e3;
+};
+var secsFromOriginAtEval = function(tp) {
+  var oPosix = fromDateTimeToPosix(tp.origin);
+  var $$eval = fromDateTimeToPosix(tp["eval"]);
+  return $$eval - oPosix;
+};
+var secsFromOriginAtWE = function(tp) {
+  var we = fromDateTimeToPosix(tp.we);
+  var oPosix = fromDateTimeToPosix(tp.origin);
+  return we - oPosix;
+};
+var secsFromOriginAtWS = function(tp) {
+  var ws = fromDateTimeToPosix(tp.ws);
+  var oPosix = fromDateTimeToPosix(tp.origin);
+  return ws - oPosix;
+};
+
+// output/TestOpsAndDefs/index.js
+var toRational3 = /* @__PURE__ */ toRational(toRationalInt);
+var defTemporal = /* @__PURE__ */ function() {
+  return new Temporal(new Kairos(0, new CPM(toRational3(120)(1))), O.value, false);
+}();
+var defConvergeTo = /* @__PURE__ */ function() {
+  return new ProcessTo(0, Origin.value);
+}();
+var defConvergeFrom = /* @__PURE__ */ function() {
+  return new Process(0);
+}();
+
+// output/Erv/foreign.js
+var Erv = __toESM(require_lib(), 1);
+var ratioToCents = Erv.default.utils.ratioToCents;
+var makeCPSScale = (size) => (factor) => Erv.default.cps.make(size, factor).scale;
+
+// output/XenoPitch/index.js
+var map15 = /* @__PURE__ */ map(functorArray);
+var elem4 = /* @__PURE__ */ elem2(eqInt);
+var mod4 = /* @__PURE__ */ mod(euclideanRingInt);
+var toMIDIInterval$prime = function(xn) {
+  return ratioToCents(xn["bounded-ratio"]) / 100;
+};
+var toMIDIInterval = function(xns) {
+  return map15(toMIDIInterval$prime)(xns);
+};
+var getSubSet = function(xn) {
+  return function(isInSet) {
+    return filter2(function(x) {
+      return elem4(isInSet)(x.set);
+    })(xn);
+  };
+};
+var cycleAndOctavesOfPatternInSet = function(ns) {
+  return function(setLen) {
+    var isOctave = map15(function(n2) {
+      return toNumber2(floor2(toNumber2(n2) / toNumber2(setLen)) * 12 | 0);
+    })(ns);
+    var cycledList = map15(function(n2) {
+      return mod4(n2)(setLen);
+    })(ns);
+    return zip(cycledList)(isOctave);
+  };
+};
+var addSampleRoot = function(xs) {
+  return cons(0)(xs);
+};
+var xenoPitchToMIDIInterval = function(v) {
+  if (v instanceof CPSet && v.value2 instanceof Nothing) {
+    var scale = makeCPSScale(v.value0)(v.value1);
+    return map15(function($33) {
+      return addSampleRoot(toMIDIInterval($33));
+    })([scale]);
+  }
+  ;
+  if (v instanceof CPSet && v.value2 instanceof Just) {
+    var scale = makeCPSScale(v.value0)(v.value1);
+    var subs = map15(getSubSet(scale))(v.value2.value0);
+    return map15(function($34) {
+      return addSampleRoot(toMIDIInterval($34));
+    })(cons(scale)(subs));
+  }
+  ;
+  return [];
+};
+var xenoPitchAsAuralPattern = function(v) {
+  return function(v1) {
+    if (v.value1 instanceof Just) {
+      var scaleAsMIDISubsets = xenoPitchToMIDIInterval(v.value0);
+      var subset = fromMaybe([0])(index(scaleAsMIDISubsets)(v.value1.value0));
+      var lengthOfSet = length(subset);
+      var cyclesAndOctave = cycleAndOctavesOfPatternInSet(v1)(lengthOfSet);
+      var toMIDI = map15(function(v2) {
+        return fromMaybe(0)(index(subset)(v2.value0)) + v2.value1;
+      })(cyclesAndOctave);
+      return toMIDI;
+    }
+    ;
+    if (v.value1 instanceof Nothing) {
+      var scaleAsMIDISubsets = xenoPitchToMIDIInterval(v.value0);
+      var subset = fromMaybe([2.666])(index(scaleAsMIDISubsets)(0));
+      var lengthOfSet = length(subset);
+      var cyclesAndOctave = cycleAndOctavesOfPatternInSet(v1)(lengthOfSet);
+      var toMIDI = map15(function(v2) {
+        return fromMaybe(0)(index(subset)(v2.value0)) + v2.value1;
+      })(cyclesAndOctave);
+      return toMIDI;
+    }
+    ;
+    throw new Error("Failed pattern match at XenoPitch (line 29, column 1 - line 29, column 83): " + [v.constructor.name, v1.constructor.name]);
+  };
+};
+
+// output/AuralSpecs/index.js
+var map16 = /* @__PURE__ */ map(functorArray);
+var fromFoldable13 = /* @__PURE__ */ fromFoldable(foldableList);
+var mod5 = /* @__PURE__ */ mod(euclideanRingInt);
+var map17 = /* @__PURE__ */ map(functorList);
+var scanl4 = /* @__PURE__ */ scanl(traversableArray);
+var add13 = /* @__PURE__ */ add(semiringNumber);
+var lookup3 = /* @__PURE__ */ lookup(ordString);
+var fromFoldable22 = /* @__PURE__ */ fromFoldable(foldableArray);
+var bind8 = /* @__PURE__ */ bind(bindMaybe);
+var spreadSpeed = function(percenPos) {
+  return function(v) {
+    var $132 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
+    if ($132) {
+      return new Just(v.value0);
+    }
+    ;
+    return Nothing.value;
+  };
+};
+var spreadSpeeds = function(percenPos) {
+  return function(spLimits) {
+    return map16(function(sLimit) {
+      return spreadSpeed(percenPos)(sLimit);
+    })(spLimits);
+  };
+};
+var spreadSound = function(percenPos) {
+  return function(v) {
+    var $137 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
+    if ($137) {
+      return new Just(v.value0);
+    }
+    ;
+    return Nothing.value;
+  };
+};
+var spreadSounds = function(percenPos) {
+  return function(soundLimits) {
+    return map16(function(sLimit) {
+      return spreadSound(percenPos)(sLimit);
+    })(soundLimits);
+  };
+};
+var spreadPan = function(percenPos) {
+  return function(v) {
+    var $142 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
+    if ($142) {
+      return new Just(v.value0);
+    }
+    ;
+    return Nothing.value;
+  };
+};
+var spreadPans = function(percenPos) {
+  return function(pLimits) {
+    return map16(function(sLimit) {
+      return spreadPan(percenPos)(sLimit);
+    })(pLimits);
+  };
+};
+var spreadNote = function(percenPos) {
+  return function(v) {
+    var $147 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
+    if ($147) {
+      return new Just(v.value0);
+    }
+    ;
+    return Nothing.value;
+  };
+};
+var spreadNotes = function(percenPos) {
+  return function(bLimits) {
+    return map16(function(sLimit) {
+      return spreadNote(percenPos)(sLimit);
+    })(bLimits);
+  };
+};
+var spreadN = function(percenPos) {
+  return function(v) {
+    var $152 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
+    if ($152) {
+      return new Just(v.value0);
+    }
+    ;
+    return Nothing.value;
+  };
+};
+var spreadNs = function(percenPos) {
+  return function(nLimits) {
+    return map16(function(sLimit) {
+      return spreadN(percenPos)(sLimit);
+    })(nLimits);
+  };
+};
+var spreadG = function(percenPos) {
+  return function(v) {
+    var $157 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
+    if ($157) {
+      return new Just(v.value0);
+    }
+    ;
+    return Nothing.value;
+  };
+};
+var spreadGains = function(percenPos) {
+  return function(gLimits) {
+    return map16(function(sLimit) {
+      return spreadG(percenPos)(sLimit);
+    })(gLimits);
+  };
+};
+var spreadEnd = function(percenPos) {
+  return function(v) {
+    var $162 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
+    if ($162) {
+      return new Just(v.value0);
+    }
+    ;
+    return Nothing.value;
+  };
+};
+var spreadEnds = function(percenPos) {
+  return function(bLimits) {
+    return map16(function(sLimit) {
+      return spreadEnd(percenPos)(sLimit);
+    })(bLimits);
+  };
+};
+var spreadBegin = function(percenPos) {
+  return function(v) {
+    var $167 = percenPos >= fst(v.value1) && percenPos < snd(v.value1);
+    if ($167) {
+      return new Just(v.value0);
+    }
+    ;
+    return Nothing.value;
+  };
+};
+var spreadBegins = function(percenPos) {
+  return function(bLimits) {
+    return map16(function(sLimit) {
+      return spreadBegin(percenPos)(sLimit);
+    })(bLimits);
+  };
+};
+var isSpeed = function(v) {
+  if (v instanceof Speed) {
+    return true;
+  }
+  ;
+  if (v instanceof TransposedSpeed) {
+    return true;
+  }
+  ;
+  return false;
+};
+var isSound = function(v) {
+  if (v instanceof Sound) {
+    return true;
+  }
+  ;
+  if (v instanceof TransposedSound) {
+    return true;
+  }
+  ;
+  return false;
+};
+var isPan = function(v) {
+  if (v instanceof Pan) {
+    return true;
+  }
+  ;
+  if (v instanceof TransposedPan) {
+    return true;
+  }
+  ;
+  return false;
+};
+var isNote = function(v) {
+  if (v instanceof Dastgah) {
+    return true;
+  }
+  ;
+  if (v instanceof Xeno) {
+    return true;
+  }
+  ;
+  return false;
+};
+var isN = function(v) {
+  if (v instanceof N) {
+    return true;
+  }
+  ;
+  if (v instanceof TransposedN) {
+    return true;
+  }
+  ;
+  if (v instanceof TransposedNWith) {
+    return true;
+  }
+  ;
+  return false;
+};
+var isGain = function(v) {
+  if (v instanceof Gain) {
+    return true;
+  }
+  ;
+  if (v instanceof TransposedGain) {
+    return true;
+  }
+  ;
+  return false;
+};
+var isEnd = function(v) {
+  if (v instanceof End) {
+    return true;
+  }
+  ;
+  if (v instanceof TransposedEnd) {
+    return true;
+  }
+  ;
+  return false;
+};
+var isBegin = function(v) {
+  if (v instanceof Begin) {
+    return true;
+  }
+  ;
+  if (v instanceof TransposedBegin) {
+    return true;
+  }
+  ;
+  return false;
+};
+var getStructureIndex = function(v) {
+  return fromMaybe(0)(head(v.value1.value1));
+};
+var getSpeed = function(aural2) {
+  return head(filter2(isSpeed)(fromFoldable13(aural2)));
+};
+var getSound = function(aural2) {
+  return head(filter2(isSound)(fromFoldable13(aural2)));
+};
+var getPan = function(aural2) {
+  return head(filter2(isPan)(fromFoldable13(aural2)));
+};
+var getNote = function(aural2) {
+  return head(filter2(isNote)(fromFoldable13(aural2)));
+};
+var getN = function(aural2) {
+  return head(filter2(isN)(fromFoldable13(aural2)));
+};
+var getGain = function(aural2) {
+  return head(filter2(isGain)(fromFoldable13(aural2)));
+};
+var getEventIndex = function(v) {
+  return v.value1.value2;
+};
+var getEnd = function(aural2) {
+  return head(filter2(isEnd)(fromFoldable13(aural2)));
+};
+var getBlockIndex = function(v) {
+  return v.value1.value0;
+};
+var spanBegin = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v instanceof CycleEvent) {
+          var processBn = function(xs1) {
+            return function(w) {
+              var bn = fromMaybe(0.0666)(index(xs1)(mod5(getEventIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: w.pan,
+                speed: w.speed,
+                begin: bn
+              };
+            };
+          };
+          return map16(processBn(v1))(v2);
+        }
+        ;
+        if (v instanceof CycleBlock) {
+          var processBn = function(xs1) {
+            return function(w) {
+              var bn = fromMaybe(0.0666)(index(xs1)(mod5(getBlockIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: w.pan,
+                speed: w.speed,
+                begin: bn
+              };
+            };
+          };
+          return map16(processBn(v1))(v2);
+        }
+        ;
+        if (v instanceof CycleInBlock) {
+          var processBn = function(xs1) {
+            return function(w) {
+              var bn = fromMaybe(0.0666)(index(xs1)(mod5(getStructureIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: w.pan,
+                speed: w.speed,
+                begin: bn
+              };
+            };
+          };
+          return map16(processBn(v1))(v2);
+        }
+        ;
+        if (v instanceof SpreadBlock) {
+          var processBn = function(xs1) {
+            return function(w) {
+              var segment = 1 / toNumber2(length(xs1));
+              var percenPositions = map17(function(v4) {
+                return v4.value1;
+              })(rhythmicToOnsets(v3));
+              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable13(percenPositions)));
+              var percenPos = fromMaybe(0)(index(fromFoldable13(percenPositions))(modIndex));
+              var limitsSnd = snoc(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
+              var limitsFst = cons(0)(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
+              var limits = zip(limitsFst)(limitsSnd);
+              var bnLimits = zip(xs1)(limits);
+              var bn = function() {
+                var f2 = function(v4) {
+                  if (v4 instanceof Just) {
+                    return v4.value0;
+                  }
+                  ;
+                  if (v4 instanceof Nothing) {
+                    return 0.0666;
+                  }
+                  ;
+                  throw new Error("Failed pattern match at AuralSpecs (line 271, column 31 - line 271, column 45): " + [v4.constructor.name]);
+                };
+                return fromMaybe(0.0666)(head(map16(f2)(filter2(isJust)(spreadBegins(percenPos)(bnLimits)))));
+              }();
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: w.pan,
+                speed: w.speed,
+                begin: bn
+              };
+            };
+          };
+          return map16(processBn(v1))(v2);
+        }
+        ;
+        throw new Error("Failed pattern match at AuralSpecs (line 250, column 1 - line 250, column 243): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+      };
+    };
+  };
+};
+var spanDastgah = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v instanceof CycleEvent) {
+          var processDastgah = function(xs1) {
+            return function(w) {
+              var note = fromMaybe(0.9666)(index(xs1)(mod5(getEventIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: w.pan,
+                speed: w.speed,
+                begin: w.begin,
+                end: w.end,
+                note
+              };
+            };
+          };
+          return map16(processDastgah(v1))(v2);
+        }
+        ;
+        if (v instanceof CycleBlock) {
+          var processDastgah = function(xs1) {
+            return function(w) {
+              var note = fromMaybe(0.9666)(index(xs1)(mod5(getBlockIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: w.pan,
+                speed: w.speed,
+                begin: w.begin,
+                end: w.end,
+                note
+              };
+            };
+          };
+          return map16(processDastgah(v1))(v2);
+        }
+        ;
+        if (v instanceof CycleInBlock) {
+          var processDastgah = function(xs1) {
+            return function(w) {
+              var note = fromMaybe(0.9666)(index(xs1)(mod5(getStructureIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: w.pan,
+                speed: w.speed,
+                begin: w.begin,
+                end: w.end,
+                note
+              };
+            };
+          };
+          return map16(processDastgah(v1))(v2);
+        }
+        ;
+        if (v instanceof SpreadBlock) {
+          var processDastgah = function(xs1) {
+            return function(w) {
+              var segment = 1 / toNumber2(length(xs1));
+              var percenPositions = map17(function(v4) {
+                return v4.value1;
+              })(rhythmicToOnsets(v3));
+              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable13(percenPositions)));
+              var percenPos = fromMaybe(0)(index(fromFoldable13(percenPositions))(modIndex));
+              var limitsSnd = snoc(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
+              var limitsFst = cons(0)(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
+              var limits = zip(limitsFst)(limitsSnd);
+              var noteLimits = zip(xs1)(limits);
+              var note = function() {
+                var f2 = function(v4) {
+                  if (v4 instanceof Just) {
+                    return v4.value0;
+                  }
+                  ;
+                  if (v4 instanceof Nothing) {
+                    return 0.9666;
+                  }
+                  ;
+                  throw new Error("Failed pattern match at AuralSpecs (line 173, column 31 - line 173, column 45): " + [v4.constructor.name]);
+                };
+                return fromMaybe(0.9666)(head(map16(f2)(filter2(isJust)(spreadNotes(percenPos)(noteLimits)))));
+              }();
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: w.pan,
+                speed: w.speed,
+                begin: w.begin,
+                end: w.end,
+                note
+              };
+            };
+          };
+          return map16(processDastgah(v1))(v2);
+        }
+        ;
+        throw new Error("Failed pattern match at AuralSpecs (line 152, column 1 - line 152, column 304): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+      };
+    };
+  };
+};
+var spanXeno = function(span3) {
+  return function(xs) {
+    return function(ws) {
+      return function(r) {
+        return spanDastgah(span3)(xs)(ws)(r);
+      };
+    };
+  };
+};
+var spanEnd = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v instanceof CycleEvent) {
+          var processEnd1 = function(xs1) {
+            return function(w) {
+              var end2 = fromMaybe(0.9666)(index(xs1)(mod5(getEventIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: w.pan,
+                speed: w.speed,
+                begin: w.begin,
+                end: end2
+              };
+            };
+          };
+          return map16(processEnd1(v1))(v2);
+        }
+        ;
+        if (v instanceof CycleBlock) {
+          var processEnd1 = function(xs1) {
+            return function(w) {
+              var end2 = fromMaybe(0.9666)(index(xs1)(mod5(getBlockIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: w.pan,
+                speed: w.speed,
+                begin: w.begin,
+                end: end2
+              };
+            };
+          };
+          return map16(processEnd1(v1))(v2);
+        }
+        ;
+        if (v instanceof CycleInBlock) {
+          var processEnd1 = function(xs1) {
+            return function(w) {
+              var end2 = fromMaybe(0.9666)(index(xs1)(mod5(getStructureIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: w.pan,
+                speed: w.speed,
+                begin: w.begin,
+                end: end2
+              };
+            };
+          };
+          return map16(processEnd1(v1))(v2);
+        }
+        ;
+        if (v instanceof SpreadBlock) {
+          var processEnd1 = function(xs1) {
+            return function(w) {
+              var segment = 1 / toNumber2(length(xs1));
+              var percenPositions = map17(function(v4) {
+                return v4.value1;
+              })(rhythmicToOnsets(v3));
+              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable13(percenPositions)));
+              var percenPos = fromMaybe(0)(index(fromFoldable13(percenPositions))(modIndex));
+              var limitsSnd = snoc(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
+              var limitsFst = cons(0)(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
+              var limits = zip(limitsFst)(limitsSnd);
+              var endLimits = zip(xs1)(limits);
+              var end2 = function() {
+                var f2 = function(v4) {
+                  if (v4 instanceof Just) {
+                    return v4.value0;
+                  }
+                  ;
+                  if (v4 instanceof Nothing) {
+                    return 0.9666;
+                  }
+                  ;
+                  throw new Error("Failed pattern match at AuralSpecs (line 219, column 31 - line 219, column 45): " + [v4.constructor.name]);
+                };
+                return fromMaybe(0.9666)(head(map16(f2)(filter2(isJust)(spreadEnds(percenPos)(endLimits)))));
+              }();
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: w.pan,
+                speed: w.speed,
+                begin: w.begin,
+                end: end2
+              };
+            };
+          };
+          return map16(processEnd1(v1))(v2);
+        }
+        ;
+        throw new Error("Failed pattern match at AuralSpecs (line 198, column 1 - line 198, column 271): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+      };
+    };
+  };
+};
+var spanGain = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v instanceof CycleEvent) {
+          var processG = function(xs1) {
+            return function(w) {
+              var g = fromMaybe(0.02666)(index(xs1)(mod5(getEventIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: g
+              };
+            };
+          };
+          return map16(processG(v1))(v2);
+        }
+        ;
+        if (v instanceof CycleBlock) {
+          var processG = function(xs1) {
+            return function(w) {
+              var g = fromMaybe(0.02666)(index(xs1)(mod5(getBlockIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: g
+              };
+            };
+          };
+          return map16(processG(v1))(v2);
+        }
+        ;
+        if (v instanceof CycleInBlock) {
+          var processG = function(xs1) {
+            return function(w) {
+              var g = fromMaybe(0.02666)(index(xs1)(mod5(getStructureIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: g
+              };
+            };
+          };
+          return map16(processG(v1))(v2);
+        }
+        ;
+        if (v instanceof SpreadBlock) {
+          var processG = function(xs1) {
+            return function(w) {
+              var segment = 1 / toNumber2(length(xs1));
+              var percenPositions = map17(function(v4) {
+                return v4.value1;
+              })(rhythmicToOnsets(v3));
+              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable13(percenPositions)));
+              var percenPos = fromMaybe(0)(index(fromFoldable13(percenPositions))(modIndex));
+              var limitsSnd = snoc(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
+              var limitsFst = cons(0)(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
+              var limits = zip(limitsFst)(limitsSnd);
+              var gLimits = zip(xs1)(limits);
+              var g = function() {
+                var f2 = function(v4) {
+                  if (v4 instanceof Just) {
+                    return v4.value0;
+                  }
+                  ;
+                  if (v4 instanceof Nothing) {
+                    return 0.02666;
+                  }
+                  ;
+                  throw new Error("Failed pattern match at AuralSpecs (line 423, column 31 - line 423, column 45): " + [v4.constructor.name]);
+                };
+                return fromMaybe(0.02666)(head(map16(f2)(filter2(isJust)(spreadGains(percenPos)(gLimits)))));
+              }();
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: g
+              };
+            };
+          };
+          return map16(processG(v1))(v2);
+        }
+        ;
+        throw new Error("Failed pattern match at AuralSpecs (line 402, column 1 - line 402, column 151): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+      };
+    };
+  };
+};
+var spanN = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v instanceof CycleEvent) {
+          var processN1 = function(xs1) {
+            return function(w) {
+              var n$prime = fromMaybe(2666)(index(xs1)(mod5(getEventIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: n$prime
+              };
+            };
+          };
+          return map16(processN1(v1))(v2);
+        }
+        ;
+        if (v instanceof CycleBlock) {
+          var processN1 = function(xs1) {
+            return function(w) {
+              var n$prime = fromMaybe(2666)(index(xs1)(mod5(getBlockIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: n$prime
+              };
+            };
+          };
+          return map16(processN1(v1))(v2);
+        }
+        ;
+        if (v instanceof CycleInBlock) {
+          var processN1 = function(xs1) {
+            return function(w) {
+              var n$prime = fromMaybe(2666)(index(xs1)(mod5(getStructureIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: n$prime
+              };
+            };
+          };
+          return map16(processN1(v1))(v2);
+        }
+        ;
+        if (v instanceof SpreadBlock) {
+          var processN1 = function(xs1) {
+            return function(w) {
+              var segment = 1 / toNumber2(length(xs1));
+              var percenPositions = map17(function(v4) {
+                return v4.value1;
+              })(rhythmicToOnsets(v3));
+              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable13(percenPositions)));
+              var percenPos = fromMaybe(0)(index(fromFoldable13(percenPositions))(modIndex));
+              var limitsSnd = snoc(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
+              var limitsFst = cons(0)(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
+              var limits = zip(limitsFst)(limitsSnd);
+              var nLimits = zip(xs1)(limits);
+              var n$prime = function() {
+                var f2 = function(v4) {
+                  if (v4 instanceof Just) {
+                    return v4.value0;
+                  }
+                  ;
+                  if (v4 instanceof Nothing) {
+                    return 2666;
+                  }
+                  ;
+                  throw new Error("Failed pattern match at AuralSpecs (line 508, column 31 - line 508, column 45): " + [v4.constructor.name]);
+                };
+                return fromMaybe(2666)(head(map16(f2)(filter2(isJust)(spreadNs(percenPos)(nLimits)))));
+              }();
+              return {
+                event: w.event,
+                s: w.s,
+                n: n$prime
+              };
+            };
+          };
+          return map16(processN1(v1))(v2);
+        }
+        ;
+        throw new Error("Failed pattern match at AuralSpecs (line 487, column 1 - line 487, column 121): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+      };
+    };
+  };
+};
+var spanPan = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v instanceof CycleEvent) {
+          var processP = function(xs1) {
+            return function(w) {
+              var p = fromMaybe(0.5666)(index(xs1)(mod5(getEventIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: p
+              };
+            };
+          };
+          return map16(processP(v1))(v2);
+        }
+        ;
+        if (v instanceof CycleBlock) {
+          var processP = function(xs1) {
+            return function(w) {
+              var p = fromMaybe(0.5666)(index(xs1)(mod5(getBlockIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: p
+              };
+            };
+          };
+          return map16(processP(v1))(v2);
+        }
+        ;
+        if (v instanceof CycleInBlock) {
+          var processP = function(xs1) {
+            return function(w) {
+              var p = fromMaybe(0.5666)(index(xs1)(mod5(getStructureIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: p
+              };
+            };
+          };
+          return map16(processP(v1))(v2);
+        }
+        ;
+        if (v instanceof SpreadBlock) {
+          var processP = function(xs1) {
+            return function(w) {
+              var segment = 1 / toNumber2(length(xs1));
+              var percenPositions = map17(function(v4) {
+                return v4.value1;
+              })(rhythmicToOnsets(v3));
+              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable13(percenPositions)));
+              var percenPos = fromMaybe(0)(index(fromFoldable13(percenPositions))(modIndex));
+              var limitsSnd = snoc(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
+              var limitsFst = cons(0)(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
+              var limits = zip(limitsFst)(limitsSnd);
+              var pLimits = zip(xs1)(limits);
+              var p = function() {
+                var f2 = function(v4) {
+                  if (v4 instanceof Just) {
+                    return v4.value0;
+                  }
+                  ;
+                  if (v4 instanceof Nothing) {
+                    return 0.5666;
+                  }
+                  ;
+                  throw new Error("Failed pattern match at AuralSpecs (line 373, column 31 - line 373, column 45): " + [v4.constructor.name]);
+                };
+                return fromMaybe(0.5666)(head(map16(f2)(filter2(isJust)(spreadPans(percenPos)(pLimits)))));
+              }();
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: p
+              };
+            };
+          };
+          return map16(processP(v1))(v2);
+        }
+        ;
+        throw new Error("Failed pattern match at AuralSpecs (line 352, column 1 - line 352, column 179): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+      };
+    };
+  };
+};
+var spanSound = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v instanceof CycleEvent) {
+          var processSound1 = function(xs1) {
+            return function(event$prime) {
+              var sound$prime = fromMaybe("error assigning sound")(index(xs1)(mod5(getEventIndex(event$prime))(length(xs1))));
+              return {
+                event: event$prime,
+                s: sound$prime
+              };
+            };
+          };
+          return map16(processSound1(v1))(v2);
+        }
+        ;
+        if (v instanceof CycleBlock) {
+          var processSound1 = function(xs1) {
+            return function(event$prime) {
+              var sound$prime = fromMaybe("error assigning sound")(index(xs1)(mod5(getBlockIndex(event$prime))(length(xs1))));
+              return {
+                event: event$prime,
+                s: sound$prime
+              };
+            };
+          };
+          return map16(processSound1(v1))(v2);
+        }
+        ;
+        if (v instanceof CycleInBlock) {
+          var processSound1 = function(xs1) {
+            return function(event$prime) {
+              var sound$prime = fromMaybe("error assigning sound")(index(xs1)(mod5(getStructureIndex(event$prime))(length(xs1))));
+              return {
+                event: event$prime,
+                s: sound$prime
+              };
+            };
+          };
+          return map16(processSound1(v1))(v2);
+        }
+        ;
+        if (v instanceof SpreadBlock) {
+          var processSound1 = function(xs1) {
+            return function(event$prime) {
+              var segment = 1 / toNumber2(length(xs1));
+              var percenPositions = map17(function(v4) {
+                return v4.value1;
+              })(rhythmicToOnsets(v3));
+              var modIndex = mod5(getEventIndex(event$prime))(length(fromFoldable13(percenPositions)));
+              var percenPos = fromMaybe(0)(index(fromFoldable13(percenPositions))(modIndex));
+              var limitsSnd = snoc(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
+              var limitsFst = cons(0)(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
+              var limits = zip(limitsFst)(limitsSnd);
+              var soundLimits = zip(xs1)(limits);
+              var sound$prime = function() {
+                var f2 = function(v4) {
+                  if (v4 instanceof Just) {
+                    return v4.value0;
+                  }
+                  ;
+                  if (v4 instanceof Nothing) {
+                    return "error thingy";
+                  }
+                  ;
+                  throw new Error("Failed pattern match at AuralSpecs (line 565, column 31 - line 565, column 45): " + [v4.constructor.name]);
+                };
+                return fromMaybe("error assigning sound SpreadBlock")(head(map16(f2)(filter2(isJust)(spreadSounds(percenPos)(soundLimits)))));
+              }();
+              return {
+                event: event$prime,
+                s: sound$prime
+              };
+            };
+          };
+          return map16(processSound1(v1))(v2);
+        }
+        ;
+        throw new Error("Failed pattern match at AuralSpecs (line 544, column 1 - line 544, column 97): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+      };
+    };
+  };
+};
+var spanSpeed = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v instanceof CycleEvent) {
+          var processSp = function(xs1) {
+            return function(w) {
+              var sp = fromMaybe(1.0666)(index(xs1)(mod5(getEventIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: w.pan,
+                speed: sp
+              };
+            };
+          };
+          return map16(processSp(v1))(v2);
+        }
+        ;
+        if (v instanceof CycleBlock) {
+          var processSp = function(xs1) {
+            return function(w) {
+              var sp = fromMaybe(1.0666)(index(xs1)(mod5(getBlockIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: w.pan,
+                speed: sp
+              };
+            };
+          };
+          return map16(processSp(v1))(v2);
+        }
+        ;
+        if (v instanceof CycleInBlock) {
+          var processSp = function(xs1) {
+            return function(w) {
+              var sp = fromMaybe(1.0666)(index(xs1)(mod5(getStructureIndex(w.event))(length(xs1))));
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: w.pan,
+                speed: sp
+              };
+            };
+          };
+          return map16(processSp(v1))(v2);
+        }
+        ;
+        if (v instanceof SpreadBlock) {
+          var processSp = function(xs1) {
+            return function(w) {
+              var segment = 1 / toNumber2(length(xs1));
+              var percenPositions = map17(function(v4) {
+                return v4.value1;
+              })(rhythmicToOnsets(v3));
+              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable13(percenPositions)));
+              var percenPos = fromMaybe(0)(index(fromFoldable13(percenPositions))(modIndex));
+              var limitsSnd = snoc(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
+              var limitsFst = cons(0)(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
+              var limits = zip(limitsFst)(limitsSnd);
+              var spLimits = zip(xs1)(limits);
+              var sp = function() {
+                var f2 = function(v4) {
+                  if (v4 instanceof Just) {
+                    return v4.value0;
+                  }
+                  ;
+                  if (v4 instanceof Nothing) {
+                    return 1.0666;
+                  }
+                  ;
+                  throw new Error("Failed pattern match at AuralSpecs (line 323, column 31 - line 323, column 45): " + [v4.constructor.name]);
+                };
+                return fromMaybe(1.0666)(head(map16(f2)(filter2(isJust)(spreadSpeeds(percenPos)(spLimits)))));
+              }();
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: w.pan,
+                speed: sp
+              };
+            };
+          };
+          return map16(processSp(v1))(v2);
+        }
+        ;
+        throw new Error("Failed pattern match at AuralSpecs (line 302, column 1 - line 302, column 211): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+      };
+    };
+  };
+};
+var getBegin = function(aural2) {
+  return head(filter2(isBegin)(fromFoldable13(aural2)));
+};
+var dToList = function(v) {
+  var f2 = function(n2) {
+    var v1 = mod5(n2 - 1 | 0)(8);
+    if (v1 === 0) {
+      return 0;
+    }
+    ;
+    if (v1 === 1) {
+      return 1.82;
+    }
+    ;
+    if (v1 === 2) {
+      return 2.96;
+    }
+    ;
+    if (v1 === 3) {
+      return 5;
+    }
+    ;
+    if (v1 === 4) {
+      return 7.04;
+    }
+    ;
+    if (v1 === 5) {
+      return 7.94;
+    }
+    ;
+    if (v1 === 6) {
+      return 9.98;
+    }
+    ;
+    if (v1 === 7) {
+      return 12;
+    }
+    ;
+    return 0;
+  };
+  return map17(f2)(v.value0);
+};
+var processNote = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        return function(v4) {
+          if (v4.length === 0) {
+            return [];
+          }
+          ;
+          if (v2 instanceof Nothing) {
+            return map16(function(w) {
+              return {
+                event: w.event,
+                s: w.s,
+                n: w.n,
+                gain: w.gain,
+                pan: w.pan,
+                speed: w.speed,
+                begin: w.begin,
+                end: 1,
+                note: 0
+              };
+            })(v4);
+          }
+          ;
+          if (v2 instanceof Just && v2.value0 instanceof Dastgah) {
+            return spanDastgah(v2.value0.value0)(fromFoldable13(dToList(v2.value0.value1)))(v4)(v1);
+          }
+          ;
+          if (v2 instanceof Just && v2.value0 instanceof Xeno) {
+            var target = fromMaybe(new EDO(0, 0))(lookup3(fst(v2.value0.value0))(v3));
+            var midiIntervals = xenoPitchAsAuralPattern(new Tuple(target, snd(v2.value0.value0)))(fromFoldable13(v2.value0.value2));
+            return spanXeno(v2.value0.value1)(fromFoldable22(midiIntervals))(v4)(v1);
+          }
+          ;
+          return [];
+        };
+      };
+    };
+  };
+};
+var cycleAurals = function(n2) {
+  return function(mVoice) {
+    return bind8(mVoice)(function(voice) {
+      var aurals = function(v) {
+        return v.value1;
+      }(voice);
+      var len = length4(aurals);
+      return bind8(index(fromFoldable13(aurals))(mod5(n2)(len)))(function(newVal) {
+        return getEnd(newVal);
+      });
+    });
+  };
+};
+var processGain = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v3.length === 0) {
+          return [];
+        }
+        ;
+        if (v2 instanceof Nothing) {
+          return map16(function(w) {
+            return {
+              event: w.event,
+              s: w.s,
+              n: w.n,
+              gain: 1
+            };
+          })(v3);
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof TransposedGain) {
+          return findOtherVoiceGain(v1)(v3)(new Tuple(v2.value0.value0, v2.value0.value1))(v);
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof Gain) {
+          return spanGain(v2.value0.value0)(fromFoldable13(v2.value0.value1))(v3)(v1);
+        }
+        ;
+        return [];
+      };
+    };
+  };
+};
+var findOtherVoiceGain = function(r) {
+  return function(ws) {
+    return function(v) {
+      return function(mapa) {
+        var newVal = cycleAurals(v.value1)(lookup3(v.value0)(mapa));
+        return processGain(mapa)(r)(newVal)(ws);
+      };
+    };
+  };
+};
+var processN = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v3.length === 0) {
+          return [];
+        }
+        ;
+        if (v2 instanceof Nothing) {
+          return map16(function(w) {
+            return {
+              event: w.event,
+              s: w.s,
+              n: 0
+            };
+          })(v3);
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof TransposedN) {
+          return findOtherVoiceN(v1)(v3)(new Tuple(v2.value0.value0, v2.value0.value1))(v);
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof N) {
+          return spanN(v2.value0.value0)(fromFoldable13(v2.value0.value1))(v3)(v1);
+        }
+        ;
+        return [];
+      };
+    };
+  };
+};
+var findOtherVoiceN = function(r) {
+  return function(ws) {
+    return function(v) {
+      return function(mapa) {
+        var newVal = cycleAurals(v.value1)(lookup3(v.value0)(mapa));
+        return processN(mapa)(r)(newVal)(ws);
+      };
+    };
+  };
+};
+var processPan = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v3.length === 0) {
+          return [];
+        }
+        ;
+        if (v2 instanceof Nothing) {
+          return map16(function(w) {
+            return {
+              event: w.event,
+              s: w.s,
+              n: w.n,
+              gain: w.gain,
+              pan: 0.5
+            };
+          })(v3);
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof TransposedPan) {
+          return findOtherVoicePan(v1)(v3)(new Tuple(v2.value0.value0, v2.value0.value1))(v);
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof Pan) {
+          return spanPan(v2.value0.value0)(fromFoldable13(v2.value0.value1))(v3)(v1);
+        }
+        ;
+        return [];
+      };
+    };
+  };
+};
+var findOtherVoicePan = function(r) {
+  return function(ws) {
+    return function(v) {
+      return function(mapa) {
+        var newVal = cycleAurals(v.value1)(lookup3(v.value0)(mapa));
+        return processPan(mapa)(r)(newVal)(ws);
+      };
+    };
+  };
+};
+var processSound = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v2 instanceof Nothing) {
+          return [];
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof TransposedSound) {
+          return findOtherVoiceSound(v1)(v3)(new Tuple(v2.value0.value0, v2.value0.value1))(v);
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof Sound) {
+          return spanSound(v2.value0.value0)(fromFoldable13(v2.value0.value1))(v3)(v1);
+        }
+        ;
+        return [];
+      };
+    };
+  };
+};
+var findOtherVoiceSound = function(r) {
+  return function(ws) {
+    return function(v) {
+      return function(mapa) {
+        var newVal = cycleAurals(v.value1)(lookup3(v.value0)(mapa));
+        return processSound(mapa)(r)(newVal)(ws);
+      };
+    };
+  };
+};
+var processSpeed = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v3.length === 0) {
+          return [];
+        }
+        ;
+        if (v2 instanceof Nothing) {
+          return map16(function(w) {
+            return {
+              event: w.event,
+              s: w.s,
+              n: w.n,
+              gain: w.gain,
+              pan: w.pan,
+              speed: 1
+            };
+          })(v3);
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof TransposedSpeed) {
+          return findOtherVoiceSpeed(v1)(v3)(new Tuple(v2.value0.value0, v2.value0.value1))(v);
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof Speed) {
+          return spanSpeed(v2.value0.value0)(fromFoldable13(v2.value0.value1))(v3)(v1);
+        }
+        ;
+        return [];
+      };
+    };
+  };
+};
+var findOtherVoiceSpeed = function(r) {
+  return function(ws) {
+    return function(v) {
+      return function(mapa) {
+        var newVal = cycleAurals(v.value1)(lookup3(v.value0)(mapa));
+        return processSpeed(mapa)(r)(newVal)(ws);
+      };
+    };
+  };
+};
+var processBegin = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v3.length === 0) {
+          return [];
+        }
+        ;
+        if (v2 instanceof Nothing) {
+          return map16(function(w) {
+            return {
+              event: w.event,
+              s: w.s,
+              n: w.n,
+              gain: w.gain,
+              pan: w.pan,
+              speed: w.speed,
+              begin: 0
+            };
+          })(v3);
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof TransposedBegin) {
+          return findReferredBegin(v1)(v3)(new Tuple(v2.value0.value0, v2.value0.value1))(v);
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof Begin) {
+          return spanBegin(v2.value0.value0)(fromFoldable13(v2.value0.value1))(v3)(v1);
+        }
+        ;
+        return [];
+      };
+    };
+  };
+};
+var findReferredBegin = function(r) {
+  return function(ws) {
+    return function(v) {
+      return function(mapa) {
+        var newVal = cycleAurals(v.value1)(lookup3(v.value0)(mapa));
+        return processBegin(mapa)(r)(newVal)(ws);
+      };
+    };
+  };
+};
+var processEnd = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v3.length === 0) {
+          return [];
+        }
+        ;
+        if (v2 instanceof Nothing) {
+          return map16(function(w) {
+            return {
+              event: w.event,
+              s: w.s,
+              n: w.n,
+              gain: w.gain,
+              pan: w.pan,
+              speed: w.speed,
+              begin: w.begin,
+              end: 1
+            };
+          })(v3);
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof TransposedEnd) {
+          return findReferredEnd(v1)(v3)(new Tuple(v2.value0.value0, v2.value0.value1))(v);
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof End) {
+          return spanEnd(v2.value0.value0)(fromFoldable13(v2.value0.value1))(v3)(v1);
+        }
+        ;
+        return [];
+      };
+    };
+  };
+};
+var findReferredEnd = function(r) {
+  return function(ws) {
+    return function(v) {
+      return function(mapa) {
+        var newVal = cycleAurals(v.value1)(lookup3(v.value0)(mapa));
+        return processEnd(mapa)(r)(newVal)(ws);
+      };
+    };
+  };
+};
+var auralSpecs$prime = function(m) {
+  return function(rhy) {
+    return function(aural2) {
+      return function(xenopitch) {
+        return function(events) {
+          var sounds = processSound(m)(rhy)(getSound(aural2))(events);
+          var nS = processN(m)(rhy)(getN(aural2))(sounds);
+          var gainNS = processGain(m)(rhy)(getGain(aural2))(nS);
+          var panGNS = processPan(m)(rhy)(getPan(aural2))(gainNS);
+          var speedPGNS = processSpeed(m)(rhy)(getSpeed(aural2))(panGNS);
+          var beginSpPGNS = processBegin(m)(rhy)(getBegin(aural2))(speedPGNS);
+          var endBSpPGNS = processEnd(m)(rhy)(getEnd(aural2))(beginSpPGNS);
+          var noteEBSpPGNS = processNote(m)(rhy)(getNote(aural2))(xenopitch)(endBSpPGNS);
+          return noteEBSpPGNS;
+        };
+      };
+    };
+  };
+};
+var auralSpecs = function(m) {
+  return function(rhy) {
+    return function(aurals) {
+      return function(xenopitch) {
+        return function(events) {
+          return concat(map16(function(a) {
+            return auralSpecs$prime(m)(rhy)(a)(xenopitch)(events);
+          })(fromFoldable13(aurals)));
+        };
+      };
+    };
+  };
+};
 
 // output/Rhythm/index.js
 var $runtime_lazy8 = function(name2, moduleName, init3) {
@@ -31066,7 +43791,7 @@ var discard3 = /* @__PURE__ */ discard(discardUnit)(bindParserT);
 var alt7 = /* @__PURE__ */ alt(altParserT);
 var choice4 = /* @__PURE__ */ choice(foldableArray);
 var applySecond5 = /* @__PURE__ */ applySecond(applyParserT);
-var map17 = /* @__PURE__ */ map(functorParserT);
+var map18 = /* @__PURE__ */ map(functorParserT);
 var tokenParser2 = /* @__PURE__ */ makeTokenParser(haskellStyle);
 var whitespace2 = /* @__PURE__ */ function() {
   return tokenParser2.whiteSpace;
@@ -31198,7 +43923,7 @@ var $lazy_parseRepeat = /* @__PURE__ */ $runtime_lazy8("parseRepeat", "Rhythm", 
 var $lazy_parseRhythmList = /* @__PURE__ */ $runtime_lazy8("parseRhythmList", "Rhythm", function() {
   return bind9(pure6(1))(function() {
     return bind9($lazy_parseXOorSDorReporBjork(56))(function(x) {
-      return bind9(map17(toList)(many1($lazy_parseXOorSDorReporBjork(57))))(function(xs) {
+      return bind9(map18(toList)(many1($lazy_parseXOorSDorReporBjork(57))))(function(xs) {
         return pure6(new Rhythmics(new Cons(x, xs)));
       });
     });
@@ -31238,23 +43963,25 @@ var rhythmic = /* @__PURE__ */ bind9(/* @__PURE__ */ pure6(1))(function() {
 // output/Parser/index.js
 var add2 = /* @__PURE__ */ add(semiringRational);
 var toRational4 = /* @__PURE__ */ toRational(toRationalInt);
-var map18 = /* @__PURE__ */ map(functorList);
-var toUnfoldable5 = /* @__PURE__ */ toUnfoldable(unfoldableList);
-var unions2 = /* @__PURE__ */ unions(ordString)(foldableList);
+var map19 = /* @__PURE__ */ map(functorList);
+var toUnfoldable6 = /* @__PURE__ */ toUnfoldable(unfoldableList);
+var unions3 = /* @__PURE__ */ unions(ordString);
+var unions1 = /* @__PURE__ */ unions3(foldableList);
 var bind10 = /* @__PURE__ */ bind(bindParserT);
 var pure7 = /* @__PURE__ */ pure(applicativeParserT);
 var discard4 = /* @__PURE__ */ discard(discardUnit)(bindParserT);
 var choice5 = /* @__PURE__ */ choice(foldableArray);
 var fromFoldable7 = /* @__PURE__ */ fromFoldable(foldableList);
-var map19 = /* @__PURE__ */ map(functorParserT);
+var map110 = /* @__PURE__ */ map(functorParserT);
+var alt8 = /* @__PURE__ */ alt(altParserT);
 var eq13 = /* @__PURE__ */ eq(/* @__PURE__ */ eqMaybe(eqString));
-var lookup3 = /* @__PURE__ */ lookup(ordString);
-var elem3 = /* @__PURE__ */ elem(foldableList)(eqString);
+var lookup4 = /* @__PURE__ */ lookup(ordString);
+var elem5 = /* @__PURE__ */ elem(foldableList)(eqString);
 var elem12 = /* @__PURE__ */ elem(foldableMap)(eqBoolean);
 var mapWithIndex3 = /* @__PURE__ */ mapWithIndex(functorWithIndexMap);
 var filter4 = /* @__PURE__ */ filter(ordString);
 var not1 = /* @__PURE__ */ not(/* @__PURE__ */ heytingAlgebraFunction(heytingAlgebraBoolean));
-var alt8 = /* @__PURE__ */ alt(altParserT);
+var unions22 = /* @__PURE__ */ unions3(foldableArray);
 var applySecond6 = /* @__PURE__ */ applySecond(applyParserT);
 var fromFoldable14 = /* @__PURE__ */ fromFoldable2(foldableArray);
 var unexpressTempo = function(v) {
@@ -31264,7 +43991,7 @@ var unexpressTempo = function(v) {
   ;
   return empty2;
 };
-var unexpressAural = function(v) {
+var unexpressAural2 = function(v) {
   if (v instanceof AuralExpression) {
     return v.value0;
   }
@@ -31290,20 +44017,20 @@ var toNumber$prime2 = function(v) {
     return v.value0;
   }
   ;
-  throw new Error("Failed pattern match at Parser (line 550, column 1 - line 550, column 40): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Parser (line 653, column 1 - line 653, column 40): " + [v.constructor.name]);
 };
-var toListAurals = function(mapas) {
-  var vals = concat2(map18(toUnfoldable5)(mapas));
+var toListAurals2 = function(mapas) {
+  var vals = concat2(map19(toUnfoldable6)(mapas));
   var toAurals = function(key) {
     return function(vals1) {
-      return singleton3(key)(map18(snd)(filter3(function(v) {
+      return singleton3(key)(map19(snd)(filter3(function(v) {
         return fst(v) === key;
       })(vals1)));
     };
   };
-  return unions2(map18(function(k) {
+  return unions1(map19(function(k) {
     return toAurals(k)(vals);
-  })(map18(fst)(vals)));
+  })(map19(fst)(vals)));
 };
 var strWS = function(x) {
   return bind10(pure7(1))(function() {
@@ -31323,12 +44050,22 @@ var reservedOp2 = /* @__PURE__ */ function() {
 var reserved2 = /* @__PURE__ */ function() {
   return tokenParser3.reserved;
 }();
+var removeA = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
+  return bind10(reserved2(".remove"))(function() {
+    return pure7(Remove.value);
+  });
+});
 var parens3 = /* @__PURE__ */ function() {
   return tokenParser3.parens;
 }();
 var naturalOrFloat2 = /* @__PURE__ */ function() {
   return tokenParser3.naturalOrFloat;
 }();
+var secsA = /* @__PURE__ */ bind10(naturalOrFloat2)(function(num) {
+  return bind10(reserved2("secs from eval"))(function() {
+    return pure7(new Right(toNumber$prime2(num)));
+  });
+});
 var secsFromEval = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
   return bind10(naturalOrFloat2)(function(n2) {
     return bind10(reserved2("secsAfterEval"))(function() {
@@ -31365,6 +44102,13 @@ var processSnap = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
 var parseProcessTo = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
   return bind10(choice5([$$try(processMod), $$try(processSnap), processOrigin]))(function(c) {
     return pure7(c);
+  });
+});
+var setWith = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
+  return bind10(reserved2("withFactor"))(function() {
+    return bind10(natural3)(function(n2) {
+      return pure7(n2);
+    });
   });
 });
 var structParser = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
@@ -31447,7 +44191,7 @@ var getTemporalMap = function(program) {
     ;
     return false;
   };
-  return unions2(map18(unexpressTempo)(filter3(function(expression1) {
+  return unions1(map19(unexpressTempo)(filter3(function(expression1) {
     return isTemporal(expression1);
   })(program)));
 };
@@ -31468,9 +44212,9 @@ var getTempoRef = function(v) {
     return Nothing.value;
   }
   ;
-  throw new Error("Failed pattern match at Parser (line 508, column 1 - line 508, column 39): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Parser (line 611, column 1 - line 611, column 39): " + [v.constructor.name]);
 };
-var getAuralMap = function(program) {
+var getAuralMap2 = function(program) {
   var isAural = function(v) {
     if (v instanceof AuralExpression) {
       return true;
@@ -31478,7 +44222,7 @@ var getAuralMap = function(program) {
     ;
     return false;
   };
-  return toListAurals(map18(unexpressAural)(filter3(function(expression1) {
+  return toListAurals2(map19(unexpressAural2)(filter3(function(expression1) {
     return isAural(expression1);
   })(program)));
 };
@@ -31520,16 +44264,48 @@ var parseStructureTo = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function
   });
 });
 var cps = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
-  return bind10(map19(toNumber$prime2)(naturalOrFloat2))(function(x) {
+  return bind10(map110(toNumber$prime2)(naturalOrFloat2))(function(x) {
     return bind10(reserved2("cps"))(function() {
       return pure7(new CPS(toRat(x)));
     });
   });
 });
 var cpm = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
-  return bind10(map19(toNumber$prime2)(naturalOrFloat2))(function(x) {
+  return bind10(map110(toNumber$prime2)(naturalOrFloat2))(function(x) {
     return bind10(reserved2("cpm"))(function() {
       return pure7(new CPM(toRat(x)));
+    });
+  });
+});
+var comma2 = /* @__PURE__ */ function() {
+  return tokenParser3.comma;
+}();
+var subsets = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
+  return bind10(reserved2("|"))(function() {
+    return bind10(sepBy(setWith)(comma2))(function(xs) {
+      return pure7(new Just(fromFoldable7(xs)));
+    });
+  });
+});
+var cpSet = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
+  return bind10(reserved2("cps"))(function() {
+    return bind10(natural3)(function(sz) {
+      return bind10(parens3(many3(natural3)))(function(factors) {
+        return bind10(alt8(subsets)(pure7(Nothing.value)))(function(subsets$prime) {
+          return pure7(new CPSet(sz, factors, subsets$prime));
+        });
+      });
+    });
+  });
+});
+var xPitch = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
+  return bind10(identifier2)(function(id) {
+    return bind10(reserved2("<-"))(function() {
+      return bind10(choice5([$$try(cpSet)]))(function(x) {
+        return bind10(reserved2(";"))(function() {
+          return pure7(singleton3(id)(x));
+        });
+      });
     });
   });
 });
@@ -31544,20 +44320,20 @@ var checkTempi = function($copy_aMap) {
         var $tco_result;
         function $tco_loop(aMap, alreadyRefd, aKey, temporal1) {
           var anotherKey = fromMaybe("")(getTempoRef(temporal1));
-          var $95 = eq13(getTempoRef(temporal1))(Nothing.value);
-          if ($95) {
+          var $94 = eq13(getTempoRef(temporal1))(Nothing.value);
+          if ($94) {
             $tco_done = true;
             return true;
           }
           ;
-          var v = lookup3(anotherKey)(aMap);
+          var v = lookup4(anotherKey)(aMap);
           if (v instanceof Nothing) {
             $tco_done = true;
             return false;
           }
           ;
           if (v instanceof Just) {
-            var v1 = elem3(aKey)(alreadyRefd);
+            var v1 = elem5(aKey)(alreadyRefd);
             if (v1) {
               $tco_done = true;
               return false;
@@ -31571,10 +44347,10 @@ var checkTempi = function($copy_aMap) {
               return;
             }
             ;
-            throw new Error("Failed pattern match at Parser (line 503, column 34 - line 505, column 92): " + [v1.constructor.name]);
+            throw new Error("Failed pattern match at Parser (line 606, column 34 - line 608, column 92): " + [v1.constructor.name]);
           }
           ;
-          throw new Error("Failed pattern match at Parser (line 501, column 10 - line 505, column 92): " + [v.constructor.name]);
+          throw new Error("Failed pattern match at Parser (line 604, column 10 - line 608, column 92): " + [v.constructor.name]);
         }
         ;
         while (!$tco_done) {
@@ -31607,14 +44383,14 @@ var check2 = function($copy_v) {
           }
           ;
           if (v3 instanceof Temporal && v3.value0 instanceof Converge) {
-            var v4 = lookup3(v3.value0.value0)(v);
+            var v4 = lookup4(v3.value0.value0)(v);
             if (v4 instanceof Nothing) {
               $tco_done = true;
               return false;
             }
             ;
             if (v4 instanceof Just) {
-              var v5 = elem3(v2)(v1);
+              var v5 = elem5(v2)(v1);
               if (v5) {
                 $tco_done = true;
                 return false;
@@ -31628,10 +44404,10 @@ var check2 = function($copy_v) {
                 return;
               }
               ;
-              throw new Error("Failed pattern match at Parser (line 483, column 26 - line 485, column 93): " + [v5.constructor.name]);
+              throw new Error("Failed pattern match at Parser (line 586, column 26 - line 588, column 93): " + [v5.constructor.name]);
             }
             ;
-            throw new Error("Failed pattern match at Parser (line 481, column 3 - line 485, column 93): " + [v4.constructor.name]);
+            throw new Error("Failed pattern match at Parser (line 584, column 3 - line 588, column 93): " + [v4.constructor.name]);
           }
           ;
           if (v3 instanceof Replica) {
@@ -31641,14 +44417,14 @@ var check2 = function($copy_v) {
             }
             ;
             if (otherwise) {
-              var v4 = lookup3(v3.value0)(v);
+              var v4 = lookup4(v3.value0)(v);
               if (v4 instanceof Nothing) {
                 $tco_done = true;
                 return false;
               }
               ;
               if (v4 instanceof Just) {
-                var v5 = elem3(v3.value0)(v1);
+                var v5 = elem5(v3.value0)(v1);
                 if (v5) {
                   $tco_done = true;
                   return false;
@@ -31662,15 +44438,15 @@ var check2 = function($copy_v) {
                   return;
                 }
                 ;
-                throw new Error("Failed pattern match at Parser (line 493, column 24 - line 495, column 74): " + [v5.constructor.name]);
+                throw new Error("Failed pattern match at Parser (line 596, column 24 - line 598, column 74): " + [v5.constructor.name]);
               }
               ;
-              throw new Error("Failed pattern match at Parser (line 491, column 5 - line 495, column 74): " + [v4.constructor.name]);
+              throw new Error("Failed pattern match at Parser (line 594, column 5 - line 598, column 74): " + [v4.constructor.name]);
             }
             ;
           }
           ;
-          throw new Error("Failed pattern match at Parser (line 477, column 1 - line 477, column 78): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+          throw new Error("Failed pattern match at Parser (line 580, column 1 - line 580, column 78): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
         }
         ;
         while (!$tco_done) {
@@ -31682,12 +44458,17 @@ var check2 = function($copy_v) {
     };
   };
 };
-var check = function(aMap$prime) {
+var checkT = function(aMap$prime) {
   var checkID = !elem12(false)(mapWithIndex3(check2(aMap$prime)(Nil.value))(aMap$prime));
   var aReplicaMap = filter4(isReplica)(aMap$prime);
   var aMap = filter4(not1(isReplica))(aMap$prime);
   var checkTempoMark = !elem12(false)(mapWithIndex3(checkTempi(aMap)(Nil.value))(aMap));
   return checkID && checkTempoMark;
+};
+var check = function(program) {
+  var checkedTempoAspects = checkT(getTemporalMap(program));
+  var checkedPitch = checkXPitch(program);
+  return checkedTempoAspects && checkedPitch;
 };
 var charWS3 = function(x) {
   return bind10(pure7(1))(function() {
@@ -31774,11 +44555,21 @@ var cFromLast = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
     return pure7(Last2.value);
   });
 });
+var braces = /* @__PURE__ */ function() {
+  return tokenParser3.braces;
+}();
+var xPitchExpression = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
+  return bind10(braces(many3(xPitch)))(function(x) {
+    return pure7(new XenoPitchExpression(unions22(x)));
+  });
+});
 var bpm = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
-  return bind10(map19(toNumber$prime2)(naturalOrFloat2))(function(x) {
-    return bind10(reserved2("bpm the"))(function() {
-      return bind10(alt8(figure)(pure7(fromInt2(1))))(function(fig) {
-        return pure7(new BPM(toRat(x), fig));
+  return bind10(figure)(function(fig) {
+    return bind10(charWS3("="))(function() {
+      return bind10(map110(toNumber$prime2)(naturalOrFloat2))(function(x) {
+        return bind10(reserved2("bpm"))(function() {
+          return pure7(new BPM(toRat(x), fig));
+        });
       });
     });
   });
@@ -31846,6 +44637,25 @@ var metric = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
     });
   });
 });
+var beatA = /* @__PURE__ */ bind10(naturalOrFloat2)(function(num) {
+  return bind10(reserved2("beats from eval"))(function() {
+    return pure7(new Left(toNumber$prime2(num)));
+  });
+});
+var buildA = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
+  return bind10(reserved2(".build ="))(function() {
+    return bind10(choice5([$$try(beatA), secsA]))(function(x) {
+      return pure7(new Build(x));
+    });
+  });
+});
+var moveA = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
+  return bind10(reserved2(".move ="))(function() {
+    return bind10(choice5([$$try(beatA), secsA]))(function(x) {
+      return pure7(new Move(x));
+    });
+  });
+});
 var atEval = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
   return bind10(reserved2("atEval"))(function() {
     return pure7(0.01);
@@ -31874,19 +44684,29 @@ var polytemporalRelation = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(func
   });
 });
 var temporal = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
-  return bind10(choice5([$$try(replica), polytemporalRelation]))(function(exp2) {
-    return pure7(exp2);
-  });
+  return choice5([$$try(replica), polytemporalRelation]);
 });
 var timeExpression = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
   return bind10(temporal)(function(x) {
     return pure7(new TimeExpression(x));
   });
 });
-var expression = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
-  return bind10(choice5([$$try(timeExpression), $$try(aural)]))(function(x) {
-    return pure7(x);
+var anchor = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
+  return bind10(identifier2)(function(id) {
+    return bind10(choice5([buildA, moveA, removeA]))(function(x) {
+      return bind10(charWS3(";"))(function() {
+        return pure7(singleton3(id)(x));
+      });
+    });
   });
+});
+var anchorExpression = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
+  return bind10(anchor)(function(x) {
+    return pure7(new AnchorExpression(x));
+  });
+});
+var expression = /* @__PURE__ */ bind10(/* @__PURE__ */ pure7(1))(function() {
+  return choice5([$$try(timeExpression), $$try(aural), $$try(anchorExpression), xPitchExpression]);
 });
 var parseProgram = /* @__PURE__ */ discard4(whitespace3)(function() {
   return bind10(many3(expression))(function(xs) {
@@ -31897,16 +44717,16 @@ var parseProgram = /* @__PURE__ */ discard4(whitespace3)(function() {
 });
 
 // output/Calculations/index.js
-var lookup4 = /* @__PURE__ */ lookup(ordString);
+var lookup5 = /* @__PURE__ */ lookup(ordString);
 var pure8 = /* @__PURE__ */ pure(applicativeEffect);
 var toRational5 = /* @__PURE__ */ toRational(toRationalInt);
 var map20 = /* @__PURE__ */ map(functorArray);
 var eq14 = /* @__PURE__ */ eq(/* @__PURE__ */ eqArray(eqInt));
-var mod5 = /* @__PURE__ */ mod(euclideanRingInt);
+var mod6 = /* @__PURE__ */ mod(euclideanRingInt);
 var fromFoldable8 = /* @__PURE__ */ fromFoldable(foldableList);
 var div12 = /* @__PURE__ */ div(euclideanRingRational);
 var mul12 = /* @__PURE__ */ mul(semiringRational);
-var map110 = /* @__PURE__ */ map(functorMaybe);
+var map111 = /* @__PURE__ */ map(functorMaybe);
 var intersectionWith2 = /* @__PURE__ */ intersectionWith(ordString);
 var eq22 = /* @__PURE__ */ eq(/* @__PURE__ */ eqMaybe(/* @__PURE__ */ eqTuple(eqString)(eqNumber)));
 var map23 = /* @__PURE__ */ map(functorEffect);
@@ -31948,7 +44768,7 @@ var getTempoMark = function(v) {
     return v.value3;
   }
   ;
-  throw new Error("Failed pattern match at Calculations (line 466, column 1 - line 466, column 41): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Calculations (line 469, column 1 - line 469, column 41): " + [v.constructor.name]);
 };
 var getRhythmic = function($copy_v) {
   return function($copy_v1) {
@@ -31962,7 +44782,7 @@ var getRhythmic = function($copy_v) {
       }
       ;
       if (v1 instanceof Replica) {
-        var v2 = lookup4(v1.value0)(v);
+        var v2 = lookup5(v1.value0)(v);
         if (v2 instanceof Nothing) {
           $tco_done = true;
           return O.value;
@@ -31974,10 +44794,10 @@ var getRhythmic = function($copy_v) {
           return;
         }
         ;
-        throw new Error("Failed pattern match at Calculations (line 450, column 30 - line 452, column 64): " + [v2.constructor.name]);
+        throw new Error("Failed pattern match at Calculations (line 453, column 30 - line 455, column 64): " + [v2.constructor.name]);
       }
       ;
-      throw new Error("Failed pattern match at Calculations (line 448, column 1 - line 448, column 60): " + [v.constructor.name, v1.constructor.name]);
+      throw new Error("Failed pattern match at Calculations (line 451, column 1 - line 451, column 60): " + [v.constructor.name, v1.constructor.name]);
     }
     ;
     while (!$tco_done) {
@@ -32004,7 +44824,7 @@ var getKey = function($copy_v) {
       }
       ;
       if (v1 instanceof Replica) {
-        var v2 = lookup4(v1.value0)(v);
+        var v2 = lookup5(v1.value0)(v);
         if (v2 instanceof Nothing) {
           $tco_done = true;
           return "2666";
@@ -32016,10 +44836,10 @@ var getKey = function($copy_v) {
           return;
         }
         ;
-        throw new Error("Failed pattern match at Calculations (line 300, column 3 - line 302, column 25): " + [v2.constructor.name]);
+        throw new Error("Failed pattern match at Calculations (line 303, column 3 - line 305, column 25): " + [v2.constructor.name]);
       }
       ;
-      throw new Error("Failed pattern match at Calculations (line 297, column 1 - line 297, column 53): " + [v.constructor.name, v1.constructor.name]);
+      throw new Error("Failed pattern match at Calculations (line 300, column 1 - line 300, column 53): " + [v.constructor.name, v1.constructor.name]);
     }
     ;
     while (!$tco_done) {
@@ -32053,7 +44873,7 @@ var f$prime = function($copy_v) {
       }
       ;
       if (v1 instanceof Replica) {
-        var v2 = lookup4(v1.value0)(v);
+        var v2 = lookup5(v1.value0)(v);
         if (v2 instanceof Nothing) {
           $tco_done = true;
           return false;
@@ -32065,10 +44885,10 @@ var f$prime = function($copy_v) {
           return;
         }
         ;
-        throw new Error("Failed pattern match at Calculations (line 308, column 21 - line 310, column 41): " + [v2.constructor.name]);
+        throw new Error("Failed pattern match at Calculations (line 311, column 21 - line 313, column 41): " + [v2.constructor.name]);
       }
       ;
-      throw new Error("Failed pattern match at Calculations (line 306, column 1 - line 306, column 47): " + [v.constructor.name, v1.constructor.name]);
+      throw new Error("Failed pattern match at Calculations (line 309, column 1 - line 309, column 47): " + [v.constructor.name, v1.constructor.name]);
     }
     ;
     while (!$tco_done) {
@@ -32080,7 +44900,7 @@ var f$prime = function($copy_v) {
 };
 var isNotConvergent = function(aKey) {
   return function(mapa) {
-    return f$prime(mapa)(fromMaybe(defTemporal)(lookup4(aKey)(mapa)));
+    return f$prime(mapa)(fromMaybe(defTemporal)(lookup5(aKey)(mapa)));
   };
 };
 var keysForReferencePath = function($copy_aKey) {
@@ -32097,7 +44917,7 @@ var keysForReferencePath = function($copy_aKey) {
         }
         ;
         if (otherwise) {
-          var nextCheck = getKey(mapa)(fromMaybe(defTemporal)(lookup4(aKey)(mapa)));
+          var nextCheck = getKey(mapa)(fromMaybe(defTemporal)(lookup5(aKey)(mapa)));
           var $201 = isNotConvergent(nextCheck)(mapa);
           if ($201) {
             $tco_done = true;
@@ -32110,7 +44930,7 @@ var keysForReferencePath = function($copy_aKey) {
           return;
         }
         ;
-        throw new Error("Failed pattern match at Calculations (line 288, column 1 - line 288, column 85): " + [aKey.constructor.name, mapa.constructor.name, listOfReferences.constructor.name]);
+        throw new Error("Failed pattern match at Calculations (line 291, column 1 - line 291, column 85): " + [aKey.constructor.name, mapa.constructor.name, listOfReferences.constructor.name]);
       }
       ;
       while (!$tco_done) {
@@ -32145,7 +44965,7 @@ var tempoMark2 = function($copy_v) {
       }
       ;
       if (v1 instanceof Replica) {
-        var v2 = lookup4(v1.value0)(v);
+        var v2 = lookup5(v1.value0)(v);
         if (v2 instanceof Nothing) {
           $tco_done = true;
           return defTempoMark;
@@ -32157,10 +44977,10 @@ var tempoMark2 = function($copy_v) {
           return;
         }
         ;
-        throw new Error("Failed pattern match at Calculations (line 462, column 28 - line 464, column 62): " + [v2.constructor.name]);
+        throw new Error("Failed pattern match at Calculations (line 465, column 28 - line 467, column 62): " + [v2.constructor.name]);
       }
       ;
-      throw new Error("Failed pattern match at Calculations (line 460, column 1 - line 460, column 59): " + [v.constructor.name, v1.constructor.name]);
+      throw new Error("Failed pattern match at Calculations (line 463, column 1 - line 463, column 59): " + [v.constructor.name, v1.constructor.name]);
     }
     ;
     while (!$tco_done) {
@@ -32183,7 +45003,7 @@ var cpPos = function(v) {
         return toNumber2(floor2(n$prime)) + v1;
       }
       ;
-      throw new Error("Failed pattern match at Calculations (line 429, column 1 - line 429, column 50): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
+      throw new Error("Failed pattern match at Calculations (line 432, column 1 - line 432, column 50): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
     };
   };
 };
@@ -32204,7 +45024,7 @@ var filterEventToPosFrom = function(cp) {
             return fromMaybe(0)(head(map20(function(x) {
               return cpPos(new Right(cp.value0))(snd(x))(lenOnset);
             })(filter2(function(x) {
-              return fst(x) === mod5(cp.value0)(lenOnset);
+              return fst(x) === mod6(cp.value0)(lenOnset);
             })(eventsAndPos))));
           }
           ;
@@ -32236,7 +45056,7 @@ var filterEventToPosTo = function(cp) {
             return fromMaybe(0)(head(map20(function(x) {
               return cpPos(new Right(cp.value0))(snd(x))(lenOnset);
             })(filter2(function(x) {
-              return fst(x) === mod5(cp.value0)(lenOnset);
+              return fst(x) === mod6(cp.value0)(lenOnset);
             })(eventsAndPos))));
           }
           ;
@@ -32282,7 +45102,7 @@ var convergences = function($copy_v) {
       }
       ;
       if (v1 instanceof Replica) {
-        var v2 = lookup4(v1.value0)(v);
+        var v2 = lookup5(v1.value0)(v);
         if (v2 instanceof Nothing) {
           $tco_done = true;
           return new Tuple(defConvergeTo, defConvergeFrom);
@@ -32294,10 +45114,10 @@ var convergences = function($copy_v) {
           return;
         }
         ;
-        throw new Error("Failed pattern match at Calculations (line 280, column 31 - line 282, column 59): " + [v2.constructor.name]);
+        throw new Error("Failed pattern match at Calculations (line 283, column 31 - line 285, column 59): " + [v2.constructor.name]);
       }
       ;
-      throw new Error("Failed pattern match at Calculations (line 278, column 1 - line 278, column 82): " + [v.constructor.name, v1.constructor.name]);
+      throw new Error("Failed pattern match at Calculations (line 281, column 1 - line 281, column 82): " + [v.constructor.name, v1.constructor.name]);
     }
     ;
     while (!$tco_done) {
@@ -32350,9 +45170,9 @@ var calculateRTempo = function($copy_v) {
           }
           ;
           if (v2 instanceof Prop) {
-            var newTM = fromMaybe(new CPM(fromInt2(120)))(map110(function(temporal2) {
+            var newTM = fromMaybe(new CPM(fromInt2(120)))(map111(function(temporal2) {
               return tempoMark2(v)(temporal2);
-            })(lookup4(v2.value0)(v)));
+            })(lookup5(v2.value0)(v)));
             var newProp = toNumber2(v2.value1) / toNumber2(v2.value2) * v3;
             $tco_var_v = v;
             $tco_var_v1 = v1;
@@ -32361,7 +45181,7 @@ var calculateRTempo = function($copy_v) {
             return;
           }
           ;
-          throw new Error("Failed pattern match at Calculations (line 356, column 1 - line 356, column 82): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+          throw new Error("Failed pattern match at Calculations (line 359, column 1 - line 359, column 82): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
         }
         ;
         while (!$tco_done) {
@@ -32394,13 +45214,13 @@ var processTempoMark = function(v) {
       ;
       if (v instanceof Prop) {
         var prop = toNumber2(v.value1) / toNumber2(v.value2);
-        var otherTempo = map110(function(temporal2) {
+        var otherTempo = map111(function(temporal2) {
           return calculateRTempo(v2)(v1)(tempoMark2(v2)(temporal2))(prop);
-        })(lookup4(v.value0)(v2));
+        })(lookup5(v.value0)(v2));
         return fromMaybe(120)(otherTempo);
       }
       ;
-      throw new Error("Failed pattern match at Calculations (line 346, column 1 - line 346, column 73): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
+      throw new Error("Failed pattern match at Calculations (line 349, column 1 - line 349, column 73): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
     };
   };
 };
@@ -32425,7 +45245,7 @@ var calculateCFrom = function(cp) {
 };
 var assambleVoice = function(program) {
   var tempoMap = getTemporalMap(program);
-  var auralMap = getAuralMap(program);
+  var auralMap = getAuralMap2(program);
   return intersectionWith2(function(x) {
     return function(y) {
       return new Voice(x, y);
@@ -32448,7 +45268,7 @@ var aligner = function(v) {
       return ceiledModInMetre * toNumber2(v1.value0);
     }
     ;
-    throw new Error("Failed pattern match at Calculations (line 384, column 1 - line 384, column 38): " + [v.constructor.name, v1.constructor.name]);
+    throw new Error("Failed pattern match at Calculations (line 387, column 1 - line 387, column 38): " + [v.constructor.name, v1.constructor.name]);
   };
 };
 var calculateCToMetric = function(v) {
@@ -32526,7 +45346,7 @@ var recursiveRefX1 = function(v) {
             var processedTM = processTempoMark(tempoMark2(v2)(v1))(v.tempo)(v2);
             var dur = durFromRhythmic(rhythmic2)(processedTM);
             var cFrom = calculateCFrom(v5.value1)(processedTM)(rhythmic2);
-            var temporalHack = fromMaybe(defTemporal)(lookup4(cKey)(v2));
+            var temporalHack = fromMaybe(defTemporal)(lookup5(cKey)(v2));
             return function __do2() {
               var incomingKeyX1 = function() {
                 var $321 = eq22(v3)(Nothing.value);
@@ -32537,7 +45357,7 @@ var recursiveRefX1 = function(v) {
                 return v3;
               }();
               var v6 = fromMaybe(new Tuple("error", 2.666))(incomingKeyX1);
-              var refTemporal2 = fromMaybe(defTemporal)(lookup4(v6.value0)(v2));
+              var refTemporal2 = fromMaybe(defTemporal)(lookup5(v6.value0)(v2));
               var refRhythmic2 = getRhythmic(v2)(refTemporal2);
               var refTM = processTempoMark(tempoMark2(v2)(refTemporal2))(v.tempo)(v2);
               var refDur2 = durFromRhythmic(refRhythmic2)(refTM);
@@ -32550,7 +45370,7 @@ var recursiveRefX1 = function(v) {
           }
           ;
           if (v4 instanceof Cons) {
-            var refTemporal = fromMaybe(defTemporal)(lookup4(v4.value0)(v2));
+            var refTemporal = fromMaybe(defTemporal)(lookup5(v4.value0)(v2));
             var v5 = convergences(v2)(refTemporal);
             var refRhythmic = getRhythmic(v2)(refTemporal);
             var refProcessedTM = processTempoMark(tempoMark2(v2)(refTemporal))(v.tempo)(v2);
@@ -32563,7 +45383,7 @@ var recursiveRefX1 = function(v) {
                 }
                 ;
                 if (v3 instanceof Just) {
-                  var prevTemporal = fromMaybe(defTemporal)(lookup4(fst(v3.value0))(v2));
+                  var prevTemporal = fromMaybe(defTemporal)(lookup5(fst(v3.value0))(v2));
                   var prevRhythmic = getRhythmic(v2)(prevTemporal);
                   var prevTM = processTempoMark(tempoMark2(v2)(prevTemporal))(v.tempo)(v2);
                   var prevDur = durFromRhythmic(prevRhythmic)(prevTM);
@@ -32574,14 +45394,14 @@ var recursiveRefX1 = function(v) {
                   return snd(v3.value0) + refX12;
                 }
                 ;
-                throw new Error("Failed pattern match at Calculations (line 262, column 12 - line 273, column 47): " + [v3.constructor.name]);
+                throw new Error("Failed pattern match at Calculations (line 265, column 12 - line 276, column 47): " + [v3.constructor.name]);
               }();
               var result = recursiveRefX1(v)(v1)(v2)(new Just(new Tuple(v4.value0, refX1)))(v4.value1)();
               return result;
             };
           }
           ;
-          throw new Error("Failed pattern match at Calculations (line 220, column 1 - line 220, column 128): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
+          throw new Error("Failed pattern match at Calculations (line 223, column 1 - line 223, column 128): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
         };
       };
     };
@@ -32591,7 +45411,7 @@ var findReferencedX1 = function(v) {
   return function(v1) {
     return function(v2) {
       if (v1 instanceof Replica) {
-        var replicatedTemporal = fromMaybe(defTemporal)(lookup4(v1.value0)(v2));
+        var replicatedTemporal = fromMaybe(defTemporal)(lookup5(v1.value0)(v2));
         return function __do2() {
           var result = findReferencedX1(v)(replicatedTemporal)(v2)();
           return result;
@@ -32619,7 +45439,7 @@ var findReferencedX1 = function(v) {
         };
       }
       ;
-      throw new Error("Failed pattern match at Calculations (line 198, column 1 - line 198, column 83): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
+      throw new Error("Failed pattern match at Calculations (line 201, column 1 - line 201, column 83): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
     };
   };
 };
@@ -32630,7 +45450,7 @@ var x1ConvergeVoice = function(tp) {
         return function(cFrom$prime) {
           return function(rhythmic2) {
             return function(mapa) {
-              var refTemporal = fromMaybe(defTemporal)(lookup4(cKey)(mapa));
+              var refTemporal = fromMaybe(defTemporal)(lookup5(cKey)(mapa));
               var refRhythmic = getRhythmic(mapa)(refTemporal);
               var refTempo = processTempoMark(tempoMark2(mapa)(refTemporal))(tp.tempo)(mapa);
               var refDur = durFromRhythmic(refRhythmic)(refTempo);
@@ -32664,7 +45484,7 @@ var calculateTemporal = function(v) {
     return function(v2) {
       return function(v3) {
         if (v3 instanceof Replica) {
-          var replicatedTemporal = fromMaybe(defTemporal)(lookup4(v3.value0)(v));
+          var replicatedTemporal = fromMaybe(defTemporal)(lookup5(v3.value0)(v));
           return function __do2() {
             var result = calculateTemporal(v)(v1)(v2)(replicatedTemporal)();
             return result;
@@ -32765,21 +45585,23 @@ var calculateTemporal = function(v) {
           };
         }
         ;
-        throw new Error("Failed pattern match at Calculations (line 93, column 1 - line 93, column 102): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+        throw new Error("Failed pattern match at Calculations (line 95, column 1 - line 95, column 102): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
       };
     };
   };
 };
 var calculateVoice = function(tempoMap) {
   return function(voiceMap) {
-    return function(tp) {
-      return function(aKey) {
-        return function(v) {
-          var events = calculateTemporal(tempoMap)(tp)(aKey)(v.value0);
-          var rhythmic2 = getRhythmic(tempoMap)(v.value0);
-          return function __do2() {
-            var toWaste = map23(auralSpecs(voiceMap)(rhythmic2)(v.value1))(events)();
-            return toWaste;
+    return function(xenopitches) {
+      return function(tp) {
+        return function(aKey) {
+          return function(v) {
+            var events = calculateTemporal(tempoMap)(tp)(aKey)(v.value0);
+            var rhythmic2 = getRhythmic(tempoMap)(v.value0);
+            return function __do2() {
+              var toWaste = map23(auralSpecs(voiceMap)(rhythmic2)(v.value1)(xenopitches))(events)();
+              return toWaste;
+            };
           };
         };
       };
@@ -32788,52 +45610,57 @@ var calculateVoice = function(tempoMap) {
 };
 var calculateVoices = function(tempoMap) {
   return function(voiceMap) {
-    return function(tp) {
-      return traverseWithIndex2(calculateVoice(tempoMap)(voiceMap)(tp))(voiceMap);
+    return function(xenopitches) {
+      return function(tp) {
+        return traverseWithIndex2(calculateVoice(tempoMap)(voiceMap)(xenopitches)(tp))(voiceMap);
+      };
     };
   };
 };
 var programToWaste = function(program) {
-  return function(ws$prime) {
-    return function(we$prime) {
-      return function(eval$prime) {
-        return function(t) {
-          var voices$prime = assambleVoice(program);
-          var toWaste = function(almostW) {
-            var posix = function(v) {
-              return v.value0.value1;
-            }(almostW.event);
-            return {
-              whenPosix: posix,
-              s: almostW.s,
-              n: almostW.n,
-              gain: almostW.gain,
-              pan: almostW.pan,
-              speed: almostW.speed,
-              begin: almostW.begin,
-              end: almostW.end,
-              note: almostW.note
+  return function(am) {
+    return function(ws$prime) {
+      return function(we$prime) {
+        return function(eval$prime) {
+          return function(t) {
+            var xenoPitches = getXPitchMap(program);
+            var voices$prime = assambleVoice(program);
+            var toWaste = function(almostW) {
+              var posix = function(v) {
+                return v.value0.value1;
+              }(almostW.event);
+              return {
+                whenPosix: posix,
+                s: almostW.s,
+                n: almostW.n,
+                gain: almostW.gain,
+                pan: almostW.pan,
+                speed: almostW.speed,
+                begin: almostW.begin,
+                end: almostW.end,
+                note: almostW.note
+              };
             };
+            var timePacket = {
+              ws: ws$prime,
+              we: we$prime,
+              "eval": eval$prime,
+              origin: origin(t),
+              tempo: t
+            };
+            var f2 = function(w) {
+              return w.event.value0.value0;
+            };
+            var getXs = function(ws) {
+              return filter2(function(w) {
+                return f2(w);
+              })(ws);
+            };
+            var calculatedVoices = calculateVoices(getTemporalMap(program))(voices$prime)(xenoPitches)(timePacket);
+            var almostWs = map23(map32(map32(concat)(fromFoldable8))(values))(calculatedVoices);
+            var waste = map23(map32(map20(toWaste))(getXs))(almostWs);
+            return waste;
           };
-          var timePacket = {
-            ws: ws$prime,
-            we: we$prime,
-            "eval": eval$prime,
-            origin: origin(t),
-            tempo: t
-          };
-          var f = function(w) {
-            return w.event.value0.value0;
-          };
-          var getXs = function(ws) {
-            return filter2(function(w) {
-              return f(w);
-            })(ws);
-          };
-          var calculatedVoices = calculateVoices(getTemporalMap(program))(voices$prime)(timePacket);
-          var almostWs = map23(map32(map32(concat)(fromFoldable8))(values))(calculatedVoices);
-          var waste = map23(map32(map20(toWaste))(getXs))(almostWs);
-          return waste;
         };
       };
     };
@@ -32857,6 +45684,43 @@ var unsafeToForeign = unsafeCoerce2;
 
 // output/Main/index.js
 var bind11 = /* @__PURE__ */ bind(bindEffect);
+var show4 = /* @__PURE__ */ show(/* @__PURE__ */ showArray(/* @__PURE__ */ showRecord()()(/* @__PURE__ */ showRecordFieldsCons({
+  reflectSymbol: function() {
+    return "begin";
+  }
+})(/* @__PURE__ */ showRecordFieldsCons({
+  reflectSymbol: function() {
+    return "end";
+  }
+})(/* @__PURE__ */ showRecordFieldsCons({
+  reflectSymbol: function() {
+    return "gain";
+  }
+})(/* @__PURE__ */ showRecordFieldsCons({
+  reflectSymbol: function() {
+    return "n";
+  }
+})(/* @__PURE__ */ showRecordFieldsCons({
+  reflectSymbol: function() {
+    return "note";
+  }
+})(/* @__PURE__ */ showRecordFieldsCons({
+  reflectSymbol: function() {
+    return "pan";
+  }
+})(/* @__PURE__ */ showRecordFieldsCons({
+  reflectSymbol: function() {
+    return "s";
+  }
+})(/* @__PURE__ */ showRecordFieldsCons({
+  reflectSymbol: function() {
+    return "speed";
+  }
+})(/* @__PURE__ */ showRecordFieldsConsNil({
+  reflectSymbol: function() {
+    return "whenPosix";
+  }
+})(showNumber))(showNumber))(showString))(showNumber))(showNumber))(showInt))(showNumber))(showNumber))(showNumber))));
 var map21 = /* @__PURE__ */ map(functorArray);
 var fromFoldable9 = /* @__PURE__ */ fromFoldable2(foldableArray);
 var toRational6 = /* @__PURE__ */ toRational(toRationalInt);
@@ -32900,9 +45764,11 @@ var timekNotToForeigns = function(tk) {
       var we$prime = numToDateTime(we * 1e3);
       return function __do2() {
         var program = read(tk.ast)();
+        var anchors = read(tk.anchors)();
         var t = read(tk.tempo)();
         var $$eval = read(tk["eval"])();
-        var events = programToWaste(program)(ws$prime)(we$prime)($$eval)(t)();
+        var events = programToWaste(program)(anchors)(ws$prime)(we$prime)($$eval)(t)();
+        log2(show4(events))();
         return map21(unsafeToForeign)(events);
       };
     };
@@ -32920,10 +45786,12 @@ var launch = function __do() {
   var ast = $$new(fromFoldable9([new TimeExpression(empty2)]))();
   var tempo = bind11(newTempo(toRational6(1)(1)))($$new)();
   var $$eval = bind11(nowDateTime)($$new)();
+  var anchors = $$new(empty2)();
   return {
     ast,
     tempo,
-    "eval": $$eval
+    "eval": $$eval,
+    anchors
   };
 };
 var check$prime = function(v) {
@@ -32932,7 +45800,7 @@ var check$prime = function(v) {
   }
   ;
   if (v instanceof Right) {
-    var v1 = check(getTemporalMap(v.value0));
+    var v1 = check(v.value0);
     if (v1) {
       return new Right(v.value0);
     }

@@ -21,6 +21,7 @@ import Data.Tempo
 
 import AST
 import Parser
+import Aural
 import Rhythm -- is this used?
 import TestOpsAndDefs
 import DurationAndIndex
@@ -57,11 +58,13 @@ v0.sound = _-_ "drum" .n = _ 0..20;
 -}
 -- this above should generate two voices. This will make the 'Replica'' parsing obsolete unless it is added with a way to change specific parameters like tempo, convergeFrom, convergeTo, etc...
 
-programToWaste:: Program -> DateTime -> DateTime -> DateTime -> Tempo -> Effect (Array Waste)
-programToWaste program ws' we' eval' t = waste
-  where timePacket = {ws: ws', we: we', eval: eval', origin: origin t, tempo: t}
+programToWaste:: Program -> AnchorMap -> DateTime -> DateTime -> DateTime -> Tempo -> Effect (Array Waste)
+programToWaste program am ws' we' eval' t = waste
+  where -- anchors = --- f:: Map String AnchorExpression -> Map String DateTime -> Map String Number (posix~~)
+        timePacket = {ws: ws', we: we', eval: eval', origin: origin t, tempo: t {-, anchors: anchors -}}
         voices' = assambleVoice program -- Voices
-        calculatedVoices = calculateVoices (getTemporalMap program) voices' timePacket
+        xenoPitches = getXPitchMap program -- Map String XenoPitch
+        calculatedVoices = calculateVoices (getTemporalMap program) voices' xenoPitches timePacket
         -- Effect (M.Map String (Array AlmostWaste))
         almostWs = concat <$> fromFoldable <$> M.values <$> calculatedVoices -- Effect (Array (Array AlmostWaste))
         f:: AlmostWaste -> Boolean
@@ -78,16 +81,15 @@ assambleVoice program = M.intersectionWith (\x y -> Voice x y) tempoMap auralMap
   where tempoMap = getTemporalMap program
         auralMap = getAuralMap program
 
-
 -- voices:: Map String (List Aural)
-calculateVoices:: M.Map String Temporal -> Voices -> TimePacket -> Effect (M.Map String (Array AlmostWaste))
-calculateVoices tempoMap voiceMap tp = traverseWithIndex (calculateVoice tempoMap voiceMap tp) voiceMap  -- to get rid of Effect, change traverseWithIndex to mapWithIndex
+calculateVoices:: M.Map String Temporal -> Voices -> M.Map String XenoPitch -> TimePacket -> Effect (M.Map String (Array AlmostWaste))
+calculateVoices tempoMap voiceMap xenopitches tp = traverseWithIndex (calculateVoice tempoMap voiceMap xenopitches tp) voiceMap  -- to get rid of Effect, change traverseWithIndex to mapWithIndex
 
-calculateVoice:: M.Map String Temporal -> Voices -> TimePacket -> String -> Voice -> Effect (Array AlmostWaste)
-calculateVoice tempoMap voiceMap tp aKey (Voice temporal aurals) = do 
+calculateVoice:: M.Map String Temporal -> Voices -> M.Map String XenoPitch-> TimePacket -> String -> Voice -> Effect (Array AlmostWaste)
+calculateVoice tempoMap voiceMap xenopitches tp aKey (Voice temporal aurals) = do 
     let events = calculateTemporal tempoMap tp aKey temporal -- Array Event
     let rhythmic = getRhythmic tempoMap temporal
-    toWaste <- auralSpecs voiceMap rhythmic aurals <$> events
+    toWaste <- auralSpecs voiceMap rhythmic aurals xenopitches <$> events
     pure toWaste
 
 calculateTemporal:: M.Map String Temporal -> TimePacket -> String -> Temporal -> Effect (Array Event)
@@ -95,6 +97,7 @@ calculateTemporal mapa tp aKey (Replica id) = do
   let replicatedTemporal = fromMaybe defTemporal $ M.lookup id mapa
   result <- calculateTemporal mapa tp aKey replicatedTemporal 
   pure result 
+
 calculateTemporal mapa tp aKey (Temporal (Kairos asap tempoMark) rhythmic loop) = do
   let tempo = processTempoMark tempoMark tp.tempo mapa
       posixAtOrigin = fromDateTimeToPosix (origin tp.tempo)

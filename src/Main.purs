@@ -43,14 +43,14 @@ import Parsing
 
 -- command for copying into estuary devstaging: cp -Rf ~/Documents/repos/tk/timekNot /home/alejandro/Documents/repos/estuary/dev-staging/Estuary.jsexe
 
--- Expression = TimeExpression (Map String Temporal)
 launch :: Effect TimekNot
 launch = do
   log "timekNot: launch"
   ast <- new $ L.fromFoldable [TimeExpression  M.empty]
   tempo <- newTempo (1 % 1) >>= new 
   eval <- nowDateTime >>= new
-  pure { ast, tempo, eval}  
+  anchors <- new $ (M.empty)
+  pure { ast, tempo, eval, anchors}  
 
 evaluate :: TimekNot -> String -> Effect { success :: Boolean, error :: String }
 evaluate tk str = do
@@ -67,7 +67,7 @@ evaluate tk str = do
 
 check':: Either ParseError Program -> Either String Program
 check' (Left error) = Left $ parseErrorMessage error
-check' (Right aProgram) = case check (getTemporalMap aProgram) of
+check' (Right aProgram) = case check aProgram of
                               true -> Right aProgram
                               false -> Left "failed the check, time bites it's own tail"
 
@@ -101,6 +101,7 @@ timekNotToForeigns tk ws we = do
     let ws' = numToDateTime (ws * 1000.0000) -- haskell comes in milliseconds, purescript needs seconds
     let we' = numToDateTime (we * 1000.0000)
     program <- read tk.ast
+    anchors <- read tk.anchors
     t <- read tk.tempo
     eval <- read tk.eval
 
@@ -110,6 +111,6 @@ timekNotToForeigns tk ws we = do
     -- log $ show we
     -- log $ show t
 
-    events <- programToWaste program ws' we' eval t
-    -- log $ show events
+    events <- programToWaste program anchors ws' we' eval t
+    log $ show events
     pure $ map unsafeToForeign events

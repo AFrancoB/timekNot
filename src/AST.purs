@@ -1,4 +1,4 @@
-module AST(TimekNot(..),Waste(..),AlmostWaste(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..),Dastgah(..),Span(..),Ops(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), Waste(..),showEventIndex, showStructureIndex) where
+module AST(TimekNot(..),Anchor(..),Waste(..),AlmostWaste(..), AnchorMap(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..),Dastgah(..),Span(..),Ops(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), XenoPitch(..), XenoNote(..),showEventIndex, showStructureIndex) where
 
 import Prelude
 import Effect.Ref
@@ -9,6 +9,8 @@ import Data.DateTime
 import Data.Rational
 import Data.Map
 import Data.Tuple
+import Data.Either
+import Data.Maybe
 
 type Waste = {
   whenPosix:: Number, 
@@ -37,8 +39,13 @@ type AlmostWaste = {
 type TimekNot = {
   ast :: Ref Program,
   tempo :: Ref Tempo,
-  eval :: Ref DateTime
+  eval :: Ref DateTime,
+  anchors :: Ref (Map String DateTime)
   }
+
+type Program = List Expression
+
+data Expression = TimeExpression (Map String Temporal) | AuralExpression (Map String Aural) | AnchorExpression  (Map String Anchor) | XenoPitchExpression (Map String XenoPitch)
 
 -- Temporal values is short for TemporalRelationship and Aural is short for Aural Values. Polytemporal stands for TempoRelationship, Rhythmic stands shor for Rhythmic values
 
@@ -52,13 +59,26 @@ instance voiceShow :: Show Voice where
 
 type Aural = List Value
 
-type Program = List Expression
+type AnchorMap = Map String DateTime
 
-data Expression = TimeExpression (Map String Temporal) | AuralExpression (Map String Aural) -- here add a convergence expression when the non-ephemeral convergence points are properly imagined
+data Anchor = Build (Either Number Number) | Move (Either Number Number) | Remove
+
+instance anchorShow :: Show Anchor where
+  show (Build num) = "established " <> x 
+      where x = case num of
+                  (Left beat) -> show beat <> " beats from eval"
+                  (Right secs) -> show secs <> " secs from eval"
+  show (Move num) = " moved by " <> show num <> " secs" -- fornow secs but enable xBeats
+      where x = case num of
+                  (Left beat) -> show beat <> " beats"
+                  (Right secs) -> show secs <> " secs"
+  show Remove = " removed"
 
 instance expressionShow :: Show Expression where
   show (TimeExpression x) = show x
   show (AuralExpression x) = show x
+  show (AnchorExpression x) = show x
+  show (XenoPitchExpression x) = show x
 
 type AudioAttributes = {
   sound:: List Value,
@@ -80,7 +100,7 @@ data Value =
   CutOff Span (List Number) | TransposedCutOff String Int |
   Vowel Span (List Number) | TransposedVowel String Int | 
   Chord Span (List Number) | TransposedChord String Int |
-  Dastgah Span Dastgah
+  Dastgah Span Dastgah | Xeno (Tuple String (Maybe Int)) Span (List Int)
 
 data Dastgah = Shur (List Int) -- 1 to 8 then it cycles back
 
@@ -124,6 +144,7 @@ instance valueShow :: Show Value where
   show (Chord x l) = show x <> " " <> show l
   show (TransposedChord voice n) = "chord transposed from " <> voice
   show (Dastgah span d) = show d
+  show (Xeno id span l) = show l
 
 data Span = CycleEvent | CycleBlock | CycleInBlock | SpreadBlock -- | Weight
 
@@ -132,6 +153,7 @@ instance spanShow :: Show Span where
   show CycleBlock =    "_-"
   show CycleInBlock =  "-_"
   show SpreadBlock =   "_-_"
+  -- show BySubdivision = "-"
   -- show Weight = "-_-"
 
 data Temporal = Temporal Polytemporal Rhythmic Boolean | Replica String -- this will require a check and the recursive implementation now very familiar
@@ -266,3 +288,21 @@ instance indexShow :: Show Index where
     show (Index x xs n) = show x <>"-"<> result <> " (" <> (Str.take 8 $ show n) <> ")"
       where subdivisions = foldl (<>) "" $ map (\x -> show x <> ".") xs
             result = Str.take (Str.length subdivisions - 1) subdivisions
+
+-- xenopPitch
+
+
+data XenoPitch = CPSet Int (Array Int) (Maybe (Array Int)) | MOS Int Int | EDO Number Int
+
+instance xenoShow :: Show XenoPitch where
+    show (CPSet s f subs) = "cps " <> show s <> " " <> show f <> " " <> show subs
+    show (MOS k n) = "mos " <> show k <> " " <> show n
+    show (EDO p d) = "edo " <> show p <> " " <> show d
+
+type XenoNote = {
+    set:: Array Int,
+    "archi-set":: Array String,
+    ratio:: Int,
+    "bounded-ratio":: Number,
+    "bounding-period":: Int
+}

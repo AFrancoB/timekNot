@@ -10,6 +10,7 @@ import * as Data_List from "../Data.List/index.js";
 import * as Data_Map_Internal from "../Data.Map.Internal/index.js";
 import * as Data_Maybe from "../Data.Maybe/index.js";
 import * as Data_Rational from "../Data.Rational/index.js";
+import * as Data_Show from "../Data.Show/index.js";
 import * as Data_Tempo from "../Data.Tempo/index.js";
 import * as Effect from "../Effect/index.js";
 import * as Effect_Console from "../Effect.Console/index.js";
@@ -19,6 +20,43 @@ import * as Foreign from "../Foreign/index.js";
 import * as Parser from "../Parser/index.js";
 import * as Parsing from "../Parsing/index.js";
 var bind = /* #__PURE__ */ Control_Bind.bind(Effect.bindEffect);
+var show = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_Show.showArray(/* #__PURE__ */ Data_Show.showRecord()()(/* #__PURE__ */ Data_Show.showRecordFieldsCons({
+    reflectSymbol: function () {
+        return "begin";
+    }
+})(/* #__PURE__ */ Data_Show.showRecordFieldsCons({
+    reflectSymbol: function () {
+        return "end";
+    }
+})(/* #__PURE__ */ Data_Show.showRecordFieldsCons({
+    reflectSymbol: function () {
+        return "gain";
+    }
+})(/* #__PURE__ */ Data_Show.showRecordFieldsCons({
+    reflectSymbol: function () {
+        return "n";
+    }
+})(/* #__PURE__ */ Data_Show.showRecordFieldsCons({
+    reflectSymbol: function () {
+        return "note";
+    }
+})(/* #__PURE__ */ Data_Show.showRecordFieldsCons({
+    reflectSymbol: function () {
+        return "pan";
+    }
+})(/* #__PURE__ */ Data_Show.showRecordFieldsCons({
+    reflectSymbol: function () {
+        return "s";
+    }
+})(/* #__PURE__ */ Data_Show.showRecordFieldsCons({
+    reflectSymbol: function () {
+        return "speed";
+    }
+})(/* #__PURE__ */ Data_Show.showRecordFieldsConsNil({
+    reflectSymbol: function () {
+        return "whenPosix";
+    }
+})(Data_Show.showNumber))(Data_Show.showNumber))(Data_Show.showString))(Data_Show.showNumber))(Data_Show.showNumber))(Data_Show.showInt))(Data_Show.showNumber))(Data_Show.showNumber))(Data_Show.showNumber))));
 var map = /* #__PURE__ */ Data_Functor.map(Data_Functor.functorArray);
 var fromFoldable = /* #__PURE__ */ Data_List.fromFoldable(Data_Foldable.foldableArray);
 var toRational = /* #__PURE__ */ Data_Rational.toRational(Data_Rational.toRationalInt);
@@ -58,9 +96,11 @@ var timekNotToForeigns = function (tk) {
             var we$prime = numToDateTime(we * 1000.0);
             return function __do() {
                 var program = Effect_Ref.read(tk.ast)();
+                var anchors = Effect_Ref.read(tk.anchors)();
                 var t = Effect_Ref.read(tk.tempo)();
                 var $$eval = Effect_Ref.read(tk["eval"])();
-                var events = Calculations.programToWaste(program)(ws$prime)(we$prime)($$eval)(t)();
+                var events = Calculations.programToWaste(program)(anchors)(ws$prime)(we$prime)($$eval)(t)();
+                Effect_Console.log(show(events))();
                 return map(Foreign.unsafeToForeign)(events);
             };
         };
@@ -78,10 +118,12 @@ var launch = function __do() {
     var ast = Effect_Ref["new"](fromFoldable([ new AST.TimeExpression(Data_Map_Internal.empty) ]))();
     var tempo = bind(Data_Tempo.newTempo(toRational(1)(1)))(Effect_Ref["new"])();
     var $$eval = bind(Effect_Now.nowDateTime)(Effect_Ref["new"])();
+    var anchors = Effect_Ref["new"](Data_Map_Internal.empty)();
     return {
         ast: ast,
         tempo: tempo,
-        "eval": $$eval
+        "eval": $$eval,
+        anchors: anchors
     };
 };
 var check$prime = function (v) {
@@ -89,7 +131,7 @@ var check$prime = function (v) {
         return new Data_Either.Left(Parsing.parseErrorMessage(v.value0));
     };
     if (v instanceof Data_Either.Right) {
-        var v1 = Parser.check(Parser.getTemporalMap(v.value0));
+        var v1 = Parser.check(v.value0);
         if (v1) {
             return new Data_Either.Right(v.value0);
         };

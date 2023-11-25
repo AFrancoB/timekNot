@@ -22,7 +22,6 @@ to generate this file without the comments in this block.
   , "foreign"
   , "identity"
   , "integers"
-  , "js-bigints"
   , "lists"
   , "maybe"
   , "newtype"
@@ -31,15 +30,14 @@ to generate this file without the comments in this block.
   , "parsing"
   , "partial"
   , "prelude"
-  , "psci-support"
   , "purescript-webdirt"
+  , "purescript-tempi"
   , "quickcheck"
   , "rationals"
   , "record"
   , "refs"
   , "strings"
   , "tuples"
-  , "typelevel"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]

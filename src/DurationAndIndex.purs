@@ -143,9 +143,11 @@ simplifyBjorklund:: Euclidean -> Int -> Int -> Int -> Rhythmic
 simplifyBjorklund (Simple) k n rot = Rhythmics xs 
   where xs = L.fromFoldable $ map (\r -> if r == true then X else O) $ blRotated rot $ bjorklund (Tuple k n)
 simplifyBjorklund (K patt) k n rot = Rhythmics xs 
-  where xs = L.fromFoldable $ map (\r -> if r == true then patt else O) $ blRotated rot $ bjorklund (Tuple k n)
+  where xs = L.fromFoldable $ map (\r -> if r == true then patt else patto) $ blRotated rot $ bjorklund (Tuple k n)
+        patto = Rhythmics $ L.fromFoldable $ replicate (L.length $ rhythmicToOnsets patt) O
 simplifyBjorklund (InvK patt) k n rot = Rhythmics xs 
-  where xs = L.fromFoldable $ map (\r -> if r == true then O else patt) $ blRotated rot $ bjorklund (Tuple k n)
+  where xs = L.fromFoldable $ map (\r -> if r == true then patto else patt) $ blRotated rot $ bjorklund (Tuple k n)
+        patto = Rhythmics $ L.fromFoldable $ replicate (L.length $ rhythmicToOnsets patt) O
 simplifyBjorklund (Full pK pN) k n rot = Rhythmics xs
   where xs = L.fromFoldable $ map (\r -> if r == true then pK else pN) $ blRotated rot $ bjorklund (Tuple k n)
 
