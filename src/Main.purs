@@ -21,20 +21,30 @@ import Data.List as L
 import Data.Map as M
 import Data.Tuple
 
-import Data.DateTime
-import Data.DateTime.Instant
-import Data.Time.Duration
-
 import Foreign 
 
 import Partial.Unsafe
 import Data.Enum
 
+import Data.DateTime (DateTime(..))
+
 import Data.Newtype
 
+import Halogen as H
+import Halogen.Aff as HA
+import Halogen.HTML as HH
+import Halogen.HTML.Properties as HP
+import Halogen.HTML.Events as HE
+import Halogen.VDom.Driver (runUI)
+
+import Visualisation
+-- import Svg.Parser
+
 import AST
+import TimePacketOps
 import Parser
 import Calculations
+import Novus
 
 import Parsing
 
@@ -49,68 +59,51 @@ launch = do
   ast <- new $ L.fromFoldable [TimeExpression  M.empty]
   tempo <- newTempo (1 % 1) >>= new 
   eval <- nowDateTime >>= new
-  anchors <- new $ (M.empty)
-  pure { ast, tempo, eval, anchors}  
+  vantageMap <- new $ (M.empty)
+  pure { ast, tempo, eval, vantageMap}  
 
 evaluate :: TimekNot -> String -> Effect { success :: Boolean, error :: String }
 evaluate tk str = do
   log "timekNot: evaluate"
-  program <- read tk.ast
+  -- program <- read tk.ast -- this does not do anything, can be erased...?
+  currentVM <- read tk.vantageMap
+  log $ "currentVM" <> show currentVM
+  tempo <- read tk.tempo
   eval <- nowDateTime
-  let pr = check' $ runParser str parseProgram
+  let pr = check' currentVM $ runParser str parseProgram
   case pr of
     Left error -> pure $ { success: false, error }
     Right p -> do
       write eval tk.eval 
       write p tk.ast 
+      write (processVantage (getVantageMap p) currentVM eval tempo) $ tk.vantageMap
       pure $ { success: true, error: "bad syntax" }
 
-check':: Either ParseError Program -> Either String Program
-check' (Left error) = Left $ parseErrorMessage error
-check' (Right aProgram) = case check aProgram of
+check':: VantageMap -> Either ParseError Program -> Either String Program
+check' vm (Left error) = Left $ parseErrorMessage error
+check' vm (Right aProgram) = case check vm aProgram of
                               true -> Right aProgram
                               false -> Left "failed the check, time bites it's own tail"
+
+scheduleNoteEvents:: TimekNot -> Number -> Number -> forall opts. Effect (Array Foreign)
+scheduleNoteEvents tk ws' we' = do
+    let ws = numToDateTime (ws' * 1000.0000) -- haskell comes in milliseconds, purescript needs seconds
+    let we = numToDateTime (we' * 1000.0000)
+    program <- read tk.ast
+    vantageMap <- read tk.vantageMap
+    log $ "vm: " <> show vantageMap
+    t <- read tk.tempo
+    eval <- read tk.eval
+    let tp = assambleTimePacket ws we eval t vantageMap
+    -- log $ show program
+    -- log $ show ws
+    -- log $ show we
+    -- log $ show t
+    events <- programToWaste program tp
+    log $ show events
+    pure $ map unsafeToForeign events
 
 setTempo :: TimekNot -> ForeignTempo -> Effect Unit
 setTempo tk t = do
   -- log $ "setTempo is called" <> show (fromForeignTempo t)
   write (fromForeignTempo t) tk.tempo
-
--- setTempo :: RE.RenderEngine -> ForeignTempo -> Effect Unit
--- setTempo re t = do
---   rEnv <- read re.renderEnvironment
---   write (rEnv { tempo = fromForeignTempo t } ) re.renderEnvironment
-
-
-scheduleNoteEvents :: TimekNot -> Number -> Number -> forall opts. Effect (Array Foreign)
-scheduleNoteEvents tk ws we = timekNotToForeigns tk ws we
-
--- make unsafe function and correct with david's advice later
-numToDateTime:: Number -> DateTime 
-numToDateTime x =
-      let asMaybeInstant = instant $ Milliseconds x -- Maybe Instant
-          asInstant = unsafeMaybeMilliseconds asMaybeInstant
-      in toDateTime asInstant 
-
-unsafeMaybeMilliseconds:: Maybe Instant -> Instant
-unsafeMaybeMilliseconds (Just x) = x
-unsafeMaybeMilliseconds Nothing = unsafeMaybeMilliseconds $ instant $ Milliseconds 0.0
-
-timekNotToForeigns:: TimekNot -> Number -> Number -> forall opts. Effect (Array Foreign)
-timekNotToForeigns tk ws we = do
-    let ws' = numToDateTime (ws * 1000.0000) -- haskell comes in milliseconds, purescript needs seconds
-    let we' = numToDateTime (we * 1000.0000)
-    program <- read tk.ast
-    anchors <- read tk.anchors
-    t <- read tk.tempo
-    eval <- read tk.eval
-
-
-    -- log $ show program
-    -- log $ show ws
-    -- log $ show we
-    -- log $ show t
-
-    events <- programToWaste program anchors ws' we' eval t
-    log $ show events
-    pure $ map unsafeToForeign events

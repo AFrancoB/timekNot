@@ -1,4 +1,4 @@
-module Parser(temporal, check, parseProgram, replica, getTemporalMap, getAuralMap, test, testP,xPitchExpression, expression) where
+module Parser(temporal, check, parseProgram, replica, getTemporalMap, getAuralMap, test, testP,xPitchExpression, expression, getVantageMap, parseDate, utcA) where
 
 import Prelude
 
@@ -8,6 +8,7 @@ import Data.List (fromFoldable, filter) as L
 import Data.Array (fromFoldable) as A
 import Data.Either
 import Data.Int
+import Data.String (take, length)
 import Data.Tuple (Tuple(..), fst, snd)
 import Data.Map (Map(..), filter, lookup, keys, singleton, fromFoldable, toUnfoldable, member, unions, empty)
 import Data.Maybe (Maybe(..), fromMaybe)
@@ -15,9 +16,20 @@ import Data.Set as Set
 import Data.Maybe
 import Data.Rational (Rational(..), toRational, fromInt, (%))
 
+import Data.DateTime (exactDate, Year(..), Month(..), Day(..))
+
 import Data.FunctorWithIndex (mapWithIndex)
 
 import Data.String.CodeUnits (fromCharArray)
+import Data.String (split, Pattern)
+
+import Data.Formatter.DateTime (Formatter, parseFormatString, unformat)
+import Data.Formatter.Number (Formatter, parseFormatString, unformat) as N
+
+import Data.DateTime
+import Data.DateTime.Instant
+import Data.Time.Duration
+
 
 import Parsing
 import Parsing.String
@@ -42,6 +54,7 @@ testP str = runParser str parseProgram
 -- TO DO LIST October 17th:
 ---- refactor Aural and Value
 ---- finish refactor of transposeWith 
+
 ---- implement keyword last DONE
 ---- implement copy of temporals: v1 <- v0 DONE
 ---- implement many aurals for one temporal DONE
@@ -50,34 +63,28 @@ testP str = runParser str parseProgram
 -----
 -- minor goals: 
 
--- for now: pitch from the middle east DONE partially: Shur for now
-
--- implemented basic math --- SEEMS LIKE A MAJOR TASK
-
+-- for now: pitch from the middle east DONE partially:structParser
 -- refactor show of my data types. They mostly suck.
 
 -- implementaciones siguientes:
-  -- xenopitch
+  -- xenopitch -- PATHWAY OPENED. CPS ARE IMPLEMENTED
 
-  -- refer to the most recent version of tempi-purs DONE (instead of pulling it from the internet I copied the code from the repo)
+  -- refer to the most recent version of tempi-purs DONE (instead of pulling it from the internet I copied the code from the repo) DONE
 
   -- events specific to concrete indexes: 2-0.1 "cp" -- should generate a cp sound only at 2-0.1
 
   -- implement unleash parser 
 
-  -- chords:
--- v0 <- ... | xxxx :|
--- v0.chord = _-_ [0 3 7 12] [0 5 8 10] [-1 2 7 14] [0 3 7 12]
-
-  -- razgado
+  -- razgado  -- doable after concat
 -- r <- razgado 0.2 5 -- donde 0.2 es dur en secs y 5 es numero de notas 
 -- r.sound = "grandpiano" .speed = _-_ 1 1.1 1.2 1.3 1.4 1.5;
 
-  -- canonise (tms) cp rhythmic <<- anchor (id index (_-4 means every fourth event in block)) 
+---- doable after razgado
+  -- canonise (tms) cp rhythmic <<- vantage (id index (_-4 means every fourth event in block)) 
 -- v0 <- diverge | xxxx :|
 -- c <- canonise cpm(100,200,300,400,500) cp: 5 | xxxxx || <<- v0 _-4
 
-  -- concat temporals
+  -- concat temporals  -- Doable soon
 -- v0 <- (2 afterEval) (3)              | xxox ||
 -- v1 <- (2 afterEval) (1) (v0 3:5) | xxx[xx]ox ||
 -- w <- v0 <> v1 :|
@@ -86,15 +93,15 @@ testP str = runParser str parseProgram
 
   -- acceleration in unlooped events (how to represent this? and calculate the durations of the events??)
 
-  -- Start with post-evaluation CPs
--- Anchor.build = "first" (100 secsFromEval)
--- Anchor.build = "second" (100 xBeatsFromEval)
--- Anchor.move = "first" (100 secsFromEval)
--- Anchor.move = "second" (100 xBeatsFromEval)
--- Anchor.move = "first" (3 fromCurrentPosition)
--- Anchor.remove = "first"
+  -- Start with post-evaluation CPstry utcA, 
+-- Vantage.build = "first" (100 secsFromEval)
+-- Vantage.build = "second" (100 xBeatsFromEval)
+-- Vantage.move = "first" (100 secsFromEval)
+-- Vantage.move = "second" (100 xBeatsFromEval)
+-- Vantage.move = "first" (3 fromCurrentPosition)
+-- Vantage.remove = "first"
 
--- v <- first cTo cFrom tm | xxxx :|
+-- v <- first cFrom tm | xxxx :|
 
 
 
@@ -117,7 +124,7 @@ parseProgram = do
 expression:: P Expression
 expression = do
   _ <- pure 1
-  choice [try timeExpression, try aural, try anchorExpression, xPitchExpression]
+  choice [try timeExpression, try aural, try vantageExpression, xPitchExpression]
   
 xPitchExpression:: P Expression
 xPitchExpression = do
@@ -143,65 +150,150 @@ cpSet = do
   subsets' <- subsets <|> pure Nothing
   pure $ CPSet sz factors subsets'
 
-subsets:: P (Maybe (Array Int))
+subsets:: P (Maybe (Array Subset))
 subsets = do
   _ <- pure 1
   _ <- reserved "|"
-  xs <- setWith `sepBy` comma
+  xs <- chooseSubset `sepBy` comma
   pure (Just $ A.fromFoldable xs)
 
-setWith:: P Int
-setWith = do
+chooseSubset:: P Subset
+chooseSubset = choice [try intersection, try difference, try union, includes]
+
+includes:: P Subset
+includes = do
   _ <- pure 1
-  _ <- reserved "withFactor"
   n <- natural
-  pure n
+  pure $ Subset n
 
+union:: P Subset
+union = do
+  _ <- pure 1
+  ns <- natural `sepBy` (reservedOp "u")
+  pure $ Unions $ A.fromFoldable ns
 
+intersection:: P Subset
+intersection = do 
+  _ <- pure 1
+  a <- natural
+  _ <- reservedOp "n"
+  b <- natural
+  pure $ Intersection a b
+
+difference:: P Subset
+difference = do
+  _ <- pure 1
+  a <- natural
+  _ <- reservedOp "c"
+  b <- natural
+  pure $ Difference a b
 
 --
-anchorExpression:: P Expression
-anchorExpression = do
+vantageExpression:: P Expression
+vantageExpression = do
   _ <- pure 1
-  x <- anchor
-  pure $ AnchorExpression x
+  x <- vantage
+  pure $ VantagePointExpression x
 
-anchor:: P (Map String Anchor)
-anchor = do
+vantage:: P (Map String Vantage)
+vantage = do
   _ <- pure 1
-
   id <- identifier
   x <- choice [buildA, moveA, removeA]
   _ <- charWS ';'
   pure $ singleton id x
 
-buildA:: P Anchor
+-- MyID.lift = 20 beats from eval;
+buildA:: P Vantage
 buildA = do
   _ <- pure 1
-  _ <- reserved ".build ="
-  x <- choice [try beatA, secsA]
+  _ <- reserved ".lift"
+  _ <- reservedOp "="
+  x <- choice [try beatA, try secsA, utcA]
   pure $ Build x
 
-beatA:: P (Either Number Number)
+utcA:: P TimePoint
+utcA = do
+  _ <- pure 1
+  d <- date
+  t <- choice [parens timeOfDay, timeOfDay] 
+  local <- (parens $ local) <|> (reserved "so-called utc") *> pure 0
+  tiempo <- liftEither $ parseDate (d <> " " <> t)
+  result <- liftMaybe (\_ -> "Not a local time") $ adjust (Hours $ toNumber local) tiempo
+  pure $ UTC result
+
+date:: P String
+date = do
+  _ <- pure 1
+  y <- natural
+  m <- identifier
+  d <- natural
+  pure (show y <> "-" <> m <> "-" <>  show d)
+
+timeOfDay:: P String
+timeOfDay = do
+  _ <- pure 1
+  h <- natural
+  _ <- reservedOp ":"
+  m <- natural
+  _ <- reservedOp ":"
+  s <- natural
+  pure ((padHour h) <> ":" <> show m <> ":" <>  show s)
+
+local:: P Int
+local = do
+  _ <- pure 1
+  _ <- reserved "so-called utc"
+  op <- choice [reservedOp "-" *> pure 1, reservedOp "+" *> pure (-1)]
+  n <- natural
+  pure (n * op)
+
+padHour:: Int -> String
+padHour n = if (length iAsStr) > 1 then iAsStr else "0" <> iAsStr
+  where iAsStr = show n 
+
+parseFormatter:: Either String Formatter
+parseFormatter = parseFormatString "YYYY-MMMM-DD HH:m:s"
+
+parseDate:: String -> Either String DateTime
+parseDate s = case parseFormatter of 
+                Left x -> Left x
+                Right x -> unformat x s
+
+beatA:: P TimePoint
 beatA = do
   num <- naturalOrFloat
   _ <- reserved "beats from eval"
-  pure $ Left (toNumber' num)
+  pure $ Beat $ toRat (toNumber' num)
 
-secsA:: P (Either Number Number)
+secsA:: P TimePoint
 secsA = do
   num <- naturalOrFloat
   _ <- reserved "secs from eval"
-  pure $ Right (toNumber' num)
+  pure $ Secs $ toRat (toNumber' num)
 
-moveA:: P Anchor
+-- MyID.move = 20 beats from eval;
+moveA:: P Vantage
 moveA = do
   _ <- pure 1
-  _ <- reserved ".move ="
-  x <- choice [try beatA, secsA]
+  _ <- reserved ".move"
+  _ <- reservedOp "="
+  x <- choice [try beatMoveA, secsMoveA]
   pure $ Move x
 
-removeA:: P Anchor
+beatMoveA:: P (Either Rational Rational)
+beatMoveA = do
+  num <- naturalOrFloat
+  _ <- reserved "beats from current"
+  pure $ Left $ toRat (toNumber' num)
+
+secsMoveA:: P (Either Rational Rational)
+secsMoveA = do
+  num <- naturalOrFloat
+  _ <- reserved "secs from current"
+  pure $ Right $ toRat (toNumber' num)
+
+removeA:: P Vantage
 removeA = do
   _ <- pure 1
   _ <- reserved ".remove"
@@ -230,7 +322,7 @@ replica = do
 polytemporalRelation:: P (Map String Temporal)
 polytemporalRelation = do
   _ <- pure 1
-  p <- choice [try kairos, try metric, converge]
+  p <- choice [try kairos, try metric, try converge]
   _ <- charWS '|'
   r <- rhythmic
   l <- choice [(strWS "||" *> pure false), (strWS ":|" *> pure true)]
@@ -286,7 +378,7 @@ converge = do
   _ <- pure 1
   id <- voiceId
   _ <- reserved "<-"
-  polytemporal <- choice [try diverging, converging]
+  polytemporal <- choice [try diverging, try converging, novus]
   pure $ Tuple id polytemporal
 
 diverging:: P Polytemporal
@@ -303,10 +395,21 @@ converging = do
   _ <- pure 1
   _ <- whitespace
   voice <- voiceId -- choice between metricVoice or arbitrary name of a voice
-  cTo <- choice [try cToLast, try $ parens parsePercenTo, try $ parens parseProcessTo, parens parseStructureTo] <|> (pure $ ProcessTo 0 Snap)
+  cTo <- choice [try cToLast, try $ parens parsePercenTo, try $ parens parseProcessTo, parens parseStructureTo]
   cFrom <- choice [try cFromLast, try $ parens cFromPercen, try $ parens cFromProcess, parens cFromStructure]
   tm <- parens tempoMark <|> pure XTempo -- the alternative should be same as estuary tempo
   pure $ Converge voice cTo cFrom tm
+
+novus:: P Polytemporal
+novus = do
+  _ <- pure 1
+  _ <- whitespace
+  _ <- reserved "Novus"
+  _ <- reservedOp "."
+  vantID <- voiceId 
+  cFrom <- choice [try cFromLast, try $ parens $ cFromPercen, try $ parens $ cFromProcess, parens cFromStructure]
+  tm <- parens tempoMark <|> pure XTempo 
+  pure $ Novus vantID cFrom tm
 
 cFromLast:: P ConvergeFrom
 cFromLast = do
@@ -519,11 +622,12 @@ ratio = do
   y <- natural
   pure $ Prop id x y
 
-test :: String -> Either String Program
-test x =
+--
+test :: VantageMap -> String -> Either String Program
+test vm x =
   case runParser x parseProgram of
     Left (ParseError err _) -> Left err
-    Right prog -> case check prog of
+    Right prog -> case check vm prog of
                     true -> Right prog
                     false -> Left "failed the check"
 
@@ -550,22 +654,33 @@ unexpressAural:: Expression -> Map String Aural
 unexpressAural (AuralExpression x) = x 
 unexpressAural _ = empty
 
+--
+getVantageMap:: Program -> Map String Vantage
+getVantageMap program = unions $ map unexpressVantage $ L.filter (\ expression -> isVantage expression) program
+  where isVantage (VantagePointExpression _) = true 
+        isVantage _ = false 
+
+unexpressVantage:: Expression -> Map String Vantage
+unexpressVantage (VantagePointExpression x) = x 
+unexpressVantage _ = empty
+
 -- test' :: String -> Either String (Map String Temporal)
 -- test' x =
 --   case getTemporalMap <$> runParser x parseProgram of
 --     Left (ParseError err _) -> Left err
 --     Right aMap -> Right $ check aMap 
 
-check :: Program -> Boolean
-check program = checkedTempoAspects && checkedPitch
-  where checkedTempoAspects = checkT $ getTemporalMap program
+check :: VantageMap -> Program -> Boolean
+check vm program = checkedTempoAspects && checkedPitch
+  where checkedTempoAspects = checkT vm (getVantageMap program) $ getTemporalMap program
         checkedPitch = checkXPitch program
 
-checkT :: Map String Temporal -> Boolean
-checkT aMap' = checkID && checkTempoMark
+
+checkT :: VantageMap -> Map String Vantage -> Map String Temporal -> Boolean
+checkT vm vMNew aMap' = checkID && checkTempoMark
   where aReplicaMap = filter isReplica aMap'
         aMap = filter (not isReplica) aMap'
-        checkID = not $ elem false $ mapWithIndex (check2 aMap' Nil) aMap'  
+        checkID = not $ elem false $ mapWithIndex (check2 vm vMNew aMap' Nil) aMap'  
         checkTempoMark = not $ elem false $ mapWithIndex (checkTempi aMap Nil) aMap
 
 isReplica:: Temporal -> Boolean
@@ -576,27 +691,35 @@ getReplicaKey:: Temporal -> String
 getReplicaKey (Replica id) = id
 getReplicaKey _ = "2666"
 
-
-check2 :: Map String Temporal -> List String -> String -> Temporal -> Boolean
-check2 aMap alreadyRefd aKey (Temporal (Kairos _ _) _ _) = true
-check2 aMap alreadyRefd aKey (Temporal (Metric _ _ _) _ _) = true
-check2 aMap alreadyRefd aKey (Temporal (Converge anotherKey _ _ _) _ _) =
+check2 :: VantageMap -> Map String Vantage -> Map String Temporal -> List String -> String -> Temporal -> Boolean
+check2 _ _ aMap alreadyRefd aKey (Temporal (Kairos _ _) _ _) = true
+check2 _ _ aMap alreadyRefd aKey (Temporal (Metric _ _ _) _ _) = true
+check2 vm vMNew aMap alreadyRefd aKey (Temporal (Converge anotherKey _ _ _) _ _) =
   case lookup anotherKey aMap of
     Nothing -> false
     Just anotherValue -> case elem aKey alreadyRefd of
                            true -> false
-                           false -> check2 aMap (aKey : alreadyRefd) anotherKey anotherValue
+                           false -> check2 vm vMNew aMap (aKey : alreadyRefd) anotherKey anotherValue
+
+check2 vm vMNew aMap alreadyRefd aKey (Temporal (Novus vantageKey _ _) _ _) = 
+  case lookup vantageKey vMNew of
+    (Just x) -> if isRemove x then false else true 
+    Nothing -> case lookup vantageKey vm of
+                  (Just _) -> true
+                  Nothing -> false
 
 -- in case of replica
-check2 aMap alreadyRefd aKey (Replica id) 
+check2 vm vMNew aMap alreadyRefd aKey (Replica id) 
   | aKey == id = false
   | otherwise = 
     case lookup id aMap of
           Nothing -> false
           Just nVal -> case elem id alreadyRefd of
                         true -> false
-                        false -> check2 aMap (aKey : alreadyRefd) id nVal
+                        false -> check2 vm vMNew aMap (aKey : alreadyRefd) id nVal
 
+isRemove Remove = true
+isRemove _ = false
 
 checkTempi:: Map String Temporal -> List String -> String -> Temporal -> Boolean
 checkTempi aMap alreadyRefd aKey temporal = 
@@ -612,6 +735,7 @@ getTempoRef:: Temporal -> Maybe String
 getTempoRef (Temporal (Kairos _ tm) _ _) = isTempoRefd tm
 getTempoRef (Temporal (Metric _ _ tm) _ _) = isTempoRefd tm
 getTempoRef (Temporal (Converge _ _ _ tm) _ _) = isTempoRefd tm
+getTempoRef (Temporal (Novus _ _ tm) _ _) = isTempoRefd tm
 getTempoRef (Replica _) = Nothing
 
 isTempoRefd:: TempoMark -> Maybe String
@@ -649,11 +773,9 @@ integer = tokenParser.integer
 stringLiteral = tokenParser.stringLiteral
 reservedOp = tokenParser.reservedOp
 
-
 toNumber':: Either Int Number -> Number
 toNumber' (Left x) = toNumber x 
 toNumber' (Right x) = x
-
 
 charWS:: Char -> P Char
 charWS x = do
@@ -676,3 +798,29 @@ toRat x =
         fract = x - (toNumber floored) -- 12.5 - 12.0 = 0.5
         fract' = round $ fract * (toNumber pFact) -- 500000
     in (floored%1) + (fract'%pFact) -- 12 + (500000%1000000)
+
+
+
+
+------ this is an attempt to create a Number range using Formatter
+-- getProperDigits:: String -> String -> Either String N.Formatter
+-- getProperDigits a b =
+--   case (length a' <= 2) && (length b' <= 2) of  
+--     false -> "not really a number"
+--     true -> if a'!0 > b'!0 then 
+--   where a' = split (Pattern ".") a
+--         b' = split (Pattern ".") b
+
+-- compareAB:: Maybe Int -> Maybe Int -> String
+-- compareAB (Just a) (Just b) = if a>=b then a "0" else b
+-- compareAB Nothing (Just b) = b
+-- compareAB (Just a) Nothing = a
+-- compareAB Nothing Nothing = 0
+
+-- parseNumFormatter:: Either String N.Formatter
+-- parseNumFormatter = N.parseFormatString "0.000"
+
+-- parseNum:: String -> Either String Number
+-- parseNum s = case parseNumFormatter of 
+--                 Left x -> Left x
+--                 Right x -> N.unformat x s
