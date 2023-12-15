@@ -2,7 +2,6 @@
 import * as AST from "../AST/index.js";
 import * as Calculations from "../Calculations/index.js";
 import * as Control_Bind from "../Control.Bind/index.js";
-import * as Control_Monad_State_Class from "../Control.Monad.State.Class/index.js";
 import * as Data_DateTime from "../Data.DateTime/index.js";
 import * as Data_Either from "../Data.Either/index.js";
 import * as Data_Foldable from "../Data.Foldable/index.js";
@@ -12,25 +11,18 @@ import * as Data_Map_Internal from "../Data.Map.Internal/index.js";
 import * as Data_Rational from "../Data.Rational/index.js";
 import * as Data_Show from "../Data.Show/index.js";
 import * as Data_Tempo from "../Data.Tempo/index.js";
-import * as Data_Unit from "../Data.Unit/index.js";
 import * as Effect from "../Effect/index.js";
-import * as Effect_Aff from "../Effect.Aff/index.js";
 import * as Effect_Console from "../Effect.Console/index.js";
 import * as Effect_Now from "../Effect.Now/index.js";
 import * as Effect_Ref from "../Effect.Ref/index.js";
 import * as Foreign from "../Foreign/index.js";
-import * as Halogen_Aff_Util from "../Halogen.Aff.Util/index.js";
-import * as Halogen_Component from "../Halogen.Component/index.js";
-import * as Halogen_HTML_Core from "../Halogen.HTML.Core/index.js";
-import * as Halogen_HTML_Elements from "../Halogen.HTML.Elements/index.js";
-import * as Halogen_HTML_Events from "../Halogen.HTML.Events/index.js";
-import * as Halogen_Query_HalogenM from "../Halogen.Query.HalogenM/index.js";
-import * as Halogen_VDom_Driver from "../Halogen.VDom.Driver/index.js";
 import * as Novus from "../Novus/index.js";
 import * as Parser from "../Parser/index.js";
 import * as Parsing from "../Parsing/index.js";
 import * as TimePacketOps from "../TimePacketOps/index.js";
-var show = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_Show.showArray(/* #__PURE__ */ Data_Show.showRecord()()(/* #__PURE__ */ Data_Show.showRecordFieldsCons({
+var bind = /* #__PURE__ */ Control_Bind.bind(Effect.bindEffect);
+var show = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_Map_Internal.showMap(Data_Show.showString)(Data_DateTime.showDateTime));
+var show1 = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_Show.showArray(/* #__PURE__ */ Data_Show.showRecord()()(/* #__PURE__ */ Data_Show.showRecordFieldsCons({
     reflectSymbol: function () {
         return "begin";
     }
@@ -67,38 +59,32 @@ var show = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_Show.showArray(/*
         return "whenPosix";
     }
 })(Data_Show.showNumber))(Data_Show.showNumber))(Data_Show.showString))(Data_Show.showNumber))(Data_Show.showNumber))(Data_Show.showInt))(Data_Show.showNumber))(Data_Show.showNumber))(Data_Show.showNumber))));
-var bind = /* #__PURE__ */ Control_Bind.bind(Effect.bindEffect);
+var map = /* #__PURE__ */ Data_Functor.map(Data_Functor.functorArray);
 var fromFoldable = /* #__PURE__ */ Data_List.fromFoldable(Data_Foldable.foldableArray);
 var toRational = /* #__PURE__ */ Data_Rational.toRational(Data_Rational.toRationalInt);
-var modify_ = /* #__PURE__ */ Control_Monad_State_Class.modify_(Halogen_Query_HalogenM.monadStateHalogenM);
-var bind1 = /* #__PURE__ */ Control_Bind.bind(Effect_Aff.bindAff);
-var show1 = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_Map_Internal.showMap(Data_Show.showString)(Data_DateTime.showDateTime));
-var map = /* #__PURE__ */ Data_Functor.map(Data_Functor.functorArray);
-var Increment = /* #__PURE__ */ (function () {
-    function Increment() {
-
-    };
-    Increment.value = new Increment();
-    return Increment;
-})();
-var Decrement = /* #__PURE__ */ (function () {
-    function Decrement() {
-
-    };
-    Decrement.value = new Decrement();
-    return Decrement;
-})();
 var setTempo = function (tk) {
     return function (t) {
         return Effect_Ref.write(Data_Tempo.fromForeignTempo(t))(tk.tempo);
     };
 };
-var render = function (state) {
-    return Halogen_HTML_Elements.div_([ Halogen_HTML_Elements.button([ Halogen_HTML_Events.onClick(function (v) {
-        return Decrement.value;
-    }) ])([ Halogen_HTML_Core.text("-") ]), Halogen_HTML_Core.text(show(state)), Halogen_HTML_Elements.button([ Halogen_HTML_Events.onClick(function (v) {
-        return Increment.value;
-    }) ])([ Halogen_HTML_Core.text("+") ]) ]);
+var scheduleNoteEvents = function (tk) {
+    return function (ws$prime) {
+        return function (we$prime) {
+            var ws = TimePacketOps.numToDateTime(ws$prime * 1000.0);
+            var we = TimePacketOps.numToDateTime(we$prime * 1000.0);
+            return function __do() {
+                var program = Effect_Ref.read(tk.ast)();
+                var vantageMap = Effect_Ref.read(tk.vantageMap)();
+                Effect_Console.log("vm: " + show(vantageMap))();
+                var t = Effect_Ref.read(tk.tempo)();
+                var $$eval = Effect_Ref.read(tk["eval"])();
+                var tp = TimePacketOps.assambleTimePacket(ws)(we)($$eval)(t)(vantageMap);
+                var events = Calculations.programToWaste(program)(tp)();
+                Effect_Console.log(show1(events))();
+                return map(Foreign.unsafeToForeign)(events);
+            };
+        };
+    };
 };
 var launch = function __do() {
     Effect_Console.log("timekNot: launch")();
@@ -111,60 +97,6 @@ var launch = function __do() {
         tempo: tempo,
         "eval": $$eval,
         vantageMap: vantageMap
-    };
-};
-var initialState = function (v) {
-    return [  ];
-};
-var handleAction = function (v) {
-    if (v instanceof Decrement) {
-        return modify_(function (state) {
-            return state;
-        });
-    };
-    if (v instanceof Increment) {
-        return modify_(function (state) {
-            return state;
-        });
-    };
-    throw new Error("Failed pattern match at Main (line 143, column 16 - line 148, column 30): " + [ v.constructor.name ]);
-};
-var component = function (e) {
-    return Halogen_Component.mkComponent({
-        initialState: initialState,
-        render: render,
-        "eval": Halogen_Component.mkEval({
-            handleAction: handleAction,
-            handleQuery: Halogen_Component.defaultEval.handleQuery,
-            receive: Halogen_Component.defaultEval.receive,
-            initialize: Halogen_Component.defaultEval.initialize,
-            finalize: Halogen_Component.defaultEval.finalize
-        })
-    });
-};
-var visuals = function (events) {
-    return Halogen_Aff_Util.runHalogenAff(bind1(Halogen_Aff_Util.awaitBody)(function (body) {
-        return Halogen_VDom_Driver.runUI(component(events))(Data_Unit.unit)(body);
-    }));
-};
-var scheduleNoteEvents = function (tk) {
-    return function (ws$prime) {
-        return function (we$prime) {
-            var ws = TimePacketOps.numToDateTime(ws$prime * 1000.0);
-            var we = TimePacketOps.numToDateTime(we$prime * 1000.0);
-            return function __do() {
-                var program = Effect_Ref.read(tk.ast)();
-                var vantageMap = Effect_Ref.read(tk.vantageMap)();
-                Effect_Console.log("vm: " + show1(vantageMap))();
-                var t = Effect_Ref.read(tk.tempo)();
-                var $$eval = Effect_Ref.read(tk["eval"])();
-                var tp = TimePacketOps.assambleTimePacket(ws)(we)($$eval)(t)(vantageMap);
-                var events = Calculations.programToWaste(program)(tp)();
-                visuals(events)();
-                Effect_Console.log(show(events))();
-                return map(Foreign.unsafeToForeign)(events);
-            };
-        };
     };
 };
 var check$prime = function (v) {
@@ -190,7 +122,7 @@ var evaluate = function (tk) {
         return function __do() {
             Effect_Console.log("timekNot: evaluate")();
             var currentVM = Effect_Ref.read(tk.vantageMap)();
-            Effect_Console.log("currentVM" + show1(currentVM))();
+            Effect_Console.log("currentVM" + show(currentVM))();
             var tempo = Effect_Ref.read(tk.tempo)();
             var $$eval = Effect_Now.nowDateTime();
             var pr = check$prime(currentVM)(Parsing.runParser(str)(Parser.parseProgram));
@@ -218,12 +150,5 @@ export {
     evaluate,
     check$prime,
     scheduleNoteEvents,
-    setTempo,
-    visuals,
-    Increment,
-    Decrement,
-    component,
-    initialState,
-    render,
-    handleAction
+    setTempo
 };
