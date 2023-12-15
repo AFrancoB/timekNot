@@ -32,7 +32,9 @@ import Data.Rational (Rational(..), (%), fromInt)
 import Data.Rational (toNumber) as R
 import Data.DateTime
 import Data.DateTime.Instant
+import Data.Newtype
 import Data.Time.Duration
+import Data.Interval.Duration (second)
 
 import Data.TraversableWithIndex
 
@@ -49,20 +51,19 @@ import Data.TraversableWithIndex
 ---- structure-oriented index: an int identifier for each segment on a voice and an array to identifier internal events in a voice: The head is the 'natural' subdivisions of the voice, each new element in the array is a new subdivision
 ---- a structure oriented index has a voice index and a structure index. A voice index is an Int while the Structure Index is an Array Int. The notation I have made for the structure oriented index is: 3-0.2.4  to the left of the (-) is the voice index and to the right of it is the event position in the rhythmic idea. The head of the array is the top level of the nested subdivisions and the last is the deepest level of the subdivisions.  
 
----- ISSUE: unions in getAuralMap need to be changed for something that allows multiple aural expressions to be bound into one single temporal expression:
-{- for example:
-v0 <- diverge | xxxx :|
+--
+---
+----
+-----
+-- calculate NOVUS!!!
+-----
+----
+---
+--
 
-v0.sound = _ "bd cp";
-v0.sound = _-_ "drum" .n = _ 0..20;
--}
--- this above should generate two voices. This will make the 'Replica'' parsing obsolete unless it is added with a way to change specific parameters like tempo, convergeFrom, convergeTo, etc...
-
-programToWaste:: Program -> AnchorMap -> DateTime -> DateTime -> DateTime -> Tempo -> Effect (Array Waste)
-programToWaste program am ws' we' eval' t = waste
-  where -- anchors = --- f:: Map String AnchorExpression -> Map String DateTime -> Map String Number (posix~~)
-        timePacket = {ws: ws', we: we', eval: eval', origin: origin t, tempo: t {-, anchors: anchors -}}
-        voices' = assambleVoice program -- Voices
+programToWaste:: Program -> TimePacket -> Effect (Array Waste)
+programToWaste program timePacket = waste
+  where voices' = assambleVoice program -- Voices
         xenoPitches = getXPitchMap program -- Map String XenoPitch
         calculatedVoices = calculateVoices (getTemporalMap program) voices' xenoPitches timePacket
         -- Effect (M.Map String (Array AlmostWaste))
@@ -74,8 +75,8 @@ programToWaste program am ws' we' eval' t = waste
         toWaste:: AlmostWaste -> Waste
         toWaste almostW =  {whenPosix: posix, s: almostW.s, n: almostW.n, gain: almostW.gain, pan: almostW.pan, speed: almostW.speed, begin: almostW.begin, end: almostW.end, note: almostW.note}
             where posix = (\(Event (Onset _ p) _) -> p) almostW.event
-        waste = map toWaste <$> getXs <$> almostWs
-        
+        waste = map toWaste <$> getXs <$> almostWs -- Effect
+
 assambleVoice:: Program -> Voices
 assambleVoice program = M.intersectionWith (\x y -> Voice x y) tempoMap auralMap
   where tempoMap = getTemporalMap program
@@ -147,14 +148,11 @@ calculateTemporal mapa tp aKey (Temporal (Converge cKey cTo' cFrom' tm) rhythmic
   let simCFrom = simplifyCFrom lengthRhythm cFrom'
   x1 <- x1ConvergeVoice tp tm cKey simCTo simCFrom rhythmic mapa -- v1
   let posixAtOrigin = fromDateTimeToPosix (origin tp.tempo)
-  -- let eval = secsFromOriginAtEval tp
   let ws = secsFromOriginAtWS tp
   let we = secsFromOriginAtWE tp
-
   let blocks = getBlocks (ws - dur) we x1 dur -- to check
-  -- log ("blocksMetricTemporal: " <> show blocks)
-  let onsetPercent = fromFoldable $ rhythmicToOnsets rhythmic -- Array Onsets --- Position in Percentage
-  let onsets = onsetsFromBlocks blocks onsetPercent dur -- Array Onset --- absolute position        
+  let onsetPercent = fromFoldable $ rhythmicToOnsets rhythmic --[Onsets] Pos in Percentage
+  let onsets = onsetsFromBlocks blocks onsetPercent dur --[Onsets] absolute position        
   let indexes = getIndexes rhythmic (ws - dur) we x1 dur -- Array Index
   let events = zipWith Event onsets indexes
   let posFromEvent:: Event -> Number
@@ -162,6 +160,38 @@ calculateTemporal mapa tp aKey (Temporal (Converge cKey cTo' cFrom' tm) rhythmic
   let looped = addPosixOriginToCalculation posixAtOrigin $ filter (\e -> (posFromEvent e) >= ws && (posFromEvent e) < we) events
   let unlooped = addPosixOriginToCalculation posixAtOrigin $ filter (\e -> (posFromEvent e) >= ws && (posFromEvent e) < we) $ unloopEvents events
   pure $ if loop then looped else unlooped
+----- CALCULATE NOVUS!!!!!!!!!!!!!
+calculateTemporal mapa tp aKey (Temporal (Novus vKey cFrom' tm) rhythmic loop) = do
+  let dur = durFromRhythmic rhythmic $ processTempoMark tm tp.tempo mapa 
+  let lengthRhythm = (length $ fromFoldable $ rhythmicToOnsets rhythmic)-1
+  let simCFrom = simplifyCFrom lengthRhythm cFrom'
+  let cp = secsFromOriginAtVantage tp vKey
+  log ("cp novus: " <> show cp)
+  x1 <- x1NovusVoice tp tm cp simCFrom rhythmic mapa -- v1
+----- work here !!!!
+
+  let posixAtOrigin = fromDateTimeToPosix (origin tp.tempo)
+  let ws = secsFromOriginAtWS tp
+  let we = secsFromOriginAtWE tp
+  let blocks = getBlocks (ws - dur) we x1 dur -- to check
+  let onsetPercent = fromFoldable $ rhythmicToOnsets rhythmic --[Onsets] Pos in Percentage
+  let onsets = onsetsFromBlocks blocks onsetPercent dur --[Onsets] absolute position        
+  let indexes = getIndexes rhythmic (ws - dur) we x1 dur -- Array Index
+  let events = zipWith Event onsets indexes
+  let posFromEvent:: Event -> Number
+      posFromEvent (Event (Onset _ p) _) = p
+  let looped = addPosixOriginToCalculation posixAtOrigin $ filter (\e -> (posFromEvent e) >= ws && (posFromEvent e) < we) events
+  let unlooped = addPosixOriginToCalculation posixAtOrigin $ filter (\e -> (posFromEvent e) >= ws && (posFromEvent e) < we) $ unloopEvents events
+  pure $ if loop then looped else unlooped
+
+x1NovusVoice:: TimePacket -> TempoMark -> Number -> ConvergeFrom -> Rhythmic -> M.Map String Temporal -> Effect Number
+x1NovusVoice tp tm cp cFrom' rhythmic mapa = do
+  let tempo = processTempoMark tm tp.tempo mapa
+  let cFrom = calculateCFrom cFrom' tempo rhythmic -- ignore for now, test with 0
+  let dur = durFromRhythmic rhythmic tempo -- correct (change tempo naming to other name)
+  let x1 = cp - (cFrom * dur)
+  pure x1 
+
 
 unloopEvents:: Array Event -> Array Event
 unloopEvents es = filter (\(Event _ (Index b _ _)) -> b == 0) es
@@ -219,6 +249,9 @@ findReferencedX1 tp (Temporal (Converge cKey cTo cFrom tm) rhy l) mapa = do
   recursiveX1 <- recursiveRefX1 tp (Temporal (Converge cKey cTo cFrom tm) rhy l) mapa Nothing way -- v1's x1
   -- log ("x1 converge voice" <> show recursiveX1)
   pure recursiveX1
+  ---- calculate NOVUS!!!!!!!!!!!!!!!!!!!!!!!!
+findReferencedX1 tp (Temporal (Novus vKey cFrom tm) rhy l) mapa = pure 0.0
+
 
 recursiveRefX1:: TimePacket -> Temporal -> M.Map String Temporal -> Maybe (Tuple String Number) -> List String -> Effect Number      -- v2                                           -- incoming with [] is v1
 recursiveRefX1 tp temporal mapa incomingKeyX1' (Nil) = do
@@ -470,6 +503,7 @@ getTempoMark:: Polytemporal -> TempoMark
 getTempoMark (Kairos _ tm) = tm
 getTempoMark (Metric _ _ tm) = tm
 getTempoMark (Converge _ _ _ tm) = tm
+getTempoMark (Novus _ _ tm) = tm
 
 convergeTo:: M.Map String Temporal -> Temporal -> ConvergeTo
 convergeTo m (Temporal p _ _) = getConvergeTo p
@@ -490,5 +524,6 @@ getConvergeTo _ = defConvergeTo
 
 getConvergeFrom:: Polytemporal -> ConvergeFrom
 getConvergeFrom (Converge _ _ cFrom _) = cFrom
+getConvergeFrom (Novus _ cFrom _) = cFrom
 getConvergeFrom (Metric _ cFrom _) = cFrom
 getConvergeFrom _ = defConvergeFrom

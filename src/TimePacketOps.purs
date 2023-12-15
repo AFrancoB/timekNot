@@ -1,4 +1,4 @@
-module TimePacketOps (secsFromOriginAtWS, secsFromOriginAtWE, secsFromOriginAtEval,metricFromOriginAtWS, metricFromOriginAtWE, metricFromOriginAtEval, voiceFromOriginToEval, fromDateTimeToPosix, fromDateTimeToPosixMaybe) where
+module TimePacketOps (assambleTimePacket,secsFromOriginAtVantage, secsFromOriginAtWS, secsFromOriginAtWE, secsFromOriginAtEval,metricFromOriginAtWS, metricFromOriginAtWE, metricFromOriginAtEval, voiceFromOriginToEval, fromDateTimeToPosix, fromDateTimeToPosixMaybe, numToDateTime) where
 
 import Prelude
 import Data.Maybe
@@ -9,6 +9,27 @@ import DurationAndIndex
 import Data.Rational (Rational(..), (%), fromInt, toNumber)
 import Data.DateTime
 import Data.DateTime.Instant
+import Data.Time.Duration
+import Data.Map (Map, lookup)
+
+assambleTimePacket:: DateTime -> DateTime -> DateTime -> Tempo -> VantageMap -> TimePacket
+assambleTimePacket ws we eval t v = {ws: ws, we: we, eval: eval, origin: origin t, tempo: t, vantageMap: v}
+
+numToDateTime:: Number -> DateTime 
+numToDateTime x =
+      let asMaybeInstant = instant $ Milliseconds x -- Maybe Instant
+          asInstant = unsafeMaybeMilliseconds asMaybeInstant
+      in toDateTime asInstant 
+
+unsafeMaybeMilliseconds:: Maybe Instant -> Instant
+unsafeMaybeMilliseconds (Just x) = x
+unsafeMaybeMilliseconds Nothing = unsafeMaybeMilliseconds $ instant $ Milliseconds 0.0
+
+secsFromOriginAtVantage:: TimePacket -> String -> Number
+secsFromOriginAtVantage tp k = vPosix - oPosix
+    where oPosix = fromDateTimeToPosix tp.origin
+          v = fromMaybe tp.tempo.time $ lookup k tp.vantageMap
+          vPosix = fromDateTimeToPosix v
 
 secsFromOriginAtWS:: TimePacket -> Number
 secsFromOriginAtWS tp = ws - oPosix

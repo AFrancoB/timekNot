@@ -1,4 +1,4 @@
-module Aural(aural, checkXPitch, getXPitchMap) where
+module Aural(aural, checkXPitch, getXPitchMap, prog) where
 
 import Prelude
 
@@ -49,8 +49,32 @@ value:: P Value
 value = do
     _ <- pure 1
     _ <- reservedOp "."
-    valType <- choice [try sound,try n, try gain, try pan, try speed, try begin, try end, try mayeh, xeno]
+    valType <- choice [try sound,try n, try gain, try pan, try speed, try begin, try end, try mayeh, try xeno, try prog]
     pure valType
+
+prog:: P Value
+prog = do
+    _ <- pure 1
+    _ <- choice [reserved "prog"]
+    _ <- reservedOp "="
+    sp <- parseSpan
+    xs <- parens $ many idOfPitch
+    pure $ Prog sp $ fromFoldable xs
+
+idOfPitch:: P (Tuple String (Maybe Int))
+idOfPitch = do
+    id <- identifier
+    n <- (Just <$> brackets natural) <|> pure Nothing
+    pure $ Tuple id n
+
+xeNotes:: P Value 
+xeNotes = do
+    _ <- pure 1
+    _ <- choice [reserved "xenotes"]
+    _ <- reservedOp "="
+    sp <- parseSpan
+    l <- choice [try (fromFoldable <$> parseRangeInt), fromFoldable <$> many natural]
+    pure $ XeNotes sp l
 
 xeno:: P Value 
 xeno = do
@@ -61,26 +85,6 @@ xeno = do
     sp <- parseSpan
     xnL <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
     pure $ Xeno (Tuple id n) sp $ fromFoldable xnL
-
--- chord:: P Value
--- chord = do
---     _ <- pure 1
---     _ <- reserved "chord"
---     _ <- reservedOp "="
---     chords <- [try makeChord, transposeChord]
---     pure n
-
--- makeChord:: P Value
--- makeChord = do
---     _ <- pure 1
---     sp <- parseSpan
---     spdList <- choice [try (A.fromFoldable <$> parseRangeInt), many parseInt]
---     pure $ Chord sp $ fromFoldable spdList
-
--- transposeChord:: P Value
--- transposeChord = do
---     id <- voiceId
---     pure $ TransposedChord id
 
 -- Dastgah
 
@@ -267,52 +271,12 @@ n = do
     n <- choice [try makeN, {-try transposeNWith,-} transposeN]
     pure n
 
-transposeNWith:: P Value
-transposeNWith = do
-    id <- voiceId
-    n <- brackets natural <|> pure 0
-    with <- transIntVal
-    pure $ TransposedNWith id n with
-
-transIntVal:: P (List Ops)
-transIntVal = do 
-    _ <- pure 1
-    n <- choice [try $ parens addInts, try $ parens multInts]
-    pure n
-
-addInts:: P (List Ops)
-addInts = do
-    _ <- pure 1
-    _ <- reserved "+"
-    ns <- many natural
-    pure $ map (\n -> AddInt n) $ fromFoldable ns
-
-multInts:: P (List Ops)
-multInts = do
-    _ <- pure 1
-    _ <- reserved "*"
-    ns <- many natural
-    pure $ map (\n -> MultInt n) $ fromFoldable ns
-
-mixInts:: P (List Ops)
-mixInts = do
-    _ <- pure 1
-    xs <- many $ choice [parens oneAdd, parens oneMult]
-    pure $ fromFoldable xs
-
-oneAdd:: P Ops
-oneAdd = do
-    _ <- pure 1
-    _ <- reserved "+"
-    n <- natural
-    pure $ AddInt n
-
-oneMult:: P Ops
-oneMult = do
-    _ <- pure 1
-    _ <- reserved "*"
-    n <- natural
-    pure $ MultInt n
+-- transposeNWith:: P Value
+-- transposeNWith = do
+--     id <- voiceId
+--     n <- brackets natural <|> pure 0
+--     with <- transIntVal
+--     pure $ TransposedNWith id n with
 
 transposeN:: P Value
 transposeN = do
@@ -454,11 +418,26 @@ negNum = do
 --     Left (ParseError err _) -> Left err
 --     Right aMap -> Right $ check aMap 
 
-checkXPitch :: List Expression -> Boolean
-checkXPitch expressions = not $ elem false $ map (\kn -> func aXenoPitchMap kn) listOfPitchID
+checkXPitch:: List Expression -> Boolean
+checkXPitch exs = (checkXPitch' exs) && (checkProg exs)
+
+checkProg :: List Expression -> Boolean
+checkProg expressions = not $ elem false $ map (\kn -> func aXenoPitchMap kn) listOfPitchID
+  where aXenoPitchMap = getXPitchMap expressions
+        listOfPitchID = getProgIDs $ getAuralMap expressions
+
+getProgIDs:: Map String (List Aural) -> List (Tuple String (Maybe Int))
+getProgIDs aurals = noteIDs
+    where noteIDs = concat $ mapMaybe keepProg $ concat $ concat $ values aurals
+
+keepProg:: Value -> Maybe (List (Tuple String (Maybe Int)))
+keepProg (Prog _ lista) = Just lista
+keepProg _ = Nothing
+
+checkXPitch' :: List Expression -> Boolean
+checkXPitch' expressions = not $ elem false $ map (\kn -> func aXenoPitchMap kn) listOfPitchID
   where aXenoPitchMap = getXPitchMap expressions
         listOfPitchID = getXenoIDs $ getAuralMap expressions
-     --   checkNotes = not $ elem false $ mapWithIndex (check2 aMap' Nil) aMap'  
 
 func:: Map String XenoPitch -> Tuple String (Maybe Int) -> Boolean
 func mapa (Tuple k Nothing) = case lookup k mapa of
@@ -476,6 +455,7 @@ getXenoIDs:: Map String (List Aural) -> List (Tuple String (Maybe Int))
 getXenoIDs aurals = noteIDs
     where noteIDs = mapMaybe keepXeno $ concat $ concat $ values aurals
 
+keepXeno:: Value -> Maybe (Tuple String (Maybe Int))
 keepXeno (Xeno id _ _) = Just id
 keepXeno _ = Nothing
 

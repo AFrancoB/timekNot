@@ -2,24 +2,34 @@
 import * as AST from "../AST/index.js";
 import * as Calculations from "../Calculations/index.js";
 import * as Control_Bind from "../Control.Bind/index.js";
-import * as Data_DateTime_Instant from "../Data.DateTime.Instant/index.js";
+import * as Control_Monad_State_Class from "../Control.Monad.State.Class/index.js";
+import * as Data_DateTime from "../Data.DateTime/index.js";
 import * as Data_Either from "../Data.Either/index.js";
 import * as Data_Foldable from "../Data.Foldable/index.js";
 import * as Data_Functor from "../Data.Functor/index.js";
 import * as Data_List from "../Data.List/index.js";
 import * as Data_Map_Internal from "../Data.Map.Internal/index.js";
-import * as Data_Maybe from "../Data.Maybe/index.js";
 import * as Data_Rational from "../Data.Rational/index.js";
 import * as Data_Show from "../Data.Show/index.js";
 import * as Data_Tempo from "../Data.Tempo/index.js";
+import * as Data_Unit from "../Data.Unit/index.js";
 import * as Effect from "../Effect/index.js";
+import * as Effect_Aff from "../Effect.Aff/index.js";
 import * as Effect_Console from "../Effect.Console/index.js";
 import * as Effect_Now from "../Effect.Now/index.js";
 import * as Effect_Ref from "../Effect.Ref/index.js";
 import * as Foreign from "../Foreign/index.js";
+import * as Halogen_Aff_Util from "../Halogen.Aff.Util/index.js";
+import * as Halogen_Component from "../Halogen.Component/index.js";
+import * as Halogen_HTML_Core from "../Halogen.HTML.Core/index.js";
+import * as Halogen_HTML_Elements from "../Halogen.HTML.Elements/index.js";
+import * as Halogen_HTML_Events from "../Halogen.HTML.Events/index.js";
+import * as Halogen_Query_HalogenM from "../Halogen.Query.HalogenM/index.js";
+import * as Halogen_VDom_Driver from "../Halogen.VDom.Driver/index.js";
+import * as Novus from "../Novus/index.js";
 import * as Parser from "../Parser/index.js";
 import * as Parsing from "../Parsing/index.js";
-var bind = /* #__PURE__ */ Control_Bind.bind(Effect.bindEffect);
+import * as TimePacketOps from "../TimePacketOps/index.js";
 var show = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_Show.showArray(/* #__PURE__ */ Data_Show.showRecord()()(/* #__PURE__ */ Data_Show.showRecordFieldsCons({
     reflectSymbol: function () {
         return "begin";
@@ -57,98 +67,133 @@ var show = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_Show.showArray(/*
         return "whenPosix";
     }
 })(Data_Show.showNumber))(Data_Show.showNumber))(Data_Show.showString))(Data_Show.showNumber))(Data_Show.showNumber))(Data_Show.showInt))(Data_Show.showNumber))(Data_Show.showNumber))(Data_Show.showNumber))));
-var map = /* #__PURE__ */ Data_Functor.map(Data_Functor.functorArray);
+var bind = /* #__PURE__ */ Control_Bind.bind(Effect.bindEffect);
 var fromFoldable = /* #__PURE__ */ Data_List.fromFoldable(Data_Foldable.foldableArray);
 var toRational = /* #__PURE__ */ Data_Rational.toRational(Data_Rational.toRationalInt);
-var unsafeMaybeMilliseconds = function ($copy_v) {
-    var $tco_done = false;
-    var $tco_result;
-    function $tco_loop(v) {
-        if (v instanceof Data_Maybe.Just) {
-            $tco_done = true;
-            return v.value0;
-        };
-        if (v instanceof Data_Maybe.Nothing) {
-            $copy_v = Data_DateTime_Instant.instant(0.0);
-            return;
-        };
-        throw new Error("Failed pattern match at Main (line 95, column 1 - line 95, column 51): " + [ v.constructor.name ]);
+var modify_ = /* #__PURE__ */ Control_Monad_State_Class.modify_(Halogen_Query_HalogenM.monadStateHalogenM);
+var bind1 = /* #__PURE__ */ Control_Bind.bind(Effect_Aff.bindAff);
+var show1 = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_Map_Internal.showMap(Data_Show.showString)(Data_DateTime.showDateTime));
+var map = /* #__PURE__ */ Data_Functor.map(Data_Functor.functorArray);
+var Increment = /* #__PURE__ */ (function () {
+    function Increment() {
+
     };
-    while (!$tco_done) {
-        $tco_result = $tco_loop($copy_v);
+    Increment.value = new Increment();
+    return Increment;
+})();
+var Decrement = /* #__PURE__ */ (function () {
+    function Decrement() {
+
     };
-    return $tco_result;
-};
+    Decrement.value = new Decrement();
+    return Decrement;
+})();
 var setTempo = function (tk) {
     return function (t) {
         return Effect_Ref.write(Data_Tempo.fromForeignTempo(t))(tk.tempo);
     };
 };
-var numToDateTime = function (x) {
-    var asMaybeInstant = Data_DateTime_Instant.instant(x);
-    var asInstant = unsafeMaybeMilliseconds(asMaybeInstant);
-    return Data_DateTime_Instant.toDateTime(asInstant);
-};
-var timekNotToForeigns = function (tk) {
-    return function (ws) {
-        return function (we) {
-            var ws$prime = numToDateTime(ws * 1000.0);
-            var we$prime = numToDateTime(we * 1000.0);
-            return function __do() {
-                var program = Effect_Ref.read(tk.ast)();
-                var anchors = Effect_Ref.read(tk.anchors)();
-                var t = Effect_Ref.read(tk.tempo)();
-                var $$eval = Effect_Ref.read(tk["eval"])();
-                var events = Calculations.programToWaste(program)(anchors)(ws$prime)(we$prime)($$eval)(t)();
-                Effect_Console.log(show(events))();
-                return map(Foreign.unsafeToForeign)(events);
-            };
-        };
-    };
-};
-var scheduleNoteEvents = function (tk) {
-    return function (ws) {
-        return function (we) {
-            return timekNotToForeigns(tk)(ws)(we);
-        };
-    };
+var render = function (state) {
+    return Halogen_HTML_Elements.div_([ Halogen_HTML_Elements.button([ Halogen_HTML_Events.onClick(function (v) {
+        return Decrement.value;
+    }) ])([ Halogen_HTML_Core.text("-") ]), Halogen_HTML_Core.text(show(state)), Halogen_HTML_Elements.button([ Halogen_HTML_Events.onClick(function (v) {
+        return Increment.value;
+    }) ])([ Halogen_HTML_Core.text("+") ]) ]);
 };
 var launch = function __do() {
     Effect_Console.log("timekNot: launch")();
     var ast = Effect_Ref["new"](fromFoldable([ new AST.TimeExpression(Data_Map_Internal.empty) ]))();
     var tempo = bind(Data_Tempo.newTempo(toRational(1)(1)))(Effect_Ref["new"])();
     var $$eval = bind(Effect_Now.nowDateTime)(Effect_Ref["new"])();
-    var anchors = Effect_Ref["new"](Data_Map_Internal.empty)();
+    var vantageMap = Effect_Ref["new"](Data_Map_Internal.empty)();
     return {
         ast: ast,
         tempo: tempo,
         "eval": $$eval,
-        anchors: anchors
+        vantageMap: vantageMap
+    };
+};
+var initialState = function (v) {
+    return [  ];
+};
+var handleAction = function (v) {
+    if (v instanceof Decrement) {
+        return modify_(function (state) {
+            return state;
+        });
+    };
+    if (v instanceof Increment) {
+        return modify_(function (state) {
+            return state;
+        });
+    };
+    throw new Error("Failed pattern match at Main (line 143, column 16 - line 148, column 30): " + [ v.constructor.name ]);
+};
+var component = function (e) {
+    return Halogen_Component.mkComponent({
+        initialState: initialState,
+        render: render,
+        "eval": Halogen_Component.mkEval({
+            handleAction: handleAction,
+            handleQuery: Halogen_Component.defaultEval.handleQuery,
+            receive: Halogen_Component.defaultEval.receive,
+            initialize: Halogen_Component.defaultEval.initialize,
+            finalize: Halogen_Component.defaultEval.finalize
+        })
+    });
+};
+var visuals = function (events) {
+    return Halogen_Aff_Util.runHalogenAff(bind1(Halogen_Aff_Util.awaitBody)(function (body) {
+        return Halogen_VDom_Driver.runUI(component(events))(Data_Unit.unit)(body);
+    }));
+};
+var scheduleNoteEvents = function (tk) {
+    return function (ws$prime) {
+        return function (we$prime) {
+            var ws = TimePacketOps.numToDateTime(ws$prime * 1000.0);
+            var we = TimePacketOps.numToDateTime(we$prime * 1000.0);
+            return function __do() {
+                var program = Effect_Ref.read(tk.ast)();
+                var vantageMap = Effect_Ref.read(tk.vantageMap)();
+                Effect_Console.log("vm: " + show1(vantageMap))();
+                var t = Effect_Ref.read(tk.tempo)();
+                var $$eval = Effect_Ref.read(tk["eval"])();
+                var tp = TimePacketOps.assambleTimePacket(ws)(we)($$eval)(t)(vantageMap);
+                var events = Calculations.programToWaste(program)(tp)();
+                visuals(events)();
+                Effect_Console.log(show(events))();
+                return map(Foreign.unsafeToForeign)(events);
+            };
+        };
     };
 };
 var check$prime = function (v) {
-    if (v instanceof Data_Either.Left) {
-        return new Data_Either.Left(Parsing.parseErrorMessage(v.value0));
-    };
-    if (v instanceof Data_Either.Right) {
-        var v1 = Parser.check(v.value0);
-        if (v1) {
-            return new Data_Either.Right(v.value0);
+    return function (v1) {
+        if (v1 instanceof Data_Either.Left) {
+            return new Data_Either.Left(Parsing.parseErrorMessage(v1.value0));
         };
-        if (!v1) {
-            return new Data_Either.Left("failed the check, time bites it's own tail");
+        if (v1 instanceof Data_Either.Right) {
+            var v2 = Parser.check(v)(v1.value0);
+            if (v2) {
+                return new Data_Either.Right(v1.value0);
+            };
+            if (!v2) {
+                return new Data_Either.Left("failed the check, time bites it's own tail");
+            };
+            throw new Error("Failed pattern match at Main (line 84, column 30 - line 86, column 89): " + [ v2.constructor.name ]);
         };
-        throw new Error("Failed pattern match at Main (line 70, column 27 - line 72, column 89): " + [ v1.constructor.name ]);
+        throw new Error("Failed pattern match at Main (line 82, column 1 - line 82, column 74): " + [ v.constructor.name, v1.constructor.name ]);
     };
-    throw new Error("Failed pattern match at Main (line 68, column 1 - line 68, column 60): " + [ v.constructor.name ]);
 };
 var evaluate = function (tk) {
     return function (str) {
         return function __do() {
             Effect_Console.log("timekNot: evaluate")();
-            var program = Effect_Ref.read(tk.ast)();
+            var currentVM = Effect_Ref.read(tk.vantageMap)();
+            Effect_Console.log("currentVM" + show1(currentVM))();
+            var tempo = Effect_Ref.read(tk.tempo)();
             var $$eval = Effect_Now.nowDateTime();
-            var pr = check$prime(Parsing.runParser(str)(Parser.parseProgram));
+            var pr = check$prime(currentVM)(Parsing.runParser(str)(Parser.parseProgram));
             if (pr instanceof Data_Either.Left) {
                 return {
                     success: false,
@@ -158,12 +203,13 @@ var evaluate = function (tk) {
             if (pr instanceof Data_Either.Right) {
                 Effect_Ref.write($$eval)(tk["eval"])();
                 Effect_Ref.write(pr.value0)(tk.ast)();
+                Effect_Ref.write(Novus.processVantage(Parser.getVantageMap(pr.value0))(currentVM)($$eval)(tempo))(tk.vantageMap)();
                 return {
                     success: true,
                     error: "bad syntax"
                 };
             };
-            throw new Error("Failed pattern match at Main (line 61, column 3 - line 66, column 52): " + [ pr.constructor.name ]);
+            throw new Error("Failed pattern match at Main (line 74, column 3 - line 80, column 52): " + [ pr.constructor.name ]);
         };
     };
 };
@@ -171,9 +217,13 @@ export {
     launch,
     evaluate,
     check$prime,
-    setTempo,
     scheduleNoteEvents,
-    numToDateTime,
-    unsafeMaybeMilliseconds,
-    timekNotToForeigns
+    setTempo,
+    visuals,
+    Increment,
+    Decrement,
+    component,
+    initialState,
+    render,
+    handleAction
 };

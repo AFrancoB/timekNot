@@ -4,16 +4,16 @@ import Prelude
 
 import Partial.Unsafe
 
-import Data.Array ((:), elem, filter,unsafeIndex, length, zip, (!!))
+import Data.Array ((:), elem, filter,unsafeIndex, length, zip, (!!), fromFoldable)
 import Data.Tuple
 import Data.Int (toNumber, floor)
 import Data.Maybe 
 
+import Data.Set (Set(..))
+import Data.Set as Set
+
 import Erv (makeCPSScale,ratioToCents)
 import AST
-
-
-
 
 ---- this top is the list processed in AuralSpecs along with span and Value
 -- top:: XenoPitch -> Array Number
@@ -23,8 +23,11 @@ import AST
 
 -- data XenoPitch = CPSet Int (Array Int) (Array Int) | MOS Int Int | EDO Number Int
 testXP = CPSet 2 [1,3,5,7] Nothing
-
 testXN = xenoPitchAsAuralPattern (Tuple testXP Nothing) [0,1,2,3]
+
+--- new fucntion that receives tuning system / note and index and can produce the midiInterval required
+
+
 
 xenoPitchAsAuralPattern:: Tuple XenoPitch (Maybe Int) -> Array Int -> Array Number
 xenoPitchAsAuralPattern (Tuple xn (Just i)) lista = toMIDI
@@ -58,8 +61,20 @@ xenoPitchToMIDIInterval (CPSet size factors (Just subsets)) = map (addSampleRoot
           subs = map (getSubSet scale) subsets
 xenoPitchToMIDIInterval _ = []
 
-getSubSet:: Array XenoNote -> Int -> Array XenoNote
-getSubSet xn isInSet = filter (\x -> elem isInSet x.set ) xn
+getSubSet:: Array XenoNote -> Subset -> Array XenoNote
+getSubSet xn subset = fromFoldable $ getSubset' xn subset 
+
+getSubset':: Array XenoNote -> Subset -> Set XenoNote
+getSubset' xn (Subset isInSet) = Set.fromFoldable $ filter (\x -> elem isInSet x.set ) xn
+getSubset' xn (Unions ns) = Set.unions $ map f ns
+    where f isInSet = Set.fromFoldable $ filter (\x -> elem isInSet x.set ) xn
+getSubset' xn (Intersection a b) = Set.intersection a' b'
+    where a' = Set.fromFoldable $ filter (\x -> elem a x.set ) xn
+          b' = Set.fromFoldable $ filter (\x -> elem b x.set ) xn
+getSubset' xn (Difference a b) = Set.difference a' b'
+    where a' = Set.fromFoldable $ filter (\x -> elem a x.set ) xn
+          b' = Set.fromFoldable $ filter (\x -> elem b x.set ) xn
+getSubset' _ _ = Set.fromFoldable []
 
 toMIDIInterval:: Array XenoNote -> Array Number
 toMIDIInterval xns = map toMIDIInterval' xns

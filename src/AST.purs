@@ -1,4 +1,4 @@
-module AST(TimekNot(..),Anchor(..),Waste(..),AlmostWaste(..), AnchorMap(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..),Dastgah(..),Span(..),Ops(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), XenoPitch(..), XenoNote(..),showEventIndex, showStructureIndex) where
+module AST(TimekNot(..),Vantage(..), TimePoint(..),Waste(..),AlmostWaste(..), VantageMap(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), XenoPitch(..), XenoNote(..), Subset(..), showEventIndex, showStructureIndex) where
 
 import Prelude
 import Effect.Ref
@@ -40,12 +40,18 @@ type TimekNot = {
   ast :: Ref Program,
   tempo :: Ref Tempo,
   eval :: Ref DateTime,
-  anchors :: Ref (Map String DateTime)
+  vantageMap :: Ref (Map String DateTime)
   }
 
 type Program = List Expression
 
-data Expression = TimeExpression (Map String Temporal) | AuralExpression (Map String Aural) | AnchorExpression  (Map String Anchor) | XenoPitchExpression (Map String XenoPitch)
+data Expression = TimeExpression (Map String Temporal) | AuralExpression (Map String Aural) | VantagePointExpression  (Map String Vantage) | XenoPitchExpression (Map String XenoPitch)
+
+instance expressionShow :: Show Expression where
+  show (TimeExpression x) = show x
+  show (AuralExpression x) = show x
+  show (XenoPitchExpression x) = show x
+  show (VantagePointExpression x) = show x
 
 -- Temporal values is short for TemporalRelationship and Aural is short for Aural Values. Polytemporal stands for TempoRelationship, Rhythmic stands shor for Rhythmic values
 
@@ -59,26 +65,24 @@ instance voiceShow :: Show Voice where
 
 type Aural = List Value
 
-type AnchorMap = Map String DateTime
+type VantageMap = Map String DateTime
 
-data Anchor = Build (Either Number Number) | Move (Either Number Number) | Remove
+data Vantage = Build TimePoint | Move (Either Rational Rational) | Remove
 
-instance anchorShow :: Show Anchor where
-  show (Build num) = "established " <> x 
-      where x = case num of
-                  (Left beat) -> show beat <> " beats from eval"
-                  (Right secs) -> show secs <> " secs from eval"
-  show (Move num) = " moved by " <> show num <> " secs" -- fornow secs but enable xBeats
+instance vantageShow :: Show Vantage where
+  show (Build x) = "established " <> show x 
+  show (Move num) = " moved by " <> show x -- fornow secs but enable xBeats
       where x = case num of
                   (Left beat) -> show beat <> " beats"
                   (Right secs) -> show secs <> " secs"
   show Remove = " removed"
 
-instance expressionShow :: Show Expression where
-  show (TimeExpression x) = show x
-  show (AuralExpression x) = show x
-  show (AnchorExpression x) = show x
-  show (XenoPitchExpression x) = show x
+data TimePoint = Beat Rational | Secs Rational | UTC DateTime
+
+instance timePoint :: Show TimePoint where
+  show (Beat beat) = show beat <> " beats from eval"
+  show (Secs secs) = show secs <> " secs from eval"
+  show (UTC utc) = show utc
 
 type AudioAttributes = {
   sound:: List Value,
@@ -91,52 +95,44 @@ type AudioAttributes = {
 -- refactor as {sound: string, n: Int, etc...} -- What was going to be auralAttributes
 data Value = 
   Sound Span (List String) | TransposedSound String Int | 
-  N Span (List Int) | TransposedN String Int | TransposedNWith String Int (List Ops) |
-  Gain Span (List Number) | TransposedGain String Int | TransposedGainWith String Int (List Ops) |
-  Pan Span (List Number) | TransposedPan String Int | TransposedPanWith String Int (List Ops) |
-  Speed Span (List Number) | TransposedSpeed String Int | TransposedSpeedWith String Int (List Ops) |
-  Begin Span (List Number) | TransposedBegin String Int | TransposedBeginWith String Int (List Ops) |
-  End Span (List Number) | TransposedEnd String Int | TransposedEndWith String Int (List Ops) |
+  N Span (List Int) | TransposedN String Int |
+  Gain Span (List Number) | TransposedGain String Int | 
+  Pan Span (List Number) | TransposedPan String Int | 
+  Speed Span (List Number) | TransposedSpeed String Int | 
+  Begin Span (List Number) | TransposedBegin String Int | 
+  End Span (List Number) | TransposedEnd String Int | 
   CutOff Span (List Number) | TransposedCutOff String Int |
   Vowel Span (List Number) | TransposedVowel String Int | 
   Chord Span (List Number) | TransposedChord String Int |
-  Dastgah Span Dastgah | Xeno (Tuple String (Maybe Int)) Span (List Int)
+  Dastgah Span Dastgah | Xeno (Tuple String (Maybe Int)) Span (List Int) |
+  Prog Span (List (Tuple String (Maybe Int))) | XeNotes Span (List Int)
 
 data Dastgah = Shur (List Int) -- 1 to 8 then it cycles back
 
 instance showDatsgah :: Show Dastgah where
   show (Shur l) = "shur " <> show l
 
-
-data Ops = AddInt Int | AddNum Number | MultInt Int | MultNum Number
-
-instance showOps :: Show Ops where
-  show (AddInt n) = "_+" <> show n
-  show (AddNum n) = "_+" <> show n
-  show (MultInt n) = "_*" <> show n
-  show (MultNum n) = "_*" <> show n
-
 instance valueShow :: Show Value where
   show (Sound x l) = show x <> " " <> show l
   show (TransposedSound voice n) = "s transposed from " <> voice
   show (N x l) = show x <> " " <> show l
   show (TransposedN voice n) = "n transposed from " <> voice
-  show (TransposedNWith voice n l) = show l <> "n transposedWith from " <> voice
+  -- show (TransposedNWith voice n l) = show l <> "n transposedWith from " <> voice
   show (Gain x l) = show x <> " " <> show l
   show (TransposedGain voice n) = "gain transposed from " <> voice
-  show (TransposedGainWith voice n l) = "gain transposedWith from " <> voice
+  -- show (TransposedGainWith voice n l) = "gain transposedWith from " <> voice
   show (Pan x l) = show x <> " " <> show l
   show (TransposedPan voice n) = "pan transposed from " <> voice
-  show (TransposedPanWith voice n l) = "pan transposedWith from " <> voice
+  -- show (TransposedPanWith voice n l) = "pan transposedWith from " <> voice
   show (Speed x l) = show x <> " " <> show l
   show (TransposedSpeed voice n) = "speed transposed from " <> voice
-  show (TransposedSpeedWith voice n l) = "speed transposedWith from " <> voice
+  -- show (TransposedSpeedWith voice n l) = "speed transposedWith from " <> voice
   show (Begin x l) = show x <> " " <> show l
   show (TransposedBegin voice n) = "begin transposed from " <> voice
-  show (TransposedBeginWith voice n l) = "begin transposedWith from " <> voice
+  -- show (TransposedBeginWith voice n l) = "begin transposedWith from " <> voice
   show (End x l) = show x <> " " <> show l
   show (TransposedEnd voice n) = "end transposed from " <> voice
-  show (TransposedEndWith voice n l) = "end transposedWith from " <> voice
+  -- show (TransposedEndWith voice n l) = "end transposedWith from " <> voice
   show (CutOff x l) = show x <> " " <> show l
   show (TransposedCutOff voice n) = "cutoff transposed from " <> voice
   show (Vowel x l) = show x <> " " <> show l
@@ -145,6 +141,8 @@ instance valueShow :: Show Value where
   show (TransposedChord voice n) = "chord transposed from " <> voice
   show (Dastgah span d) = show d
   show (Xeno id span l) = show l
+  show (Prog span l) = "prog" <> show l
+  show (XeNotes span l) = "xnotes " <> show l
 
 data Span = CycleEvent | CycleBlock | CycleInBlock | SpreadBlock -- | Weight
 
@@ -166,14 +164,14 @@ data Polytemporal =
   Kairos Number TempoMark | -- last arg is tempo -- Arg: universal time unit (miliseconds and datetime in purs)
   -- Kairos starts a program at evaluation time (or as soon as possible), no underlying grid
   Metric ConvergeTo ConvergeFrom TempoMark | -- starts a program attached to a default underlying voice (a tempo grid basically) first number is the point to where the new voice will converge, second number is the point from which it converges. 
-  Converge String ConvergeTo ConvergeFrom TempoMark -- Args: String is the voice identifier, convergAt (where this voice converges with the identified voice) and convergedFrom (the point of this voice that converges with the identified voice)
-  -- Converge starts a program in relationship with another voice
+  Converge String ConvergeTo ConvergeFrom TempoMark | -- Args: String is the voice identifier, convergAt (where this voice converges with the identified voice) and convergedFrom (the point of this voice that converges with the identified voice)  -- Converge starts a program in relationship with another voice
+  Novus String ConvergeFrom TempoMark
 
 instance polytemporalShowInstance :: Show Polytemporal where
   show (Kairos asap t) = "kairos: " <> show asap <> " tempo mark: " <> show t
-  show (Metric cTo cFrom t) = "(converges to "<>show cTo<>") (from "<>show cFrom <> ") (tempo mark: " <> show t <> ")"
-  show (Converge voice cTo cFrom t) = "voice "<>show voice<>" (converges to "<>show cTo<>") (from "<>show cFrom <> ") (tempo mark: " <> show t <> ")"
-
+  show (Metric cTo cFrom t) = "(cTo "<>show cTo<>") (cFrom "<>show cFrom <> ") (tempo mark: " <> show t <> ")"
+  show (Converge voice cTo cFrom t) = "toVoice "<>show voice<>" (cTo "<>show cTo<>") (cFrom "<>show cFrom <> ") (tempo mark: " <> show t <> ")"
+  show (Novus vantageId cFrom t) = "vantagePoint "<>show vantageId<>" (cFrom "<>show cFrom <> ") (tempo mark: " <> show t <> ")"
 
 data Rhythmic =  -- whenPosix, thats it
   X | -- x
@@ -256,7 +254,8 @@ type TimePacket = {
   we:: DateTime,
   eval:: DateTime,
   origin:: DateTime,
-  tempo:: Tempo
+  tempo:: Tempo,
+  vantageMap:: VantageMap
 }
 
 data Event = Event Onset Index
@@ -291,8 +290,12 @@ instance indexShow :: Show Index where
 
 -- xenopPitch
 
+data Subset = Subset Int | Unions (Array Int) | Intersection Int Int | Difference Int Int | Nested Subset 
 
-data XenoPitch = CPSet Int (Array Int) (Maybe (Array Int)) | MOS Int Int | EDO Number Int
+instance subsetShow :: Show Subset where
+  show _ = "subset"
+
+data XenoPitch = CPSet Int (Array Int) (Maybe (Array Subset)) | MOS Int Int | EDO Number Int
 
 instance xenoShow :: Show XenoPitch where
     show (CPSet s f subs) = "cps " <> show s <> " " <> show f <> " " <> show subs
