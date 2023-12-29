@@ -1,4 +1,4 @@
-module AST(TimekNot(..),Vantage(..), TimePoint(..),Waste(..),AlmostWaste(..), VantageMap(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), XenoPitch(..), XenoNote(..), Subset(..), showEventIndex, showStructureIndex) where
+module AST(TimekNot(..),Vantage(..), TimePoint(..),Waste(..),AlmostWaste(..), VantageMap(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), Sinusoidal(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), XenoPitch(..), XenoNote(..), Subset(..), showEventIndex, showStructureIndex) where
 
 import Prelude
 import Effect.Ref
@@ -236,11 +236,11 @@ instance Show ConvergeTo where
   show (LastTo a) = "last"
 
 -- perhaps this is the output of processTempoMark, this will allow users to declare a total duration of a block (reverting more or less the additive logic to divisive)
-type Duration = Rational
-type MetricUnit = Rational
-data TimeSignature = Either Duration MetricUnit
 
-data TempoMark = XTempo | CPM Rational | BPM Rational Rational | CPS Rational | Prop String Int Int
+-- data TimeSignature = Duration Rational | TM TempoMark | Sin Sinusoidal
+-- type Sinusoidal = {tempoMark:: TempoMark, freq:: Rational, amp:: Rational}
+
+data TempoMark = XTempo | CPM Rational | BPM Rational Rational | CPS Rational | Prop String Int Int | Sin Sinusoidal | Dur Rational
 
 instance Show TempoMark where
   show XTempo = "external"
@@ -248,6 +248,15 @@ instance Show TempoMark where
   show (BPM bpm figure) = show bpm <> "bpm the " <> show figure
   show (CPS cps) = show cps <> "cps"
   show (Prop id x y) = "from voice: " <> id <> " " <> show x <> ":" <> show y 
+  show (Sin acc) = show acc
+  show (Dur n) = "dur " <> show n
+
+type Sinusoidal = {
+  min:: TempoMark,
+  max:: TempoMark,
+  osc:: Rational,
+  phase:: Rational
+}
 
 type TimePacket = {
   ws:: DateTime,
@@ -272,8 +281,8 @@ showStructureIndex (Index x xs _) = show x <>"-"<> result
 data Onset = Onset Boolean Number
 
 instance Show Onset where
-    show (Onset true n) =  "(X" <> " psx:" <> " ..." <>(Str.drop 0 $ show n) <>")"
-    show (Onset false n) = "(O" <> " psx:" <> " ..." <>(Str.drop 0 $ show n) <>")"
+    show (Onset true n) =  "(X" <> " psx:" <>(Str.drop 0 $ show n) <>")"
+    show (Onset false n) = "(O" <> " psx:" <>(Str.drop 0 $ show n) <>")"
 
 instance Ord Onset where
     compare (Onset bool1 pos1) (Onset bool2 pos2) = pos1 `compare` pos2  

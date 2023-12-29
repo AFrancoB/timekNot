@@ -9537,7 +9537,7 @@ var require_lib = __commonJS({
       typeof console !== "undefined" && Oj();
       ha = globalThis;
       Oj();
-      var Al = new V(null, "nil", "nil", 99600501), Bl = new V(null, "async?", "async?", 1523057758), qe = new V(null, "size", "size", 1098693007), Cl = new V(null, "true-mos?", "true-mos?", 1663374015), Dl = new V(null, "string", "string", -1989541586), El = new V(null, "pattern", "pattern", 242135423), Fl = new V(null, "spying?", "spying?", 1753444487), Gl = new F(null, "js", "js", -886355190, null), gg = new F(null, "p1__9225#", "p1__9225#", 225913350, null), Hl = new F(null, "uuid", "uuid", -504564192, null), Xf = new F(null, "fn*", "fn*", -752876845, null), Ba = new V(null, "dup", "dup", 556298533), Il = new V(null, "enabled?", "enabled?", -1376075057), Yf = new V(null, "status", "status", -1997798413), ig = new V(null, "count", "count", 2139924085), ci = new V("cljs.spec.alpha", "nil", "cljs.spec.alpha/nil", 1733813950), Ai = new V("cljs.spec.alpha", "k", "cljs.spec.alpha/k", -1602615178), Jl = new V("rl", "reset", "rl/reset", -800926172), za = new V(null, "readably", "readably", 1129599760), Zf = new F("cljs.core", "count", "cljs.core/count", -921270233, null), Kl = new V(null, "any", "any", 1705907423), vf = new V(null, "period", "period", -352129191), li = new F("cljs.core", "map", "cljs.core/map", -338988913, null), $f = new F("cljs.core", "fn", "cljs.core/fn", -1065745098, null), Bi = new V("cljs.spec.alpha", "v", "cljs.spec.alpha/v", 552625740), Ll = new V(null, "fn", "fn", -1175266204), mi = new V(null, "amp", "amp", 271690571), Ml = new V(null, "?meta", "?meta", -793560773), kg = new V(null, "kind", "kind", -717265803), Kf = new V("cps", "normalized-by", "cps/normalized-by", 878262682), Nl = new V(null, "report", "report", 1394055010), Ol = new V(null, "qualifier", "qualifier", 125841738), Pl = new V(null, "appender", "appender", 1267426510), Pf = new V("cps", "size", "cps/size", 1098790769), Rf = new V(null, "cps", "cps", 685853525), Qf = new V(null, "pending", "pending", -220036727), lp = new V(null, "rotate", "rotate", 152705015), tl = new V(null, "default", "default", -1987822328), Ql = new V(null, "timestamp_", "timestamp_", -954533417), Rl = new V(null, "strable", "strable", 1877668047), Sl = new V(null, "days", "days", -1394072564), Tl = new V(null, "mins", "mins", 467369676), Ul = new V(null, "months", "months", -45571637), Vl = new V(null, "vargs", "vargs", -966597273), Wl = new V(null, "map", "map", 1371690461), Gh = new V(null, "conform-keys", "conform-keys", -1800041814), ej = new F(null, "set?", "set?", 1636014792, null), Xl = new V(null, "iso8601", "iso8601", 609352650), Yl = new V(null, "err", "err", -2089457205), Zl = new V(null, "whitelist", "whitelist", -979294437), $l = new V(null, "fatal", "fatal", 1874419888), Hh = new V("cljs.spec.alpha", "kfn", "cljs.spec.alpha/kfn", 672643897), Ih = new V(null, "gen-max", "gen-max", -793680445), am = new V(null, "hash_", "hash_", -827203612), bm = new V(null, "hash", "hash", -13781596), ki = new V(null, "max-count", "max-count", 1539185305), cm = new V(null, "msg_", "msg_", -1925147e3), Sf = new V(null, "bounded-ratio", "bounded-ratio", 1332865443), dm = new V(null, "error", "error", -978969032), em = new V(null, "println", "println", 1920840330), fm = new V(null, "waiting", "waiting", 895906735), gm = new V(null, "version", "version", 425292698), Yh = new V(null, "ps", "ps", 292358046), Uf = new V("erv.cps.core", "archi-factors", "erv.cps.core/archi-factors", 765622525), bg = new V(null, "bounding-period", "bounding-period", 1768663702), qh = new V("cljs.spec.alpha", "name", "cljs.spec.alpha/name", 205233570), hm = new V(null, "ms", "ms", -1152709733), im = new V(null, "?err", "?err", 549653299), mp = new V(null, "utils", "utils", -121060109), jm = new V(null, "cache?", "cache?", -1601953949), Th = new V(null, "p1", "p1", -936759954), Ph = new V(null, "p2", "p2", 905500641), ni = new V("cljs.spec.alpha", "describe", "cljs.spec.alpha/describe", 1883026911), km = new V(null, "list", "list", 765357683), lm = new V("edo", "degree", "edo/degree", 237203460), mm = new V(null, "config", "config", 994861415), Kk = new V(null, "parents", "parents", -2027538891), Lh = new V(null, "ret", "ret", -468222814), nm = new V(null, "rate-limit", "rate-limit", 1748082022), Zh = new V(null, "ks", "ks", 1900203942), di = new V("cljs.spec.alpha", "amp", "cljs.spec.alpha/amp", 831147508), om = new V(null, "?ns-str", "?ns-str", 2012733966), ug = new V(null, "graphs", "graphs", -1584479112), pm = new V(null, "min-level", "min-level", 1634684919), qm = new V("rl", "peek", "rl/peek", -291391771), rm = new V(null, "appender-id", "appender-id", -1917983538), Dg = new V(null, "scale", "scale", -230427353), Xh = new V("cljs.spec.alpha", "alt", "cljs.spec.alpha/alt", 523685437), sm = new V(null, "ns-blacklist", "ns-blacklist", 1957763142), tm = new V(null, "vargs_", "vargs_", 552132148), fj = new F("cljs.spec.alpha", "coll-of", "cljs.spec.alpha/coll-of", 1019430407, null), hj = new F("cljs.core", "->>", "cljs.core/->>", -1207871206, null), um = new V(null, "debug", "debug", -1608172596), Sh = new V(null, "id", "id", -1388402092), Hg = new V(null, "archi-set", "archi-set", 495795173), ag = new V(null, "set", "set", 304602554), vm = new V(null, "trace", "trace", -1082747415), Tf = new V(null, "ready", "ready", 1086465795), wm = new V(null, "?msg-fmt", "?msg-fmt", -852453891), xm = new F(null, "queue", "queue", -1198599890, null), ym = new V(null, "output_", "output_", -36797880), ri = new F("cljs.core", "set?", "cljs.core/set?", -1176684971, null), zm = new V("edo", "period", "edo/period", -352225367), Am = new V(null, "output-fn", "output-fn", 1600951539), Bm = new V(null, "?err_", "?err_", 789480858), Cm = new V(null, "level", "level", 1290497552), Aa = new V(null, "meta", "meta", 1499536964), Dm = new V(null, "deny", "deny", 1589338523), Gi = new F(null, "%", "%", -950237169, null), si = new F("cljs.core", "list?", "cljs.core/list?", -684796618, null), Ca = new V(null, "print-length", "print-length", 1931866356), Em = new V(null, "ns-filter", "ns-filter", 108598448), Fm = new V(null, "make", "make", -1284043325), oi = new V("cljs.spec.alpha", "kind-form", "cljs.spec.alpha/kind-form", -1047104697), Mk = new V(null, "ancestors", "ancestors", -776045424), Gm = new V(null, "p", "p", 151049309), Hm = new V(null, "hostname_", "hostname_", -2091647379), Im = new V(null, "moses", "moses", -780704400), Hi = new V("cljs.spec.alpha", "kvs->map", "cljs.spec.alpha/kvs->map", 579713455), Ii = new F(null, "k", "k", -505765866, null), Jg = new V("cps", "factors", "cps/factors", 1108767994), Jm = new V(null, "f", "f", -1597136552), cg = new F(null, "v", "v", 1661996586, null), Km = new V(null, "given", "given", 716253602), ui = new F("cljs.spec.alpha", "conformer", "cljs.spec.alpha/conformer", 2140085535, null), Lm = new V(null, "edo", "edo", 664006494), Mm = new V(null, "?line", "?line", -631853385), Nm = new V(null, "auto", "auto", -566279492), Om = new V("edo", "pattern", "edo/pattern", 242034639), Pm = new V(null, "hierarchy", "hierarchy", -1053470341), Qm = new V(null, "console", "console", 1228072057), Lg = new V(null, "ratio", "ratio", -926560044), pi = new V(null, "distinct", "distinct", -1788879121), Rm = new V(null, "inherit", "inherit", -1840815422), Jf = new V(null, "fallback-impl", "fallback-impl", -1501286995), Pg = new V(null, "full", "full", 436801220), Sm = new V(null, "warn", "warn", -436710552), Tm = new V(null, "ns-whitelist", "ns-whitelist", -1717299774), ei = new V("cljs.spec.alpha", "pcat", "cljs.spec.alpha/pcat", 26406623), kj = new V("erv.cps.core", "type", "erv.cps.core/type", -1302047896), Hj = new V(null, "keyword-fn", "keyword-fn", -64566675), np = new V(null, "ratioToCents", "ratioToCents", 2147177470), Um = new V(null, "middleware-fn", "middleware-fn", -61585752), Vm = new V(null, "deny-spec", "deny-spec", -1074984268), Wm = new V(null, "allow", "allow", -1857325745), Xm = new V(null, "years", "years", -1298579689), Ym = new F(null, "inst", "inst", -2008473268, null), qi = new V(null, "into", "into", -150836029), Oh = new V("cljs.spec.alpha", "rep", "cljs.spec.alpha/rep", 1483217317), oh = new V("cljs.spec.alpha", "op", "cljs.spec.alpha/op", -1269055252), ti = new V("cljs.spec.alpha", "cpred", "cljs.spec.alpha/cpred", -693471218), Zm = new V(null, "hours", "hours", 58380855), $m = new V(null, "secs", "secs", 1532330091), an = new V(null, "context", "context", -830191113), bn = new V(null, "instant", "instant", 655498374), Og = new F("cljs.core", "apply", "cljs.core/apply", 1757277831, null), lj = new V(null, "simple", "simple", -581868663), vi = new V(null, "min-count", "min-count", 1594709013), cn = new V(null, "raw-console?", "raw-console?", -2061489061), Lk = new V(null, "descendants", "descendants", 1824886031), mj = new V(null, "norm-fac", "norm-fac", 1175241557), nj = new V(null, "nodes", "nodes", -2099585805), dn = new V(null, "appenders", "appenders", 1245583998), en = new V(null, "mos", "mos", 1902052264), Rh = new V(null, "forms", "forms", 2045992350), ij = new V("erv.cps.core", "cps", "erv.cps.core/cps", 1942691201), fn = new V(null, "location", "location", 1815599388), Vf = new V(null, "val", "val", 128701612), gn = new V(null, "vector", "vector", 1902966158), hn = new V(null, "weeks", "weeks", 1844596125), gj = new V("erv.cps.core", "sub-cps-set", "erv.cps.core/sub-cps-set", -1884356686), wi = new F("cljs.core", "map?", "cljs.core/map?", -1390345523, null), ya = new V(null, "flush-on-newline", "flush-on-newline", -151457939), jn = new V(null, "min-version", "min-version", -1697197126), kn = new V(null, "blacklist", "blacklist", 1248093170), xi = new F("cljs.spec.alpha", "and", "cljs.spec.alpha/and", -2060279705, null), Kh = new V("cljs.spec.alpha", "accept", "cljs.spec.alpha/accept", 370988198), ln = new V(null, "fromPattern", "fromPattern", -381751332), mn = new V(null, "middleware", "middleware", 1462115504), nn = new V(null, "no-stacktrace?", "no-stacktrace?", 1701072694), on = new V(null, "msecs", "msecs", 1711980553), pn = new V(null, "allow-spec", "allow-spec", 448749872), dg = new F("cljs.core", "=", "cljs.core/=", -1891498332, null), Mi = new V("cljs.spec.alpha", "unknown", "cljs.spec.alpha/unknown", 651034818), qn = new V("rl", "all", "rl/all", 892118056), xf = new V(null, "more-marker", "more-marker", -14717935), rn = new V(null, "stacktrace-fonts", "stacktrace-fonts", 830799382), sn = new V("edo", "divisions", "edo/divisions", -1442383238), yo = new V(null, "req-id", "req-id", -471642231), oj = new V("cps", "type", "cps/type", 1175547714), zo = new V(null, "timestamp-opts", "timestamp-opts", -1359534807), Qh = new V(null, "splice", "splice", 449588165), Ao = new V(null, "?file", "?file", 1533429675), Bo = new V(null, "error-level?", "error-level?", 778415885), Ci = new F(null, "p1__8966#", "p1__8966#", -2146281877, null), fp = new V("edo", "original-degree", "edo/original-degree", -1225096234), yi = new F("cljs.core", "vector?", "cljs.core/vector?", -1550392028, null), Ni = new F("cljs.core", "zipmap", "cljs.core/zipmap", -1902130674, null), pj = new V(null, "type", "type", 1174270348), gp = new V(null, "your-version", "your-version", -351781765), Hf = new V(null, "alt-impl", "alt-impl", 670969595), hp = new V(null, "none", "none", 1333468478), zi = new V(null, "rep+", "rep+", -281382396), yh = new V("cljs.spec.alpha", "gfn", "cljs.spec.alpha/gfn", -593120375), Eh = new V("cljs.spec.alpha", "invalid", "cljs.spec.alpha/invalid", -1220295119), Di = new V("cljs.spec.alpha", "conform-all", "cljs.spec.alpha/conform-all", 45201917), Ei = new F(null, "p1__8967#", "p1__8967#", -1644498870, null);
+      var Al = new V(null, "nil", "nil", 99600501), Bl = new V(null, "async?", "async?", 1523057758), qe = new V(null, "size", "size", 1098693007), Cl = new V(null, "true-mos?", "true-mos?", 1663374015), Dl = new V(null, "string", "string", -1989541586), El = new V(null, "pattern", "pattern", 242135423), Fl = new V(null, "spying?", "spying?", 1753444487), Gl = new F(null, "js", "js", -886355190, null), gg = new F(null, "p1__9225#", "p1__9225#", 225913350, null), Hl = new F(null, "uuid", "uuid", -504564192, null), Xf = new F(null, "fn*", "fn*", -752876845, null), Ba = new V(null, "dup", "dup", 556298533), Il = new V(null, "enabled?", "enabled?", -1376075057), Yf = new V(null, "status", "status", -1997798413), ig = new V(null, "count", "count", 2139924085), ci = new V("cljs.spec.alpha", "nil", "cljs.spec.alpha/nil", 1733813950), Ai = new V("cljs.spec.alpha", "k", "cljs.spec.alpha/k", -1602615178), Jl = new V("rl", "reset", "rl/reset", -800926172), za = new V(null, "readably", "readably", 1129599760), Zf = new F("cljs.core", "count", "cljs.core/count", -921270233, null), Kl = new V(null, "any", "any", 1705907423), vf = new V(null, "period", "period", -352129191), li = new F("cljs.core", "map", "cljs.core/map", -338988913, null), $f = new F("cljs.core", "fn", "cljs.core/fn", -1065745098, null), Bi = new V("cljs.spec.alpha", "v", "cljs.spec.alpha/v", 552625740), Ll = new V(null, "fn", "fn", -1175266204), mi = new V(null, "amp", "amp", 271690571), Ml = new V(null, "?meta", "?meta", -793560773), kg = new V(null, "kind", "kind", -717265803), Kf = new V("cps", "normalized-by", "cps/normalized-by", 878262682), Nl = new V(null, "report", "report", 1394055010), Ol = new V(null, "qualifier", "qualifier", 125841738), Pl = new V(null, "appender", "appender", 1267426510), Pf = new V("cps", "size", "cps/size", 1098790769), Rf = new V(null, "cps", "cps", 685853525), Qf = new V(null, "pending", "pending", -220036727), lp = new V(null, "rotate", "rotate", 152705015), tl = new V(null, "default", "default", -1987822328), Ql = new V(null, "timestamp_", "timestamp_", -954533417), Rl = new V(null, "strable", "strable", 1877668047), Sl = new V(null, "days", "days", -1394072564), Tl = new V(null, "mins", "mins", 467369676), Ul = new V(null, "months", "months", -45571637), Vl = new V(null, "vargs", "vargs", -966597273), Wl = new V(null, "map", "map", 1371690461), Gh = new V(null, "conform-keys", "conform-keys", -1800041814), ej = new F(null, "set?", "set?", 1636014792, null), Xl = new V(null, "iso8601", "iso8601", 609352650), Yl = new V(null, "err", "err", -2089457205), Zl = new V(null, "whitelist", "whitelist", -979294437), $l = new V(null, "fatal", "fatal", 1874419888), Hh = new V("cljs.spec.alpha", "kfn", "cljs.spec.alpha/kfn", 672643897), Ih = new V(null, "gen-max", "gen-max", -793680445), am = new V(null, "hash_", "hash_", -827203612), bm = new V(null, "hash", "hash", -13781596), ki = new V(null, "max-count", "max-count", 1539185305), cm = new V(null, "msg_", "msg_", -1925147e3), Sf = new V(null, "bounded-ratio", "bounded-ratio", 1332865443), dm = new V(null, "error", "error", -978969032), em = new V(null, "println", "println", 1920840330), fm = new V(null, "waiting", "waiting", 895906735), gm = new V(null, "version", "version", 425292698), Yh = new V(null, "ps", "ps", 292358046), Uf = new V("erv.cps.core", "archi-factors", "erv.cps.core/archi-factors", 765622525), bg = new V(null, "bounding-period", "bounding-period", 1768663702), qh = new V("cljs.spec.alpha", "name", "cljs.spec.alpha/name", 205233570), hm = new V(null, "ms", "ms", -1152709733), im = new V(null, "?err", "?err", 549653299), mp = new V(null, "utils", "utils", -121060109), jm = new V(null, "cache?", "cache?", -1601953949), Th = new V(null, "p1", "p1", -936759954), Ph = new V(null, "p2", "p2", 905500641), ni = new V("cljs.spec.alpha", "describe", "cljs.spec.alpha/describe", 1883026911), km = new V(null, "list", "list", 765357683), lm = new V("edo", "degree", "edo/degree", 237203460), mm = new V(null, "config", "config", 994861415), Kk = new V(null, "parents", "parents", -2027538891), Lh = new V(null, "ret", "ret", -468222814), nm = new V(null, "rate-limit", "rate-limit", 1748082022), Zh = new V(null, "ks", "ks", 1900203942), di = new V("cljs.spec.alpha", "amp", "cljs.spec.alpha/amp", 831147508), om = new V(null, "?ns-str", "?ns-str", 2012733966), ug = new V(null, "graphs", "graphs", -1584479112), pm = new V(null, "min-level", "min-level", 1634684919), qm = new V("rl", "peek", "rl/peek", -291391771), rm = new V(null, "appender-id", "appender-id", -1917983538), Dg = new V(null, "scale", "scale", -230427353), Xh = new V("cljs.spec.alpha", "alt", "cljs.spec.alpha/alt", 523685437), sm = new V(null, "ns-blacklist", "ns-blacklist", 1957763142), tm = new V(null, "vargs_", "vargs_", 552132148), fj = new F("cljs.spec.alpha", "coll-of", "cljs.spec.alpha/coll-of", 1019430407, null), hj = new F("cljs.core", "->>", "cljs.core/->>", -1207871206, null), um = new V(null, "debug", "debug", -1608172596), Sh = new V(null, "id", "id", -1388402092), Hg = new V(null, "archi-set", "archi-set", 495795173), ag = new V(null, "set", "set", 304602554), vm = new V(null, "trace", "trace", -1082747415), Tf = new V(null, "ready", "ready", 1086465795), wm = new V(null, "?msg-fmt", "?msg-fmt", -852453891), xm = new F(null, "queue", "queue", -1198599890, null), ym = new V(null, "output_", "output_", -36797880), ri = new F("cljs.core", "set?", "cljs.core/set?", -1176684971, null), zm = new V("edo", "period", "edo/period", -352225367), Am = new V(null, "output-fn", "output-fn", 1600951539), Bm = new V(null, "?err_", "?err_", 789480858), Cm = new V(null, "level", "level", 1290497552), Aa = new V(null, "meta", "meta", 1499536964), Dm = new V(null, "deny", "deny", 1589338523), Gi = new F(null, "%", "%", -950237169, null), si = new F("cljs.core", "list?", "cljs.core/list?", -684796618, null), Ca = new V(null, "print-length", "print-length", 1931866356), Em = new V(null, "ns-filter", "ns-filter", 108598448), Fm = new V(null, "make", "make", -1284043325), oi = new V("cljs.spec.alpha", "kind-form", "cljs.spec.alpha/kind-form", -1047104697), Mk = new V(null, "ancestors", "ancestors", -776045424), Gm = new V(null, "p", "p", 151049309), Hm = new V(null, "hostname_", "hostname_", -2091647379), Im = new V(null, "moses", "moses", -780704400), Hi = new V("cljs.spec.alpha", "kvs->map", "cljs.spec.alpha/kvs->map", 579713455), Ii = new F(null, "k", "k", -505765866, null), Jg = new V("cps", "factors", "cps/factors", 1108767994), Jm = new V(null, "f", "f", -1597136552), cg = new F(null, "v", "v", 1661996586, null), Km = new V(null, "given", "given", 716253602), ui = new F("cljs.spec.alpha", "conformer", "cljs.spec.alpha/conformer", 2140085535, null), Lm = new V(null, "edo", "edo", 664006494), Mm = new V(null, "?line", "?line", -631853385), Nm = new V(null, "auto", "auto", -566279492), Om = new V("edo", "pattern", "edo/pattern", 242034639), Pm = new V(null, "hierarchy", "hierarchy", -1053470341), Qm = new V(null, "console", "console", 1228072057), Lg = new V(null, "ratio", "ratio", -926560044), pi2 = new V(null, "distinct", "distinct", -1788879121), Rm = new V(null, "inherit", "inherit", -1840815422), Jf = new V(null, "fallback-impl", "fallback-impl", -1501286995), Pg = new V(null, "full", "full", 436801220), Sm = new V(null, "warn", "warn", -436710552), Tm = new V(null, "ns-whitelist", "ns-whitelist", -1717299774), ei = new V("cljs.spec.alpha", "pcat", "cljs.spec.alpha/pcat", 26406623), kj = new V("erv.cps.core", "type", "erv.cps.core/type", -1302047896), Hj = new V(null, "keyword-fn", "keyword-fn", -64566675), np = new V(null, "ratioToCents", "ratioToCents", 2147177470), Um = new V(null, "middleware-fn", "middleware-fn", -61585752), Vm = new V(null, "deny-spec", "deny-spec", -1074984268), Wm = new V(null, "allow", "allow", -1857325745), Xm = new V(null, "years", "years", -1298579689), Ym = new F(null, "inst", "inst", -2008473268, null), qi = new V(null, "into", "into", -150836029), Oh = new V("cljs.spec.alpha", "rep", "cljs.spec.alpha/rep", 1483217317), oh = new V("cljs.spec.alpha", "op", "cljs.spec.alpha/op", -1269055252), ti = new V("cljs.spec.alpha", "cpred", "cljs.spec.alpha/cpred", -693471218), Zm = new V(null, "hours", "hours", 58380855), $m = new V(null, "secs", "secs", 1532330091), an = new V(null, "context", "context", -830191113), bn = new V(null, "instant", "instant", 655498374), Og = new F("cljs.core", "apply", "cljs.core/apply", 1757277831, null), lj = new V(null, "simple", "simple", -581868663), vi = new V(null, "min-count", "min-count", 1594709013), cn = new V(null, "raw-console?", "raw-console?", -2061489061), Lk = new V(null, "descendants", "descendants", 1824886031), mj = new V(null, "norm-fac", "norm-fac", 1175241557), nj = new V(null, "nodes", "nodes", -2099585805), dn = new V(null, "appenders", "appenders", 1245583998), en = new V(null, "mos", "mos", 1902052264), Rh = new V(null, "forms", "forms", 2045992350), ij = new V("erv.cps.core", "cps", "erv.cps.core/cps", 1942691201), fn = new V(null, "location", "location", 1815599388), Vf = new V(null, "val", "val", 128701612), gn = new V(null, "vector", "vector", 1902966158), hn = new V(null, "weeks", "weeks", 1844596125), gj = new V("erv.cps.core", "sub-cps-set", "erv.cps.core/sub-cps-set", -1884356686), wi = new F("cljs.core", "map?", "cljs.core/map?", -1390345523, null), ya = new V(null, "flush-on-newline", "flush-on-newline", -151457939), jn = new V(null, "min-version", "min-version", -1697197126), kn = new V(null, "blacklist", "blacklist", 1248093170), xi = new F("cljs.spec.alpha", "and", "cljs.spec.alpha/and", -2060279705, null), Kh = new V("cljs.spec.alpha", "accept", "cljs.spec.alpha/accept", 370988198), ln = new V(null, "fromPattern", "fromPattern", -381751332), mn = new V(null, "middleware", "middleware", 1462115504), nn = new V(null, "no-stacktrace?", "no-stacktrace?", 1701072694), on = new V(null, "msecs", "msecs", 1711980553), pn = new V(null, "allow-spec", "allow-spec", 448749872), dg = new F("cljs.core", "=", "cljs.core/=", -1891498332, null), Mi = new V("cljs.spec.alpha", "unknown", "cljs.spec.alpha/unknown", 651034818), qn = new V("rl", "all", "rl/all", 892118056), xf = new V(null, "more-marker", "more-marker", -14717935), rn = new V(null, "stacktrace-fonts", "stacktrace-fonts", 830799382), sn = new V("edo", "divisions", "edo/divisions", -1442383238), yo = new V(null, "req-id", "req-id", -471642231), oj = new V("cps", "type", "cps/type", 1175547714), zo = new V(null, "timestamp-opts", "timestamp-opts", -1359534807), Qh = new V(null, "splice", "splice", 449588165), Ao = new V(null, "?file", "?file", 1533429675), Bo = new V(null, "error-level?", "error-level?", 778415885), Ci = new F(null, "p1__8966#", "p1__8966#", -2146281877, null), fp = new V("edo", "original-degree", "edo/original-degree", -1225096234), yi = new F("cljs.core", "vector?", "cljs.core/vector?", -1550392028, null), Ni = new F("cljs.core", "zipmap", "cljs.core/zipmap", -1902130674, null), pj = new V(null, "type", "type", 1174270348), gp = new V(null, "your-version", "your-version", -351781765), Hf = new V(null, "alt-impl", "alt-impl", 670969595), hp = new V(null, "none", "none", 1333468478), zi = new V(null, "rep+", "rep+", -281382396), yh = new V("cljs.spec.alpha", "gfn", "cljs.spec.alpha/gfn", -593120375), Eh = new V("cljs.spec.alpha", "invalid", "cljs.spec.alpha/invalid", -1220295119), Di = new V("cljs.spec.alpha", "conform-all", "cljs.spec.alpha/conform-all", 45201917), Ei = new F(null, "p1__8967#", "p1__8967#", -1644498870, null);
       var qj = function qj2(a) {
         return new ld(null, function() {
           var c = H(a);
@@ -10426,7 +10426,7 @@ var require_lib = __commonJS({
         function e(Ga, qa, ba, Ra) {
           return Z.h(Ga, Ra);
         }
-        var f2 = Ig(c), h = T.h(f2, ki), k = T.h(f2, oi), l = T.j(f2, Ih, 20), m = T.h(f2, ti), n2 = T.h(f2, Gh), p = T.h(f2, ni), q = T.h(f2, pi), r = T.h(f2, Hh), w = T.h(f2, ig), z = T.h(f2, vi), A = T.h(f2, kg), K2 = T.h(f2, Di), M = T.h(f2, qi), ca = v(M) ? yc(M) : T.h(Si, k), la = new zg(function() {
+        var f2 = Ig(c), h = T.h(f2, ki), k = T.h(f2, oi), l = T.j(f2, Ih, 20), m = T.h(f2, ti), n2 = T.h(f2, Gh), p = T.h(f2, ni), q = T.h(f2, pi2), r = T.h(f2, Hh), w = T.h(f2, ig), z = T.h(f2, vi), A = T.h(f2, kg), K2 = T.h(f2, Di), M = T.h(f2, qi), ca = v(M) ? yc(M) : T.h(Si, k), la = new zg(function() {
           return zh.g(b);
         });
         return new Li(a, h, function(Ga) {
@@ -10723,13 +10723,13 @@ var require_lib = __commonJS({
       };
       zn.hc.i = zn.hc.d;
       zn.hc.u = zn.hc.d;
-      Dh(ij, ji(xi, ji(fj, ri, pi, true), ji(Xf, new W(null, 1, 5, X2, [gg], null), ji(hj, gg, ji(li, Zf), ji(Og, dg)))), jj(new W(null, 2, 5, X2, [ji(fj, ri, pi, true), ji($f, new W(null, 1, 5, X2, [Gi], null), ji(hj, Gi, ji(li, Zf), ji(Og, dg)))], null), new W(null, 2, 5, X2, [aj(ej, Fc, new u(null, 5, [Di, true, pi, true, oi, null, ni, ji(fj, ri, pi, true), ti, function(a) {
+      Dh(ij, ji(xi, ji(fj, ri, pi2, true), ji(Xf, new W(null, 1, 5, X2, [gg], null), ji(hj, gg, ji(li, Zf), ji(Og, dg)))), jj(new W(null, 2, 5, X2, [ji(fj, ri, pi2, true), ji($f, new W(null, 1, 5, X2, [Gi], null), ji(hj, Gi, ji(li, Zf), ji(Og, dg)))], null), new W(null, 2, 5, X2, [aj(ej, Fc, new u(null, 5, [Di, true, pi2, true, oi, null, ni, ji(fj, ri, pi2, true), ti, function(a) {
         var b = Xi(a);
         return b ? (b = Ec(a)) ? b : na(cj, a) : b;
       }], null), null), function(a) {
         return na(P, Y.h(O2, a));
       }], null), null));
-      Dh(gj, ji(fj, ij, pi, true), aj(ij, ij, new u(null, 5, [Di, true, pi, true, oi, null, ni, ji(fj, ij, pi, true), ti, function(a) {
+      Dh(gj, ji(fj, ij, pi2, true), aj(ij, ij, new u(null, 5, [Di, true, pi2, true, oi, null, ni, ji(fj, ij, pi2, true), ti, function(a) {
         var b = Xi(a);
         return b ? (b = Ec(a)) ? b : na(cj, a) : b;
       }], null), null));
@@ -12359,10 +12359,10 @@ var map = function(dict) {
   return dict.map;
 };
 var mapFlipped = function(dictFunctor) {
-  var map113 = map(dictFunctor);
+  var map114 = map(dictFunctor);
   return function(fa) {
     return function(f2) {
-      return map113(f2)(fa);
+      return map114(f2)(fa);
     };
   };
 };
@@ -12370,10 +12370,10 @@ var $$void = function(dictFunctor) {
   return map(dictFunctor)($$const(unit));
 };
 var voidLeft = function(dictFunctor) {
-  var map113 = map(dictFunctor);
+  var map114 = map(dictFunctor);
   return function(f2) {
     return function(x) {
-      return map113($$const(x))(f2);
+      return map114($$const(x))(f2);
     };
   };
 };
@@ -12391,29 +12391,29 @@ var apply = function(dict) {
 };
 var applyFirst = function(dictApply) {
   var apply1 = apply(dictApply);
-  var map27 = map(dictApply.Functor0());
+  var map29 = map(dictApply.Functor0());
   return function(a) {
     return function(b) {
-      return apply1(map27($$const)(a))(b);
+      return apply1(map29($$const)(a))(b);
     };
   };
 };
 var applySecond = function(dictApply) {
   var apply1 = apply(dictApply);
-  var map27 = map(dictApply.Functor0());
+  var map29 = map(dictApply.Functor0());
   return function(a) {
     return function(b) {
-      return apply1(map27($$const(identity2))(a))(b);
+      return apply1(map29($$const(identity2))(a))(b);
     };
   };
 };
 var lift2 = function(dictApply) {
   var apply1 = apply(dictApply);
-  var map27 = map(dictApply.Functor0());
+  var map29 = map(dictApply.Functor0());
   return function(f2) {
     return function(a) {
       return function(b) {
-        return apply1(map27(f2)(a))(b);
+        return apply1(map29(f2)(a))(b);
       };
     };
   };
@@ -12440,11 +12440,11 @@ var when = function(dictApplicative) {
   };
 };
 var liftA1 = function(dictApplicative) {
-  var apply5 = apply(dictApplicative.Apply0());
+  var apply6 = apply(dictApplicative.Apply0());
   var pure13 = pure(dictApplicative);
   return function(f2) {
     return function(a) {
-      return apply5(pure13(f2))(a);
+      return apply6(pure13(f2))(a);
     };
   };
 };
@@ -13705,8 +13705,8 @@ var traverseArrayImpl = function() {
       return xs.concat(ys);
     };
   }
-  return function(apply5) {
-    return function(map27) {
+  return function(apply6) {
+    return function(map29) {
       return function(pure11) {
         return function(f2) {
           return function(array) {
@@ -13715,14 +13715,14 @@ var traverseArrayImpl = function() {
                 case 0:
                   return pure11([]);
                 case 1:
-                  return map27(array1)(f2(array[bot]));
+                  return map29(array1)(f2(array[bot]));
                 case 2:
-                  return apply5(map27(array2)(f2(array[bot])))(f2(array[bot + 1]));
+                  return apply6(map29(array2)(f2(array[bot])))(f2(array[bot + 1]));
                 case 3:
-                  return apply5(apply5(map27(array3)(f2(array[bot])))(f2(array[bot + 1])))(f2(array[bot + 2]));
+                  return apply6(apply6(map29(array3)(f2(array[bot])))(f2(array[bot + 1])))(f2(array[bot + 2]));
                 default:
                   var pivot = bot + Math.floor((top3 - bot) / 4) * 2;
-                  return apply5(map27(concat22)(go(bot, pivot)))(go(pivot, top3));
+                  return apply6(map29(concat22)(go(bot, pivot)))(go(pivot, top3));
               }
             }
             return go(0, array.length);
@@ -15113,6 +15113,10 @@ var pow = function(n2) {
   };
 };
 var round = Math.round;
+var sin = Math.sin;
+
+// output/Data.Number/index.js
+var pi = 3.141592653589793;
 
 // output/Data.Int/index.js
 var top2 = /* @__PURE__ */ top(boundedInt);
@@ -15847,11 +15851,11 @@ var append1 = /* @__PURE__ */ append(semigroupList);
 var traversableList = {
   traverse: function(dictApplicative) {
     var Apply0 = dictApplicative.Apply0();
-    var map113 = map(Apply0.Functor0());
+    var map114 = map(Apply0.Functor0());
     var lift24 = lift2(Apply0);
     var pure13 = pure(dictApplicative);
     return function(f2) {
-      var $301 = map113(foldl2(flip(Cons.create))(Nil.value));
+      var $301 = map114(foldl2(flip(Cons.create))(Nil.value));
       var $302 = foldl2(function(acc) {
         var $304 = lift24(flip(Cons.create))(acc);
         return function($305) {
@@ -16737,8 +16741,8 @@ var traversableMap = {
   traverse: function(dictApplicative) {
     var pure11 = pure(dictApplicative);
     var Apply0 = dictApplicative.Apply0();
-    var apply5 = apply(Apply0);
-    var map113 = map(Apply0.Functor0());
+    var apply6 = apply(Apply0);
+    var map114 = map(Apply0.Functor0());
     return function(f2) {
       var go = function(v) {
         if (v instanceof Leaf) {
@@ -16746,7 +16750,7 @@ var traversableMap = {
         }
         ;
         if (v instanceof Node) {
-          return apply5(apply5(map113(function(l$prime) {
+          return apply6(apply6(map114(function(l$prime) {
             return function(v$prime) {
               return function(r$prime) {
                 return new Node(v.value0, v.value1, v.value2, v$prime, l$prime, r$prime);
@@ -16774,8 +16778,8 @@ var traversableWithIndexMap = {
   traverseWithIndex: function(dictApplicative) {
     var pure11 = pure(dictApplicative);
     var Apply0 = dictApplicative.Apply0();
-    var apply5 = apply(Apply0);
-    var map113 = map(Apply0.Functor0());
+    var apply6 = apply(Apply0);
+    var map114 = map(Apply0.Functor0());
     return function(f2) {
       var go = function(v) {
         if (v instanceof Leaf) {
@@ -16783,7 +16787,7 @@ var traversableWithIndexMap = {
         }
         ;
         if (v instanceof Node) {
-          return apply5(apply5(map113(function(l$prime) {
+          return apply6(apply6(map114(function(l$prime) {
             return function(v$prime) {
               return function(r$prime) {
                 return new Node(v.value0, v.value1, v.value2, v$prime, l$prime, r$prime);
@@ -16915,7 +16919,7 @@ var semiringRatio = function(dictOrd) {
     var one2 = one(Semiring0);
     var reduce22 = reduce1(dictEuclideanRing);
     var mul4 = mul(Semiring0);
-    var add3 = add(Semiring0);
+    var add4 = add(Semiring0);
     return {
       one: new Ratio(one2, one2),
       mul: function(v) {
@@ -16926,7 +16930,7 @@ var semiringRatio = function(dictOrd) {
       zero: new Ratio(zero(Semiring0), one2),
       add: function(v) {
         return function(v1) {
-          return reduce22(add3(mul4(v.value0)(v1.value1))(mul4(v.value1)(v1.value0)))(mul4(v.value1)(v1.value1));
+          return reduce22(add4(mul4(v.value0)(v1.value1))(mul4(v.value1)(v1.value0)))(mul4(v.value1)(v1.value1));
         };
       }
     };
@@ -17253,6 +17257,16 @@ var concat = function(xss) {
 };
 var filterImpl = function(f2, xs) {
   return xs.filter(f2);
+};
+var scanlImpl = function(f2, b, xs) {
+  var len = xs.length;
+  var acc = b;
+  var out = new Array(len);
+  for (var i = 0; i < len; i++) {
+    acc = f2(acc)(xs[i]);
+    out[i] = acc;
+  }
+  return out;
 };
 var sortByImpl = function() {
   function mergeFromTo(compare5, fromOrdering, xs1, xs2, from3, to) {
@@ -17626,6 +17640,8 @@ var runFn4 = function(fn) {
 };
 
 // output/Data.Array/index.js
+var apply3 = /* @__PURE__ */ apply(applyMaybe);
+var map6 = /* @__PURE__ */ map(functorMaybe);
 var append2 = /* @__PURE__ */ append(semigroupArray);
 var zipWith = /* @__PURE__ */ runFn3(zipWithImpl);
 var zip = /* @__PURE__ */ function() {
@@ -17688,11 +17704,39 @@ var splitAt = function(v) {
     };
   };
 };
+var scanl2 = /* @__PURE__ */ runFn3(scanlImpl);
 var replicate = /* @__PURE__ */ runFn2(replicateImpl);
 var range2 = /* @__PURE__ */ runFn2(rangeImpl);
+var $$null = function(xs) {
+  return length(xs) === 0;
+};
+var init = function(xs) {
+  if ($$null(xs)) {
+    return Nothing.value;
+  }
+  ;
+  if (otherwise) {
+    return new Just(slice(0)(length(xs) - 1 | 0)(xs));
+  }
+  ;
+  throw new Error("Failed pattern match at Data.Array (line 351, column 1 - line 351, column 45): " + [xs.constructor.name]);
+};
 var index = /* @__PURE__ */ function() {
   return runFn4(indexImpl)(Just.create)(Nothing.value);
 }();
+var last = function(xs) {
+  return index(xs)(length(xs) - 1 | 0);
+};
+var unsnoc = function(xs) {
+  return apply3(map6(function(v) {
+    return function(v1) {
+      return {
+        init: v,
+        last: v1
+      };
+    };
+  })(init(xs)))(last(xs));
+};
 var head = function(xs) {
   return index(xs)(0);
 };
@@ -17834,7 +17878,7 @@ var trim = function(s) {
 };
 
 // output/Data.String.Common/index.js
-var $$null = function(s) {
+var $$null2 = function(s) {
   return s === "";
 };
 
@@ -17854,7 +17898,7 @@ var $runtime_lazy6 = function(name2, moduleName, init3) {
   };
 };
 var fromEnum7 = /* @__PURE__ */ fromEnum(boundedEnumChar);
-var map6 = /* @__PURE__ */ map(functorMaybe);
+var map7 = /* @__PURE__ */ map(functorMaybe);
 var unfoldr2 = /* @__PURE__ */ unfoldr(unfoldableArray);
 var div2 = /* @__PURE__ */ div(euclideanRingInt);
 var mod2 = /* @__PURE__ */ mod(euclideanRingInt);
@@ -17902,7 +17946,7 @@ var uncons3 = function(s) {
   });
 };
 var unconsButWithTuple = function(s) {
-  return map6(function(v) {
+  return map7(function(v) {
     return new Tuple(v.head, v.tail);
   })(uncons3(s));
 };
@@ -18112,62 +18156,6 @@ var Remove = /* @__PURE__ */ function() {
   Remove2.value = new Remove2();
   return Remove2;
 }();
-var XTempo = /* @__PURE__ */ function() {
-  function XTempo2() {
-  }
-  ;
-  XTempo2.value = new XTempo2();
-  return XTempo2;
-}();
-var CPM = /* @__PURE__ */ function() {
-  function CPM2(value0) {
-    this.value0 = value0;
-  }
-  ;
-  CPM2.create = function(value0) {
-    return new CPM2(value0);
-  };
-  return CPM2;
-}();
-var BPM = /* @__PURE__ */ function() {
-  function BPM2(value0, value1) {
-    this.value0 = value0;
-    this.value1 = value1;
-  }
-  ;
-  BPM2.create = function(value0) {
-    return function(value1) {
-      return new BPM2(value0, value1);
-    };
-  };
-  return BPM2;
-}();
-var CPS = /* @__PURE__ */ function() {
-  function CPS2(value0) {
-    this.value0 = value0;
-  }
-  ;
-  CPS2.create = function(value0) {
-    return new CPS2(value0);
-  };
-  return CPS2;
-}();
-var Prop = /* @__PURE__ */ function() {
-  function Prop2(value0, value1, value2) {
-    this.value0 = value0;
-    this.value1 = value1;
-    this.value2 = value2;
-  }
-  ;
-  Prop2.create = function(value0) {
-    return function(value1) {
-      return function(value2) {
-        return new Prop2(value0, value1, value2);
-      };
-    };
-  };
-  return Prop2;
-}();
 var Subset = /* @__PURE__ */ function() {
   function Subset2(value0) {
     this.value0 = value0;
@@ -18270,6 +18258,82 @@ var SpreadBlock = /* @__PURE__ */ function() {
   ;
   SpreadBlock2.value = new SpreadBlock2();
   return SpreadBlock2;
+}();
+var XTempo = /* @__PURE__ */ function() {
+  function XTempo2() {
+  }
+  ;
+  XTempo2.value = new XTempo2();
+  return XTempo2;
+}();
+var CPM = /* @__PURE__ */ function() {
+  function CPM2(value0) {
+    this.value0 = value0;
+  }
+  ;
+  CPM2.create = function(value0) {
+    return new CPM2(value0);
+  };
+  return CPM2;
+}();
+var BPM = /* @__PURE__ */ function() {
+  function BPM2(value0, value1) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+  ;
+  BPM2.create = function(value0) {
+    return function(value1) {
+      return new BPM2(value0, value1);
+    };
+  };
+  return BPM2;
+}();
+var CPS = /* @__PURE__ */ function() {
+  function CPS2(value0) {
+    this.value0 = value0;
+  }
+  ;
+  CPS2.create = function(value0) {
+    return new CPS2(value0);
+  };
+  return CPS2;
+}();
+var Prop = /* @__PURE__ */ function() {
+  function Prop2(value0, value1, value2) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+  }
+  ;
+  Prop2.create = function(value0) {
+    return function(value1) {
+      return function(value2) {
+        return new Prop2(value0, value1, value2);
+      };
+    };
+  };
+  return Prop2;
+}();
+var Sin = /* @__PURE__ */ function() {
+  function Sin2(value0) {
+    this.value0 = value0;
+  }
+  ;
+  Sin2.create = function(value0) {
+    return new Sin2(value0);
+  };
+  return Sin2;
+}();
+var Dur = /* @__PURE__ */ function() {
+  function Dur2(value0) {
+    this.value0 = value0;
+  }
+  ;
+  Dur2.create = function(value0) {
+    return new Dur2(value0);
+  };
+  return Dur2;
 }();
 var Onset = /* @__PURE__ */ function() {
   function Onset2(value0, value1) {
@@ -18927,7 +18991,7 @@ var Voice = /* @__PURE__ */ function() {
 }();
 
 // output/Data.List/index.js
-var map7 = /* @__PURE__ */ map(functorMaybe);
+var map8 = /* @__PURE__ */ map(functorMaybe);
 var bimap2 = /* @__PURE__ */ bimap(bifunctorStep);
 var foldl3 = /* @__PURE__ */ foldl(foldableList);
 var bind3 = /* @__PURE__ */ bind(bindList);
@@ -18948,7 +19012,7 @@ var uncons4 = function(v) {
 };
 var toUnfoldable2 = function(dictUnfoldable) {
   return unfoldr(dictUnfoldable)(function(xs) {
-    return map7(function(rec) {
+    return map8(function(rec) {
       return new Tuple(rec.head, rec.tail);
     })(uncons4(xs));
   });
@@ -18986,7 +19050,7 @@ var reverse2 = /* @__PURE__ */ function() {
   };
   return go(Nil.value);
 }();
-var unsnoc = function(lst) {
+var unsnoc2 = function(lst) {
   var go = function($copy_v) {
     return function($copy_v1) {
       var $tco_var_v = $copy_v;
@@ -19022,7 +19086,7 @@ var unsnoc = function(lst) {
       return $tco_result;
     };
   };
-  return map7(function(h) {
+  return map8(function(h) {
     return {
       init: reverse2(h.revInit),
       last: h.last
@@ -19174,11 +19238,11 @@ var manyRec = function(dictMonadRec) {
   return function(dictAlternative) {
     var Alt0 = dictAlternative.Plus1().Alt0();
     var alt9 = alt(Alt0);
-    var map113 = map(Alt0.Functor0());
+    var map114 = map(Alt0.Functor0());
     var pure11 = pure(dictAlternative.Applicative0());
     return function(p) {
       var go = function(acc) {
-        return bind15(alt9(map113(Loop.create)(p))(pure11(new Done(unit))))(function(aa) {
+        return bind15(alt9(map114(Loop.create)(p))(pure11(new Done(unit))))(function(aa) {
           return pure11(bimap2(function(v) {
             return new Cons(v, acc);
           })(function(v) {
@@ -19191,12 +19255,12 @@ var manyRec = function(dictMonadRec) {
   };
 };
 var some2 = function(dictAlternative) {
-  var apply5 = apply(dictAlternative.Applicative0().Apply0());
-  var map113 = map(dictAlternative.Plus1().Alt0().Functor0());
+  var apply6 = apply(dictAlternative.Applicative0().Apply0());
+  var map114 = map(dictAlternative.Plus1().Alt0().Functor0());
   return function(dictLazy) {
     var defer4 = defer(dictLazy);
     return function(v) {
-      return apply5(map113(Cons.create)(v))(defer4(function(v1) {
+      return apply6(map114(Cons.create)(v))(defer4(function(v1) {
         return many2(dictAlternative)(dictLazy)(v);
       }));
     };
@@ -19216,10 +19280,10 @@ var length4 = /* @__PURE__ */ foldl3(function(acc) {
     return acc + 1 | 0;
   };
 })(0);
-var init = function(lst) {
-  return map7(function(v) {
+var init2 = function(lst) {
+  return map8(function(v) {
     return v.init;
-  })(unsnoc(lst));
+  })(unsnoc2(lst));
 };
 var fromFoldable2 = function(dictFoldable) {
   return foldr(dictFoldable)(Cons.create)(Nil.value);
@@ -19265,6 +19329,636 @@ var filter3 = function(p) {
 };
 var concat2 = function(v) {
   return bind3(v)(identity10);
+};
+
+// output/DurationAndIndex/index.js
+var append3 = /* @__PURE__ */ append(semigroupArray);
+var map9 = /* @__PURE__ */ map(functorArray);
+var add1 = /* @__PURE__ */ add(semiringNumber);
+var min3 = /* @__PURE__ */ min(ordInt);
+var fromFoldable3 = /* @__PURE__ */ fromFoldable2(foldableArray);
+var foldl4 = /* @__PURE__ */ foldl(foldableArray);
+var map1 = /* @__PURE__ */ map(functorList);
+var foldl12 = /* @__PURE__ */ foldl(foldableList);
+var scanl3 = /* @__PURE__ */ scanl(traversableList);
+var sum2 = /* @__PURE__ */ sum(foldableList)(semiringNumber);
+var fromFoldable1 = /* @__PURE__ */ fromFoldable(foldableList);
+var right = function(v) {
+  var splitted = splitAt(v.value0.value0)(v.value1.value1);
+  return new Tuple(new Tuple(v.value0.value0, v.value0.value1 - v.value0.value0 | 0), new Tuple(zipWith(append3)(v.value1.value0)(splitted.before), splitted.after));
+};
+var onsetsFromBlock = function(onsets) {
+  return function(block) {
+    return function(dur) {
+      return map9(function(v) {
+        return new Onset(v.value0, block + v.value1 * dur);
+      })(onsets);
+    };
+  };
+};
+var onsetsFromBlocks = function(blocks) {
+  return function(onsets) {
+    return function(dur) {
+      return concat(map9(function(block) {
+        return onsetsFromBlock(onsets)(block)(dur);
+      })(blocks));
+    };
+  };
+};
+var nLastBlock = function(we) {
+  return function(x1) {
+    return function(dur) {
+      var wEndBlocks = (we - x1) / dur;
+      var nOfLastBlock = function() {
+        if (wEndBlocks < 0) {
+          return Nothing.value;
+        }
+        ;
+        if (otherwise) {
+          return new Just(floor2(wEndBlocks));
+        }
+        ;
+        throw new Error("Failed pattern match at DurationAndIndex (line 229, column 9 - line 231, column 48): " + []);
+      }();
+      return nOfLastBlock;
+    };
+  };
+};
+var nFirstBlock = function(v) {
+  return function(v1) {
+    return function(v2) {
+      if (v2 === 0) {
+        return 0;
+      }
+      ;
+      var xwsB = (v - v1) / v2;
+      var nOfNxBlock = function() {
+        if (xwsB <= 0) {
+          return 0;
+        }
+        ;
+        if (otherwise) {
+          return ceil2(xwsB);
+        }
+        ;
+        throw new Error("Failed pattern match at DurationAndIndex (line 222, column 9 - line 224, column 34): " + []);
+      }();
+      return nOfNxBlock;
+    };
+  };
+};
+var left = function(v) {
+  var splitted = splitAt(v.value0.value1)(v.value1.value0);
+  return new Tuple(new Tuple(v.value0.value1, v.value0.value0 - v.value0.value1 | 0), new Tuple(zipWith(append3)(splitted.before)(v.value1.value1), splitted.after));
+};
+var getVoiceIndex = function(xws) {
+  return function(we) {
+    return function(x1) {
+      return function(dur) {
+        var nOfLstBlock = nLastBlock(we)(x1)(dur);
+        var nOfFstBlock = nFirstBlock(xws)(x1)(dur);
+        var nOfBlocks = function() {
+          if (nOfLstBlock instanceof Nothing) {
+            return [];
+          }
+          ;
+          if (nOfLstBlock instanceof Just) {
+            return range2(nOfFstBlock)(nOfLstBlock.value0);
+          }
+          ;
+          throw new Error("Failed pattern match at DurationAndIndex (line 199, column 19 - line 201, column 49): " + [nOfLstBlock.constructor.name]);
+        }();
+        return nOfBlocks;
+      };
+    };
+  };
+};
+var getDur = function(v) {
+  return v.value1;
+};
+var getBool = function(v) {
+  return v.value0;
+};
+var funquilla = function(voicesIndexes) {
+  return function(onsetIndexes) {
+    return function(lenOnsets) {
+      var funquilla$prime = function(onsetIndexes1) {
+        return function(lenOnsets1) {
+          return function(voiceIndex) {
+            return map9(function(onsetIndex) {
+              return (voiceIndex * lenOnsets1 | 0) + onsetIndex | 0;
+            })(onsetIndexes1);
+          };
+        };
+      };
+      return map9(function(voiceIndex) {
+        return funquilla$prime(onsetIndexes)(lenOnsets)(voiceIndex);
+      })(voicesIndexes);
+    };
+  };
+};
+var bpmToFreq = function(bpm2) {
+  return bpm2 / 60;
+};
+var bpmToDur = function(bpm2) {
+  return 1 / bpmToFreq(bpm2);
+};
+var durInSecs = function(dur) {
+  return function(bpm2) {
+    return dur * bpmToDur(bpm2);
+  };
+};
+var blockToPos = function(is) {
+  return function(x1) {
+    return function(dur) {
+      return map9(function(i) {
+        return x1 + toNumber(i) * dur;
+      })(is);
+    };
+  };
+};
+var getBlocks = function(xws) {
+  return function(we) {
+    return function(x1) {
+      return function(dur) {
+        var nOfLstBlock = nLastBlock(we)(x1)(dur);
+        var nOfFstBlock = nFirstBlock(xws)(x1)(dur);
+        var nsOfBlocks = function() {
+          if (nOfLstBlock instanceof Nothing) {
+            return [];
+          }
+          ;
+          if (nOfLstBlock instanceof Just) {
+            return range2(nOfFstBlock)(nOfLstBlock.value0);
+          }
+          ;
+          throw new Error("Failed pattern match at DurationAndIndex (line 209, column 20 - line 211, column 49): " + [nOfLstBlock.constructor.name]);
+        }();
+        return blockToPos(nsOfBlocks)(x1)(dur);
+      };
+    };
+  };
+};
+var blRotated = function(rot) {
+  return function(patt) {
+    var x = splitAt(rot)(patt);
+    return append3(x.after)(x.before);
+  };
+};
+var bjorklund$prime = function($copy_v) {
+  var $tco_done = false;
+  var $tco_result;
+  function $tco_loop(v) {
+    var $88 = min3(v.value0.value0)(v.value0.value1) <= 1;
+    if ($88) {
+      $tco_done = true;
+      return new Tuple(v.value0, v.value1);
+    }
+    ;
+    $copy_v = function() {
+      var $89 = v.value0.value0 > v.value0.value1;
+      if ($89) {
+        return left(new Tuple(v.value0, v.value1));
+      }
+      ;
+      return right(new Tuple(v.value0, v.value1));
+    }();
+    return;
+  }
+  ;
+  while (!$tco_done) {
+    $tco_result = $tco_loop($copy_v);
+  }
+  ;
+  return $tco_result;
+};
+var bjorklund = function(v) {
+  var x = replicate(v.value0)([true]);
+  var j = v.value1 - v.value0 | 0;
+  var y = replicate(j)([false]);
+  var v1 = bjorklund$prime(new Tuple(new Tuple(v.value0, j), new Tuple(x, y)));
+  return append3(concat(v1.value1.value0))(concat(v1.value1.value1));
+};
+var simplifyBjorklund = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v instanceof Simple) {
+          var xs = fromFoldable3(map9(function(r) {
+            var $106 = r === true;
+            if ($106) {
+              return X.value;
+            }
+            ;
+            return O.value;
+          })(blRotated(v3)(bjorklund(new Tuple(v1, v2)))));
+          return new Rhythmics(xs);
+        }
+        ;
+        if (v instanceof K) {
+          var patto = new Rhythmics(fromFoldable3(replicate(length4(rhythmicToOnsets(v.value0)))(O.value)));
+          var xs = fromFoldable3(map9(function(r) {
+            var $107 = r === true;
+            if ($107) {
+              return v.value0;
+            }
+            ;
+            return patto;
+          })(blRotated(v3)(bjorklund(new Tuple(v1, v2)))));
+          return new Rhythmics(xs);
+        }
+        ;
+        if (v instanceof InvK) {
+          var patto = new Rhythmics(fromFoldable3(replicate(length4(rhythmicToOnsets(v.value0)))(O.value)));
+          var xs = fromFoldable3(map9(function(r) {
+            var $109 = r === true;
+            if ($109) {
+              return patto;
+            }
+            ;
+            return v.value0;
+          })(blRotated(v3)(bjorklund(new Tuple(v1, v2)))));
+          return new Rhythmics(xs);
+        }
+        ;
+        if (v instanceof Full) {
+          var xs = fromFoldable3(map9(function(r) {
+            var $111 = r === true;
+            if ($111) {
+              return v.value0;
+            }
+            ;
+            return v.value1;
+          })(blRotated(v3)(bjorklund(new Tuple(v1, v2)))));
+          return new Rhythmics(xs);
+        }
+        ;
+        throw new Error("Failed pattern match at DurationAndIndex (line 142, column 1 - line 142, column 63): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+      };
+    };
+  };
+};
+var rhythmicToVoiceDuration = function(v) {
+  if (v instanceof X) {
+    return 1;
+  }
+  ;
+  if (v instanceof O) {
+    return 1;
+  }
+  ;
+  if (v instanceof Sd) {
+    return 1;
+  }
+  ;
+  if (v instanceof Repeat) {
+    var x = replicate(v.value1)(rhythmicToVoiceDuration(v.value0));
+    return foldl4(add1)(0)(x);
+  }
+  ;
+  if (v instanceof Bjorklund) {
+    return rhythmicToVoiceDuration(simplifyBjorklund(v.value0)(v.value1)(v.value2)(v.value3));
+  }
+  ;
+  if (v instanceof Rhythmics) {
+    var x = map1(function(x1) {
+      return rhythmicToVoiceDuration(x1);
+    })(v.value0);
+    return foldl12(add1)(0)(x);
+  }
+  ;
+  throw new Error("Failed pattern match at DurationAndIndex (line 54, column 1 - line 54, column 45): " + [v.constructor.name]);
+};
+var rhythmicToOnsets = function(rhy) {
+  var voiceDur = rhythmicToVoiceDuration(rhy);
+  var rhythmicSegments = onsetDurations(1)(rhy);
+  var durInPercentOfEvents = new Cons(0, fromMaybe(fromFoldable3([]))(init2(scanl3(add1)(0)(map1(function(x) {
+    return x / voiceDur;
+  })(map1(getDur)(rhythmicSegments))))));
+  return zipWith2(function(x) {
+    return function(y) {
+      return new Onset(x, y);
+    };
+  })(map1(getBool)(rhythmicSegments))(durInPercentOfEvents);
+};
+var onsetDurations$prime = function(v) {
+  return function(v1) {
+    if (v1 instanceof X) {
+      return fromFoldable3([new Onset(true, v)]);
+    }
+    ;
+    if (v1 instanceof O) {
+      return fromFoldable3([new Onset(false, v)]);
+    }
+    ;
+    if (v1 instanceof Sd) {
+      return onsetDurations$prime(v)(v1.value0);
+    }
+    ;
+    if (v1 instanceof Repeat) {
+      var newDur = v / toNumber(v1.value1);
+      return concat2(map1(function(x) {
+        return onsetDurations$prime(newDur)(x);
+      })(fromFoldable3(replicate(v1.value1)(v1.value0))));
+    }
+    ;
+    if (v1 instanceof Bjorklund) {
+      return onsetDurations(v)(simplifyBjorklund(v1.value0)(v1.value1)(v1.value2)(v1.value3));
+    }
+    ;
+    if (v1 instanceof Rhythmics) {
+      var newDur = v / toNumber(length4(v1.value0));
+      return concat2(map1(function(x) {
+        return onsetDurations$prime(newDur)(x);
+      })(v1.value0));
+    }
+    ;
+    throw new Error("Failed pattern match at DurationAndIndex (line 79, column 1 - line 79, column 51): " + [v.constructor.name, v1.constructor.name]);
+  };
+};
+var onsetDurations = function(v) {
+  return function(v1) {
+    if (v1 instanceof X) {
+      return fromFoldable3([new Onset(true, v)]);
+    }
+    ;
+    if (v1 instanceof O) {
+      return fromFoldable3([new Onset(false, v)]);
+    }
+    ;
+    if (v1 instanceof Sd) {
+      return onsetDurations$prime(v)(v1.value0);
+    }
+    ;
+    if (v1 instanceof Repeat) {
+      return concat2(map1(function(x) {
+        return onsetDurations(v)(x);
+      })(fromFoldable3(replicate(v1.value1)(v1.value0))));
+    }
+    ;
+    if (v1 instanceof Bjorklund) {
+      return onsetDurations(v)(simplifyBjorklund(v1.value0)(v1.value1)(v1.value2)(v1.value3));
+    }
+    ;
+    if (v1 instanceof Rhythmics) {
+      return concat2(map1(function(x) {
+        return onsetDurations(v)(x);
+      })(v1.value0));
+    }
+    ;
+    throw new Error("Failed pattern match at DurationAndIndex (line 71, column 1 - line 71, column 50): " + [v.constructor.name, v1.constructor.name]);
+  };
+};
+var durFromRhythmic = function(v) {
+  return function(v1) {
+    if (v instanceof X) {
+      return durInSecs(1)(v1);
+    }
+    ;
+    if (v instanceof O) {
+      return durInSecs(1)(v1);
+    }
+    ;
+    if (v instanceof Sd) {
+      return durInSecs(1)(v1);
+    }
+    ;
+    if (v instanceof Repeat) {
+      return durFromRhythmic(v.value0)(v1) * toNumber(v.value1);
+    }
+    ;
+    if (v instanceof Rhythmics) {
+      return sum2(map1(function(x) {
+        return durFromRhythmic(x)(v1);
+      })(v.value0));
+    }
+    ;
+    if (v instanceof Bjorklund) {
+      return durFromRhythmic(simplifyBjorklund(v.value0)(v.value1)(v.value2)(v.value3))(v1);
+    }
+    ;
+    throw new Error("Failed pattern match at DurationAndIndex (line 46, column 1 - line 46, column 47): " + [v.constructor.name, v1.constructor.name]);
+  };
+};
+var simplifyRepeat = function($copy_v) {
+  return function($copy_v1) {
+    var $tco_var_v = $copy_v;
+    var $tco_done = false;
+    var $tco_result;
+    function $tco_loop(v, v1) {
+      if (v instanceof X) {
+        $tco_done = true;
+        return new Rhythmics(fromFoldable3(replicate(v1)(X.value)));
+      }
+      ;
+      if (v instanceof O) {
+        $tco_done = true;
+        return new Rhythmics(fromFoldable3(replicate(v1)(O.value)));
+      }
+      ;
+      if (v instanceof Sd) {
+        $tco_done = true;
+        return new Rhythmics(map1(function(r) {
+          return new Sd(r);
+        })(fromFoldable3(replicate(v1)(v.value0))));
+      }
+      ;
+      if (v instanceof Repeat) {
+        var n2 = round2(toNumber(v1) * toNumber(v.value1));
+        $tco_var_v = v.value0;
+        $copy_v1 = n2;
+        return;
+      }
+      ;
+      if (v instanceof Bjorklund) {
+        $tco_var_v = simplifyBjorklund(v.value0)(v.value1)(v.value2)(v.value3);
+        $copy_v1 = v1;
+        return;
+      }
+      ;
+      if (v instanceof Rhythmics) {
+        $tco_done = true;
+        return new Rhythmics(fromFoldable3(concat(replicate(v1)(fromFoldable1(v.value0)))));
+      }
+      ;
+      throw new Error("Failed pattern match at DurationAndIndex (line 185, column 1 - line 185, column 45): " + [v.constructor.name, v1.constructor.name]);
+    }
+    ;
+    while (!$tco_done) {
+      $tco_result = $tco_loop($tco_var_v, $copy_v1);
+    }
+    ;
+    return $tco_result;
+  };
+};
+var rhythmicStructIndex$prime = function(v) {
+  return function(v1) {
+    if (v instanceof X) {
+      return [v1];
+    }
+    ;
+    if (v instanceof O) {
+      return [v1];
+    }
+    ;
+    if (v instanceof Rhythmics) {
+      var zipped = zip(fromFoldable1(v.value0))(range2(0)(length4(v.value0) - 1 | 0));
+      return concat(map9(function(v2) {
+        return rhythmicStructIndex$prime(v2.value0)(snoc(v1)(v2.value1));
+      })(zipped));
+    }
+    ;
+    if (v instanceof Sd) {
+      return rhythmicStructIndex$prime(v.value0)(v1);
+    }
+    ;
+    if (v instanceof Repeat) {
+      return rhythmicStructIndex$prime(simplifyRepeat(v.value0)(v.value1))(v1);
+    }
+    ;
+    if (v instanceof Bjorklund) {
+      return rhythmicStructIndex$prime(simplifyBjorklund(v.value0)(v.value1)(v.value2)(v.value3))(v1);
+    }
+    ;
+    throw new Error("Failed pattern match at DurationAndIndex (line 126, column 1 - line 126, column 66): " + [v.constructor.name, v1.constructor.name]);
+  };
+};
+var rhythmicStructIndex = function(v) {
+  return function(v1) {
+    if (v instanceof X) {
+      return [v1];
+    }
+    ;
+    if (v instanceof O) {
+      return [v1];
+    }
+    ;
+    if (v instanceof Rhythmics) {
+      var zipped = zip(fromFoldable1(v.value0))(range2(0)(length4(v.value0) - 1 | 0));
+      return concat(map9(function(v2) {
+        return rhythmicStructIndex(v2.value0)([v2.value1]);
+      })(zipped));
+    }
+    ;
+    if (v instanceof Repeat) {
+      return rhythmicStructIndex(simplifyRepeat(v.value0)(v.value1))(v1);
+    }
+    ;
+    if (v instanceof Sd) {
+      return rhythmicStructIndex$prime(v.value0)(v1);
+    }
+    ;
+    if (v instanceof Bjorklund) {
+      return rhythmicStructIndex(simplifyBjorklund(v.value0)(v.value1)(v.value2)(v.value3))(v1);
+    }
+    ;
+    throw new Error("Failed pattern match at DurationAndIndex (line 117, column 1 - line 117, column 65): " + [v.constructor.name, v1.constructor.name]);
+  };
+};
+var assambleIndex = function(vs) {
+  return function(st) {
+    return function(es) {
+      var xs = map9(function(e) {
+        return zip(st)(e);
+      })(es);
+      var f2 = function(v) {
+        return function(xs1) {
+          return map9(function(x) {
+            return new Index(v, fst(x), snd(x));
+          })(xs1);
+        };
+      };
+      return concat(zipWith(f2)(vs)(xs));
+    };
+  };
+};
+var getIndexes = function(rhythmic2) {
+  return function(xws) {
+    return function(we) {
+      return function(x1) {
+        return function(dur) {
+          var voiceIndexes = getVoiceIndex(xws)(we)(x1)(dur);
+          var structIndexes = rhythmicStructIndex(rhythmic2)([0]);
+          var lenOnset = length4(rhythmicToOnsets(rhythmic2));
+          var eventIndexesPerVoice = range2(0)(lenOnset - 1 | 0);
+          var eventIndexes = funquilla(voiceIndexes)(eventIndexesPerVoice)(lenOnset);
+          return assambleIndex(voiceIndexes)(structIndexes)(eventIndexes);
+        };
+      };
+    };
+  };
+};
+
+// output/Aceleracion/index.js
+var add2 = /* @__PURE__ */ add(semiringNumber);
+var map10 = /* @__PURE__ */ map(functorList);
+var map12 = /* @__PURE__ */ map(functorArray);
+var fromFoldable4 = /* @__PURE__ */ fromFoldable(foldableList);
+var sum3 = /* @__PURE__ */ sum(foldableArray)(semiringNumber);
+var fromFoldable12 = /* @__PURE__ */ fromFoldable2(foldableArray);
+var sinusoidalAcceleration = function(frequency) {
+  return function(currentTime) {
+    return function(amplitude) {
+      return function(phase) {
+        return amplitude * sin(2 * pi * frequency * currentTime + phase);
+      };
+    };
+  };
+};
+var rhythmicToSinDur = function(rhythmic2) {
+  return function(freq) {
+    return function(min$prime) {
+      return function(max$prime) {
+        return function(ph) {
+          var phase = function() {
+            var $18 = ph === 0;
+            if ($18) {
+              return 0;
+            }
+            ;
+            return pi / ph;
+          }();
+          var onsetPos = map10(function(v) {
+            return v.value1;
+          })(rhythmicToOnsets(rhythmic2));
+          var onsetDur = map12(function(v) {
+            return v.value1;
+          })(fromFoldable4(onsetDurations(1)(rhythmic2)));
+          var max3 = max$prime / min$prime;
+          var amp = (max3 - 1) / 2;
+          var onsetAcc = fromFoldable4(map10(function(pos) {
+            return sinusoidalAcceleration(freq)(pos)(amp)(phase);
+          })(onsetPos));
+          var zipped = zip(onsetDur)(onsetAcc);
+          return map12(function(v) {
+            return v.value0 / (1 + (amp + v.value1));
+          })(zipped);
+        };
+      };
+    };
+  };
+};
+var rhythmicToOnsetsSin = function(rhy) {
+  return function(osc) {
+    return function(min4) {
+      return function(max3) {
+        return function(ph) {
+          var rhyDur = rhythmicToSinDur(rhy)(osc)(min4)(max3)(ph);
+          var onsets = map12(function(v) {
+            return v.value0;
+          })(fromFoldable4(rhythmicToOnsets(rhy)));
+          var folded$prime = fromMaybe({
+            init: [],
+            last: 2.666
+          })(unsnoc(scanl2(add2)(0)(rhyDur)));
+          var pos = map12(function(fo) {
+            return fo / sum3(rhyDur);
+          })(cons(0)(folded$prime.init));
+          return fromFoldable12(zipWith(Onset.create)(onsets)(pos));
+        };
+      };
+    };
+  };
 };
 
 // output/Control.Monad.Error.Class/index.js
@@ -19398,10 +20092,10 @@ var Stop = /* @__PURE__ */ function() {
 }();
 var monadTransParserT = {
   lift: function(dictMonad) {
-    var map27 = map(dictMonad.Bind1().Apply0().Functor0());
+    var map29 = map(dictMonad.Bind1().Apply0().Functor0());
     return function(m) {
       return function(state1, v, lift$prime, v1, done) {
-        return lift$prime(map27(function(a) {
+        return lift$prime(map29(function(a) {
           return function(v2) {
             return done(state1, a);
           };
@@ -19587,7 +20281,7 @@ var stateParserT = function(k) {
 };
 var runParserT$prime = function(dictMonadRec) {
   var Monad0 = dictMonadRec.Monad0();
-  var map27 = map(Monad0.Bind1().Apply0().Functor0());
+  var map29 = map(Monad0.Bind1().Apply0().Functor0());
   var pure13 = pure(Monad0.Applicative0());
   var tailRecM5 = tailRecM(dictMonadRec);
   return function(state1) {
@@ -19604,7 +20298,7 @@ var runParserT$prime = function(dictMonadRec) {
           ;
           if (v1 instanceof Lift) {
             $tco_done = true;
-            return map27(Loop.create)(v1.value0);
+            return map29(Loop.create)(v1.value0);
           }
           ;
           if (v1 instanceof Stop) {
@@ -19643,11 +20337,11 @@ var parseErrorMessage = function(v) {
 var mapParserT = function(dictMonadRec) {
   var runParserT$prime1 = runParserT$prime(dictMonadRec);
   return function(dictFunctor) {
-    var map27 = map(dictFunctor);
+    var map29 = map(dictFunctor);
     return function(f2) {
       return function(p) {
         return function(state1, v, lift12, $$throw, done) {
-          return lift12(map27(function(v1) {
+          return lift12(map29(function(v1) {
             return function(v2) {
               if (v1.value0 instanceof Left) {
                 return $$throw(v1.value1, v1.value0.value0);
@@ -19671,12 +20365,12 @@ var initialPos = {
   column: 1
 };
 var runParserT = function(dictMonadRec) {
-  var map27 = map(dictMonadRec.Monad0().Bind1().Apply0().Functor0());
+  var map29 = map(dictMonadRec.Monad0().Bind1().Apply0().Functor0());
   var runParserT$prime1 = runParserT$prime(dictMonadRec);
   return function(s) {
     return function(p) {
       var initialState = new ParseState(s, initialPos, false);
-      return map27(fst)(runParserT$prime1(initialState)(p));
+      return map29(fst)(runParserT$prime1(initialState)(p));
     };
   };
 };
@@ -19756,10 +20450,10 @@ var pure3 = /* @__PURE__ */ pure(applicativeParserT);
 var applySecond2 = /* @__PURE__ */ applySecond(applyParserT);
 var tailRecM3 = /* @__PURE__ */ tailRecM(monadRecParserT);
 var bind4 = /* @__PURE__ */ bind(bindParserT);
-var map8 = /* @__PURE__ */ map(functorParserT);
+var map11 = /* @__PURE__ */ map(functorParserT);
 var manyRec2 = /* @__PURE__ */ manyRec(monadRecParserT)(alternativeParserT);
 var $$void2 = /* @__PURE__ */ $$void(functorParserT);
-var apply3 = /* @__PURE__ */ apply(applyParserT);
+var apply4 = /* @__PURE__ */ apply(applyParserT);
 var applyFirst2 = /* @__PURE__ */ applyFirst(applyParserT);
 var empty3 = /* @__PURE__ */ empty(plusParserT);
 var withLazyErrorMessage = function(p) {
@@ -19801,7 +20495,7 @@ var sepBy1 = function(p) {
 };
 var sepBy = function(p) {
   return function(sep) {
-    return alt2(map8(toList)(sepBy1(p)(sep)))(pure3(Nil.value));
+    return alt2(map11(toList)(sepBy1(p)(sep)))(pure3(Nil.value));
   };
 };
 var optional = function(p) {
@@ -19813,13 +20507,13 @@ var option = function(a) {
   };
 };
 var optionMaybe = function(p) {
-  return option(Nothing.value)(map8(Just.create)(p));
+  return option(Nothing.value)(map11(Just.create)(p));
 };
 var notFollowedBy = function(p) {
   return $$try(alt2(applySecond2($$try(p))(fail("Negated parser succeeded")))(pure3(unit)));
 };
 var many1 = function(p) {
-  return apply3(map8(cons$prime)(p))(manyRec2(p));
+  return apply4(map11(cons$prime)(p))(manyRec2(p));
 };
 var choice = function(dictFoldable) {
   var go = function(p1) {
@@ -19877,9 +20571,9 @@ var traverse1Impl = function() {
     }
     return arr;
   }
-  return function(apply5, map27, f2) {
+  return function(apply6, map29, f2) {
     var buildFrom = function(x, ys) {
-      return apply5(map27(consList)(f2(x)))(ys);
+      return apply6(map29(consList)(f2(x)))(ys);
     };
     var go = function(acc, currentLen, xs) {
       if (currentLen === 0) {
@@ -19893,12 +20587,12 @@ var traverse1Impl = function() {
       }
     };
     return function(array) {
-      var acc = map27(finalCell)(f2(array[array.length - 1]));
+      var acc = map29(finalCell)(f2(array[array.length - 1]));
       var result = go(acc, array.length - 1, array);
       while (result instanceof Cont) {
         result = result.fn();
       }
-      return map27(listToArray)(result);
+      return map29(listToArray)(result);
     };
   };
 }();
@@ -19908,14 +20602,14 @@ var bind5 = /* @__PURE__ */ bind(bindParserT);
 var tailRecM4 = /* @__PURE__ */ tailRecM(monadRecParserT);
 var alt3 = /* @__PURE__ */ alt(altParserT);
 var pure4 = /* @__PURE__ */ pure(applicativeParserT);
-var fromFoldable3 = /* @__PURE__ */ fromFoldable(foldableList);
+var fromFoldable5 = /* @__PURE__ */ fromFoldable(foldableList);
 var many3 = function(p) {
   return bind5(flip(tailRecM4)(Nil.value)(function(xs) {
     return alt3(bind5($$try(p))(function(x) {
       return pure4(new Loop(new Cons(x, xs)));
     }))(pure4(new Done(xs)));
   }))(function(rlist) {
-    return pure4(reverse(fromFoldable3(rlist)));
+    return pure4(reverse(fromFoldable5(rlist)));
   });
 };
 
@@ -19987,7 +20681,7 @@ var updatePosString = function($copy_pos) {
         ;
         if (v instanceof Just) {
           var newPos = function() {
-            if ($$null(v.value0.tail)) {
+            if ($$null2(v.value0.tail)) {
               return updatePosSingle(pos)(v.value0.head)(after);
             }
             ;
@@ -20080,7 +20774,7 @@ var eof = /* @__PURE__ */ mkFn5(function(v) {
     return function(v2) {
       return function($$throw) {
         return function(done) {
-          var $133 = $$null(v.value0);
+          var $133 = $$null2(v.value0);
           if ($133) {
             return done(new ParseState(v.value0, v.value1, true), unit);
           }
@@ -20103,7 +20797,7 @@ var consumeWith = function(f2) {
             }
             ;
             if (v3 instanceof Right) {
-              return done(new ParseState(v3.value0.remainder, updatePosString(v.value1)(v3.value0.consumed)(v3.value0.remainder), !$$null(v3.value0.consumed)), v3.value0.value);
+              return done(new ParseState(v3.value0.remainder, updatePosString(v.value1)(v3.value0.consumed)(v3.value0.remainder), !$$null2(v3.value0.consumed)), v3.value0.value);
             }
             ;
             throw new Error("Failed pattern match at Parsing.String (line 286, column 7 - line 290, column 121): " + [v3.constructor.name]);
@@ -41629,9 +42323,9 @@ var digit = /* @__PURE__ */ withErrorMessage(/* @__PURE__ */ satisfyCP(isDecDigi
 var alphaNum = /* @__PURE__ */ withErrorMessage(/* @__PURE__ */ satisfyCP(isAlphaNum))("letter or digit");
 
 // output/Data.String.Unicode/index.js
-var map9 = /* @__PURE__ */ map(functorArray);
+var map13 = /* @__PURE__ */ map(functorArray);
 var convert = function(f2) {
-  var $6 = map9(f2);
+  var $6 = map13(f2);
   return function($7) {
     return fromCodePointArray($6(toCodePointArray($7)));
   };
@@ -41643,19 +42337,19 @@ var toUpperSimple2 = /* @__PURE__ */ convert(toUpperSimple);
 var bind6 = /* @__PURE__ */ bind(bindParserT);
 var pure5 = /* @__PURE__ */ pure(applicativeParserT);
 var sort2 = /* @__PURE__ */ sort(ordString);
-var map10 = /* @__PURE__ */ map(functorArray);
+var map14 = /* @__PURE__ */ map(functorArray);
 var applySecond3 = /* @__PURE__ */ applySecond(applyParserT);
 var compare4 = /* @__PURE__ */ compare(ordString);
-var append3 = /* @__PURE__ */ append(semigroupArray);
+var append4 = /* @__PURE__ */ append(semigroupArray);
 var fix2 = /* @__PURE__ */ fix(lazyParserT);
 var alt4 = /* @__PURE__ */ alt(altParserT);
 var $$void3 = /* @__PURE__ */ $$void(functorParserT);
 var voidLeft3 = /* @__PURE__ */ voidLeft(functorParserT);
 var identity11 = /* @__PURE__ */ identity(categoryFn);
 var many4 = /* @__PURE__ */ many(alternativeParserT)(lazyParserT);
-var map1 = /* @__PURE__ */ map(functorMaybe);
+var map15 = /* @__PURE__ */ map(functorMaybe);
 var some3 = /* @__PURE__ */ some(alternativeParserT)(lazyParserT);
-var foldl4 = /* @__PURE__ */ foldl(foldableArray);
+var foldl5 = /* @__PURE__ */ foldl(foldableArray);
 var applyFirst3 = /* @__PURE__ */ applyFirst(applyParserT);
 var show7 = /* @__PURE__ */ show(showString);
 var bind1 = /* @__PURE__ */ bind(bindMaybe);
@@ -41675,7 +42369,7 @@ var theReservedNames = function(v) {
   }
   ;
   if (otherwise) {
-    return sort2(map10(toLower)(v.reservedNames));
+    return sort2(map14(toLower)(v.reservedNames));
   }
   ;
   throw new Error("Failed pattern match at Parsing.Token (line 825, column 1 - line 825, column 70): " + [v.constructor.name]);
@@ -41746,7 +42440,7 @@ var isReservedName = function(v) {
   };
 };
 var inCommentSingle = function(v) {
-  var startEnd = append3(toCharArray(v.commentEnd))(toCharArray(v.commentStart));
+  var startEnd = append4(toCharArray(v.commentEnd))(toCharArray(v.commentStart));
   return fix2(function(p) {
     return alt4($$void3($$try(string(v.commentEnd))))(alt4(applySecond3(skipMany1(noneOf(startEnd)))(p))(withErrorMessage(applySecond3(oneOf2(startEnd))(p))("end of comment")));
   });
@@ -41755,7 +42449,7 @@ var multiLineComment = function(v) {
   return applySecond3($$try(string(v.commentStart)))(inComment(v));
 };
 var inCommentMulti = function(v) {
-  var startEnd = append3(toCharArray(v.commentEnd))(toCharArray(v.commentStart));
+  var startEnd = append4(toCharArray(v.commentEnd))(toCharArray(v.commentStart));
   return fix2(function(p) {
     return alt4($$void3($$try(string(v.commentEnd))))(alt4(applySecond3(multiLineComment(v))(p))(alt4(applySecond3(skipMany1(noneOf(startEnd)))(p))(withErrorMessage(applySecond3(oneOf2(startEnd))(p))("end of comment"))));
   });
@@ -41768,15 +42462,15 @@ var inComment = function(v) {
   return inCommentSingle(v);
 };
 var whiteSpace$prime = function(v) {
-  if ($$null(v.commentLine) && $$null(v.commentStart)) {
+  if ($$null2(v.commentLine) && $$null2(v.commentStart)) {
     return skipMany(withErrorMessage(simpleSpace)(""));
   }
   ;
-  if ($$null(v.commentLine)) {
+  if ($$null2(v.commentLine)) {
     return skipMany(alt4(simpleSpace)(withErrorMessage(multiLineComment(v))("")));
   }
   ;
-  if ($$null(v.commentStart)) {
+  if ($$null2(v.commentStart)) {
     return skipMany(alt4(simpleSpace)(withErrorMessage(oneLineComment(v))("")));
   }
   ;
@@ -41811,7 +42505,7 @@ var makeTokenParser = function(v) {
           }
           ;
           if (v1 instanceof Just) {
-            return map1(function(v3) {
+            return map15(function(v3) {
               return (base * v1.value0 | 0) + v3 | 0;
             })(hexDigitToInt(codePointFromChar(v2)));
           }
@@ -41820,7 +42514,7 @@ var makeTokenParser = function(v) {
         };
       };
       return bind6(some3(baseDigit))(function(digits) {
-        return maybe(fail("not digits"))(pure5)(foldl4(folder)(new Just(0))(digits));
+        return maybe(fail("not digits"))(pure5)(foldl5(folder)(new Just(0))(digits));
       });
     };
   };
@@ -41991,7 +42685,7 @@ var makeTokenParser = function(v) {
     var parseEsc = function(v1) {
       return voidLeft3($$char(v1.value0))(v1.value1);
     };
-    return choice2(map10(parseEsc)(escMap));
+    return choice2(map14(parseEsc)(escMap));
   }();
   var charControl = bind6($$char("^"))(function() {
     return bind6(upper2)(function(code) {
@@ -42070,12 +42764,12 @@ var makeTokenParser = function(v) {
   var ascii3 = ["\0", "", "", "", "", "", "", "\x07", "", "", "", "", "", "", "", "", "", "", "\x1B", "\x7F"];
   var ascii2codes = ["BS", "HT", "LF", "VT", "FF", "CR", "SO", "SI", "EM", "FS", "GS", "RS", "US", "SP"];
   var ascii2 = ["\b", "	", "\n", "\v", "\f", "\r", "", "", "", "", "", "", "", " "];
-  var asciiMap = zip(append3(ascii3codes)(ascii2codes))(append3(ascii3)(ascii2));
+  var asciiMap = zip(append4(ascii3codes)(ascii2codes))(append4(ascii3)(ascii2));
   var charAscii = function() {
     var parseAscii = function(v1) {
       return $$try(voidLeft3(string(v1.value0))(v1.value1));
     };
-    return choice2(map10(parseAscii)(asciiMap));
+    return choice2(map14(parseAscii)(asciiMap));
   }();
   var escapeCode = alt4(charEsc)(alt4(charNum)(alt4(charAscii)(withErrorMessage(charControl)("escape code"))));
   var charEscape = applySecond3($$char("\\"))(escapeCode);
@@ -42180,16 +42874,16 @@ var haskellStyle = /* @__PURE__ */ function() {
 
 // output/Aural/index.js
 var empty4 = /* @__PURE__ */ empty(/* @__PURE__ */ plusMap(ordString));
-var map11 = /* @__PURE__ */ map(functorList);
+var map16 = /* @__PURE__ */ map(functorList);
 var toUnfoldable5 = /* @__PURE__ */ toUnfoldable(unfoldableList);
 var unions2 = /* @__PURE__ */ unions(ordString)(foldableList);
-var fromFoldable4 = /* @__PURE__ */ fromFoldable2(foldableArray);
+var fromFoldable6 = /* @__PURE__ */ fromFoldable2(foldableArray);
 var bind7 = /* @__PURE__ */ bind(bindParserT);
 var pure6 = /* @__PURE__ */ pure(applicativeParserT);
 var discard2 = /* @__PURE__ */ discard(discardUnit)(bindParserT);
 var choice3 = /* @__PURE__ */ choice(foldableArray);
 var applySecond4 = /* @__PURE__ */ applySecond(applyParserT);
-var map12 = /* @__PURE__ */ map(functorParserT);
+var map17 = /* @__PURE__ */ map(functorParserT);
 var fromFoldable22 = /* @__PURE__ */ fromFoldable(foldableList);
 var lookup2 = /* @__PURE__ */ lookup(ordString);
 var elem3 = /* @__PURE__ */ elem(foldableList)(eqBoolean);
@@ -42227,20 +42921,20 @@ var toNumber$prime = function(v) {
   throw new Error("Failed pattern match at Aural (line 345, column 1 - line 345, column 40): " + [v.constructor.name]);
 };
 var toListAurals = function(mapas) {
-  var vals = concat2(map11(toUnfoldable5)(mapas));
+  var vals = concat2(map16(toUnfoldable5)(mapas));
   var toAurals = function(key) {
     return function(vals1) {
-      return singleton3(key)(map11(snd)(filter3(function(v) {
+      return singleton3(key)(map16(snd)(filter3(function(v) {
         return fst(v) === key;
       })(vals1)));
     };
   };
-  return unions2(map11(function(k) {
+  return unions2(map16(function(k) {
     return toAurals(k)(vals);
-  })(map11(fst)(vals)));
+  })(map16(fst)(vals)));
 };
 var stringToSamples = function(s) {
-  return fromFoldable4(split(" ")(trim(s)));
+  return fromFoldable6(split(" ")(trim(s)));
 };
 var stringLit = /* @__PURE__ */ function() {
   return tokenParser.stringLiteral;
@@ -42250,7 +42944,7 @@ var specialRange = function(v) {
     var n2 = toNumber(v1.value0) * 10 + toNumber(v1.value1);
     var n1 = toNumber(v.value0) * 10 + toNumber(v.value1);
     var rangeInts = range3(floor2(n1))(floor2(n2));
-    return map11(function(rangeInt) {
+    return map16(function(rangeInt) {
       return toNumber(rangeInt) / 10;
     })(rangeInts);
   };
@@ -42294,8 +42988,8 @@ var makeSound = /* @__PURE__ */ bind7(/* @__PURE__ */ pure6(1))(function() {
 });
 var makeShur = /* @__PURE__ */ bind7(/* @__PURE__ */ pure6(1))(function() {
   return bind7(parseSpan)(function(sp) {
-    return bind7(choice3([$$try(map12(fromFoldable22)(parseRangeInt)), many3(natural)]))(function(shurList) {
-      return pure6(new Dastgah(sp, new Shur(fromFoldable4(shurList))));
+    return bind7(choice3([$$try(map17(fromFoldable22)(parseRangeInt)), many3(natural)]))(function(shurList) {
+      return pure6(new Dastgah(sp, new Shur(fromFoldable6(shurList))));
     });
   });
 });
@@ -42313,8 +43007,8 @@ var mayeh = /* @__PURE__ */ bind7(/* @__PURE__ */ pure6(1))(function() {
 });
 var makeN = /* @__PURE__ */ bind7(/* @__PURE__ */ pure6(1))(function() {
   return bind7(parseSpan)(function(sp) {
-    return bind7(choice3([$$try(map12(fromFoldable22)(parseRangeInt)), many3(natural)]))(function(strList) {
-      return pure6(new N(sp, fromFoldable4(strList)));
+    return bind7(choice3([$$try(map17(fromFoldable22)(parseRangeInt)), many3(natural)]))(function(strList) {
+      return pure6(new N(sp, fromFoldable6(strList)));
     });
   });
 });
@@ -42352,7 +43046,7 @@ var getXPitchMap = function(program) {
     ;
     return false;
   };
-  return unions2(map11(unexpressPitch)(filter3(function(expression2) {
+  return unions2(map16(unexpressPitch)(filter3(function(expression2) {
     return isXPitch(expression2);
   })(program)));
 };
@@ -42368,7 +43062,7 @@ var getAuralMap = function(program) {
     ;
     return false;
   };
-  return toListAurals(map11(unexpressAural)(filter3(function(expression2) {
+  return toListAurals(map16(unexpressAural)(filter3(function(expression2) {
     return isAural(expression2);
   })(program)));
 };
@@ -42415,14 +43109,14 @@ var func = function(v) {
 var checkXPitch$prime = function(expressions) {
   var listOfPitchID = getXenoIDs(getAuralMap(expressions));
   var aXenoPitchMap = getXPitchMap(expressions);
-  return !elem3(false)(map11(function(kn) {
+  return !elem3(false)(map16(function(kn) {
     return func(aXenoPitchMap)(kn);
   })(listOfPitchID));
 };
 var checkProg = function(expressions) {
   var listOfPitchID = getProgIDs(getAuralMap(expressions));
   var aXenoPitchMap = getXPitchMap(expressions);
-  return !elem3(false)(map11(function(kn) {
+  return !elem3(false)(map16(function(kn) {
     return func(aXenoPitchMap)(kn);
   })(listOfPitchID));
 };
@@ -42443,7 +43137,7 @@ var negNum = /* @__PURE__ */ bind7(/* @__PURE__ */ charWS("-"))(function() {
     return pure6(-1 * toNumber$prime(x));
   });
 });
-var parseNumber = /* @__PURE__ */ choice3([/* @__PURE__ */ $$try(/* @__PURE__ */ parens(/* @__PURE__ */ map12(toNumber$prime)(naturalOrFloat))), /* @__PURE__ */ $$try(/* @__PURE__ */ map12(toNumber$prime)(naturalOrFloat)), negNum]);
+var parseNumber = /* @__PURE__ */ choice3([/* @__PURE__ */ $$try(/* @__PURE__ */ parens(/* @__PURE__ */ map17(toNumber$prime)(naturalOrFloat))), /* @__PURE__ */ $$try(/* @__PURE__ */ map17(toNumber$prime)(naturalOrFloat)), negNum]);
 var parseSpecialNum$prime = /* @__PURE__ */ bind7(natural)(function(x) {
   return bind7(charWS("."))(function() {
     return bind7(natural)(function(y) {
@@ -42451,7 +43145,7 @@ var parseSpecialNum$prime = /* @__PURE__ */ bind7(natural)(function(x) {
     });
   });
 });
-var parseSpecialNum = /* @__PURE__ */ choice3([/* @__PURE__ */ $$try(parseSpecialNum$prime), /* @__PURE__ */ map12(toSpecial)(natural)]);
+var parseSpecialNum = /* @__PURE__ */ choice3([/* @__PURE__ */ $$try(parseSpecialNum$prime), /* @__PURE__ */ map17(toSpecial)(natural)]);
 var parseRangeNum = /* @__PURE__ */ bind7(parseSpecialNum)(function(x) {
   return bind7(reservedOp(".."))(function() {
     return bind7(parseSpecialNum)(function(y) {
@@ -42461,36 +43155,36 @@ var parseRangeNum = /* @__PURE__ */ bind7(parseSpecialNum)(function(x) {
 });
 var makeBegin = /* @__PURE__ */ bind7(/* @__PURE__ */ pure6(1))(function() {
   return bind7(parseSpan)(function(sp) {
-    return bind7(choice3([$$try(map12(fromFoldable22)(parseRangeNum)), many3(parseNumber)]))(function(panList) {
-      return pure6(new Begin(sp, fromFoldable4(panList)));
+    return bind7(choice3([$$try(map17(fromFoldable22)(parseRangeNum)), many3(parseNumber)]))(function(panList) {
+      return pure6(new Begin(sp, fromFoldable6(panList)));
     });
   });
 });
 var makeEnd = /* @__PURE__ */ bind7(/* @__PURE__ */ pure6(1))(function() {
   return bind7(parseSpan)(function(sp) {
-    return bind7(choice3([$$try(map12(fromFoldable22)(parseRangeNum)), many3(parseNumber)]))(function(spdList) {
-      return pure6(new End(sp, fromFoldable4(spdList)));
+    return bind7(choice3([$$try(map17(fromFoldable22)(parseRangeNum)), many3(parseNumber)]))(function(spdList) {
+      return pure6(new End(sp, fromFoldable6(spdList)));
     });
   });
 });
 var makeGain = /* @__PURE__ */ bind7(/* @__PURE__ */ pure6(1))(function() {
   return bind7(parseSpan)(function(sp) {
-    return bind7(choice3([$$try(map12(fromFoldable22)(parseRangeNum)), many3(parseNumber)]))(function(gainList) {
-      return pure6(new Gain(sp, fromFoldable4(gainList)));
+    return bind7(choice3([$$try(map17(fromFoldable22)(parseRangeNum)), many3(parseNumber)]))(function(gainList) {
+      return pure6(new Gain(sp, fromFoldable6(gainList)));
     });
   });
 });
 var makePan = /* @__PURE__ */ bind7(/* @__PURE__ */ pure6(1))(function() {
   return bind7(parseSpan)(function(sp) {
-    return bind7(choice3([$$try(map12(fromFoldable22)(parseRangeNum)), many3(parseNumber)]))(function(panList) {
-      return pure6(new Pan(sp, fromFoldable4(panList)));
+    return bind7(choice3([$$try(map17(fromFoldable22)(parseRangeNum)), many3(parseNumber)]))(function(panList) {
+      return pure6(new Pan(sp, fromFoldable6(panList)));
     });
   });
 });
 var makeSpeed = /* @__PURE__ */ bind7(/* @__PURE__ */ pure6(1))(function() {
   return bind7(parseSpan)(function(sp) {
-    return bind7(choice3([$$try(map12(fromFoldable22)(parseRangeNum)), many3(parseNumber)]))(function(spdList) {
-      return pure6(new Speed(sp, fromFoldable4(spdList)));
+    return bind7(choice3([$$try(map17(fromFoldable22)(parseRangeNum)), many3(parseNumber)]))(function(spdList) {
+      return pure6(new Speed(sp, fromFoldable6(spdList)));
     });
   });
 });
@@ -42498,7 +43192,7 @@ var brackets = /* @__PURE__ */ function() {
   return tokenParser.brackets;
 }();
 var idOfPitch = /* @__PURE__ */ bind7(identifier)(function(id) {
-  return bind7(alt6(map12(Just.create)(brackets(natural)))(pure6(Nothing.value)))(function(n1) {
+  return bind7(alt6(map17(Just.create)(brackets(natural)))(pure6(Nothing.value)))(function(n1) {
     return pure6(new Tuple(id, n1));
   });
 });
@@ -42507,7 +43201,7 @@ var prog = /* @__PURE__ */ bind7(/* @__PURE__ */ pure6(1))(function() {
     return bind7(reservedOp("="))(function() {
       return bind7(parseSpan)(function(sp) {
         return bind7(parens(many3(idOfPitch)))(function(xs) {
-          return pure6(new Prog(sp, fromFoldable4(xs)));
+          return pure6(new Prog(sp, fromFoldable6(xs)));
         });
       });
     });
@@ -42604,11 +43298,11 @@ var speed = /* @__PURE__ */ bind7(/* @__PURE__ */ pure6(1))(function() {
 });
 var xeno = /* @__PURE__ */ bind7(/* @__PURE__ */ pure6(1))(function() {
   return bind7(identifier)(function(id) {
-    return bind7(alt6(map12(Just.create)(brackets(natural)))(pure6(Nothing.value)))(function(n1) {
+    return bind7(alt6(map17(Just.create)(brackets(natural)))(pure6(Nothing.value)))(function(n1) {
       return bind7(reservedOp("="))(function() {
         return bind7(parseSpan)(function(sp) {
-          return bind7(choice3([$$try(map12(fromFoldable22)(parseRangeInt)), many3(natural)]))(function(xnL) {
-            return pure6(new Xeno(new Tuple(id, n1), sp, fromFoldable4(xnL)));
+          return bind7(choice3([$$try(map17(fromFoldable22)(parseRangeInt)), many3(natural)]))(function(xnL) {
+            return pure6(new Xeno(new Tuple(id, n1), sp, fromFoldable6(xnL)));
           });
         });
       });
@@ -42634,7 +43328,7 @@ var value = /* @__PURE__ */ bind7(/* @__PURE__ */ pure6(1))(function() {
 var parseValues = /* @__PURE__ */ bind7(/* @__PURE__ */ pure6(1))(function() {
   return bind7(voiceId)(function(id) {
     return bind7(many3(value))(function(xs) {
-      return pure6(singleton3(id)(fromFoldable4(xs)));
+      return pure6(singleton3(id)(fromFoldable6(xs)));
     });
   });
 });
@@ -42645,564 +43339,6 @@ var aural = /* @__PURE__ */ bind7(/* @__PURE__ */ pure6(1))(function() {
     });
   });
 });
-
-// output/DurationAndIndex/index.js
-var append4 = /* @__PURE__ */ append(semigroupArray);
-var map13 = /* @__PURE__ */ map(functorArray);
-var add1 = /* @__PURE__ */ add(semiringNumber);
-var min3 = /* @__PURE__ */ min(ordInt);
-var fromFoldable5 = /* @__PURE__ */ fromFoldable2(foldableArray);
-var foldl5 = /* @__PURE__ */ foldl(foldableArray);
-var map14 = /* @__PURE__ */ map(functorList);
-var foldl12 = /* @__PURE__ */ foldl(foldableList);
-var scanl3 = /* @__PURE__ */ scanl(traversableList);
-var sum2 = /* @__PURE__ */ sum(foldableList)(semiringNumber);
-var fromFoldable1 = /* @__PURE__ */ fromFoldable(foldableList);
-var right = function(v) {
-  var splitted = splitAt(v.value0.value0)(v.value1.value1);
-  return new Tuple(new Tuple(v.value0.value0, v.value0.value1 - v.value0.value0 | 0), new Tuple(zipWith(append4)(v.value1.value0)(splitted.before), splitted.after));
-};
-var onsetsFromBlock = function(onsets) {
-  return function(block) {
-    return function(dur) {
-      return map13(function(v) {
-        return new Onset(v.value0, block + v.value1 * dur);
-      })(onsets);
-    };
-  };
-};
-var onsetsFromBlocks = function(blocks) {
-  return function(onsets) {
-    return function(dur) {
-      return concat(map13(function(block) {
-        return onsetsFromBlock(onsets)(block)(dur);
-      })(blocks));
-    };
-  };
-};
-var nLastBlock = function(we) {
-  return function(x1) {
-    return function(dur) {
-      var wEndBlocks = (we - x1) / dur;
-      var nOfLastBlock = function() {
-        if (wEndBlocks < 0) {
-          return Nothing.value;
-        }
-        ;
-        if (otherwise) {
-          return new Just(floor2(wEndBlocks));
-        }
-        ;
-        throw new Error("Failed pattern match at DurationAndIndex (line 229, column 9 - line 231, column 48): " + []);
-      }();
-      return nOfLastBlock;
-    };
-  };
-};
-var nFirstBlock = function(v) {
-  return function(v1) {
-    return function(v2) {
-      if (v2 === 0) {
-        return 0;
-      }
-      ;
-      var xwsB = (v - v1) / v2;
-      var nOfNxBlock = function() {
-        if (xwsB <= 0) {
-          return 0;
-        }
-        ;
-        if (otherwise) {
-          return ceil2(xwsB);
-        }
-        ;
-        throw new Error("Failed pattern match at DurationAndIndex (line 222, column 9 - line 224, column 34): " + []);
-      }();
-      return nOfNxBlock;
-    };
-  };
-};
-var left = function(v) {
-  var splitted = splitAt(v.value0.value1)(v.value1.value0);
-  return new Tuple(new Tuple(v.value0.value1, v.value0.value0 - v.value0.value1 | 0), new Tuple(zipWith(append4)(splitted.before)(v.value1.value1), splitted.after));
-};
-var getVoiceIndex = function(xws) {
-  return function(we) {
-    return function(x1) {
-      return function(dur) {
-        var nOfLstBlock = nLastBlock(we)(x1)(dur);
-        var nOfFstBlock = nFirstBlock(xws)(x1)(dur);
-        var nOfBlocks = function() {
-          if (nOfLstBlock instanceof Nothing) {
-            return [];
-          }
-          ;
-          if (nOfLstBlock instanceof Just) {
-            return range2(nOfFstBlock)(nOfLstBlock.value0);
-          }
-          ;
-          throw new Error("Failed pattern match at DurationAndIndex (line 199, column 19 - line 201, column 49): " + [nOfLstBlock.constructor.name]);
-        }();
-        return nOfBlocks;
-      };
-    };
-  };
-};
-var getDur = function(v) {
-  return v.value1;
-};
-var getBool = function(v) {
-  return v.value0;
-};
-var funquilla = function(voicesIndexes) {
-  return function(onsetIndexes) {
-    return function(lenOnsets) {
-      var funquilla$prime = function(onsetIndexes1) {
-        return function(lenOnsets1) {
-          return function(voiceIndex) {
-            return map13(function(onsetIndex) {
-              return (voiceIndex * lenOnsets1 | 0) + onsetIndex | 0;
-            })(onsetIndexes1);
-          };
-        };
-      };
-      return map13(function(voiceIndex) {
-        return funquilla$prime(onsetIndexes)(lenOnsets)(voiceIndex);
-      })(voicesIndexes);
-    };
-  };
-};
-var bpmToFreq = function(bpm2) {
-  return bpm2 / 60;
-};
-var bpmToDur = function(bpm2) {
-  return 1 / bpmToFreq(bpm2);
-};
-var durInSecs = function(dur) {
-  return function(bpm2) {
-    return dur * bpmToDur(bpm2);
-  };
-};
-var blockToPos = function(is) {
-  return function(x1) {
-    return function(dur) {
-      return map13(function(i) {
-        return x1 + toNumber(i) * dur;
-      })(is);
-    };
-  };
-};
-var getBlocks = function(xws) {
-  return function(we) {
-    return function(x1) {
-      return function(dur) {
-        var nOfLstBlock = nLastBlock(we)(x1)(dur);
-        var nOfFstBlock = nFirstBlock(xws)(x1)(dur);
-        var nsOfBlocks = function() {
-          if (nOfLstBlock instanceof Nothing) {
-            return [];
-          }
-          ;
-          if (nOfLstBlock instanceof Just) {
-            return range2(nOfFstBlock)(nOfLstBlock.value0);
-          }
-          ;
-          throw new Error("Failed pattern match at DurationAndIndex (line 209, column 20 - line 211, column 49): " + [nOfLstBlock.constructor.name]);
-        }();
-        return blockToPos(nsOfBlocks)(x1)(dur);
-      };
-    };
-  };
-};
-var blRotated = function(rot) {
-  return function(patt) {
-    var x = splitAt(rot)(patt);
-    return append4(x.after)(x.before);
-  };
-};
-var bjorklund$prime = function($copy_v) {
-  var $tco_done = false;
-  var $tco_result;
-  function $tco_loop(v) {
-    var $88 = min3(v.value0.value0)(v.value0.value1) <= 1;
-    if ($88) {
-      $tco_done = true;
-      return new Tuple(v.value0, v.value1);
-    }
-    ;
-    $copy_v = function() {
-      var $89 = v.value0.value0 > v.value0.value1;
-      if ($89) {
-        return left(new Tuple(v.value0, v.value1));
-      }
-      ;
-      return right(new Tuple(v.value0, v.value1));
-    }();
-    return;
-  }
-  ;
-  while (!$tco_done) {
-    $tco_result = $tco_loop($copy_v);
-  }
-  ;
-  return $tco_result;
-};
-var bjorklund = function(v) {
-  var x = replicate(v.value0)([true]);
-  var j = v.value1 - v.value0 | 0;
-  var y = replicate(j)([false]);
-  var v1 = bjorklund$prime(new Tuple(new Tuple(v.value0, j), new Tuple(x, y)));
-  return append4(concat(v1.value1.value0))(concat(v1.value1.value1));
-};
-var simplifyBjorklund = function(v) {
-  return function(v1) {
-    return function(v2) {
-      return function(v3) {
-        if (v instanceof Simple) {
-          var xs = fromFoldable5(map13(function(r) {
-            var $106 = r === true;
-            if ($106) {
-              return X.value;
-            }
-            ;
-            return O.value;
-          })(blRotated(v3)(bjorklund(new Tuple(v1, v2)))));
-          return new Rhythmics(xs);
-        }
-        ;
-        if (v instanceof K) {
-          var patto = new Rhythmics(fromFoldable5(replicate(length4(rhythmicToOnsets(v.value0)))(O.value)));
-          var xs = fromFoldable5(map13(function(r) {
-            var $107 = r === true;
-            if ($107) {
-              return v.value0;
-            }
-            ;
-            return patto;
-          })(blRotated(v3)(bjorklund(new Tuple(v1, v2)))));
-          return new Rhythmics(xs);
-        }
-        ;
-        if (v instanceof InvK) {
-          var patto = new Rhythmics(fromFoldable5(replicate(length4(rhythmicToOnsets(v.value0)))(O.value)));
-          var xs = fromFoldable5(map13(function(r) {
-            var $109 = r === true;
-            if ($109) {
-              return patto;
-            }
-            ;
-            return v.value0;
-          })(blRotated(v3)(bjorklund(new Tuple(v1, v2)))));
-          return new Rhythmics(xs);
-        }
-        ;
-        if (v instanceof Full) {
-          var xs = fromFoldable5(map13(function(r) {
-            var $111 = r === true;
-            if ($111) {
-              return v.value0;
-            }
-            ;
-            return v.value1;
-          })(blRotated(v3)(bjorklund(new Tuple(v1, v2)))));
-          return new Rhythmics(xs);
-        }
-        ;
-        throw new Error("Failed pattern match at DurationAndIndex (line 142, column 1 - line 142, column 63): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
-      };
-    };
-  };
-};
-var rhythmicToVoiceDuration = function(v) {
-  if (v instanceof X) {
-    return 1;
-  }
-  ;
-  if (v instanceof O) {
-    return 1;
-  }
-  ;
-  if (v instanceof Sd) {
-    return 1;
-  }
-  ;
-  if (v instanceof Repeat) {
-    var x = replicate(v.value1)(rhythmicToVoiceDuration(v.value0));
-    return foldl5(add1)(0)(x);
-  }
-  ;
-  if (v instanceof Bjorklund) {
-    return rhythmicToVoiceDuration(simplifyBjorklund(v.value0)(v.value1)(v.value2)(v.value3));
-  }
-  ;
-  if (v instanceof Rhythmics) {
-    var x = map14(function(x1) {
-      return rhythmicToVoiceDuration(x1);
-    })(v.value0);
-    return foldl12(add1)(0)(x);
-  }
-  ;
-  throw new Error("Failed pattern match at DurationAndIndex (line 54, column 1 - line 54, column 45): " + [v.constructor.name]);
-};
-var rhythmicToOnsets = function(rhy) {
-  var voiceDur = rhythmicToVoiceDuration(rhy);
-  var rhythmicSegments = onsetDurations(1)(rhy);
-  var durInPercentOfEvents = new Cons(0, fromMaybe(fromFoldable5([]))(init(scanl3(add1)(0)(map14(function(x) {
-    return x / voiceDur;
-  })(map14(getDur)(rhythmicSegments))))));
-  return zipWith2(function(x) {
-    return function(y) {
-      return new Onset(x, y);
-    };
-  })(map14(getBool)(rhythmicSegments))(durInPercentOfEvents);
-};
-var onsetDurations$prime = function(v) {
-  return function(v1) {
-    if (v1 instanceof X) {
-      return fromFoldable5([new Onset(true, v)]);
-    }
-    ;
-    if (v1 instanceof O) {
-      return fromFoldable5([new Onset(false, v)]);
-    }
-    ;
-    if (v1 instanceof Sd) {
-      return onsetDurations$prime(v)(v1.value0);
-    }
-    ;
-    if (v1 instanceof Repeat) {
-      var newDur = v / toNumber(v1.value1);
-      return concat2(map14(function(x) {
-        return onsetDurations$prime(newDur)(x);
-      })(fromFoldable5(replicate(v1.value1)(v1.value0))));
-    }
-    ;
-    if (v1 instanceof Bjorklund) {
-      return onsetDurations(v)(simplifyBjorklund(v1.value0)(v1.value1)(v1.value2)(v1.value3));
-    }
-    ;
-    if (v1 instanceof Rhythmics) {
-      var newDur = v / toNumber(length4(v1.value0));
-      return concat2(map14(function(x) {
-        return onsetDurations$prime(newDur)(x);
-      })(v1.value0));
-    }
-    ;
-    throw new Error("Failed pattern match at DurationAndIndex (line 79, column 1 - line 79, column 51): " + [v.constructor.name, v1.constructor.name]);
-  };
-};
-var onsetDurations = function(v) {
-  return function(v1) {
-    if (v1 instanceof X) {
-      return fromFoldable5([new Onset(true, v)]);
-    }
-    ;
-    if (v1 instanceof O) {
-      return fromFoldable5([new Onset(false, v)]);
-    }
-    ;
-    if (v1 instanceof Sd) {
-      return onsetDurations$prime(v)(v1.value0);
-    }
-    ;
-    if (v1 instanceof Repeat) {
-      return concat2(map14(function(x) {
-        return onsetDurations(v)(x);
-      })(fromFoldable5(replicate(v1.value1)(v1.value0))));
-    }
-    ;
-    if (v1 instanceof Bjorklund) {
-      return onsetDurations(v)(simplifyBjorklund(v1.value0)(v1.value1)(v1.value2)(v1.value3));
-    }
-    ;
-    if (v1 instanceof Rhythmics) {
-      return concat2(map14(function(x) {
-        return onsetDurations(v)(x);
-      })(v1.value0));
-    }
-    ;
-    throw new Error("Failed pattern match at DurationAndIndex (line 71, column 1 - line 71, column 50): " + [v.constructor.name, v1.constructor.name]);
-  };
-};
-var durFromRhythmic = function(v) {
-  return function(v1) {
-    if (v instanceof X) {
-      return durInSecs(1)(v1);
-    }
-    ;
-    if (v instanceof O) {
-      return durInSecs(1)(v1);
-    }
-    ;
-    if (v instanceof Sd) {
-      return durInSecs(1)(v1);
-    }
-    ;
-    if (v instanceof Repeat) {
-      return durFromRhythmic(v.value0)(v1) * toNumber(v.value1);
-    }
-    ;
-    if (v instanceof Rhythmics) {
-      return sum2(map14(function(x) {
-        return durFromRhythmic(x)(v1);
-      })(v.value0));
-    }
-    ;
-    if (v instanceof Bjorklund) {
-      return durFromRhythmic(simplifyBjorklund(v.value0)(v.value1)(v.value2)(v.value3))(v1);
-    }
-    ;
-    throw new Error("Failed pattern match at DurationAndIndex (line 46, column 1 - line 46, column 47): " + [v.constructor.name, v1.constructor.name]);
-  };
-};
-var simplifyRepeat = function($copy_v) {
-  return function($copy_v1) {
-    var $tco_var_v = $copy_v;
-    var $tco_done = false;
-    var $tco_result;
-    function $tco_loop(v, v1) {
-      if (v instanceof X) {
-        $tco_done = true;
-        return new Rhythmics(fromFoldable5(replicate(v1)(X.value)));
-      }
-      ;
-      if (v instanceof O) {
-        $tco_done = true;
-        return new Rhythmics(fromFoldable5(replicate(v1)(O.value)));
-      }
-      ;
-      if (v instanceof Sd) {
-        $tco_done = true;
-        return new Rhythmics(map14(function(r) {
-          return new Sd(r);
-        })(fromFoldable5(replicate(v1)(v.value0))));
-      }
-      ;
-      if (v instanceof Repeat) {
-        var n2 = round2(toNumber(v1) * toNumber(v.value1));
-        $tco_var_v = v.value0;
-        $copy_v1 = n2;
-        return;
-      }
-      ;
-      if (v instanceof Bjorklund) {
-        $tco_var_v = simplifyBjorklund(v.value0)(v.value1)(v.value2)(v.value3);
-        $copy_v1 = v1;
-        return;
-      }
-      ;
-      if (v instanceof Rhythmics) {
-        $tco_done = true;
-        return new Rhythmics(fromFoldable5(concat(replicate(v1)(fromFoldable1(v.value0)))));
-      }
-      ;
-      throw new Error("Failed pattern match at DurationAndIndex (line 185, column 1 - line 185, column 45): " + [v.constructor.name, v1.constructor.name]);
-    }
-    ;
-    while (!$tco_done) {
-      $tco_result = $tco_loop($tco_var_v, $copy_v1);
-    }
-    ;
-    return $tco_result;
-  };
-};
-var rhythmicStructIndex$prime = function(v) {
-  return function(v1) {
-    if (v instanceof X) {
-      return [v1];
-    }
-    ;
-    if (v instanceof O) {
-      return [v1];
-    }
-    ;
-    if (v instanceof Rhythmics) {
-      var zipped = zip(fromFoldable1(v.value0))(range2(0)(length4(v.value0) - 1 | 0));
-      return concat(map13(function(v2) {
-        return rhythmicStructIndex$prime(v2.value0)(snoc(v1)(v2.value1));
-      })(zipped));
-    }
-    ;
-    if (v instanceof Sd) {
-      return rhythmicStructIndex$prime(v.value0)(v1);
-    }
-    ;
-    if (v instanceof Repeat) {
-      return rhythmicStructIndex$prime(simplifyRepeat(v.value0)(v.value1))(v1);
-    }
-    ;
-    if (v instanceof Bjorklund) {
-      return rhythmicStructIndex$prime(simplifyBjorklund(v.value0)(v.value1)(v.value2)(v.value3))(v1);
-    }
-    ;
-    throw new Error("Failed pattern match at DurationAndIndex (line 126, column 1 - line 126, column 66): " + [v.constructor.name, v1.constructor.name]);
-  };
-};
-var rhythmicStructIndex = function(v) {
-  return function(v1) {
-    if (v instanceof X) {
-      return [v1];
-    }
-    ;
-    if (v instanceof O) {
-      return [v1];
-    }
-    ;
-    if (v instanceof Rhythmics) {
-      var zipped = zip(fromFoldable1(v.value0))(range2(0)(length4(v.value0) - 1 | 0));
-      return concat(map13(function(v2) {
-        return rhythmicStructIndex(v2.value0)([v2.value1]);
-      })(zipped));
-    }
-    ;
-    if (v instanceof Repeat) {
-      return rhythmicStructIndex(simplifyRepeat(v.value0)(v.value1))(v1);
-    }
-    ;
-    if (v instanceof Sd) {
-      return rhythmicStructIndex$prime(v.value0)(v1);
-    }
-    ;
-    if (v instanceof Bjorklund) {
-      return rhythmicStructIndex(simplifyBjorklund(v.value0)(v.value1)(v.value2)(v.value3))(v1);
-    }
-    ;
-    throw new Error("Failed pattern match at DurationAndIndex (line 117, column 1 - line 117, column 65): " + [v.constructor.name, v1.constructor.name]);
-  };
-};
-var assambleIndex = function(vs) {
-  return function(st) {
-    return function(es) {
-      var xs = map13(function(e) {
-        return zip(st)(e);
-      })(es);
-      var f2 = function(v) {
-        return function(xs1) {
-          return map13(function(x) {
-            return new Index(v, fst(x), snd(x));
-          })(xs1);
-        };
-      };
-      return concat(zipWith(f2)(vs)(xs));
-    };
-  };
-};
-var getIndexes = function(rhythmic2) {
-  return function(xws) {
-    return function(we) {
-      return function(x1) {
-        return function(dur) {
-          var voiceIndexes = getVoiceIndex(xws)(we)(x1)(dur);
-          var structIndexes = rhythmicStructIndex(rhythmic2)([0]);
-          var lenOnset = length4(rhythmicToOnsets(rhythmic2));
-          var eventIndexesPerVoice = range2(0)(lenOnset - 1 | 0);
-          var eventIndexes = funquilla(voiceIndexes)(eventIndexesPerVoice)(lenOnset);
-          return assambleIndex(voiceIndexes)(structIndexes)(eventIndexes);
-        };
-      };
-    };
-  };
-};
 
 // output/Data.DateTime.Instant/foreign.js
 var createDateTime = function(y, m, d, h, mi, s, ms) {
@@ -43268,8 +43404,8 @@ function now() {
 }
 
 // output/Effect.Now/index.js
-var map15 = /* @__PURE__ */ map(functorEffect);
-var nowDateTime = /* @__PURE__ */ map15(toDateTime)(now);
+var map18 = /* @__PURE__ */ map(functorEffect);
+var nowDateTime = /* @__PURE__ */ map18(toDateTime)(now);
 
 // output/Data.Tempo/index.js
 var unwrap3 = /* @__PURE__ */ unwrap();
@@ -43452,7 +43588,7 @@ var foldableSet = {
   }
 };
 var empty5 = empty2;
-var fromFoldable7 = function(dictFoldable) {
+var fromFoldable8 = function(dictFoldable) {
   var foldl22 = foldl(dictFoldable);
   return function(dictOrd) {
     var insert1 = insert3(dictOrd);
@@ -43479,7 +43615,7 @@ var ratioToCents = Erv.default.utils.ratioToCents;
 var makeCPSScale = (size2) => (factor) => Erv.default.cps.make(size2, factor).scale;
 
 // output/XenoPitch/index.js
-var map16 = /* @__PURE__ */ map(functorArray);
+var map19 = /* @__PURE__ */ map(functorArray);
 var ordRecord2 = /* @__PURE__ */ ordRecord()(/* @__PURE__ */ ordRecordCons(/* @__PURE__ */ ordRecordCons(/* @__PURE__ */ ordRecordCons(/* @__PURE__ */ ordRecordCons(/* @__PURE__ */ ordRecordCons(ordRecordNil)()({
   reflectSymbol: function() {
     return "set";
@@ -43501,70 +43637,70 @@ var ordRecord2 = /* @__PURE__ */ ordRecord()(/* @__PURE__ */ ordRecordCons(/* @_
     return "archi-set";
   }
 })(/* @__PURE__ */ ordArray(ordString)));
-var fromFoldable8 = /* @__PURE__ */ fromFoldable7(foldableArray)(ordRecord2);
+var fromFoldable9 = /* @__PURE__ */ fromFoldable8(foldableArray)(ordRecord2);
 var elem4 = /* @__PURE__ */ elem2(eqInt);
 var unions4 = /* @__PURE__ */ unions3(foldableArray)(ordRecord2);
 var intersection3 = /* @__PURE__ */ intersection2(ordRecord2);
 var difference4 = /* @__PURE__ */ difference3(ordRecord2);
-var fromFoldable12 = /* @__PURE__ */ fromFoldable(foldableSet);
+var fromFoldable13 = /* @__PURE__ */ fromFoldable(foldableSet);
 var mod4 = /* @__PURE__ */ mod(euclideanRingInt);
 var toMIDIInterval$prime = function(xn) {
   return ratioToCents(xn["bounded-ratio"]) / 100;
 };
 var toMIDIInterval = function(xns) {
-  return map16(toMIDIInterval$prime)(xns);
+  return map19(toMIDIInterval$prime)(xns);
 };
 var getSubset$prime = function(v) {
   return function(v1) {
     if (v1 instanceof Subset) {
-      return fromFoldable8(filter2(function(x) {
+      return fromFoldable9(filter2(function(x) {
         return elem4(v1.value0)(x.set);
       })(v));
     }
     ;
     if (v1 instanceof Unions) {
       var f2 = function(isInSet) {
-        return fromFoldable8(filter2(function(x) {
+        return fromFoldable9(filter2(function(x) {
           return elem4(isInSet)(x.set);
         })(v));
       };
-      return unions4(map16(f2)(v1.value0));
+      return unions4(map19(f2)(v1.value0));
     }
     ;
     if (v1 instanceof Intersection) {
-      var b$prime = fromFoldable8(filter2(function(x) {
+      var b$prime = fromFoldable9(filter2(function(x) {
         return elem4(v1.value1)(x.set);
       })(v));
-      var a$prime = fromFoldable8(filter2(function(x) {
+      var a$prime = fromFoldable9(filter2(function(x) {
         return elem4(v1.value0)(x.set);
       })(v));
       return intersection3(a$prime)(b$prime);
     }
     ;
     if (v1 instanceof Difference) {
-      var b$prime = fromFoldable8(filter2(function(x) {
+      var b$prime = fromFoldable9(filter2(function(x) {
         return elem4(v1.value1)(x.set);
       })(v));
-      var a$prime = fromFoldable8(filter2(function(x) {
+      var a$prime = fromFoldable9(filter2(function(x) {
         return elem4(v1.value0)(x.set);
       })(v));
       return difference4(a$prime)(b$prime);
     }
     ;
-    return fromFoldable8([]);
+    return fromFoldable9([]);
   };
 };
 var getSubSet = function(xn) {
   return function(subset) {
-    return fromFoldable12(getSubset$prime(xn)(subset));
+    return fromFoldable13(getSubset$prime(xn)(subset));
   };
 };
 var cycleAndOctavesOfPatternInSet = function(ns) {
   return function(setLen) {
-    var isOctave = map16(function(n2) {
+    var isOctave = map19(function(n2) {
       return toNumber(floor2(toNumber(n2) / toNumber(setLen)) * 12 | 0);
     })(ns);
-    var cycledList = map16(function(n2) {
+    var cycledList = map19(function(n2) {
       return mod4(n2)(setLen);
     })(ns);
     return zip(cycledList)(isOctave);
@@ -43576,15 +43712,15 @@ var addSampleRoot = function(xs) {
 var xenoPitchToMIDIInterval = function(v) {
   if (v instanceof CPSet && v.value2 instanceof Nothing) {
     var scale = makeCPSScale(v.value0)(v.value1);
-    return map16(function($79) {
+    return map19(function($79) {
       return addSampleRoot(toMIDIInterval($79));
     })([scale]);
   }
   ;
   if (v instanceof CPSet && v.value2 instanceof Just) {
     var scale = makeCPSScale(v.value0)(v.value1);
-    var subs = map16(getSubSet(scale))(v.value2.value0);
-    return map16(function($80) {
+    var subs = map19(getSubSet(scale))(v.value2.value0);
+    return map19(function($80) {
       return addSampleRoot(toMIDIInterval($80));
     })(cons(scale)(subs));
   }
@@ -43598,7 +43734,7 @@ var xenoPitchAsAuralPattern = function(v) {
       var subset = fromMaybe([0])(index(scaleAsMIDISubsets)(v.value1.value0));
       var lengthOfSet = length(subset);
       var cyclesAndOctave = cycleAndOctavesOfPatternInSet(v1)(lengthOfSet);
-      var toMIDI = map16(function(v2) {
+      var toMIDI = map19(function(v2) {
         return fromMaybe(0)(index(subset)(v2.value0)) + v2.value1;
       })(cyclesAndOctave);
       return toMIDI;
@@ -43609,7 +43745,7 @@ var xenoPitchAsAuralPattern = function(v) {
       var subset = fromMaybe([2.666])(index(scaleAsMIDISubsets)(0));
       var lengthOfSet = length(subset);
       var cyclesAndOctave = cycleAndOctavesOfPatternInSet(v1)(lengthOfSet);
-      var toMIDI = map16(function(v2) {
+      var toMIDI = map19(function(v2) {
         return fromMaybe(0)(index(subset)(v2.value0)) + v2.value1;
       })(cyclesAndOctave);
       return toMIDI;
@@ -43620,10 +43756,10 @@ var xenoPitchAsAuralPattern = function(v) {
 };
 
 // output/AuralSpecs/index.js
-var map17 = /* @__PURE__ */ map(functorArray);
+var map20 = /* @__PURE__ */ map(functorArray);
 var mod5 = /* @__PURE__ */ mod(euclideanRingInt);
-var fromFoldable13 = /* @__PURE__ */ fromFoldable(foldableList);
-var map18 = /* @__PURE__ */ map(functorList);
+var fromFoldable14 = /* @__PURE__ */ fromFoldable(foldableList);
+var map110 = /* @__PURE__ */ map(functorList);
 var scanl4 = /* @__PURE__ */ scanl(traversableArray);
 var add13 = /* @__PURE__ */ add(semiringNumber);
 var bind8 = /* @__PURE__ */ bind(bindMaybe);
@@ -43676,7 +43812,7 @@ var spreadSpeed = function(percenPos) {
 };
 var spreadSpeeds = function(percenPos) {
   return function(spLimits) {
-    return map17(function(sLimit) {
+    return map20(function(sLimit) {
       return spreadSpeed(percenPos)(sLimit);
     })(spLimits);
   };
@@ -43693,7 +43829,7 @@ var spreadSound = function(percenPos) {
 };
 var spreadSounds = function(percenPos) {
   return function(soundLimits) {
-    return map17(function(sLimit) {
+    return map20(function(sLimit) {
       return spreadSound(percenPos)(sLimit);
     })(soundLimits);
   };
@@ -43710,7 +43846,7 @@ var spreadPan = function(percenPos) {
 };
 var spreadPans = function(percenPos) {
   return function(pLimits) {
-    return map17(function(sLimit) {
+    return map20(function(sLimit) {
       return spreadPan(percenPos)(sLimit);
     })(pLimits);
   };
@@ -43727,7 +43863,7 @@ var spreadNote = function(percenPos) {
 };
 var spreadNotes = function(percenPos) {
   return function(bLimits) {
-    return map17(function(sLimit) {
+    return map20(function(sLimit) {
       return spreadNote(percenPos)(sLimit);
     })(bLimits);
   };
@@ -43744,7 +43880,7 @@ var spreadN = function(percenPos) {
 };
 var spreadNs = function(percenPos) {
   return function(nLimits) {
-    return map17(function(sLimit) {
+    return map20(function(sLimit) {
       return spreadN(percenPos)(sLimit);
     })(nLimits);
   };
@@ -43761,7 +43897,7 @@ var spreadG = function(percenPos) {
 };
 var spreadGains = function(percenPos) {
   return function(gLimits) {
-    return map17(function(sLimit) {
+    return map20(function(sLimit) {
       return spreadG(percenPos)(sLimit);
     })(gLimits);
   };
@@ -43778,7 +43914,7 @@ var spreadEnd = function(percenPos) {
 };
 var spreadEnds = function(percenPos) {
   return function(bLimits) {
-    return map17(function(sLimit) {
+    return map20(function(sLimit) {
       return spreadEnd(percenPos)(sLimit);
     })(bLimits);
   };
@@ -43795,7 +43931,7 @@ var spreadBegin = function(percenPos) {
 };
 var spreadBegins = function(percenPos) {
   return function(bLimits) {
-    return map17(function(sLimit) {
+    return map20(function(sLimit) {
       return spreadBegin(percenPos)(sLimit);
     })(bLimits);
   };
@@ -43932,25 +44068,25 @@ var isBegin = function(v) {
   return false;
 };
 var getXeNote = function(aural2) {
-  return head(filter2(isXeNote)(fromFoldable13(aural2)));
+  return head(filter2(isXeNote)(fromFoldable14(aural2)));
 };
 var getStructureIndex = function(v) {
   return fromMaybe(0)(head(v.value1.value1));
 };
 var getSpeed = function(aural2) {
-  return head(filter2(isSpeed)(fromFoldable13(aural2)));
+  return head(filter2(isSpeed)(fromFoldable14(aural2)));
 };
 var getSound = function(aural2) {
-  return head(filter2(isSound)(fromFoldable13(aural2)));
+  return head(filter2(isSound)(fromFoldable14(aural2)));
 };
 var getPan = function(aural2) {
-  return head(filter2(isPan)(fromFoldable13(aural2)));
+  return head(filter2(isPan)(fromFoldable14(aural2)));
 };
 var getNote = function(aural2) {
-  return head(filter2(isNote)(fromFoldable13(aural2)));
+  return head(filter2(isNote)(fromFoldable14(aural2)));
 };
 var getN = function(aural2) {
-  return head(filter2(isN)(fromFoldable13(aural2)));
+  return head(filter2(isN)(fromFoldable14(aural2)));
 };
 var getMovement = function(note) {
   return function(target) {
@@ -43978,22 +44114,22 @@ var getMovement = function(note) {
       return Unison.value;
     }
     ;
-    throw new Error("Failed pattern match at AuralSpecs (line 210, column 1 - line 210, column 37): " + [note.constructor.name, target.constructor.name]);
+    throw new Error("Failed pattern match at AuralSpecs (line 212, column 1 - line 212, column 37): " + [note.constructor.name, target.constructor.name]);
   };
 };
 var getMIDIInterval = function(xs) {
-  return map17(function(x) {
+  return map20(function(x) {
     return x.midiInterval;
   })(xs);
 };
 var getGain = function(aural2) {
-  return head(filter2(isGain)(fromFoldable13(aural2)));
+  return head(filter2(isGain)(fromFoldable14(aural2)));
 };
 var getEventIndex = function(v) {
   return v.value1.value2;
 };
 var getEnd = function(aural2) {
-  return head(filter2(isEnd)(fromFoldable13(aural2)));
+  return head(filter2(isEnd)(fromFoldable14(aural2)));
 };
 var getDastgahList = function(v) {
   return v.value0;
@@ -44020,7 +44156,7 @@ var spanBegin = function(v) {
               };
             };
           };
-          return map17(processBn(v1))(v2);
+          return map20(processBn(v1))(v2);
         }
         ;
         if (v instanceof CycleBlock) {
@@ -44038,7 +44174,7 @@ var spanBegin = function(v) {
               };
             };
           };
-          return map17(processBn(v1))(v2);
+          return map20(processBn(v1))(v2);
         }
         ;
         if (v instanceof CycleInBlock) {
@@ -44056,18 +44192,18 @@ var spanBegin = function(v) {
               };
             };
           };
-          return map17(processBn(v1))(v2);
+          return map20(processBn(v1))(v2);
         }
         ;
         if (v instanceof SpreadBlock) {
           var processBn = function(xs1) {
             return function(w) {
               var segment = 1 / toNumber(length(xs1));
-              var percenPositions = map18(function(v4) {
+              var percenPositions = map110(function(v4) {
                 return v4.value1;
               })(rhythmicToOnsets(v3));
-              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable13(percenPositions)));
-              var percenPos = fromMaybe(0)(index(fromFoldable13(percenPositions))(modIndex));
+              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable14(percenPositions)));
+              var percenPos = fromMaybe(0)(index(fromFoldable14(percenPositions))(modIndex));
               var limitsSnd = snoc(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
               var limitsFst = cons(0)(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
               var limits = zip(limitsFst)(limitsSnd);
@@ -44082,9 +44218,9 @@ var spanBegin = function(v) {
                     return 0.0666;
                   }
                   ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 365, column 31 - line 365, column 45): " + [v4.constructor.name]);
+                  throw new Error("Failed pattern match at AuralSpecs (line 367, column 31 - line 367, column 45): " + [v4.constructor.name]);
                 };
-                return fromMaybe(0.0666)(head(map17(f2)(filter2(isJust)(spreadBegins(percenPos)(bnLimits)))));
+                return fromMaybe(0.0666)(head(map20(f2)(filter2(isJust)(spreadBegins(percenPos)(bnLimits)))));
               }();
               return {
                 event: w.event,
@@ -44097,10 +44233,10 @@ var spanBegin = function(v) {
               };
             };
           };
-          return map17(processBn(v1))(v2);
+          return map20(processBn(v1))(v2);
         }
         ;
-        throw new Error("Failed pattern match at AuralSpecs (line 344, column 1 - line 344, column 243): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+        throw new Error("Failed pattern match at AuralSpecs (line 346, column 1 - line 346, column 243): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
       };
     };
   };
@@ -44126,7 +44262,7 @@ var spanDastgah = function(v) {
               };
             };
           };
-          return map17(processDastgah(v1))(v2);
+          return map20(processDastgah(v1))(v2);
         }
         ;
         if (v instanceof CycleBlock) {
@@ -44146,7 +44282,7 @@ var spanDastgah = function(v) {
               };
             };
           };
-          return map17(processDastgah(v1))(v2);
+          return map20(processDastgah(v1))(v2);
         }
         ;
         if (v instanceof CycleInBlock) {
@@ -44166,18 +44302,18 @@ var spanDastgah = function(v) {
               };
             };
           };
-          return map17(processDastgah(v1))(v2);
+          return map20(processDastgah(v1))(v2);
         }
         ;
         if (v instanceof SpreadBlock) {
           var processDastgah = function(xs1) {
             return function(w) {
               var segment = 1 / toNumber(length(xs1));
-              var percenPositions = map18(function(v4) {
+              var percenPositions = map110(function(v4) {
                 return v4.value1;
               })(rhythmicToOnsets(v3));
-              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable13(percenPositions)));
-              var percenPos = fromMaybe(0)(index(fromFoldable13(percenPositions))(modIndex));
+              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable14(percenPositions)));
+              var percenPos = fromMaybe(0)(index(fromFoldable14(percenPositions))(modIndex));
               var limitsSnd = snoc(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
               var limitsFst = cons(0)(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
               var limits = zip(limitsFst)(limitsSnd);
@@ -44192,9 +44328,9 @@ var spanDastgah = function(v) {
                     return 0.9666;
                   }
                   ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 267, column 31 - line 267, column 45): " + [v4.constructor.name]);
+                  throw new Error("Failed pattern match at AuralSpecs (line 269, column 31 - line 269, column 45): " + [v4.constructor.name]);
                 };
-                return fromMaybe(0.9666)(head(map17(f2)(filter2(isJust)(spreadNotes(percenPos)(noteLimits)))));
+                return fromMaybe(0.9666)(head(map20(f2)(filter2(isJust)(spreadNotes(percenPos)(noteLimits)))));
               }();
               return {
                 event: w.event,
@@ -44209,10 +44345,10 @@ var spanDastgah = function(v) {
               };
             };
           };
-          return map17(processDastgah(v1))(v2);
+          return map20(processDastgah(v1))(v2);
         }
         ;
-        throw new Error("Failed pattern match at AuralSpecs (line 246, column 1 - line 246, column 304): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+        throw new Error("Failed pattern match at AuralSpecs (line 248, column 1 - line 248, column 304): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
       };
     };
   };
@@ -44246,7 +44382,7 @@ var spanEnd = function(v) {
               };
             };
           };
-          return map17(processEnd1(v1))(v2);
+          return map20(processEnd1(v1))(v2);
         }
         ;
         if (v instanceof CycleBlock) {
@@ -44265,7 +44401,7 @@ var spanEnd = function(v) {
               };
             };
           };
-          return map17(processEnd1(v1))(v2);
+          return map20(processEnd1(v1))(v2);
         }
         ;
         if (v instanceof CycleInBlock) {
@@ -44284,18 +44420,18 @@ var spanEnd = function(v) {
               };
             };
           };
-          return map17(processEnd1(v1))(v2);
+          return map20(processEnd1(v1))(v2);
         }
         ;
         if (v instanceof SpreadBlock) {
           var processEnd1 = function(xs1) {
             return function(w) {
               var segment = 1 / toNumber(length(xs1));
-              var percenPositions = map18(function(v4) {
+              var percenPositions = map110(function(v4) {
                 return v4.value1;
               })(rhythmicToOnsets(v3));
-              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable13(percenPositions)));
-              var percenPos = fromMaybe(0)(index(fromFoldable13(percenPositions))(modIndex));
+              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable14(percenPositions)));
+              var percenPos = fromMaybe(0)(index(fromFoldable14(percenPositions))(modIndex));
               var limitsSnd = snoc(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
               var limitsFst = cons(0)(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
               var limits = zip(limitsFst)(limitsSnd);
@@ -44310,9 +44446,9 @@ var spanEnd = function(v) {
                     return 0.9666;
                   }
                   ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 313, column 31 - line 313, column 45): " + [v4.constructor.name]);
+                  throw new Error("Failed pattern match at AuralSpecs (line 315, column 31 - line 315, column 45): " + [v4.constructor.name]);
                 };
-                return fromMaybe(0.9666)(head(map17(f2)(filter2(isJust)(spreadEnds(percenPos)(endLimits)))));
+                return fromMaybe(0.9666)(head(map20(f2)(filter2(isJust)(spreadEnds(percenPos)(endLimits)))));
               }();
               return {
                 event: w.event,
@@ -44326,10 +44462,10 @@ var spanEnd = function(v) {
               };
             };
           };
-          return map17(processEnd1(v1))(v2);
+          return map20(processEnd1(v1))(v2);
         }
         ;
-        throw new Error("Failed pattern match at AuralSpecs (line 292, column 1 - line 292, column 271): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+        throw new Error("Failed pattern match at AuralSpecs (line 294, column 1 - line 294, column 271): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
       };
     };
   };
@@ -44350,7 +44486,7 @@ var spanGain = function(v) {
               };
             };
           };
-          return map17(processG(v1))(v2);
+          return map20(processG(v1))(v2);
         }
         ;
         if (v instanceof CycleBlock) {
@@ -44365,7 +44501,7 @@ var spanGain = function(v) {
               };
             };
           };
-          return map17(processG(v1))(v2);
+          return map20(processG(v1))(v2);
         }
         ;
         if (v instanceof CycleInBlock) {
@@ -44380,18 +44516,18 @@ var spanGain = function(v) {
               };
             };
           };
-          return map17(processG(v1))(v2);
+          return map20(processG(v1))(v2);
         }
         ;
         if (v instanceof SpreadBlock) {
           var processG = function(xs1) {
             return function(w) {
               var segment = 1 / toNumber(length(xs1));
-              var percenPositions = map18(function(v4) {
+              var percenPositions = map110(function(v4) {
                 return v4.value1;
               })(rhythmicToOnsets(v3));
-              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable13(percenPositions)));
-              var percenPos = fromMaybe(0)(index(fromFoldable13(percenPositions))(modIndex));
+              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable14(percenPositions)));
+              var percenPos = fromMaybe(0)(index(fromFoldable14(percenPositions))(modIndex));
               var limitsSnd = snoc(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
               var limitsFst = cons(0)(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
               var limits = zip(limitsFst)(limitsSnd);
@@ -44406,9 +44542,9 @@ var spanGain = function(v) {
                     return 0.02666;
                   }
                   ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 517, column 31 - line 517, column 45): " + [v4.constructor.name]);
+                  throw new Error("Failed pattern match at AuralSpecs (line 519, column 31 - line 519, column 45): " + [v4.constructor.name]);
                 };
-                return fromMaybe(0.02666)(head(map17(f2)(filter2(isJust)(spreadGains(percenPos)(gLimits)))));
+                return fromMaybe(0.02666)(head(map20(f2)(filter2(isJust)(spreadGains(percenPos)(gLimits)))));
               }();
               return {
                 event: w.event,
@@ -44418,10 +44554,10 @@ var spanGain = function(v) {
               };
             };
           };
-          return map17(processG(v1))(v2);
+          return map20(processG(v1))(v2);
         }
         ;
-        throw new Error("Failed pattern match at AuralSpecs (line 496, column 1 - line 496, column 151): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+        throw new Error("Failed pattern match at AuralSpecs (line 498, column 1 - line 498, column 151): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
       };
     };
   };
@@ -44441,7 +44577,7 @@ var spanN = function(v) {
               };
             };
           };
-          return map17(processN1(v1))(v2);
+          return map20(processN1(v1))(v2);
         }
         ;
         if (v instanceof CycleBlock) {
@@ -44455,7 +44591,7 @@ var spanN = function(v) {
               };
             };
           };
-          return map17(processN1(v1))(v2);
+          return map20(processN1(v1))(v2);
         }
         ;
         if (v instanceof CycleInBlock) {
@@ -44469,18 +44605,18 @@ var spanN = function(v) {
               };
             };
           };
-          return map17(processN1(v1))(v2);
+          return map20(processN1(v1))(v2);
         }
         ;
         if (v instanceof SpreadBlock) {
           var processN1 = function(xs1) {
             return function(w) {
               var segment = 1 / toNumber(length(xs1));
-              var percenPositions = map18(function(v4) {
+              var percenPositions = map110(function(v4) {
                 return v4.value1;
               })(rhythmicToOnsets(v3));
-              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable13(percenPositions)));
-              var percenPos = fromMaybe(0)(index(fromFoldable13(percenPositions))(modIndex));
+              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable14(percenPositions)));
+              var percenPos = fromMaybe(0)(index(fromFoldable14(percenPositions))(modIndex));
               var limitsSnd = snoc(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
               var limitsFst = cons(0)(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
               var limits = zip(limitsFst)(limitsSnd);
@@ -44495,9 +44631,9 @@ var spanN = function(v) {
                     return 2666;
                   }
                   ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 597, column 31 - line 597, column 45): " + [v4.constructor.name]);
+                  throw new Error("Failed pattern match at AuralSpecs (line 599, column 31 - line 599, column 45): " + [v4.constructor.name]);
                 };
-                return fromMaybe(2666)(head(map17(f2)(filter2(isJust)(spreadNs(percenPos)(nLimits)))));
+                return fromMaybe(2666)(head(map20(f2)(filter2(isJust)(spreadNs(percenPos)(nLimits)))));
               }();
               return {
                 event: w.event,
@@ -44506,10 +44642,10 @@ var spanN = function(v) {
               };
             };
           };
-          return map17(processN1(v1))(v2);
+          return map20(processN1(v1))(v2);
         }
         ;
-        throw new Error("Failed pattern match at AuralSpecs (line 576, column 1 - line 576, column 121): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+        throw new Error("Failed pattern match at AuralSpecs (line 578, column 1 - line 578, column 121): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
       };
     };
   };
@@ -44531,7 +44667,7 @@ var spanPan = function(v) {
               };
             };
           };
-          return map17(processP(v1))(v2);
+          return map20(processP(v1))(v2);
         }
         ;
         if (v instanceof CycleBlock) {
@@ -44547,7 +44683,7 @@ var spanPan = function(v) {
               };
             };
           };
-          return map17(processP(v1))(v2);
+          return map20(processP(v1))(v2);
         }
         ;
         if (v instanceof CycleInBlock) {
@@ -44563,18 +44699,18 @@ var spanPan = function(v) {
               };
             };
           };
-          return map17(processP(v1))(v2);
+          return map20(processP(v1))(v2);
         }
         ;
         if (v instanceof SpreadBlock) {
           var processP = function(xs1) {
             return function(w) {
               var segment = 1 / toNumber(length(xs1));
-              var percenPositions = map18(function(v4) {
+              var percenPositions = map110(function(v4) {
                 return v4.value1;
               })(rhythmicToOnsets(v3));
-              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable13(percenPositions)));
-              var percenPos = fromMaybe(0)(index(fromFoldable13(percenPositions))(modIndex));
+              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable14(percenPositions)));
+              var percenPos = fromMaybe(0)(index(fromFoldable14(percenPositions))(modIndex));
               var limitsSnd = snoc(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
               var limitsFst = cons(0)(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
               var limits = zip(limitsFst)(limitsSnd);
@@ -44589,9 +44725,9 @@ var spanPan = function(v) {
                     return 0.5666;
                   }
                   ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 467, column 31 - line 467, column 45): " + [v4.constructor.name]);
+                  throw new Error("Failed pattern match at AuralSpecs (line 469, column 31 - line 469, column 45): " + [v4.constructor.name]);
                 };
-                return fromMaybe(0.5666)(head(map17(f2)(filter2(isJust)(spreadPans(percenPos)(pLimits)))));
+                return fromMaybe(0.5666)(head(map20(f2)(filter2(isJust)(spreadPans(percenPos)(pLimits)))));
               }();
               return {
                 event: w.event,
@@ -44602,10 +44738,10 @@ var spanPan = function(v) {
               };
             };
           };
-          return map17(processP(v1))(v2);
+          return map20(processP(v1))(v2);
         }
         ;
-        throw new Error("Failed pattern match at AuralSpecs (line 446, column 1 - line 446, column 179): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+        throw new Error("Failed pattern match at AuralSpecs (line 448, column 1 - line 448, column 179): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
       };
     };
   };
@@ -44624,7 +44760,7 @@ var spanSound = function(v) {
               };
             };
           };
-          return map17(processSound1(v1))(v2);
+          return map20(processSound1(v1))(v2);
         }
         ;
         if (v instanceof CycleBlock) {
@@ -44637,7 +44773,7 @@ var spanSound = function(v) {
               };
             };
           };
-          return map17(processSound1(v1))(v2);
+          return map20(processSound1(v1))(v2);
         }
         ;
         if (v instanceof CycleInBlock) {
@@ -44650,18 +44786,18 @@ var spanSound = function(v) {
               };
             };
           };
-          return map17(processSound1(v1))(v2);
+          return map20(processSound1(v1))(v2);
         }
         ;
         if (v instanceof SpreadBlock) {
           var processSound1 = function(xs1) {
             return function(event$prime) {
               var segment = 1 / toNumber(length(xs1));
-              var percenPositions = map18(function(v4) {
+              var percenPositions = map110(function(v4) {
                 return v4.value1;
               })(rhythmicToOnsets(v3));
-              var modIndex = mod5(getEventIndex(event$prime))(length(fromFoldable13(percenPositions)));
-              var percenPos = fromMaybe(0)(index(fromFoldable13(percenPositions))(modIndex));
+              var modIndex = mod5(getEventIndex(event$prime))(length(fromFoldable14(percenPositions)));
+              var percenPos = fromMaybe(0)(index(fromFoldable14(percenPositions))(modIndex));
               var limitsSnd = snoc(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
               var limitsFst = cons(0)(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
               var limits = zip(limitsFst)(limitsSnd);
@@ -44676,9 +44812,9 @@ var spanSound = function(v) {
                     return "error thingy";
                   }
                   ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 654, column 31 - line 654, column 45): " + [v4.constructor.name]);
+                  throw new Error("Failed pattern match at AuralSpecs (line 656, column 31 - line 656, column 45): " + [v4.constructor.name]);
                 };
-                return fromMaybe("error assigning sound SpreadBlock")(head(map17(f2)(filter2(isJust)(spreadSounds(percenPos)(soundLimits)))));
+                return fromMaybe("error assigning sound SpreadBlock")(head(map20(f2)(filter2(isJust)(spreadSounds(percenPos)(soundLimits)))));
               }();
               return {
                 event: event$prime,
@@ -44686,10 +44822,10 @@ var spanSound = function(v) {
               };
             };
           };
-          return map17(processSound1(v1))(v2);
+          return map20(processSound1(v1))(v2);
         }
         ;
-        throw new Error("Failed pattern match at AuralSpecs (line 633, column 1 - line 633, column 97): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+        throw new Error("Failed pattern match at AuralSpecs (line 635, column 1 - line 635, column 97): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
       };
     };
   };
@@ -44712,7 +44848,7 @@ var spanSpeed = function(v) {
               };
             };
           };
-          return map17(processSp(v1))(v2);
+          return map20(processSp(v1))(v2);
         }
         ;
         if (v instanceof CycleBlock) {
@@ -44729,7 +44865,7 @@ var spanSpeed = function(v) {
               };
             };
           };
-          return map17(processSp(v1))(v2);
+          return map20(processSp(v1))(v2);
         }
         ;
         if (v instanceof CycleInBlock) {
@@ -44746,18 +44882,18 @@ var spanSpeed = function(v) {
               };
             };
           };
-          return map17(processSp(v1))(v2);
+          return map20(processSp(v1))(v2);
         }
         ;
         if (v instanceof SpreadBlock) {
           var processSp = function(xs1) {
             return function(w) {
               var segment = 1 / toNumber(length(xs1));
-              var percenPositions = map18(function(v4) {
+              var percenPositions = map110(function(v4) {
                 return v4.value1;
               })(rhythmicToOnsets(v3));
-              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable13(percenPositions)));
-              var percenPos = fromMaybe(0)(index(fromFoldable13(percenPositions))(modIndex));
+              var modIndex = mod5(getEventIndex(w.event))(length(fromFoldable14(percenPositions)));
+              var percenPos = fromMaybe(0)(index(fromFoldable14(percenPositions))(modIndex));
               var limitsSnd = snoc(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)))(1);
               var limitsFst = cons(0)(scanl4(add13)(0)(replicate(length(xs1) - 1 | 0)(segment)));
               var limits = zip(limitsFst)(limitsSnd);
@@ -44772,9 +44908,9 @@ var spanSpeed = function(v) {
                     return 1.0666;
                   }
                   ;
-                  throw new Error("Failed pattern match at AuralSpecs (line 417, column 31 - line 417, column 45): " + [v4.constructor.name]);
+                  throw new Error("Failed pattern match at AuralSpecs (line 419, column 31 - line 419, column 45): " + [v4.constructor.name]);
                 };
-                return fromMaybe(1.0666)(head(map17(f2)(filter2(isJust)(spreadSpeeds(percenPos)(spLimits)))));
+                return fromMaybe(1.0666)(head(map20(f2)(filter2(isJust)(spreadSpeeds(percenPos)(spLimits)))));
               }();
               return {
                 event: w.event,
@@ -44786,16 +44922,16 @@ var spanSpeed = function(v) {
               };
             };
           };
-          return map17(processSp(v1))(v2);
+          return map20(processSp(v1))(v2);
         }
         ;
-        throw new Error("Failed pattern match at AuralSpecs (line 396, column 1 - line 396, column 211): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+        throw new Error("Failed pattern match at AuralSpecs (line 398, column 1 - line 398, column 211): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
       };
     };
   };
 };
 var getBegin = function(aural2) {
-  return head(filter2(isBegin)(fromFoldable13(aural2)));
+  return head(filter2(isBegin)(fromFoldable14(aural2)));
 };
 var cycleAurals = function(n2) {
   return function(mVoice) {
@@ -44804,7 +44940,7 @@ var cycleAurals = function(n2) {
         return v.value1;
       }(voice);
       var len = length4(aurals);
-      return bind8(index(fromFoldable13(aurals))(mod5(n2)(len)))(function(newVal) {
+      return bind8(index(fromFoldable14(aurals))(mod5(n2)(len)))(function(newVal) {
         return getEnd(newVal);
       });
     });
@@ -44819,7 +44955,7 @@ var processGain = function(v) {
         }
         ;
         if (v2 instanceof Nothing) {
-          return map17(function(w) {
+          return map20(function(w) {
             return {
               event: w.event,
               s: w.s,
@@ -44834,7 +44970,7 @@ var processGain = function(v) {
         }
         ;
         if (v2 instanceof Just && v2.value0 instanceof Gain) {
-          return spanGain(v2.value0.value0)(fromFoldable13(v2.value0.value1))(v3)(v1);
+          return spanGain(v2.value0.value0)(fromFoldable14(v2.value0.value1))(v3)(v1);
         }
         ;
         return [];
@@ -44861,7 +44997,7 @@ var processN = function(v) {
         }
         ;
         if (v2 instanceof Nothing) {
-          return map17(function(w) {
+          return map20(function(w) {
             return {
               event: w.event,
               s: w.s,
@@ -44875,7 +45011,7 @@ var processN = function(v) {
         }
         ;
         if (v2 instanceof Just && v2.value0 instanceof N) {
-          return spanN(v2.value0.value0)(fromFoldable13(v2.value0.value1))(v3)(v1);
+          return spanN(v2.value0.value0)(fromFoldable14(v2.value0.value1))(v3)(v1);
         }
         ;
         return [];
@@ -44902,7 +45038,7 @@ var processPan = function(v) {
         }
         ;
         if (v2 instanceof Nothing) {
-          return map17(function(w) {
+          return map20(function(w) {
             return {
               event: w.event,
               s: w.s,
@@ -44918,7 +45054,7 @@ var processPan = function(v) {
         }
         ;
         if (v2 instanceof Just && v2.value0 instanceof Pan) {
-          return spanPan(v2.value0.value0)(fromFoldable13(v2.value0.value1))(v3)(v1);
+          return spanPan(v2.value0.value0)(fromFoldable14(v2.value0.value1))(v3)(v1);
         }
         ;
         return [];
@@ -44949,7 +45085,7 @@ var processSound = function(v) {
         }
         ;
         if (v2 instanceof Just && v2.value0 instanceof Sound) {
-          return spanSound(v2.value0.value0)(fromFoldable13(v2.value0.value1))(v3)(v1);
+          return spanSound(v2.value0.value0)(fromFoldable14(v2.value0.value1))(v3)(v1);
         }
         ;
         return [];
@@ -44976,7 +45112,7 @@ var processSpeed = function(v) {
         }
         ;
         if (v2 instanceof Nothing) {
-          return map17(function(w) {
+          return map20(function(w) {
             return {
               event: w.event,
               s: w.s,
@@ -44993,7 +45129,7 @@ var processSpeed = function(v) {
         }
         ;
         if (v2 instanceof Just && v2.value0 instanceof Speed) {
-          return spanSpeed(v2.value0.value0)(fromFoldable13(v2.value0.value1))(v3)(v1);
+          return spanSpeed(v2.value0.value0)(fromFoldable14(v2.value0.value1))(v3)(v1);
         }
         ;
         return [];
@@ -45020,7 +45156,7 @@ var processBegin = function(v) {
         }
         ;
         if (v2 instanceof Nothing) {
-          return map17(function(w) {
+          return map20(function(w) {
             return {
               event: w.event,
               s: w.s,
@@ -45038,7 +45174,7 @@ var processBegin = function(v) {
         }
         ;
         if (v2 instanceof Just && v2.value0 instanceof Begin) {
-          return spanBegin(v2.value0.value0)(fromFoldable13(v2.value0.value1))(v3)(v1);
+          return spanBegin(v2.value0.value0)(fromFoldable14(v2.value0.value1))(v3)(v1);
         }
         ;
         return [];
@@ -45065,7 +45201,7 @@ var processEnd = function(v) {
         }
         ;
         if (v2 instanceof Nothing) {
-          return map17(function(w) {
+          return map20(function(w) {
             return {
               event: w.event,
               s: w.s,
@@ -45084,7 +45220,7 @@ var processEnd = function(v) {
         }
         ;
         if (v2 instanceof Just && v2.value0 instanceof End) {
-          return spanEnd(v2.value0.value0)(fromFoldable13(v2.value0.value1))(v3)(v1);
+          return spanEnd(v2.value0.value0)(fromFoldable14(v2.value0.value1))(v3)(v1);
         }
         ;
         return [];
@@ -45142,7 +45278,7 @@ var analysisDastgahPattern = function(v) {
         })(uncons(v2));
         var second2 = snoc(s.tail)(s.head);
         var zipped = zip(v2)(second2);
-        return map17(assambleDastgahNote)(zipped);
+        return map20(assambleDastgahNote)(zipped);
       }
       ;
       if (v instanceof CycleBlock) {
@@ -45152,16 +45288,16 @@ var analysisDastgahPattern = function(v) {
         })(uncons(v2));
         var second2 = snoc(s.tail)(s.head);
         var zipped = zip(v2)(second2);
-        return map17(assambleDastgahNote)(zipped);
+        return map20(assambleDastgahNote)(zipped);
       }
       ;
       if (v instanceof CycleInBlock) {
-        var structure = map17(function(x) {
+        var structure = map20(function(x) {
           return mod5(x)(length(v2));
-        })(map17(function(x) {
+        })(map20(function(x) {
           return fromMaybe(0)(head(x));
         })(rhythmicStructIndex(v1)([0])));
-        var seque = map17(function(x) {
+        var seque = map20(function(x) {
           return fromMaybe(0)(index(v2)(x));
         })(structure);
         var s = fromMaybe({
@@ -45170,12 +45306,12 @@ var analysisDastgahPattern = function(v) {
         })(uncons(seque));
         var second2 = snoc(s.tail)(s.head);
         var zipped = zip(seque)(second2);
-        return map17(assambleDastgahNote)(zipped);
+        return map20(assambleDastgahNote)(zipped);
       }
       ;
       if (v instanceof SpreadBlock) {
         var segment = 1 / toNumber(length(v2));
-        var percenPositions = map18(function(v3) {
+        var percenPositions = map110(function(v3) {
           return v3.value1;
         })(rhythmicToOnsets(v1));
         var limitsSnd = snoc(scanl4(add13)(0)(replicate(length(v2) - 1 | 0)(segment)))(1);
@@ -45184,24 +45320,24 @@ var analysisDastgahPattern = function(v) {
         var noteLimits = zip(v2)(limits);
         var funka = function(noteLimits1) {
           return function(percenPos) {
-            return map17(fst)(filter2(function(v3) {
+            return map20(fst)(filter2(function(v3) {
               return percenPos >= fst(v3.value1) && percenPos < snd(v3.value1);
             })(noteLimits1));
           };
         };
-        var realNS = concat(map17(function(percenPos) {
+        var realNS = concat(map20(function(percenPos) {
           return funka(noteLimits)(percenPos);
-        })(fromFoldable13(percenPositions)));
+        })(fromFoldable14(percenPositions)));
         var s = fromMaybe({
           head: 0,
           tail: []
         })(uncons(realNS));
         var second2 = snoc(s.tail)(s.head);
         var zipped = zip(realNS)(second2);
-        return map17(assambleDastgahNote)(zipped);
+        return map20(assambleDastgahNote)(zipped);
       }
       ;
-      throw new Error("Failed pattern match at AuralSpecs (line 166, column 1 - line 166, column 75): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
+      throw new Error("Failed pattern match at AuralSpecs (line 168, column 1 - line 168, column 75): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
     };
   };
 };
@@ -45216,7 +45352,7 @@ var processNote = function(v) {
             }
             ;
             if (v2 instanceof Nothing) {
-              return map17(function(w) {
+              return map20(function(w) {
                 return {
                   event: w.event,
                   s: w.s,
@@ -45232,13 +45368,13 @@ var processNote = function(v) {
             }
             ;
             if (v2 instanceof Just && v2.value0 instanceof Dastgah) {
-              var newList = getMIDIInterval(analysisDastgahPattern(v2.value0.value0)(v1)(fromFoldable13(getDastgahList(v2.value0.value1))));
+              var newList = getMIDIInterval(analysisDastgahPattern(v2.value0.value0)(v1)(fromFoldable14(getDastgahList(v2.value0.value1))));
               return spanDastgah(v2.value0.value0)(newList)(v5)(v1);
             }
             ;
             if (v2 instanceof Just && v2.value0 instanceof Xeno) {
               var target = fromMaybe(new EDO(0, 0))(lookup4(fst(v2.value0.value0))(v4));
-              var midiIntervals = xenoPitchAsAuralPattern(new Tuple(target, snd(v2.value0.value0)))(fromFoldable13(v2.value0.value2));
+              var midiIntervals = xenoPitchAsAuralPattern(new Tuple(target, snd(v2.value0.value0)))(fromFoldable14(v2.value0.value2));
               return spanXeno(v2.value0.value1)(fromFoldable23(midiIntervals))(v5)(v1);
             }
             ;
@@ -45252,7 +45388,7 @@ var processNote = function(v) {
                   return [2666];
                 }
                 ;
-                throw new Error("Failed pattern match at AuralSpecs (line 118, column 19 - line 120, column 39): " + [v3.constructor.name]);
+                throw new Error("Failed pattern match at AuralSpecs (line 120, column 19 - line 122, column 39): " + [v3.constructor.name]);
               }();
               return [];
             }
@@ -45288,9 +45424,9 @@ var auralSpecs = function(m) {
     return function(aurals) {
       return function(xenopitch) {
         return function(events) {
-          return concat(map17(function(a) {
+          return concat(map20(function(a) {
             return auralSpecs$prime(m)(rhy)(a)(xenopitch)(events);
-          })(fromFoldable13(aurals)));
+          })(fromFoldable14(aurals)));
         };
       };
     };
@@ -45336,13 +45472,13 @@ var functorReaderT = function(dictFunctor) {
   };
 };
 var applyReaderT = function(dictApply) {
-  var apply5 = apply(dictApply);
+  var apply6 = apply(dictApply);
   var functorReaderT1 = functorReaderT(dictApply.Functor0());
   return {
     apply: function(v) {
       return function(v1) {
         return function(r) {
-          return apply5(v(r))(v1(r));
+          return apply6(v(r))(v1(r));
         };
       };
     },
@@ -45416,12 +45552,12 @@ var monadAskReaderT = function(dictMonad) {
 
 // output/Control.Monad.State.Trans/index.js
 var functorStateT = function(dictFunctor) {
-  var map27 = map(dictFunctor);
+  var map29 = map(dictFunctor);
   return {
     map: function(f2) {
       return function(v) {
         return function(s) {
-          return map27(function(v1) {
+          return map29(function(v1) {
             return new Tuple(f2(v1.value0), v1.value1);
           })(v(s));
         };
@@ -45563,13 +45699,13 @@ var runP = function(p) {
   };
 };
 var oneOfAs = function(dictFunctor) {
-  var map27 = map(dictFunctor);
+  var map29 = map(dictFunctor);
   return function(dictFoldable) {
     var choice6 = choice(dictFoldable);
     return function(dictMonad) {
       return function(p) {
         return function(xs) {
-          return choice6(map27(function(v) {
+          return choice6(map29(function(v) {
             return voidLeft4(p(v.value0))(v.value1);
           })(xs));
         };
@@ -45598,7 +45734,7 @@ var oneOfAs3 = /* @__PURE__ */ oneOfAs(functorArray)(foldableArray);
 var bind12 = /* @__PURE__ */ bind(bindParserT);
 var foldDigits2 = /* @__PURE__ */ foldDigits(foldableList);
 var pure12 = /* @__PURE__ */ pure(applicativeParserT);
-var map19 = /* @__PURE__ */ map(functorParserT);
+var map21 = /* @__PURE__ */ map(functorParserT);
 var negate2 = /* @__PURE__ */ negate(ringInt);
 var identity13 = /* @__PURE__ */ identity(categoryFn);
 var some4 = /* @__PURE__ */ some2(alternativeParserT)(lazyParserT);
@@ -45618,11 +45754,11 @@ var lift23 = /* @__PURE__ */ lift2(applyParserT);
 var mul2 = /* @__PURE__ */ mul(semiringInt);
 var parseDigit2 = /* @__PURE__ */ parseDigit(monadStateT2);
 var append12 = /* @__PURE__ */ append(/* @__PURE__ */ semigroupReaderT(applyEither)(semigroupUnit));
-var map110 = /* @__PURE__ */ map(functorMaybe);
+var map111 = /* @__PURE__ */ map(functorMaybe);
 var put2 = /* @__PURE__ */ put(monadStateStateT2);
 var $$void4 = /* @__PURE__ */ $$void(functorParserT);
 var applySecond5 = /* @__PURE__ */ applySecond(applyEither);
-var apply4 = /* @__PURE__ */ apply(applyEither);
+var apply5 = /* @__PURE__ */ apply(applyEither);
 var map23 = /* @__PURE__ */ map(functorEither);
 var toEnum9 = /* @__PURE__ */ toEnum(boundedEnumYear);
 var toEnum12 = /* @__PURE__ */ toEnum(boundedEnumMonth);
@@ -45923,8 +46059,8 @@ var parseSignedInt = function(dictMonad) {
   return function(maxLength) {
     return function(validators) {
       return function(errMsg) {
-        return bind12(map19(isJust)(optionMaybe($$char("-"))))(function(isNegative) {
-          return map19(function() {
+        return bind12(map21(isJust)(optionMaybe($$char("-"))))(function(isNegative) {
+          return map21(function() {
             if (isNegative) {
               return negate2;
             }
@@ -45964,7 +46100,7 @@ var initialAccum = /* @__PURE__ */ function() {
 var formatterCommandParser = /* @__PURE__ */ function() {
   return alt(altParserT)(oneOfAs3(monadIdentity)(function($664) {
     return $$try(string($664));
-  })([new Tuple("YYYY", YearFull.value), new Tuple("YY", YearTwoDigits.value), new Tuple("Y", YearAbsolute.value), new Tuple("MMMM", MonthFull.value), new Tuple("MMM", MonthShort.value), new Tuple("MM", MonthTwoDigits.value), new Tuple("DD", DayOfMonthTwoDigits.value), new Tuple("D", DayOfMonth.value), new Tuple("E", DayOfWeek.value), new Tuple("X", UnixTimestamp.value), new Tuple("dddd", DayOfWeekName.value), new Tuple("ddd", DayOfWeekNameShort.value), new Tuple("HH", Hours24.value), new Tuple("hh", Hours12.value), new Tuple("a", Meridiem.value), new Tuple("mm", MinutesTwoDigits.value), new Tuple("m", Minutes.value), new Tuple("ss", SecondsTwoDigits.value), new Tuple("s", Seconds2.value), new Tuple("SSS", Milliseconds2.value), new Tuple("SS", MillisecondsTwoDigits.value), new Tuple("S", MillisecondsShort.value)]))(map19(Placeholder.create)(placeholderContent));
+  })([new Tuple("YYYY", YearFull.value), new Tuple("YY", YearTwoDigits.value), new Tuple("Y", YearAbsolute.value), new Tuple("MMMM", MonthFull.value), new Tuple("MMM", MonthShort.value), new Tuple("MM", MonthTwoDigits.value), new Tuple("DD", DayOfMonthTwoDigits.value), new Tuple("D", DayOfMonth.value), new Tuple("E", DayOfWeek.value), new Tuple("X", UnixTimestamp.value), new Tuple("dddd", DayOfWeekName.value), new Tuple("ddd", DayOfWeekNameShort.value), new Tuple("HH", Hours24.value), new Tuple("hh", Hours12.value), new Tuple("a", Meridiem.value), new Tuple("mm", MinutesTwoDigits.value), new Tuple("m", Minutes.value), new Tuple("ss", SecondsTwoDigits.value), new Tuple("s", Seconds2.value), new Tuple("SSS", Milliseconds2.value), new Tuple("SS", MillisecondsTwoDigits.value), new Tuple("S", MillisecondsShort.value)]))(map21(Placeholder.create)(placeholderContent));
 }();
 var formatParser = /* @__PURE__ */ some4(formatterCommandParser);
 var parseFormatString = /* @__PURE__ */ runP(formatParser);
@@ -46052,7 +46188,7 @@ var unformatCommandParser = /* @__PURE__ */ function() {
             year: v1.year
           };
         };
-      })(map19(fromEnum12)(parseMonth1));
+      })(map21(fromEnum12)(parseMonth1));
     }
     ;
     if (v instanceof MonthShort) {
@@ -46069,7 +46205,7 @@ var unformatCommandParser = /* @__PURE__ */ function() {
             year: v1.year
           };
         };
-      })(map19(fromEnum12)(parseShortMonth1));
+      })(map21(fromEnum12)(parseShortMonth1));
     }
     ;
     if (v instanceof MonthTwoDigits) {
@@ -46124,8 +46260,8 @@ var unformatCommandParser = /* @__PURE__ */ function() {
     }
     ;
     if (v instanceof UnixTimestamp) {
-      return bind12(map19(foldDigits2)(some4(parseDigit2)))(function(s) {
-        var v1 = map110(toDateTime)(instant(1e3 * toNumber(s)));
+      return bind12(map21(foldDigits2)(some4(parseDigit2)))(function(s) {
+        var v1 = map111(toDateTime)(instant(1e3 * toNumber(s)));
         if (v1 instanceof Nothing) {
           return fail("Incorrect timestamp");
         }
@@ -46165,7 +46301,7 @@ var unformatCommandParser = /* @__PURE__ */ function() {
             year: v1.year
           };
         };
-      })(map19(fromEnum33)(parseDayOfWeekName1));
+      })(map21(fromEnum33)(parseDayOfWeekName1));
     }
     ;
     if (v instanceof DayOfWeekNameShort) {
@@ -46182,7 +46318,7 @@ var unformatCommandParser = /* @__PURE__ */ function() {
             year: v1.year
           };
         };
-      })(map19(fromEnum33)(parseDayOfWeekNameShort1));
+      })(map21(fromEnum33)(parseDayOfWeekNameShort1));
     }
     ;
     if (v instanceof Hours24) {
@@ -46405,7 +46541,7 @@ var adjustDay = function(v) {
   };
 };
 var unformatAccumToDateTime = function(a) {
-  return applySecond5(validAccum(a))(apply4(map23(DateTime.create)(apply4(apply4(map23(canonicalDate)(maybe(new Left("Incorrect year"))(pure7)(toEnum9(fromMaybe(0)(a.year)))))(maybe(new Left("Incorrect month"))(pure7)(toEnum12(fromMaybe(1)(a.month)))))(maybe(new Left("Incorrect day"))(pure7)(toEnum23(adjustDay(a.hour)(fromMaybe(1)(a.day)))))))(apply4(apply4(apply4(map23(Time.create)(maybe(new Left("Incorrect hour"))(pure7)(toEnum33(fromMaybe(0)(map110(adjustMeridiem(a.meridiem))(a.hour))))))(maybe(new Left("Incorrect minute"))(pure7)(toEnum42(fromMaybe(0)(a.minute)))))(maybe(new Left("Incorrect second"))(pure7)(toEnum52(fromMaybe(0)(a.second)))))(maybe(new Left("Incorrect millisecond"))(pure7)(toEnum62(fromMaybe(0)(a.millisecond))))));
+  return applySecond5(validAccum(a))(apply5(map23(DateTime.create)(apply5(apply5(map23(canonicalDate)(maybe(new Left("Incorrect year"))(pure7)(toEnum9(fromMaybe(0)(a.year)))))(maybe(new Left("Incorrect month"))(pure7)(toEnum12(fromMaybe(1)(a.month)))))(maybe(new Left("Incorrect day"))(pure7)(toEnum23(adjustDay(a.hour)(fromMaybe(1)(a.day)))))))(apply5(apply5(apply5(map23(Time.create)(maybe(new Left("Incorrect hour"))(pure7)(toEnum33(fromMaybe(0)(map111(adjustMeridiem(a.meridiem))(a.hour))))))(maybe(new Left("Incorrect minute"))(pure7)(toEnum42(fromMaybe(0)(a.minute)))))(maybe(new Left("Incorrect second"))(pure7)(toEnum52(fromMaybe(0)(a.second)))))(maybe(new Left("Incorrect millisecond"))(pure7)(toEnum62(fromMaybe(0)(a.millisecond))))));
 };
 var unformatParser = function(dictMonad) {
   var mapParserT1 = mapParserT2(dictMonad.Bind1().Apply0().Functor0());
@@ -46450,7 +46586,7 @@ var discard3 = /* @__PURE__ */ discard(discardUnit)(bindParserT);
 var alt7 = /* @__PURE__ */ alt(altParserT);
 var choice4 = /* @__PURE__ */ choice(foldableArray);
 var applySecond6 = /* @__PURE__ */ applySecond(applyParserT);
-var map20 = /* @__PURE__ */ map(functorParserT);
+var map24 = /* @__PURE__ */ map(functorParserT);
 var tokenParser2 = /* @__PURE__ */ makeTokenParser(haskellStyle);
 var whitespace2 = /* @__PURE__ */ function() {
   return tokenParser2.whiteSpace;
@@ -46582,7 +46718,7 @@ var $lazy_parseRepeat = /* @__PURE__ */ $runtime_lazy8("parseRepeat", "Rhythm", 
 var $lazy_parseRhythmList = /* @__PURE__ */ $runtime_lazy8("parseRhythmList", "Rhythm", function() {
   return bind10(pure8(1))(function() {
     return bind10($lazy_parseXOorSDorReporBjork(56))(function(x) {
-      return bind10(map20(toList)(many1($lazy_parseXOorSDorReporBjork(57))))(function(xs) {
+      return bind10(map24(toList)(many1($lazy_parseXOorSDorReporBjork(57))))(function(xs) {
         return pure8(new Rhythmics(new Cons(x, xs)));
       });
     });
@@ -46620,9 +46756,9 @@ var rhythmic = /* @__PURE__ */ bind10(/* @__PURE__ */ pure8(1))(function() {
 });
 
 // output/Parser/index.js
-var add2 = /* @__PURE__ */ add(semiringRational);
+var add3 = /* @__PURE__ */ add(semiringRational);
 var toRational4 = /* @__PURE__ */ toRational(toRationalInt);
-var map21 = /* @__PURE__ */ map(functorList);
+var map25 = /* @__PURE__ */ map(functorList);
 var toUnfoldable6 = /* @__PURE__ */ toUnfoldable(unfoldableList);
 var unions5 = /* @__PURE__ */ unions(ordString);
 var unions1 = /* @__PURE__ */ unions5(foldableList);
@@ -46631,13 +46767,13 @@ var pure9 = /* @__PURE__ */ pure(applicativeParserT);
 var discard4 = /* @__PURE__ */ discard(discardUnit)(bindParserT);
 var show10 = /* @__PURE__ */ show(showInt);
 var choice5 = /* @__PURE__ */ choice(foldableArray);
-var fromFoldable9 = /* @__PURE__ */ fromFoldable(foldableList);
+var fromFoldable10 = /* @__PURE__ */ fromFoldable(foldableList);
 var applySecond7 = /* @__PURE__ */ applySecond(applyParserT);
 var alt8 = /* @__PURE__ */ alt(altParserT);
 var liftEither2 = /* @__PURE__ */ liftEither(monadIdentity);
 var liftMaybe2 = /* @__PURE__ */ liftMaybe(monadIdentity);
 var adjust3 = /* @__PURE__ */ adjust(durationHours);
-var map111 = /* @__PURE__ */ map(functorParserT);
+var map112 = /* @__PURE__ */ map(functorParserT);
 var eq13 = /* @__PURE__ */ eq(/* @__PURE__ */ eqMaybe(eqString));
 var lookup5 = /* @__PURE__ */ lookup(ordString);
 var elem5 = /* @__PURE__ */ elem(foldableList)(eqString);
@@ -46646,7 +46782,7 @@ var mapWithIndex3 = /* @__PURE__ */ mapWithIndex(functorWithIndexMap);
 var filter4 = /* @__PURE__ */ filter(ordString);
 var not1 = /* @__PURE__ */ not(/* @__PURE__ */ heytingAlgebraFunction(heytingAlgebraBoolean));
 var unions22 = /* @__PURE__ */ unions5(foldableArray);
-var fromFoldable14 = /* @__PURE__ */ fromFoldable2(foldableArray);
+var fromFoldable15 = /* @__PURE__ */ fromFoldable2(foldableArray);
 var unexpressVantage = function(v) {
   if (v instanceof VantagePointExpression) {
     return v.value0;
@@ -46676,7 +46812,7 @@ var toRat = function(x) {
   var floored = floor2(x);
   var fract = x - toNumber(floored);
   var fract$prime = round2(fract * toNumber(1e6));
-  return add2(toRational4(floored)(1))(toRational4(fract$prime)(1e6));
+  return add3(toRational4(floored)(1))(toRational4(fract$prime)(1e6));
 };
 var toNumber$prime2 = function(v) {
   if (v instanceof Left) {
@@ -46687,20 +46823,20 @@ var toNumber$prime2 = function(v) {
     return v.value0;
   }
   ;
-  throw new Error("Failed pattern match at Parser (line 776, column 1 - line 776, column 40): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Parser (line 787, column 1 - line 787, column 40): " + [v.constructor.name]);
 };
 var toListAurals2 = function(mapas) {
-  var vals = concat2(map21(toUnfoldable6)(mapas));
+  var vals = concat2(map25(toUnfoldable6)(mapas));
   var toAurals = function(key) {
     return function(vals1) {
-      return singleton3(key)(map21(snd)(filter3(function(v) {
+      return singleton3(key)(map25(snd)(filter3(function(v) {
         return fst(v) === key;
       })(vals1)));
     };
   };
-  return unions1(map21(function(k) {
+  return unions1(map25(function(k) {
     return toAurals(k)(vals);
-  })(map21(fst)(vals)));
+  })(map25(fst)(vals)));
 };
 var strWS = function(x) {
   return bind11(pure9(1))(function() {
@@ -46802,7 +46938,7 @@ var parseProcessTo = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function()
 });
 var structParser = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
   return bind11(sepBy(natural3)(string(".")))(function(xs) {
-    return pure9(fromFoldable9(xs));
+    return pure9(fromFoldable10(xs));
   });
 });
 var timeOfDay = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
@@ -46820,7 +46956,7 @@ var timeOfDay = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
 });
 var union4 = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
   return bind11(sepBy(natural3)(reservedOp2("u")))(function(ns) {
-    return pure9(new Unions(fromFoldable9(ns)));
+    return pure9(new Unions(fromFoldable10(ns)));
   });
 });
 var local2 = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
@@ -46928,7 +47064,7 @@ var getVantageMap = function(program) {
     ;
     return false;
   };
-  return unions1(map21(unexpressVantage)(filter3(function(expression1) {
+  return unions1(map25(unexpressVantage)(filter3(function(expression1) {
     return isVantage(expression1);
   })(program)));
 };
@@ -46940,7 +47076,7 @@ var getTemporalMap = function(program) {
     ;
     return false;
   };
-  return unions1(map21(unexpressTempo)(filter3(function(expression1) {
+  return unions1(map25(unexpressTempo)(filter3(function(expression1) {
     return isTemporal(expression1);
   })(program)));
 };
@@ -46965,7 +47101,7 @@ var getTempoRef = function(v) {
     return Nothing.value;
   }
   ;
-  throw new Error("Failed pattern match at Parser (line 734, column 1 - line 734, column 39): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Parser (line 745, column 1 - line 745, column 39): " + [v.constructor.name]);
 };
 var getAuralMap2 = function(program) {
   var isAural = function(v) {
@@ -46975,7 +47111,7 @@ var getAuralMap2 = function(program) {
     ;
     return false;
   };
-  return toListAurals2(map21(unexpressAural2)(filter3(function(expression1) {
+  return toListAurals2(map25(unexpressAural2)(filter3(function(expression1) {
     return isAural(expression1);
   })(program)));
 };
@@ -47050,14 +47186,14 @@ var utcA = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
   });
 });
 var cps = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
-  return bind11(map111(toNumber$prime2)(naturalOrFloat2))(function(x) {
+  return bind11(map112(toNumber$prime2)(naturalOrFloat2))(function(x) {
     return bind11(reserved2("cps"))(function() {
       return pure9(new CPS(toRat(x)));
     });
   });
 });
 var cpm = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
-  return bind11(map111(toNumber$prime2)(naturalOrFloat2))(function(x) {
+  return bind11(map112(toNumber$prime2)(naturalOrFloat2))(function(x) {
     return bind11(reserved2("cpm"))(function() {
       return pure9(new CPM(toRat(x)));
     });
@@ -47070,7 +47206,7 @@ var chooseSubset = /* @__PURE__ */ choice5([/* @__PURE__ */ $$try(intersection4)
 var subsets = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
   return bind11(reserved2("|"))(function() {
     return bind11(sepBy(chooseSubset)(comma2))(function(xs) {
-      return pure9(new Just(fromFoldable9(xs)));
+      return pure9(new Just(fromFoldable10(xs)));
     });
   });
 });
@@ -47134,10 +47270,10 @@ var checkTempi = function($copy_aMap) {
               return;
             }
             ;
-            throw new Error("Failed pattern match at Parser (line 729, column 34 - line 731, column 92): " + [v1.constructor.name]);
+            throw new Error("Failed pattern match at Parser (line 740, column 34 - line 742, column 92): " + [v1.constructor.name]);
           }
           ;
-          throw new Error("Failed pattern match at Parser (line 727, column 10 - line 731, column 92): " + [v.constructor.name]);
+          throw new Error("Failed pattern match at Parser (line 738, column 10 - line 742, column 92): " + [v.constructor.name]);
         }
         ;
         while (!$tco_done) {
@@ -47197,10 +47333,10 @@ var check2 = function($copy_v) {
                     return;
                   }
                   ;
-                  throw new Error("Failed pattern match at Parser (line 700, column 26 - line 702, column 102): " + [v7.constructor.name]);
+                  throw new Error("Failed pattern match at Parser (line 711, column 26 - line 713, column 102): " + [v7.constructor.name]);
                 }
                 ;
-                throw new Error("Failed pattern match at Parser (line 698, column 3 - line 702, column 102): " + [v6.constructor.name]);
+                throw new Error("Failed pattern match at Parser (line 709, column 3 - line 713, column 102): " + [v6.constructor.name]);
               }
               ;
               if (v5 instanceof Temporal && v5.value0 instanceof Novus) {
@@ -47228,10 +47364,10 @@ var check2 = function($copy_v) {
                     return false;
                   }
                   ;
-                  throw new Error("Failed pattern match at Parser (line 707, column 16 - line 709, column 35): " + [v7.constructor.name]);
+                  throw new Error("Failed pattern match at Parser (line 718, column 16 - line 720, column 35): " + [v7.constructor.name]);
                 }
                 ;
-                throw new Error("Failed pattern match at Parser (line 705, column 3 - line 709, column 35): " + [v6.constructor.name]);
+                throw new Error("Failed pattern match at Parser (line 716, column 3 - line 720, column 35): " + [v6.constructor.name]);
               }
               ;
               if (v5 instanceof Replica) {
@@ -47264,15 +47400,15 @@ var check2 = function($copy_v) {
                       return;
                     }
                     ;
-                    throw new Error("Failed pattern match at Parser (line 717, column 24 - line 719, column 83): " + [v7.constructor.name]);
+                    throw new Error("Failed pattern match at Parser (line 728, column 24 - line 730, column 83): " + [v7.constructor.name]);
                   }
                   ;
-                  throw new Error("Failed pattern match at Parser (line 715, column 5 - line 719, column 83): " + [v6.constructor.name]);
+                  throw new Error("Failed pattern match at Parser (line 726, column 5 - line 730, column 83): " + [v6.constructor.name]);
                 }
                 ;
               }
               ;
-              throw new Error("Failed pattern match at Parser (line 694, column 1 - line 694, column 114): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name, v5.constructor.name]);
+              throw new Error("Failed pattern match at Parser (line 705, column 1 - line 705, column 114): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name, v5.constructor.name]);
             }
             ;
             while (!$tco_done) {
@@ -47313,14 +47449,10 @@ var charWS3 = function(x) {
     });
   });
 };
-var figure = /* @__PURE__ */ bind11(/* @__PURE__ */ charWS3("("))(function() {
-  return bind11(natural3)(function(n2) {
-    return bind11(charWS3("/"))(function() {
-      return bind11(natural3)(function(d) {
-        return bind11(charWS3(")"))(function() {
-          return pure9(toRational4(n2)(d));
-        });
-      });
+var figure = /* @__PURE__ */ bind11(natural3)(function(n2) {
+  return bind11(charWS3("/"))(function() {
+    return bind11(natural3)(function(d) {
+      return pure9(toRational4(n2)(d));
     });
   });
 });
@@ -47400,7 +47532,7 @@ var xPitchExpression = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function
 var bpm = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
   return bind11(figure)(function(fig) {
     return bind11(charWS3("="))(function() {
-      return bind11(map111(toNumber$prime2)(naturalOrFloat2))(function(x) {
+      return bind11(map112(toNumber$prime2)(naturalOrFloat2))(function(x) {
         return bind11(reserved2("bpm"))(function() {
           return pure9(new BPM(toRat(x), fig));
         });
@@ -47408,8 +47540,79 @@ var bpm = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
     });
   });
 });
+var beatMoveA = /* @__PURE__ */ bind11(naturalOrFloat2)(function(num) {
+  return bind11(reserved2("beats from current"))(function() {
+    return pure9(new Left(toRat(toNumber$prime2(num))));
+  });
+});
+var moveA = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
+  return bind11(reserved2(".move"))(function() {
+    return bind11(reservedOp2("="))(function() {
+      return bind11(choice5([$$try(beatMoveA), secsMoveA]))(function(x) {
+        return pure9(new Move(x));
+      });
+    });
+  });
+});
+var beatA = /* @__PURE__ */ bind11(naturalOrFloat2)(function(num) {
+  return bind11(reserved2("beats from eval"))(function() {
+    return pure9(new Beat(toRat(toNumber$prime2(num))));
+  });
+});
+var buildA = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
+  return bind11(reserved2(".lift"))(function() {
+    return bind11(reservedOp2("="))(function() {
+      return bind11(choice5([$$try(beatA), $$try(secsA), utcA]))(function(x) {
+        return pure9(new Build(x));
+      });
+    });
+  });
+});
+var vantage = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
+  return bind11(identifier2)(function(id) {
+    return bind11(choice5([buildA, moveA, removeA]))(function(x) {
+      return bind11(charWS3(";"))(function() {
+        return pure9(singleton3(id)(x));
+      });
+    });
+  });
+});
+var vantageExpression = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
+  return bind11(vantage)(function(x) {
+    return pure9(new VantagePointExpression(x));
+  });
+});
+var atEval = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
+  return bind11(reserved2("atEval"))(function() {
+    return pure9(0.01);
+  });
+});
+var acceleration = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
+  return bind11(reserved2("~"))(function() {
+    return bind11(map112(toNumber$prime2)(naturalOrFloat2))(function(freq) {
+      return bind11(reserved2("<<"))(function() {
+        return bind11(map112(toNumber$prime2)(naturalOrFloat2))(function(ph) {
+          return bind11(reservedOp2("range"))(function() {
+            return bind11(choice5([$$try(cpm), $$try(bpm), $$try(cps), $$try(ratio)]))(function(max3) {
+              return bind11(reservedOp2(","))(function() {
+                return bind11(choice5([$$try(cpm), $$try(bpm), $$try(cps), $$try(ratio)]))(function(min4) {
+                  return pure9(new Sin({
+                    osc: toRat(freq),
+                    min: min4,
+                    max: max3,
+                    phase: toRat(ph)
+                  }));
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+});
 var tempoMark = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
-  return bind11(choice5([$$try(cpm), $$try(bpm), $$try(cps), ratio]))(function(x) {
+  return bind11(choice5([$$try(cpm), $$try(bpm), $$try(cps), $$try(ratio), acceleration]))(function(x) {
     return pure9(x);
   });
 });
@@ -47462,6 +47665,17 @@ var metric = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
     });
   });
 });
+var kairos = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
+  return bind11(voiceId2)(function(id) {
+    return bind11(reserved2("<-"))(function() {
+      return bind11(choice5([secsFromEval, atEval]))(function(n2) {
+        return bind11(alt8(parens3(tempoMark))(pure9(XTempo.value)))(function(tm) {
+          return pure9(new Tuple(id, new Kairos(n2, tm)));
+        });
+      });
+    });
+  });
+});
 var novus = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
   return bind11(whitespace3)(function() {
     return bind11(reserved2("Novus"))(function() {
@@ -47482,64 +47696,6 @@ var converge = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
     return bind11(reserved2("<-"))(function() {
       return bind11(choice5([$$try(diverging), $$try(converging), novus]))(function(polytemporal) {
         return pure9(new Tuple(id, polytemporal));
-      });
-    });
-  });
-});
-var beatMoveA = /* @__PURE__ */ bind11(naturalOrFloat2)(function(num) {
-  return bind11(reserved2("beats from current"))(function() {
-    return pure9(new Left(toRat(toNumber$prime2(num))));
-  });
-});
-var moveA = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
-  return bind11(reserved2(".move"))(function() {
-    return bind11(reservedOp2("="))(function() {
-      return bind11(choice5([$$try(beatMoveA), secsMoveA]))(function(x) {
-        return pure9(new Move(x));
-      });
-    });
-  });
-});
-var beatA = /* @__PURE__ */ bind11(naturalOrFloat2)(function(num) {
-  return bind11(reserved2("beats from eval"))(function() {
-    return pure9(new Beat(toRat(toNumber$prime2(num))));
-  });
-});
-var buildA = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
-  return bind11(reserved2(".lift"))(function() {
-    return bind11(reservedOp2("="))(function() {
-      return bind11(choice5([$$try(beatA), $$try(secsA), utcA]))(function(x) {
-        return pure9(new Build(x));
-      });
-    });
-  });
-});
-var vantage = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
-  return bind11(identifier2)(function(id) {
-    return bind11(choice5([buildA, moveA, removeA]))(function(x) {
-      return bind11(charWS3(";"))(function() {
-        return pure9(singleton3(id)(x));
-      });
-    });
-  });
-});
-var vantageExpression = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
-  return bind11(vantage)(function(x) {
-    return pure9(new VantagePointExpression(x));
-  });
-});
-var atEval = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
-  return bind11(reserved2("atEval"))(function() {
-    return pure9(0.01);
-  });
-});
-var kairos = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
-  return bind11(voiceId2)(function(id) {
-    return bind11(reserved2("<-"))(function() {
-      return bind11(choice5([secsFromEval, atEval]))(function(n2) {
-        return bind11(alt8(parens3(tempoMark))(pure9(XTempo.value)))(function(tm) {
-          return pure9(new Tuple(id, new Kairos(n2, tm)));
-        });
       });
     });
   });
@@ -47569,7 +47725,7 @@ var expression = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
 var parseProgram = /* @__PURE__ */ discard4(whitespace3)(function() {
   return bind11(many3(expression))(function(xs) {
     return discard4(eof)(function() {
-      return pure9(fromFoldable14(xs));
+      return pure9(fromFoldable15(xs));
     });
   });
 });
@@ -47578,16 +47734,17 @@ var parseProgram = /* @__PURE__ */ discard4(whitespace3)(function() {
 var lookup6 = /* @__PURE__ */ lookup(ordString);
 var pure10 = /* @__PURE__ */ pure(applicativeEffect);
 var toRational5 = /* @__PURE__ */ toRational(toRationalInt);
-var map24 = /* @__PURE__ */ map(functorArray);
+var map26 = /* @__PURE__ */ map(functorArray);
 var eq14 = /* @__PURE__ */ eq(/* @__PURE__ */ eqArray(eqInt));
 var mod6 = /* @__PURE__ */ mod(euclideanRingInt);
-var fromFoldable10 = /* @__PURE__ */ fromFoldable(foldableList);
+var fromFoldable11 = /* @__PURE__ */ fromFoldable(foldableList);
 var div12 = /* @__PURE__ */ div(euclideanRingRational);
 var mul12 = /* @__PURE__ */ mul(semiringRational);
-var map112 = /* @__PURE__ */ map(functorMaybe);
+var map113 = /* @__PURE__ */ map(functorMaybe);
+var sum4 = /* @__PURE__ */ sum(foldableArray)(semiringNumber);
 var intersectionWith2 = /* @__PURE__ */ intersectionWith(ordString);
 var eq23 = /* @__PURE__ */ eq(/* @__PURE__ */ eqMaybe(/* @__PURE__ */ eqTuple(eqString)(eqNumber)));
-var map25 = /* @__PURE__ */ map(functorEffect);
+var map27 = /* @__PURE__ */ map(functorEffect);
 var show11 = /* @__PURE__ */ show(showNumber);
 var traverseWithIndex2 = /* @__PURE__ */ traverseWithIndex(traversableWithIndexMap)(applicativeEffect);
 var map32 = /* @__PURE__ */ map(functorFn);
@@ -47631,7 +47788,7 @@ var getTempoMark = function(v) {
     return v.value2;
   }
   ;
-  throw new Error("Failed pattern match at Calculations (line 502, column 1 - line 502, column 41): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Calculations (line 524, column 1 - line 524, column 41): " + [v.constructor.name]);
 };
 var getRhythmic = function($copy_v) {
   return function($copy_v1) {
@@ -47657,10 +47814,10 @@ var getRhythmic = function($copy_v) {
           return;
         }
         ;
-        throw new Error("Failed pattern match at Calculations (line 486, column 30 - line 488, column 64): " + [v2.constructor.name]);
+        throw new Error("Failed pattern match at Calculations (line 508, column 30 - line 510, column 64): " + [v2.constructor.name]);
       }
       ;
-      throw new Error("Failed pattern match at Calculations (line 484, column 1 - line 484, column 60): " + [v.constructor.name, v1.constructor.name]);
+      throw new Error("Failed pattern match at Calculations (line 506, column 1 - line 506, column 60): " + [v.constructor.name, v1.constructor.name]);
     }
     ;
     while (!$tco_done) {
@@ -47699,10 +47856,10 @@ var getKey = function($copy_v) {
           return;
         }
         ;
-        throw new Error("Failed pattern match at Calculations (line 336, column 3 - line 338, column 25): " + [v2.constructor.name]);
+        throw new Error("Failed pattern match at Calculations (line 344, column 3 - line 346, column 25): " + [v2.constructor.name]);
       }
       ;
-      throw new Error("Failed pattern match at Calculations (line 333, column 1 - line 333, column 53): " + [v.constructor.name, v1.constructor.name]);
+      throw new Error("Failed pattern match at Calculations (line 341, column 1 - line 341, column 53): " + [v.constructor.name, v1.constructor.name]);
     }
     ;
     while (!$tco_done) {
@@ -47748,10 +47905,10 @@ var f$prime = function($copy_v) {
           return;
         }
         ;
-        throw new Error("Failed pattern match at Calculations (line 344, column 21 - line 346, column 41): " + [v2.constructor.name]);
+        throw new Error("Failed pattern match at Calculations (line 352, column 21 - line 354, column 41): " + [v2.constructor.name]);
       }
       ;
-      throw new Error("Failed pattern match at Calculations (line 342, column 1 - line 342, column 47): " + [v.constructor.name, v1.constructor.name]);
+      throw new Error("Failed pattern match at Calculations (line 350, column 1 - line 350, column 47): " + [v.constructor.name, v1.constructor.name]);
     }
     ;
     while (!$tco_done) {
@@ -47781,8 +47938,8 @@ var keysForReferencePath = function($copy_aKey) {
         ;
         if (otherwise) {
           var nextCheck = getKey(mapa)(fromMaybe(defTemporal)(lookup6(aKey)(mapa)));
-          var $212 = isNotConvergent(nextCheck)(mapa);
-          if ($212) {
+          var $222 = isNotConvergent(nextCheck)(mapa);
+          if ($222) {
             $tco_done = true;
             return new Cons(nextCheck, listOfReferences);
           }
@@ -47793,7 +47950,7 @@ var keysForReferencePath = function($copy_aKey) {
           return;
         }
         ;
-        throw new Error("Failed pattern match at Calculations (line 324, column 1 - line 324, column 85): " + [aKey.constructor.name, mapa.constructor.name, listOfReferences.constructor.name]);
+        throw new Error("Failed pattern match at Calculations (line 332, column 1 - line 332, column 85): " + [aKey.constructor.name, mapa.constructor.name, listOfReferences.constructor.name]);
       }
       ;
       while (!$tco_done) {
@@ -47840,10 +47997,10 @@ var tempoMark2 = function($copy_v) {
           return;
         }
         ;
-        throw new Error("Failed pattern match at Calculations (line 498, column 28 - line 500, column 62): " + [v2.constructor.name]);
+        throw new Error("Failed pattern match at Calculations (line 520, column 28 - line 522, column 62): " + [v2.constructor.name]);
       }
       ;
-      throw new Error("Failed pattern match at Calculations (line 496, column 1 - line 496, column 59): " + [v.constructor.name, v1.constructor.name]);
+      throw new Error("Failed pattern match at Calculations (line 518, column 1 - line 518, column 59): " + [v.constructor.name, v1.constructor.name]);
     }
     ;
     while (!$tco_done) {
@@ -47866,7 +48023,7 @@ var cpPos = function(v) {
         return toNumber(floor2(n$prime)) + v1;
       }
       ;
-      throw new Error("Failed pattern match at Calculations (line 465, column 1 - line 465, column 50): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
+      throw new Error("Failed pattern match at Calculations (line 452, column 1 - line 452, column 50): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
     };
   };
 };
@@ -47876,7 +48033,7 @@ var filterEventToPosFrom = function(cp) {
       return function(lenOnset) {
         var result = function() {
           if (cp instanceof Structure) {
-            return fromMaybe(0)(head(map24(function(x) {
+            return fromMaybe(0)(head(map26(function(x) {
               return cpPos(new Left(cp.value0))(snd(x))(lenOnset);
             })(filter2(function(x) {
               return eq14(fst(x))(cp.value1);
@@ -47884,7 +48041,7 @@ var filterEventToPosFrom = function(cp) {
           }
           ;
           if (cp instanceof Process) {
-            return fromMaybe(0)(head(map24(function(x) {
+            return fromMaybe(0)(head(map26(function(x) {
               return cpPos(new Right(cp.value0))(snd(x))(lenOnset);
             })(filter2(function(x) {
               return fst(x) === mod6(cp.value0)(lenOnset);
@@ -47908,7 +48065,7 @@ var filterEventToPosTo = function(cp) {
       return function(lenOnset) {
         var result = function() {
           if (cp instanceof StructureTo) {
-            return fromMaybe(0)(head(map24(function(x) {
+            return fromMaybe(0)(head(map26(function(x) {
               return cpPos(new Left(cp.value0))(snd(x))(lenOnset);
             })(filter2(function(x) {
               return eq14(fst(x))(cp.value1);
@@ -47916,7 +48073,7 @@ var filterEventToPosTo = function(cp) {
           }
           ;
           if (cp instanceof ProcessTo) {
-            return fromMaybe(0)(head(map24(function(x) {
+            return fromMaybe(0)(head(map26(function(x) {
               return cpPos(new Right(cp.value0))(snd(x))(lenOnset);
             })(filter2(function(x) {
               return fst(x) === mod6(cp.value0)(lenOnset);
@@ -47935,22 +48092,19 @@ var filterEventToPosTo = function(cp) {
   };
 };
 var innerPosCTo = function(rhythmic2) {
-  return function(t) {
-    return function(cTo) {
-      var structIndexes = rhythmicStructIndex(rhythmic2)([0]);
-      var onsetPercent = fromFoldable10(rhythmicToOnsets(rhythmic2));
-      var structAndPos = zip(structIndexes)(map24(function(v) {
-        return v.value1;
-      })(onsetPercent));
-      var lenOnset = length(onsetPercent);
-      var eventIndexesPerVoice = range2(0)(lenOnset - 1 | 0);
-      var eventsAndPos = zip(eventIndexesPerVoice)(map24(function(v) {
-        return v.value1;
-      })(onsetPercent));
-      var percentPos = filterEventToPosTo(cTo)(structAndPos)(eventsAndPos)(lenOnset);
-      var dur = durFromRhythmic(rhythmic2)(t);
-      return percentPos;
-    };
+  return function(cTo) {
+    var structIndexes = rhythmicStructIndex(rhythmic2)([0]);
+    var onsetPercent = fromFoldable11(rhythmicToOnsets(rhythmic2));
+    var structAndPos = zip(structIndexes)(map26(function(v) {
+      return v.value1;
+    })(onsetPercent));
+    var lenOnset = length(onsetPercent);
+    var eventIndexesPerVoice = range2(0)(lenOnset - 1 | 0);
+    var eventsAndPos = zip(eventIndexesPerVoice)(map26(function(v) {
+      return v.value1;
+    })(onsetPercent));
+    var percentPos = filterEventToPosTo(cTo)(structAndPos)(eventsAndPos)(lenOnset);
+    return percentPos;
   };
 };
 var convergences = function($copy_v) {
@@ -47977,10 +48131,10 @@ var convergences = function($copy_v) {
           return;
         }
         ;
-        throw new Error("Failed pattern match at Calculations (line 316, column 31 - line 318, column 59): " + [v2.constructor.name]);
+        throw new Error("Failed pattern match at Calculations (line 324, column 31 - line 326, column 59): " + [v2.constructor.name]);
       }
       ;
-      throw new Error("Failed pattern match at Calculations (line 314, column 1 - line 314, column 82): " + [v.constructor.name, v1.constructor.name]);
+      throw new Error("Failed pattern match at Calculations (line 322, column 1 - line 322, column 82): " + [v.constructor.name, v1.constructor.name]);
     }
     ;
     while (!$tco_done) {
@@ -48033,7 +48187,7 @@ var calculateRTempo = function($copy_v) {
           }
           ;
           if (v2 instanceof Prop) {
-            var newTM = fromMaybe(new CPM(fromInt2(120)))(map112(function(temporal2) {
+            var newTM = fromMaybe(new CPM(fromInt2(120)))(map113(function(temporal2) {
               return tempoMark2(v)(temporal2);
             })(lookup6(v2.value0)(v)));
             var newProp = toNumber(v2.value1) / toNumber(v2.value2) * v3;
@@ -48044,7 +48198,8 @@ var calculateRTempo = function($copy_v) {
             return;
           }
           ;
-          throw new Error("Failed pattern match at Calculations (line 392, column 1 - line 392, column 82): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+          $tco_done = true;
+          return 0;
         }
         ;
         while (!$tco_done) {
@@ -48077,33 +48232,64 @@ var processTempoMark = function(v) {
       ;
       if (v instanceof Prop) {
         var prop = toNumber(v.value1) / toNumber(v.value2);
-        var otherTempo = map112(function(temporal2) {
+        var otherTempo = map113(function(temporal2) {
           return calculateRTempo(v2)(v1)(tempoMark2(v2)(temporal2))(prop);
         })(lookup6(v.value0)(v2));
         return fromMaybe(120)(otherTempo);
       }
       ;
-      throw new Error("Failed pattern match at Calculations (line 382, column 1 - line 382, column 73): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
+      return 0;
+    };
+  };
+};
+var establishDur = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v instanceof Dur) {
+          return toNumber3(v.value0);
+        }
+        ;
+        if (v instanceof Sin) {
+          var min4 = processTempoMark(v.value0.min)(v1)(v2);
+          var max3 = processTempoMark(v.value0.max)(v1)(v2);
+          return durInSecs(sum4(rhythmicToSinDur(v3)(toNumber3(v.value0.osc))(min4)(max3)(toNumber3(v.value0.phase))))(min4);
+        }
+        ;
+        return durFromRhythmic(v3)(processTempoMark(v)(v1)(v2));
+      };
+    };
+  };
+};
+var rhythmicToOnsets$prime = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v instanceof Sin) {
+          var min4 = processTempoMark(v.value0.min)(v1)(v2);
+          var max3 = processTempoMark(v.value0.max)(v1)(v2);
+          return rhythmicToOnsetsSin(v3)(toNumber3(v.value0.osc))(min4)(max3)(toNumber3(v.value0.phase));
+        }
+        ;
+        return rhythmicToOnsets(v3);
+      };
     };
   };
 };
 var calculateCFrom = function(cp) {
-  return function(t) {
-    return function(rhythmic2) {
-      var structIndexes = rhythmicStructIndex(rhythmic2)([0]);
-      var onsetPercent = fromFoldable10(rhythmicToOnsets(rhythmic2));
-      var structAndPos = zip(structIndexes)(map24(function(v) {
-        return v.value1;
-      })(onsetPercent));
-      var lenOnset = length(onsetPercent);
-      var eventIndexesPerVoice = range2(0)(lenOnset - 1 | 0);
-      var eventsAndPos = zip(eventIndexesPerVoice)(map24(function(v) {
-        return v.value1;
-      })(onsetPercent));
-      var percentPos = filterEventToPosFrom(cp)(structAndPos)(eventsAndPos)(lenOnset);
-      var dur = durFromRhythmic(rhythmic2)(t);
-      return percentPos;
-    };
+  return function(rhythmic2) {
+    var structIndexes = rhythmicStructIndex(rhythmic2)([0]);
+    var onsetPercent = fromFoldable11(rhythmicToOnsets(rhythmic2));
+    var structAndPos = zip(structIndexes)(map26(function(v) {
+      return v.value1;
+    })(onsetPercent));
+    var lenOnset = length(onsetPercent);
+    var eventIndexesPerVoice = range2(0)(lenOnset - 1 | 0);
+    var eventsAndPos = zip(eventIndexesPerVoice)(map26(function(v) {
+      return v.value1;
+    })(onsetPercent));
+    var percentPos = filterEventToPosFrom(cp)(structAndPos)(eventsAndPos)(lenOnset);
+    return percentPos;
   };
 };
 var x1NovusVoice = function(tp) {
@@ -48112,9 +48298,8 @@ var x1NovusVoice = function(tp) {
       return function(cFrom$prime) {
         return function(rhythmic2) {
           return function(mapa) {
-            var tempo = processTempoMark(tm)(tp.tempo)(mapa);
-            var cFrom = calculateCFrom(cFrom$prime)(tempo)(rhythmic2);
-            var dur = durFromRhythmic(rhythmic2)(tempo);
+            var cFrom = calculateCFrom(cFrom$prime)(rhythmic2);
+            var dur = establishDur(tm)(tp.tempo)(mapa)(rhythmic2);
             var x1 = cp - cFrom * dur;
             return pure10(x1);
           };
@@ -48148,7 +48333,7 @@ var aligner = function(v) {
       return ceiledModInMetre * toNumber(v1.value0);
     }
     ;
-    throw new Error("Failed pattern match at Calculations (line 420, column 1 - line 420, column 38): " + [v.constructor.name, v1.constructor.name]);
+    throw new Error("Failed pattern match at Calculations (line 409, column 1 - line 409, column 38): " + [v.constructor.name, v1.constructor.name]);
   };
 };
 var calculateCToMetric = function(v) {
@@ -48177,13 +48362,12 @@ var x1MetricVoice = function(tp) {
       return function(cFrom$prime) {
         return function(rhythmic2) {
           return function(mapa) {
-            var tempo = processTempoMark(tm)(tp.tempo)(mapa);
             var $$eval = secsFromOriginAtEval(tp);
             var externalVoiceSecs = 1 / toNumber3(tp.tempo.freq);
             var cyclesAtEval = toNumber3(timeToCount(tp.tempo)(tp["eval"]));
             var cTo = calculateCToMetric(cyclesAtEval)(cTo$prime);
-            var cFrom = calculateCFrom(cFrom$prime)(tempo)(rhythmic2);
-            var dur = durFromRhythmic(rhythmic2)(tempo);
+            var cFrom = calculateCFrom(cFrom$prime)(rhythmic2);
+            var dur = establishDur(tm)(tp.tempo)(mapa)(rhythmic2);
             var x1 = calculateStartConvergent(externalVoiceSecs)(cTo)(dur)(cFrom);
             return pure10(x1);
           };
@@ -48223,15 +48407,14 @@ var recursiveRefX1 = function(v) {
             var cKey = getKey(v2)(v1);
             var v5 = convergences(v2)(v1);
             var rhythmic2 = getRhythmic(v2)(v1);
-            var processedTM = processTempoMark(tempoMark2(v2)(v1))(v.tempo)(v2);
-            var dur = durFromRhythmic(rhythmic2)(processedTM);
-            var cFrom = calculateCFrom(v5.value1)(processedTM)(rhythmic2);
+            var dur = establishDur(tempoMark2(v2)(v1))(v.tempo)(v2)(rhythmic2);
+            var cFrom = calculateCFrom(v5.value1)(rhythmic2);
             var temporalHack = fromMaybe(defTemporal)(lookup6(cKey)(v2));
             return function __do2() {
               var incomingKeyX1 = function() {
-                var $332 = eq23(v3)(Nothing.value);
-                if ($332) {
-                  return map25(Just.create)(map25(Tuple.create(cKey))(findReferencedX1(v)(temporalHack)(v2)))();
+                var $353 = eq23(v3)(Nothing.value);
+                if ($353) {
+                  return map27(Just.create)(map27(Tuple.create(cKey))(findReferencedX1(v)(temporalHack)(v2)))();
                 }
                 ;
                 return v3;
@@ -48239,10 +48422,9 @@ var recursiveRefX1 = function(v) {
               var v6 = fromMaybe(new Tuple("error", 2.666))(incomingKeyX1);
               var refTemporal2 = fromMaybe(defTemporal)(lookup6(v6.value0)(v2));
               var refRhythmic2 = getRhythmic(v2)(refTemporal2);
-              var refTM = processTempoMark(tempoMark2(v2)(refTemporal2))(v.tempo)(v2);
-              var refDur2 = durFromRhythmic(refRhythmic2)(refTM);
+              var refDur2 = establishDur(tempoMark2(v2)(refTemporal2))(v.tempo)(v2)(refRhythmic2);
               var refVoiceAtEval = elapsedVoiceAtEval(v)(v6.value1)(refDur2)();
-              var innerPos = innerPosCTo(refRhythmic2)(refTM)(v5.value0);
+              var innerPos = innerPosCTo(refRhythmic2)(v5.value0);
               var cTo = calculateCToNEW(innerPos)(refVoiceAtEval)(v5.value0);
               var x1 = calculateStartConvergent(refDur2)(cTo)(dur)(cFrom);
               return v6.value1 + x1;
@@ -48253,9 +48435,8 @@ var recursiveRefX1 = function(v) {
             var refTemporal = fromMaybe(defTemporal)(lookup6(v4.value0)(v2));
             var v5 = convergences(v2)(refTemporal);
             var refRhythmic = getRhythmic(v2)(refTemporal);
-            var refProcessedTM = processTempoMark(tempoMark2(v2)(refTemporal))(v.tempo)(v2);
-            var refDur = durFromRhythmic(refRhythmic)(refProcessedTM);
-            var cFrom = calculateCFrom(v5.value1)(refProcessedTM)(refRhythmic);
+            var refDur = establishDur(tempoMark2(v2)(refTemporal))(v.tempo)(v2)(refRhythmic);
+            var cFrom = calculateCFrom(v5.value1)(refRhythmic);
             return function __do2() {
               var refX1 = function() {
                 if (v3 instanceof Nothing) {
@@ -48266,22 +48447,22 @@ var recursiveRefX1 = function(v) {
                   var prevTemporal = fromMaybe(defTemporal)(lookup6(fst(v3.value0))(v2));
                   var prevRhythmic = getRhythmic(v2)(prevTemporal);
                   var prevTM = processTempoMark(tempoMark2(v2)(prevTemporal))(v.tempo)(v2);
-                  var prevDur = durFromRhythmic(prevRhythmic)(prevTM);
+                  var prevDur = establishDur(tempoMark2(v2)(prevTemporal))(v.tempo)(v2)(prevRhythmic);
                   var prevVoiceAtEval = elapsedVoiceAtEval(v)(snd(v3.value0))(prevDur)();
-                  var innerPos = innerPosCTo(prevRhythmic)(prevTM)(v5.value0);
+                  var innerPos = innerPosCTo(prevRhythmic)(v5.value0);
                   var cTo = calculateCToNEW(innerPos)(prevVoiceAtEval)(v5.value0);
                   var refX12 = calculateStartConvergent(prevDur)(cTo)(refDur)(cFrom);
                   return snd(v3.value0) + refX12;
                 }
                 ;
-                throw new Error("Failed pattern match at Calculations (line 298, column 12 - line 309, column 47): " + [v3.constructor.name]);
+                throw new Error("Failed pattern match at Calculations (line 305, column 12 - line 317, column 47): " + [v3.constructor.name]);
               }();
               var result = recursiveRefX1(v)(v1)(v2)(new Just(new Tuple(v4.value0, refX1)))(v4.value1)();
               return result;
             };
           }
           ;
-          throw new Error("Failed pattern match at Calculations (line 256, column 1 - line 256, column 128): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
+          throw new Error("Failed pattern match at Calculations (line 257, column 1 - line 257, column 128): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
         };
       };
     };
@@ -48323,7 +48504,7 @@ var findReferencedX1 = function(v) {
         return pure10(0);
       }
       ;
-      throw new Error("Failed pattern match at Calculations (line 231, column 1 - line 231, column 83): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
+      throw new Error("Failed pattern match at Calculations (line 232, column 1 - line 232, column 83): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
     };
   };
 };
@@ -48336,16 +48517,14 @@ var x1ConvergeVoice = function(tp) {
             return function(mapa) {
               var refTemporal = fromMaybe(defTemporal)(lookup6(cKey)(mapa));
               var refRhythmic = getRhythmic(mapa)(refTemporal);
-              var refTempo = processTempoMark(tempoMark2(mapa)(refTemporal))(tp.tempo)(mapa);
-              var refDur = durFromRhythmic(refRhythmic)(refTempo);
+              var refDur = establishDur(tempoMark2(mapa)(refTemporal))(tp.tempo)(mapa)(refRhythmic);
               return function __do2() {
                 var refX1 = findReferencedX1(tp)(refTemporal)(mapa)();
                 var refVoiceAtEval = elapsedVoiceAtEval(tp)(refX1)(refDur)();
-                var innerPos = innerPosCTo(refRhythmic)(refTempo)(cTo$prime);
+                var innerPos = innerPosCTo(refRhythmic)(cTo$prime);
                 var cTo = calculateCToNEW(innerPos)(refVoiceAtEval)(cTo$prime);
-                var processedTempoMark = processTempoMark(tm)(tp.tempo)(mapa);
-                var cFrom = calculateCFrom(cFrom$prime)(processedTempoMark)(rhythmic2);
-                var dur = durFromRhythmic(rhythmic2)(processedTempoMark);
+                var cFrom = calculateCFrom(cFrom$prime)(rhythmic2);
+                var dur = establishDur(tm)(tp.tempo)(mapa)(rhythmic2);
                 var x1 = calculateStartConvergent(refDur)(cTo)(dur)(cFrom);
                 return refX1 + x1;
               };
@@ -48358,7 +48537,7 @@ var x1ConvergeVoice = function(tp) {
 };
 var addPosixOriginToCalculation = function(posix) {
   return function(es) {
-    return map24(function(v) {
+    return map26(function(v) {
       return new Event(new Onset(v.value0.value0, v.value0.value1 + posix), v.value1);
     })(es);
   };
@@ -48378,17 +48557,16 @@ var calculateTemporal = function(v) {
         if (v3 instanceof Temporal && v3.value0 instanceof Kairos) {
           var ws = secsFromOriginAtWS(v1);
           var we = secsFromOriginAtWE(v1);
-          var tempo = processTempoMark(v3.value0.value1)(v1.tempo)(v);
           var posixAtOrigin = fromDateTimeToPosix(origin(v1.tempo));
           var posFromEvent = function(v4) {
             return v4.value0.value1;
           };
           var $$eval = secsFromOriginAtEval(v1);
           var x1 = $$eval + v3.value0.value0;
-          var dur = durFromRhythmic(v3.value1)(tempo);
+          var dur = establishDur(v3.value0.value1)(v1.tempo)(v)(v3.value1);
           var indexes = getIndexes(v3.value1)(ws - dur)(we)(x1)(dur);
           var blocks = getBlocks(ws - dur)(we)(x1)(dur);
-          var onsets = onsetsFromBlocks(blocks)(fromFoldable10(rhythmicToOnsets(v3.value1)))(dur);
+          var onsets = onsetsFromBlocks(blocks)(fromFoldable11(rhythmicToOnsets$prime(v3.value0.value1)(v1.tempo)(v)(v3.value1)))(dur);
           var events = zipWith(Event.create)(onsets)(indexes);
           var looped = addPosixOriginToCalculation(posixAtOrigin)(filter2(function(e) {
             return posFromEvent(e) >= ws && posFromEvent(e) < we;
@@ -48406,8 +48584,8 @@ var calculateTemporal = function(v) {
         }
         ;
         if (v3 instanceof Temporal && v3.value0 instanceof Metric) {
-          var dur = durFromRhythmic(v3.value1)(processTempoMark(v3.value0.value2)(v1.tempo)(v));
-          var lengthRhythm = length(fromFoldable10(rhythmicToOnsets(v3.value1))) - 1 | 0;
+          var dur = establishDur(v3.value0.value2)(v1.tempo)(v)(v3.value1);
+          var lengthRhythm = length(fromFoldable11(rhythmicToOnsets(v3.value1))) - 1 | 0;
           var simCTo = simplifyCTo(lengthRhythm)(v3.value0.value0);
           var simCFrom = simplifyCFrom(lengthRhythm)(v3.value0.value1);
           return function __do2() {
@@ -48416,7 +48594,7 @@ var calculateTemporal = function(v) {
             var ws2 = secsFromOriginAtWS(v1);
             var we2 = secsFromOriginAtWE(v1);
             var blocks2 = getBlocks(ws2 - dur)(we2)(x12)(dur);
-            var onsetPercent = fromFoldable10(rhythmicToOnsets(v3.value1));
+            var onsetPercent = fromFoldable11(rhythmicToOnsets$prime(v3.value0.value2)(v1.tempo)(v)(v3.value1));
             var onsets2 = onsetsFromBlocks(blocks2)(onsetPercent)(dur);
             var indexes2 = getIndexes(v3.value1)(ws2 - dur)(we2)(x12)(dur);
             var events2 = zipWith(Event.create)(onsets2)(indexes2);
@@ -48438,8 +48616,8 @@ var calculateTemporal = function(v) {
         }
         ;
         if (v3 instanceof Temporal && v3.value0 instanceof Converge) {
-          var dur = durFromRhythmic(v3.value1)(processTempoMark(v3.value0.value3)(v1.tempo)(v));
-          var lengthRhythm = length(fromFoldable10(rhythmicToOnsets(v3.value1))) - 1 | 0;
+          var dur = establishDur(v3.value0.value3)(v1.tempo)(v)(v3.value1);
+          var lengthRhythm = length(fromFoldable11(rhythmicToOnsets(v3.value1))) - 1 | 0;
           var simCTo = simplifyCTo(lengthRhythm)(v3.value0.value1);
           var simCFrom = simplifyCFrom(lengthRhythm)(v3.value0.value2);
           return function __do2() {
@@ -48448,7 +48626,7 @@ var calculateTemporal = function(v) {
             var ws2 = secsFromOriginAtWS(v1);
             var we2 = secsFromOriginAtWE(v1);
             var blocks2 = getBlocks(ws2 - dur)(we2)(x12)(dur);
-            var onsetPercent = fromFoldable10(rhythmicToOnsets(v3.value1));
+            var onsetPercent = fromFoldable11(rhythmicToOnsets$prime(v3.value0.value3)(v1.tempo)(v)(v3.value1));
             var onsets2 = onsetsFromBlocks(blocks2)(onsetPercent)(dur);
             var indexes2 = getIndexes(v3.value1)(ws2 - dur)(we2)(x12)(dur);
             var events2 = zipWith(Event.create)(onsets2)(indexes2);
@@ -48470,8 +48648,8 @@ var calculateTemporal = function(v) {
         }
         ;
         if (v3 instanceof Temporal && v3.value0 instanceof Novus) {
-          var dur = durFromRhythmic(v3.value1)(processTempoMark(v3.value0.value2)(v1.tempo)(v));
-          var lengthRhythm = length(fromFoldable10(rhythmicToOnsets(v3.value1))) - 1 | 0;
+          var dur = establishDur(v3.value0.value2)(v1.tempo)(v)(v3.value1);
+          var lengthRhythm = length(fromFoldable11(rhythmicToOnsets$prime(v3.value0.value2)(v1.tempo)(v)(v3.value1))) - 1 | 0;
           var simCFrom = simplifyCFrom(lengthRhythm)(v3.value0.value1);
           var cp = secsFromOriginAtVantage(v1)(v3.value0.value0);
           return function __do2() {
@@ -48481,7 +48659,7 @@ var calculateTemporal = function(v) {
             var ws2 = secsFromOriginAtWS(v1);
             var we2 = secsFromOriginAtWE(v1);
             var blocks2 = getBlocks(ws2 - dur)(we2)(x12)(dur);
-            var onsetPercent = fromFoldable10(rhythmicToOnsets(v3.value1));
+            var onsetPercent = fromFoldable11(rhythmicToOnsets$prime(v3.value0.value2)(v1.tempo)(v)(v3.value1));
             var onsets2 = onsetsFromBlocks(blocks2)(onsetPercent)(dur);
             var indexes2 = getIndexes(v3.value1)(ws2 - dur)(we2)(x12)(dur);
             var events2 = zipWith(Event.create)(onsets2)(indexes2);
@@ -48502,7 +48680,7 @@ var calculateTemporal = function(v) {
           };
         }
         ;
-        throw new Error("Failed pattern match at Calculations (line 96, column 1 - line 96, column 102): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
+        throw new Error("Failed pattern match at Calculations (line 91, column 1 - line 91, column 102): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
       };
     };
   };
@@ -48516,7 +48694,7 @@ var calculateVoice = function(tempoMap) {
             var events = calculateTemporal(tempoMap)(tp)(aKey)(v.value0);
             var rhythmic2 = getRhythmic(tempoMap)(v.value0);
             return function __do2() {
-              var toWaste = map25(auralSpecs(voiceMap)(rhythmic2)(v.value1)(xenopitches))(events)();
+              var toWaste = map27(auralSpecs(voiceMap)(rhythmic2)(v.value1)(xenopitches))(events)();
               return toWaste;
             };
           };
@@ -48563,8 +48741,8 @@ var programToWaste = function(program) {
       })(ws);
     };
     var calculatedVoices = calculateVoices(getTemporalMap(program))(voices$prime)(xenoPitches)(timePacket);
-    var almostWs = map25(map32(map32(concat)(fromFoldable10))(values))(calculatedVoices);
-    var waste = map25(map32(map24(toWaste))(getXs))(almostWs);
+    var almostWs = map27(map32(map32(concat)(fromFoldable11))(values))(calculatedVoices);
+    var waste = map27(map32(map26(toWaste))(getXs))(almostWs);
     return waste;
   };
 };
@@ -48727,8 +48905,8 @@ var show17 = /* @__PURE__ */ show(/* @__PURE__ */ showArray(/* @__PURE__ */ show
     return "whenPosix";
   }
 })(showNumber))(showNumber))(showString))(showNumber))(showNumber))(showInt))(showNumber))(showNumber))(showNumber))));
-var map26 = /* @__PURE__ */ map(functorArray);
-var fromFoldable11 = /* @__PURE__ */ fromFoldable2(foldableArray);
+var map28 = /* @__PURE__ */ map(functorArray);
+var fromFoldable16 = /* @__PURE__ */ fromFoldable2(foldableArray);
 var toRational6 = /* @__PURE__ */ toRational(toRationalInt);
 var setTempo = function(tk) {
   return function(t) {
@@ -48749,14 +48927,14 @@ var scheduleNoteEvents = function(tk) {
         var tp = assambleTimePacket(ws)(we)($$eval)(t)(vantageMap);
         var events = programToWaste(program)(tp)();
         log2(show17(events))();
-        return map26(unsafeToForeign)(events);
+        return map28(unsafeToForeign)(events);
       };
     };
   };
 };
 var launch = function __do() {
   log2("timekNot: launch")();
-  var ast = $$new(fromFoldable11([new TimeExpression(empty2)]))();
+  var ast = $$new(fromFoldable16([new TimeExpression(empty2)]))();
   var tempo = bind14(newTempo(toRational6(1)(1)))($$new)();
   var $$eval = bind14(nowDateTime)($$new)();
   var vantageMap = $$new(empty2)();
