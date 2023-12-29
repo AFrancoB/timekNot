@@ -114,6 +114,8 @@ processNote _ r (Just (Dastgah span d)) _ _ ws = spanDastgah span newList ws r
 processNote _ r (Just (Xeno id span lista)) _ xn ws = spanXeno span (fromFoldable midiIntervals) ws r
   where target = fromMaybe (EDO 0.0 0) $ M.lookup (fst id) xn 
         midiIntervals = xenoPitchAsAuralPattern (Tuple target (snd id)) $ fromFoldable lista
+
+        ----- work here, combine note with pitch system new function will be needed.
 processNote m r (Just (Prog span lista)) xeNotes xn ws = []
   where xeNote' = case xeNotes of
                       Nothing -> [0]

@@ -577,8 +577,21 @@ voiceId = do
 tempoMark:: P TempoMark
 tempoMark = do
   _ <- pure 1
-  x <- choice [try cpm, try bpm, try cps, ratio]
+  x <- choice [try cpm, try bpm, try cps, try ratio, acceleration]
   pure x
+
+acceleration:: P TempoMark
+acceleration = do 
+  _ <- pure 1
+  _ <- reserved "~"
+  freq <- toNumber' <$> naturalOrFloat
+  _ <- reserved "<<"
+  ph <- toNumber' <$> naturalOrFloat
+  _ <- reservedOp "range"
+  max <- choice [try cpm, try bpm, try cps, try ratio]
+  _ <- reservedOp ","
+  min <- choice [try cpm, try bpm, try cps, try ratio]
+  pure $ Sin {osc: toRat freq, min: min, max: max, phase: toRat ph}
 
 cpm:: P TempoMark 
 cpm = do
@@ -599,11 +612,9 @@ bpm = do
 
 figure:: P Rational
 figure = do
-  _ <- charWS '('
   n <- natural
   _ <- charWS '/'
   d <- natural 
-  _ <- charWS ')'
   pure $ toRational n d
 
 cps:: P TempoMark

@@ -1,5 +1,4 @@
-module DurationAndIndex(durFromRhythmic,rhythmicToVoiceDuration,rhythmicToOnsets, getIndexes, rhythmicStructIndex, getVoiceIndex, getBlocks, durInSecs, onsetsFromBlocks, bjorklund) where
-
+module DurationAndIndex(onsetDurations,durFromRhythmic,rhythmicToVoiceDuration,rhythmicToOnsets, getIndexes, rhythmicStructIndex, getVoiceIndex, getBlocks, durInSecs, onsetsFromBlocks, bjorklund) where
 
 import Prelude
 
@@ -17,6 +16,7 @@ import Data.Array (filter,fromFoldable,(!!), zipWith, replicate, concat, (..), (
 import Data.List
 import Data.Traversable (scanl)
 import Data.List (fromFoldable,concat,zip,zipWith,length,init) as L
+import Data.Map (Map(..)) as M
 
 import Control.Applicative
 
