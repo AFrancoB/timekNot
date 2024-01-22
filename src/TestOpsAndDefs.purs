@@ -1,4 +1,4 @@
-module TestOpsAndDefs (defMapTemporals,defTemporal,defPolytemporal,defConvergeTo,defConvergeFrom,defVoice,defAural, defEvent) where
+module TestOpsAndDefs (getPolytemporal,getRhythmic,getLoop,tempoMark,convergeTo,convergeFrom,defMapTemporals,defTemporal,defPolytemporal,defConvergeTo,defConvergeFrom,defVoice,defAural, defEvent) where
 
 import Prelude
 
@@ -19,6 +19,61 @@ import Data.DateTime
 import Data.Enum
 import Partial.Unsafe
 
+--- helpers
+
+getPolytemporal:: M.Map String Temporal -> Temporal -> Polytemporal
+getPolytemporal _ (Temporal p _ _) = p 
+getPolytemporal m (Replica id) = case M.lookup id m of
+                                      Nothing -> defPolytemporal
+                                      Just t -> getPolytemporal m t
+
+getRhythmic:: M.Map String Temporal -> Temporal -> Rhythmic
+getRhythmic m (Temporal _ r _) = r
+getRhythmic m (Replica id) = case M.lookup id m of
+                                      Nothing -> O
+                                      Just t -> getRhythmic m t
+
+getLoop:: M.Map String Temporal -> Temporal -> Boolean
+getLoop m (Temporal _ _ l) = l
+getLoop m (Replica id) = case M.lookup id m of
+                                      Nothing -> false
+                                      Just t -> getLoop m t
+
+tempoMark:: M.Map String Temporal -> Temporal -> TempoMark
+tempoMark m (Temporal p _ _) = getTempoMark p 
+tempoMark m (Replica id) = case M.lookup id m of
+                                      Nothing -> defTempoMark
+                                      Just t -> tempoMark m t
+
+getTempoMark:: Polytemporal -> TempoMark
+getTempoMark (Kairos _ tm) = tm
+getTempoMark (Metric _ _ tm) = tm
+getTempoMark (Converge _ _ _ tm) = tm
+getTempoMark (Novus _ _ tm) = tm
+
+convergeTo:: M.Map String Temporal -> Temporal -> ConvergeTo
+convergeTo m (Temporal p _ _) = getConvergeTo p
+convergeTo m (Replica id) = case M.lookup id m of
+                                      Nothing -> defConvergeTo
+                                      Just t -> convergeTo m t
+
+convergeFrom:: M.Map String Temporal -> Temporal -> ConvergeFrom
+convergeFrom m (Temporal p _ _ ) = getConvergeFrom p
+convergeFrom m (Replica id) = case M.lookup id m of
+                                      Nothing -> defConvergeFrom
+                                      Just t -> convergeFrom m t
+
+getConvergeTo:: Polytemporal -> ConvergeTo
+getConvergeTo (Converge _ cTo _ _) = cTo
+getConvergeTo (Metric cTo _ _) = cTo
+getConvergeTo _ = defConvergeTo
+
+getConvergeFrom:: Polytemporal -> ConvergeFrom
+getConvergeFrom (Converge _ _ cFrom _) = cFrom
+getConvergeFrom (Novus _ cFrom _) = cFrom
+getConvergeFrom (Metric _ cFrom _) = cFrom
+getConvergeFrom _ = defConvergeFrom
+
 -- testProgramToWaste ws we eval bpm str = (\pr -> programToWaste pr (wP ws) (wP we) (wP eval) (t' bpm)) <$> parsed 
 --   where parsed = runParser str parseProgram
 
@@ -31,7 +86,8 @@ defMapTemporals = M.fromFoldable [
 ]
 
 defTemporal = Temporal (Kairos 0.0 (CPM (120%1))) O false
-defPolytemporal = Kairos 0.0 (CPM (120%1))
+defTempoMark = CPM (120%1)
+defPolytemporal = Kairos 0.0 defTempoMark
 
 defConvergeTo = ProcessTo 0 Origin
 defConvergeFrom = Process 0
@@ -61,10 +117,6 @@ voice = durInSecs 6.0 120.0
 t':: Rational -> Tempo
 t' freq = {freq: freq,time: (DateTime (makeDate 2022 June 3) (makeTime 19 11 0 0)), count: fromInt 0 }
   -- where freq = toRat $ bpmToFreq bpm
-
--- t':: Number -> Tempo
--- t' bpm = {freq: freq,time: (DateTime (makeDate 2022 June 3) (makeTime 19 11 0 0)), count: fromInt 0 }
---   where freq = toRat $ bpmToFreq bpm
 
 t:: Tempo
 t = {freq: (2%1),time: (DateTime (makeDate 2022 June 3) (makeTime 19 11 0 0)), count: fromInt 0 }

@@ -1,92 +1,28 @@
-module Calculations (programToWaste) where
+module TemporalSpecs (calculateTemporal) where
 
 import Prelude
-
 import Effect (Effect)
 import Effect.Console
-
 import Data.Tuple
 import Data.Maybe
 import Data.Either
 import Data.Map as M
 import Data.Foldable (sum)
 import Data.Int
-import Data.FunctorWithIndex (mapWithIndex)
 import Data.Array (filter,fromFoldable,(!!), zipWith, replicate, concat, (..), (:), init, tail, last,head,reverse,zip, cons, snoc, length, singleton, splitAt)
 import Data.List (List(..))
-import Data.Traversable (scanl)
-import Data.List (fromFoldable,concat,zip,zipWith,length,init) as L
 
 import Data.Tempo
 
 import AST
-import Aceleracion
-import Parser
-import Aural
-import Rhythm -- is this used?
+import Acceleration
 import TestOpsAndDefs
 import DurationAndIndex
 import TimePacketOps
-import AuralSpecs
 
 import Data.Rational (Rational(..), (%), fromInt)
-import Data.Rational (toNumber) as R
-import Data.DateTime
-import Data.DateTime.Instant
-import Data.Newtype
-import Data.Time.Duration
-import Data.Interval.Duration (second)
+import Data.Rational (toNumber) as R -- still need to convert all Number calcs into Rational!!
 
-import Data.TraversableWithIndex
-
--- glosario:
----- Voice is an ongoing or finished or yet-to-be-played musical idea enabled by 
----- Block is a rhythmic pattern of onsets
----- Onset a moment in time when a sound is instantiated
-
----- An Event is an Onset with an Index
-
----- Index is a mark that allows me to identify the position of the onset so sounds and sound characteristics can be attached to it
----- process-oriented index: an int identifier for each onset on a flow of onsets. 
----- eventIndex is the way I will refer to process oriented indexes
----- structure-oriented index: an int identifier for each segment on a voice and an array to identifier internal events in a voice: The head is the 'natural' subdivisions of the voice, each new element in the array is a new subdivision
----- a structure oriented index has a voice index and a structure index. A voice index is an Int while the Structure Index is an Array Int. The notation I have made for the structure oriented index is: 3-0.2.4  to the left of the (-) is the voice index and to the right of it is the event position in the rhythmic idea. The head of the array is the top level of the nested subdivisions and the last is the deepest level of the subdivisions.  
-
-programToWaste:: Program -> TimePacket -> Effect (Array Waste)
-programToWaste program timePacket = waste
-  where voices' = assambleVoice program -- Voices
-        xenoPitches = getXPitchMap program -- Map String XenoPitch
-        calculatedVoices = calculateVoices (getTemporalMap program) voices' xenoPitches timePacket
-        -- Effect (M.Map String (Array AlmostWaste))
-        almostWs = concat <$> fromFoldable <$> M.values <$> calculatedVoices -- Effect (Array (Array AlmostWaste))
-        f:: AlmostWaste -> Boolean
-        f w = (\(Event (Onset b _) _) -> b) w.event
-        getXs:: Array AlmostWaste -> Array AlmostWaste
-        getXs ws = filter (\w -> f w) ws
-        toWaste:: AlmostWaste -> Waste
-        toWaste almostW =  {whenPosix: posix, s: almostW.s, n: almostW.n, gain: almostW.gain, pan: almostW.pan, speed: almostW.speed, begin: almostW.begin, end: almostW.end, note: almostW.note}
-            where posix = (\(Event (Onset _ p) _) -> p) almostW.event
-        waste = map toWaste <$> getXs <$> almostWs -- Effect
-
-assambleVoice:: Program -> Voices
-assambleVoice program = M.intersectionWith (\x y -> Voice x y) tempoMap auralMap
-  where tempoMap = getTemporalMap program
-        auralMap = getAuralMap program
-
--- voices:: Map String (List Aural)
-calculateVoices:: M.Map String Temporal -> Voices -> M.Map String XenoPitch -> TimePacket -> Effect (M.Map String (Array AlmostWaste))
-calculateVoices tempoMap voiceMap xenopitches tp = traverseWithIndex (calculateVoice tempoMap voiceMap xenopitches tp) voiceMap  -- to get rid of Effect, change traverseWithIndex to mapWithIndex
-
-calculateVoice:: M.Map String Temporal -> Voices -> M.Map String XenoPitch-> TimePacket -> String -> Voice -> Effect (Array AlmostWaste)
-calculateVoice tempoMap voiceMap xenopitches tp aKey (Voice temporal aurals) = do 
-    let events = calculateTemporal tempoMap tp aKey temporal -- Array Event
-    let rhythmic = getRhythmic tempoMap temporal
-    toWaste <- auralSpecs voiceMap rhythmic aurals xenopitches <$> events
-    pure toWaste
-
-
--- proven that inner acceleration works, understand what tempo should be passed to the  function: dur = durFromRhythmic rhythmic tempo -- numbe
---- so far, the sinusoidal movement is unipolar and I seem to be passing the lowest tempo perhaps this works.
 
 calculateTemporal:: M.Map String Temporal -> TimePacket -> String -> Temporal -> Effect (Array Event)
 calculateTemporal mapa tp aKey (Replica id) = do
@@ -166,7 +102,7 @@ calculateTemporal mapa tp aKey (Temporal (Novus vKey cFrom' tm) rhythmic loop) =
   let lengthRhythm = (length $ fromFoldable $ rhythmicToOnsets' tm tp.tempo mapa rhythmic)-1
   let simCFrom = simplifyCFrom lengthRhythm cFrom'
   let cp = secsFromOriginAtVantage tp vKey
-  log ("cp novus: " <> show cp)
+  -- log ("cp novus: " <> show cp)
   x1 <- x1NovusVoice tp tm cp simCFrom rhythmic mapa -- v1
 
   let posixAtOrigin = fromDateTimeToPosix (origin tp.tempo)
@@ -307,7 +243,7 @@ recursiveRefX1 tp temporal mapa incomingKeyX1 (Cons x xs) = do
           Just prevKeyX1 -> do
                 let prevTemporal = fromMaybe defTemporal $ M.lookup (fst prevKeyX1) mapa
                 let prevRhythmic = getRhythmic mapa prevTemporal
-                let prevTM = processTempoMark (tempoMark mapa prevTemporal) tp.tempo mapa
+                -- let prevTM = processTempoMark (tempoMark mapa prevTemporal) tp.tempo mapa
                 -- let prevDur = durFromRhythmic prevRhythmic prevTM
                 let prevDur = establishDur (tempoMark mapa prevTemporal) tp.tempo mapa prevRhythmic
                 prevVoiceAtEval <- elapsedVoiceAtEval tp (snd prevKeyX1) prevDur -- not secs but cycles
@@ -386,7 +322,6 @@ calculateStartConvergent durConverged convergeTo durVoice convergeFrom = startOf
         cFrom = convergeFrom * durVoice
         startOfVoiceInSecs = cTo - cFrom
 
-
 -- calculating convergence points
 calculateCToMetric:: Number -> ConvergeTo -> Number
 calculateCToMetric cyclesAtEval (StructureTo b st a) = (toNumber b) + aligned
@@ -461,15 +396,37 @@ establishDur (Dur n) xT m rhy = R.toNumber n
 establishDur (Sin sin) xT m rhy = durInSecs (sum $ rhythmicToSinDur rhy (R.toNumber sin.osc) min max (R.toNumber sin.phase)) min
   where min = processTempoMark sin.min xT m
         max = processTempoMark sin.max xT m
+establishDur (Prop id x y) xT m rhy = durProp m xT otherTempoMark otherRhy prop 
+  where prop = (toNumber x / toNumber y)
+        otherTemporal = fromMaybe defTemporal $ M.lookup id m
+        otherTempoMark = tempoMark m otherTemporal
+        otherRhy = getRhythmic m otherTemporal
 establishDur tm xT m rhy = durFromRhythmic rhy $ processTempoMark tm xT m
 
+durProp:: M.Map String Temporal -> Tempo -> TempoMark -> Rhythmic -> Number -> Number
+durProp m xT (Sin sin) r prop = durOther / prop
+  where min = processTempoMark sin.min xT m
+        max = processTempoMark sin.max xT m
+        durOther = durInSecs (sum $ rhythmicToSinDur r (R.toNumber sin.osc) min max (R.toNumber sin.phase)) min
+
+durProp m xT (Dur d) r prop = (R.toNumber d) / prop
+durProp m xT (Prop id x y) _ prop = durProp m xT otherTM otherRhy otherProp 
+  where otherProp = (toNumber x / toNumber y) * prop
+        otherTemporal = fromMaybe defTemporal $ M.lookup id m
+        otherTM = tempoMark m otherTemporal
+        otherRhy = getRhythmic m otherTemporal
+durProp m xT another r prop = (durFromRhythmic r $ processTempoMark another xT m) / prop
 
 rhythmicToOnsets':: TempoMark -> Tempo -> M.Map String Temporal -> Rhythmic -> List Onset 
 rhythmicToOnsets' (Sin s) xT m rhy = rhythmicToOnsetsSin rhy (R.toNumber s.osc) min max (R.toNumber s.phase)
   where min = processTempoMark s.min xT m
         max = processTempoMark s.max xT m
-rhythmicToOnsets' _ _ _ rhy = rhythmicToOnsets rhy
-
+rhythmicToOnsets' tm xT m rhy = case tm of 
+                              (Prop id x y) -> rhythmicToOnsets' otherTM xT m rhy 
+                                where otherTemporal = fromMaybe defTemporal $ M.lookup id m
+                                      otherTM = tempoMark m otherTemporal
+                                      otherRhy = getRhythmic m otherTemporal
+                              _ -> rhythmicToOnsets rhy
 
 processTempoMark:: TempoMark -> Tempo -> M.Map String Temporal -> Number 
 processTempoMark (CPM cpm) _ _ = R.toNumber (cpm / (4%1))
@@ -490,62 +447,3 @@ calculateRTempo m t (Prop id x y) prop = calculateRTempo m t newTM newProp
   where newProp = (toNumber x / toNumber y) * prop
         newTM = fromMaybe (CPM (fromInt 120)) $ (\temporal -> tempoMark m temporal) <$> M.lookup id m
 calculateRTempo m t other prop = 0.0
-
---- helpers
-
-defPolytemporal = Kairos 0.0 defTempoMark
-
-defTempoMark = CPM (120%1)
-
-getPolytemporal:: M.Map String Temporal -> Temporal -> Polytemporal
-getPolytemporal _ (Temporal p _ _) = p 
-getPolytemporal m (Replica id) = case M.lookup id m of
-                                      Nothing -> defPolytemporal
-                                      Just t -> getPolytemporal m t
-
-getRhythmic:: M.Map String Temporal -> Temporal -> Rhythmic
-getRhythmic m (Temporal _ r _) = r
-getRhythmic m (Replica id) = case M.lookup id m of
-                                      Nothing -> O
-                                      Just t -> getRhythmic m t
-
-getLoop:: M.Map String Temporal -> Temporal -> Boolean
-getLoop m (Temporal _ _ l) = l
-getLoop m (Replica id) = case M.lookup id m of
-                                      Nothing -> false
-                                      Just t -> getLoop m t
-
-tempoMark:: M.Map String Temporal -> Temporal -> TempoMark
-tempoMark m (Temporal p _ _) = getTempoMark p 
-tempoMark m (Replica id) = case M.lookup id m of
-                                      Nothing -> defTempoMark
-                                      Just t -> tempoMark m t
-
-getTempoMark:: Polytemporal -> TempoMark
-getTempoMark (Kairos _ tm) = tm
-getTempoMark (Metric _ _ tm) = tm
-getTempoMark (Converge _ _ _ tm) = tm
-getTempoMark (Novus _ _ tm) = tm
-
-convergeTo:: M.Map String Temporal -> Temporal -> ConvergeTo
-convergeTo m (Temporal p _ _) = getConvergeTo p
-convergeTo m (Replica id) = case M.lookup id m of
-                                      Nothing -> defConvergeTo
-                                      Just t -> convergeTo m t
-
-convergeFrom:: M.Map String Temporal -> Temporal -> ConvergeFrom
-convergeFrom m (Temporal p _ _ ) = getConvergeFrom p
-convergeFrom m (Replica id) = case M.lookup id m of
-                                      Nothing -> defConvergeFrom
-                                      Just t -> convergeFrom m t
-
-getConvergeTo:: Polytemporal -> ConvergeTo
-getConvergeTo (Converge _ cTo _ _) = cTo
-getConvergeTo (Metric cTo _ _) = cTo
-getConvergeTo _ = defConvergeTo
-
-getConvergeFrom:: Polytemporal -> ConvergeFrom
-getConvergeFrom (Converge _ _ cFrom _) = cFrom
-getConvergeFrom (Novus _ cFrom _) = cFrom
-getConvergeFrom (Metric _ cFrom _) = cFrom
-getConvergeFrom _ = defConvergeFrom

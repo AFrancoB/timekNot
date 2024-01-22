@@ -1,4 +1,4 @@
-module AST(TimekNot(..),Vantage(..), TimePoint(..),Waste(..),AlmostWaste(..), VantageMap(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), Sinusoidal(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), XenoPitch(..), XenoNote(..), Subset(..), showEventIndex, showStructureIndex) where
+module AST(TimekNot(..),Vantage(..), TimePoint(..), VantageMap(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), Sinusoidal(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), XenoPitch(..), XenoNote(..), Subset(..), showEventIndex, showStructureIndex) where
 
 import Prelude
 import Effect.Ref
@@ -11,30 +11,6 @@ import Data.Map
 import Data.Tuple
 import Data.Either
 import Data.Maybe
-
-type Waste = {
-  whenPosix:: Number, 
-  s:: String, 
-  n:: Int,
-  gain:: Number,
-  pan:: Number,
-  speed:: Number,
-  begin:: Number,
-  end:: Number,
-  note:: Number
-  }
-
-type AlmostWaste = {
-  event:: Event, 
-  s:: String, 
-  n:: Int,
-  gain:: Number,
-  pan:: Number,
-  speed:: Number,
-  begin:: Number,
-  end:: Number,
-  note:: Number
-  }
 
 type TimekNot = {
   ast :: Ref Program,
@@ -63,7 +39,9 @@ data Voice = Voice Temporal (List Aural)
 instance voiceShow :: Show Voice where
     show (Voice t a) = show t <> " " <> show a 
 
-type Aural = List Value
+type Aural = List Value -- aural is a list of aural attributes for a given time layer. tend to be 1 sound, 1 n, 1 gain, 1 pan, etc.
+
+-- :: List Aural is a non-monophonic time layer. Each event will trigger multiple samples with different aural attributes
 
 type VantageMap = Map String DateTime
 
@@ -101,11 +79,11 @@ data Value =
   Speed Span (List Number) | TransposedSpeed String Int | 
   Begin Span (List Number) | TransposedBegin String Int | 
   End Span (List Number) | TransposedEnd String Int | 
+  Vowel Span (List String) | TransposedVowel String Int |
   CutOff Span (List Number) | TransposedCutOff String Int |
-  Vowel Span (List Number) | TransposedVowel String Int | 
-  Chord Span (List Number) | TransposedChord String Int |
+  CutOffH Span (List Number) | TransposedCutOffH String Int |
   Dastgah Span Dastgah | Xeno (Tuple String (Maybe Int)) Span (List Int) |
-  Prog Span (List (Tuple String (Maybe Int))) | XeNotes Span (List Int)
+  Prog Span (List (Tuple String (Maybe Int))) | XNotes Span (List Int) | TransposedPitch String Int
 
 data Dastgah = Shur (List Int) -- 1 to 8 then it cycles back
 
@@ -133,16 +111,17 @@ instance valueShow :: Show Value where
   show (End x l) = show x <> " " <> show l
   show (TransposedEnd voice n) = "end transposed from " <> voice
   -- show (TransposedEndWith voice n l) = "end transposedWith from " <> voice
-  show (CutOff x l) = show x <> " " <> show l
-  show (TransposedCutOff voice n) = "cutoff transposed from " <> voice
   show (Vowel x l) = show x <> " " <> show l
   show (TransposedVowel voice n) = "vowel transposed from " <> voice
-  show (Chord x l) = show x <> " " <> show l
-  show (TransposedChord voice n) = "chord transposed from " <> voice
+  show (CutOff x l) = show x <> " " <> show l
+  show (TransposedCutOff voice n) = "cutoff transposed from " <> voice
+  show (CutOffH x l) = show x <> " " <> show l
+  show (TransposedCutOffH voice n) = "hcutoff transposed from " <> voice
   show (Dastgah span d) = show d
   show (Xeno id span l) = show l
   show (Prog span l) = "prog" <> show l
-  show (XeNotes span l) = "xnotes " <> show l
+  show (XNotes span l) = "xnotes " <> show l
+  show (TransposedPitch voice n) = "pitch transposed from " <> voice
 
 data Span = CycleEvent | CycleBlock | CycleInBlock | SpreadBlock -- | Weight
 

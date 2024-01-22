@@ -1,11 +1,13 @@
-module AuralSpecs (auralSpecs,bjorklundAsInterval,cycleAurals, testVoice, analysisDastgahPattern, Interval(..)) where
+module AuralSpecs (auralSpecs) where 
 
 import Prelude
 
 import Effect (Effect)
+import Effect.Console (log)
 
 import Data.Tuple
 import Data.Maybe
+import Data.Maybe.First
 import Data.Either
 import Data.Map as M
 import Data.Foldable (sum)
@@ -13,12 +15,11 @@ import Data.Int
 import Data.FunctorWithIndex (mapWithIndex)
 import Data.Array (filter,fromFoldable,(!!), zipWith, replicate, concat, (..), (:), init, tail, last,head,reverse,zip, cons, uncons, snoc, length, singleton)
 import Data.List
-import Data.List (fromFoldable,concat,zip,zipWith,length,init,uncons) as L
-import Data.Traversable (scanl)
-
-import Record
+import Data.List (fromFoldable,concat,zip,zipWith,length,init) as L
+import Data.Traversable (scanl,traverseDefault,sequence)
 
 import Data.Newtype
+import Foreign 
 
 import Data.Tempo
 
@@ -27,660 +28,274 @@ import DurationAndIndex
 import Parser
 import Rhythm
 import TestOpsAndDefs
+import AssambleWebdirt
 import XenoPitch
-
+import Dastgah
+   
 import Data.Rational (Rational(..), (%), fromInt)
 import Data.Rational (toNumber) as R
 import Data.DateTime
 import Data.DateTime.Instant
 import Data.Time.Duration
 
----- ISSUE SOLVE SOON!  
------ parser should fail if list of values is empty. List should be at least 1
+-- aural specs maps on the list of aurals. One aural attribute at the time to process
+auralSpecs:: Voices -> Rhythmic -> List Aural -> M.Map String XenoPitch -> Array Event -> Effect (Array Foreign)
+auralSpecs v r aurals x es' = map concat <$> traverseDefault (\a -> auralSpecs' v r a x es) $ fromFoldable aurals
+    where es = filter checkOnset es' -- here O get removed!
 
+auralSpecs':: Voices -> Rhythmic -> Aural -> M.Map String XenoPitch -> Array Event -> Effect (Array Foreign)
+auralSpecs' voices rhy aural xenopitch events 
+   | (checkForSound aural) = pure []
+   | otherwise = traverseDefault (processEvent voices rhy aural xenopitch) events
 
--- transposeWith needs to be implemented in almost all of this (except N)
+checkForSound:: List Value -> Boolean
+checkForSound aural = not $ elem true $ map isSound aural 
 
-{-
-weight:
-1. weight function allows users to change a parameter based on a weight given to a CP. 0% weight will output an unaffected parameter. 100% will modify the paramter as indicated by user. The process will extend by a number of events that is equivalent to the length of the rhythmic.
+checkOnset:: Event -> Boolean
+checkOnset (Event o i) = (\(Onset b p) -> b) o 
 
-So: v0.speed = -_- 2 1  will generate a 2 in the event closest to the cFrom and a 1 at the event (cFrom +/- lengthRhythmic). All events in-between will be in a range between these two numbers.  
--}
+processEvent:: Voices -> Rhythmic -> List Value -> M.Map String XenoPitch -> Event -> Effect Foreign
+processEvent v r vals xp ev = do
+  let when = processWhen ev 
+  let s = processSound v r (getS vals) ev 
+  let n = processN v r (getN vals) ev 
+  let gain = processGain v r (getG vals) ev 
+  let pan = processPan v r (getP vals) ev 
+  let speed = processSpeed v r (getSpeed vals) ev
+  let begin = processBegin v r (getBegin vals) ev
+  let end = processEnd v r (getEnd vals) ev
+  let vowel = processVowel v r (getVowel vals) ev
+  let cutoff = processCutOff v r (getCutOff vals) ev
+  let cutoffh = processCutOffH v r (getCutOffH vals) ev
+  let note = processNote v xp r (getNote vals) (getXNote vals) ev
+  makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh note
 
-{-
-These are the fields/options for the record passed to playSample:
-  buffer :: Foreign, -- Web Audio buffer of sample data to play (ie. new-style)
-  s :: String, -- name of sample bank (ie. old-style with sampleMap)
-  n :: Int, -- number of sample within a bank (ie. old-style with sampleMap)
-  whenPosix :: Number, -- when to play the sample, in POSIX/epoch-1970 time
-  when :: Number, -- when to play the sample, in audio context time
-  gain :: Number, -- clamped from 0 to 2; 1 is default and full-scale
-  overgain :: Number, -- additional gain added to gain to go past clamp at 2
-  pan :: Number, -- range: 0 to 1
-  nudge :: Number, -- nudge the time of the sample forwards/backwards in seconds
-  speed :: Number,
-  note :: Number,
-  begin :: Number,
-  end :: Number,
-  cut :: Int,
-  shape :: Number,
-  cutoff :: Number,
-  resonance :: Number,
-  hcutoff :: Number,
-  hresonance :: Number,
-  bandf :: Number,
-  bandq :: Number,
-  vowel :: String,
-  delay :: Number,
-  delaytime :: Number,
-  delayfeedback :: Number,
-  loop :: Number,
-  crush :: Number,
-  coarse :: Number,
-  unit :: String
--}
+makeWebDirtEvent:: Number -> String -> Int -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe String -> Maybe Number -> Maybe Number -> Maybe Number -> Effect Foreign
+makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh note = do
+  oEvent <- objectWithWhenSN when s n
+  oG <- optVNum oEvent gain addGain
+  oP <- optVNum oG pan addPan 
+  oSp <- optVNum oP speed addSpeed
+  oB <- optVNum oSp begin addBegin
+  oE <- optVNum oB end addEnd
+  oCOff <- optVNum oE cutoff addCutOff
+  oCOffH <- optVNum oCOff cutoffh addCutOffH 
+  oV <- optVStr oCOffH vowel addVowel
+  oN <- optVNum oV note addNote
+  pure oN
 
--- refactoring aural from List Value to List List Value broke the tranbsposition system in aural specs. Fix it!
+optVNum:: Foreign -> Maybe Number -> (Foreign -> Number -> Effect Foreign) -> Effect Foreign
+optVNum o Nothing _ = pure o
+optVNum o (Just x) f = f o x
 
-auralSpecs:: Voices -> Rhythmic -> List (List Value) -> M.Map String XenoPitch -> Array Event -> Array AlmostWaste
-auralSpecs m rhy aurals xenopitch events = concat $ map (\a -> auralSpecs' m rhy a xenopitch events) $ fromFoldable aurals 
+optVStr:: Foreign -> Maybe String -> (Foreign -> String -> Effect Foreign) -> Effect Foreign
+optVStr o Nothing _ = pure o
+optVStr o (Just x) f = f o x
 
--- aural specs processes one voice at the time
-auralSpecs':: Voices -> Rhythmic -> List Value -> M.Map String XenoPitch -> Array Event -> Array AlmostWaste
-auralSpecs' m rhy aural xenopitch events =
-    let sounds = processSound m rhy (getSound aural) events
-        nS = processN m rhy (getN aural) sounds 
-        gainNS = processGain m rhy (getGain aural) nS
-        panGNS = processPan m rhy (getPan aural) gainNS
-        speedPGNS = processSpeed m rhy (getSpeed aural) panGNS
-        beginSpPGNS = processBegin m rhy (getBegin aural) speedPGNS
-        endBSpPGNS = processEnd m rhy (getEnd aural) beginSpPGNS
-        noteEBSpPGNS = processNote m rhy (getNote aural) (getXeNote aural) xenopitch endBSpPGNS
-        -- cutoffEBSpPGNS = processCutOff
-        -- vowelCEBSpPGNS = processVowel
-    in noteEBSpPGNS
-
-
--- note
-processNote:: Voices -> Rhythmic -> Maybe Value -> Maybe Value -> M.Map String XenoPitch ->
-               Array {event::Event, s::String, n::Int, gain::Number, pan::Number, speed::Number, begin::Number, end::Number}  -> 
-               Array {event::Event, s::String, n::Int, gain::Number, pan::Number, speed::Number, begin::Number, end::Number, note:: Number}
-processNote _ _ _ _ _ [] = []
-processNote _ _ Nothing _ _ ws = map (\w -> {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: w.begin, end: 1.0, note: 0.0}) ws
--- processNote m r (Just (TransposedNote id)) xn ws = findReferredNote r ws id m 
-processNote _ r (Just (Dastgah span d)) _ _ ws = spanDastgah span newList ws r
+processNote:: Voices -> M.Map String XenoPitch -> Rhythmic -> Maybe Value -> Maybe Value -> Event -> Maybe Number 
+processNote _ xp r Nothing xNotes e = Nothing
+processNote m xp r (Just (TransposedPitch id n)) xn e = findRefdNote m xp r e (Tuple id n) xn 
+processNote _ xp r (Just (Prog span lista)) xNotes e = mergeProgWithNote xp r (Prog span lista) xNotes e
+processNote _ xp r (Just (Dastgah span d)) _ e = spanMaybe span newList e r
   where newList = getMIDIInterval $ analysisDastgahPattern span r $ fromFoldable (getDastgahList d)
-processNote _ r (Just (Xeno id span lista)) _ xn ws = spanXeno span (fromFoldable midiIntervals) ws r
-  where target = fromMaybe (EDO 0.0 0) $ M.lookup (fst id) xn 
+processNote _ xp r (Just (Xeno id span lista)) xn e = spanMaybe span (fromFoldable midiIntervals) e r
+  where target = fromMaybe (EDO 0.0 0) $ M.lookup (fst id) xp 
         midiIntervals = xenoPitchAsAuralPattern (Tuple target (snd id)) $ fromFoldable lista
-
-        ----- work here, combine note with pitch system new function will be needed.
-processNote m r (Just (Prog span lista)) xeNotes xn ws = []
-  where xeNote' = case xeNotes of
-                      Nothing -> [0]
-                      Just x -> [2666] --processXeNote
-processNote _ _ _ _ _ _ = []
-
-getXeNote:: List Value -> Maybe Value
-getXeNote aural = head $ filter isXeNote $ fromFoldable aural
-
-isXeNote:: Value -> Boolean
-isXeNote (XeNotes _ _) = true
-isXeNote _ = false
-
-getNote:: List Value -> Maybe Value
-getNote aural = head $ filter isNote $ fromFoldable aural
-
-isNote:: Value -> Boolean
-isNote (Dastgah _ _) = true
--- isDastgah (TransposedDastgah _) = true
-isNote (Xeno _ _ _) = true
-isNote _ = false
-
--- abrir notacion para subsets y relacionarla con spanXeno!!!!
-spanXeno:: Span -> Array Number -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number, end:: Number} -> Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number, end:: Number, note:: Number}
-spanXeno span xs ws r = spanDastgah span xs ws r
-
-getDastgahList:: Dastgah -> List Int
-getDastgahList (Shur ns) = ns
-getDastgahList _ = Nil
-
--- 0 1.82 2.96 5.0 7.04 7.94 9.98 12.0
--- data Dastgah = Shur (List Int)
-dToList:: Dastgah -> List Number
-dToList (Shur ns) = map f ns
-  where f n = case (n-1)`mod`8 of
-                0 -> 0.0 
-                1 -> 1.82
-                2 -> 2.96
-                3 -> 5.0
-                4 -> 7.04 
-                5 -> 7.94
-                6 -> 9.98
-                7 -> 12.0
-                _ -> 0.0
-dToList _ = Nil
-
-getMIDIInterval:: Array DastgahNote -> Array Number
-getMIDIInterval xs = map (\x -> x.midiInterval) xs
-
-analysisDastgahPattern::Span -> Rhythmic -> Array Int -> Array DastgahNote
-analysisDastgahPattern CycleEvent _ ns = map assambleDastgahNote zipped
-  where first = ns
-        s = fromMaybe {head: 0, tail: []} $ uncons ns
-        second = snoc s.tail s.head
-        zipped = zip first second
-analysisDastgahPattern CycleBlock _ ns = map assambleDastgahNote zipped
-  where first = ns
-        s = fromMaybe {head: 0, tail: []} $ uncons ns
-        second = snoc s.tail s.head
-        zipped = zip first second
-analysisDastgahPattern CycleInBlock r ns = map assambleDastgahNote zipped
-  where structure = map (\x -> (x `mod` (length ns))) $ map (\x -> fromMaybe 0 $ head x) $ rhythmicStructIndex r [0]  
-        seque = map (\x -> fromMaybe 0 (ns !! x)) structure
-        first = seque
-        s = fromMaybe {head: 0, tail: []} $ uncons seque
-        second = snoc s.tail s.head
-        zipped = zip first second
-analysisDastgahPattern SpreadBlock r ns = map assambleDastgahNote zipped
-  where percenPositions = map (\(Onset b p) -> p) $ rhythmicToOnsets r -- xxx[xx] : 0 0.25 0.5 0.75 0.875
-        segment = 1.0 / toNumber (length ns)  -- 1 3 5 : 0.333333
-        limitsFst = cons 0.0 (scanl (+) 0.0 $ replicate ((length ns) - 1) segment) -- [0, 0.333, 0.666]
-        limitsSnd = snoc (scanl (+) 0.0 $ replicate ((length ns) - 1) segment) 1.0 -- [0.333, 0.666, 1]
-        limits = zip limitsFst limitsSnd  -- [(0,0.333), (0.333,0.666), (0.666,1)]
-        noteLimits = zip ns limits -- [(1,(0,0.333)),(3,(0.333,0.666)),(5,(0.666,1))]
-        funka:: Array (Tuple Int (Tuple Number Number)) -> Number -> Array Int
-        funka noteLimits percenPos = map fst $ filter (\(Tuple _ limit) -> (percenPos >= (fst limit)) && (percenPos < (snd limit))) noteLimits
-        realNS = concat $ map (\percenPos -> funka noteLimits percenPos) $ fromFoldable percenPositions 
-        first = realNS
-        s = fromMaybe {head: 0, tail: []} $ uncons realNS
-        second = snoc s.tail s.head
-        zipped = zip first second
-
-assambleDastgahNote:: Tuple Int Int -> DastgahNote
-assambleDastgahNote (Tuple x y) = {function: fu, movement: mov, midiInterval: checkedMidiInt}
-  where (Tuple midiInter fu) = shurIntToFuncAndMIDIInt x
-        mov = getMovement x y
-        checkedMidiInt = if x == 6 then checkSixth mov midiInter else midiInter
-
-checkSixth:: Interval -> Number -> Number
-checkSixth UpJump midiInter = midiInter + 0.92
-checkSixth UpNext midiInter = midiInter + 0.92
-checkSixth _ midiInter = midiInter
-
-getMovement:: Int -> Int -> Interval
-getMovement note target 
-  | (note < target) && (target == (note+1)) = UpNext
-  | (note < target) && (target /= (note+1)) = UpJump
-  | (note > target) && (target == (note-1)) = DownNext
-  | (note > target) && (target /= (note-1)) = DownJump
-  | note == target = Unison
-  | otherwise = Unison
-
-shurIntToFuncAndMIDIInt:: Int -> Tuple Number String
-shurIntToFuncAndMIDIInt n = case (n-1)`mod`8 of
-                          0 -> Tuple 0.0 "unknown" 
-                          1 -> Tuple 1.82 "unknown"
-                          2 -> Tuple 2.96 "unknown"
-                          3 -> Tuple 5.0 "unknown"
-                          4 -> Tuple 7.04 "unknown"
-                          5 -> Tuple 7.94 "unknown" -- upwards move 8.86
-                          6 -> Tuple 9.98 "unknown"
-                          7 -> Tuple 12.0 "unknown"
-                          _ -> Tuple 0.0 "unknown"
-
-type DastgahNote = {
-  function:: String,
-  movement:: Interval,
-  midiInterval:: Number
-}
-
-data Interval = UpJump | UpNext | DownJump | DownNext | Unison 
-
-instance intervalShow :: Show Interval where
-  show UpJump = "UpJump"
-  show UpNext = "UpNext"
-  show DownJump = "DownJump"
-  show DownNext = "DownNext"
-  show Unison = "Unison"
-
-spanDastgah:: Span -> Array Number -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number, end:: Number} -> Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number, end:: Number, note:: Number}
-spanDastgah CycleEvent ns ws _ = map (processDastgah ns) ws
-  where processDastgah ns w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: w.begin, end: w.end, note: note} 
-              where note = fromMaybe 0.9666 $ ns !! (getEventIndex w.event `mod` length ns)
-spanDastgah CycleBlock xs ws _ = map (processDastgah xs) ws
-  where processDastgah xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: w.begin, end: w.end, note: note}  
-              where note = fromMaybe 0.9666 $ xs !! (getBlockIndex w.event `mod` length xs)
-spanDastgah CycleInBlock xs ws _ = map (processDastgah xs) ws
-  where processDastgah xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: w.begin, end: w.end, note: note} 
-              where note = fromMaybe 0.9666 $ xs !! (getStructureIndex w.event `mod` length xs)
-spanDastgah SpreadBlock xs ws rhythmic = map (processDastgah xs) ws
-  where processDastgah xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: w.begin, end: w.end, note: note} 
-              where percenPositions = map (\(Onset b p) -> p) $ rhythmicToOnsets rhythmic 
-                    modIndex = (getEventIndex w.event) `mod` (length $ fromFoldable percenPositions)
-                    percenPos = fromMaybe 0.0 $ (fromFoldable percenPositions) !! modIndex
-                    segment = 1.0 / toNumber (length xs)
-                    limitsFst = cons 0.0 (scanl (+) 0.0 $ replicate ((length xs) - 1) segment)
-                    limitsSnd = snoc (scanl (+) 0.0 $ replicate ((length xs) - 1) segment) 1.0
-                    limits = zip limitsFst limitsSnd
-                    noteLimits = zip xs limits
-                    note = fromMaybe 0.9666 $ head $ map f $ filter isJust $ spreadNotes percenPos noteLimits
-                        where f (Just x) = x
-                              f Nothing = 0.9666
-
-spreadNotes:: Number -> Array (Tuple Number (Tuple Number Number)) -> Array (Maybe Number)
-spreadNotes percenPos bLimits = map (\sLimit -> spreadNote percenPos sLimit) bLimits
-
-spreadNote::  Number -> Tuple Number (Tuple Number Number) -> Maybe Number
-spreadNote percenPos (Tuple b limit) = if (percenPos >= fst limit) && (percenPos < snd limit) then Just b else Nothing
-
-
--- end
-processEnd:: Voices -> Rhythmic -> Maybe Value -> 
-               Array {event::Event, s::String, n::Int, gain::Number, pan::Number, speed::Number, begin::Number}  -> 
-               Array {event::Event, s::String, n::Int, gain::Number, pan::Number, speed::Number, begin::Number, end::Number}
-processEnd _ _ _ [] = []
-processEnd _ _ Nothing ws = map (\w -> {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: w.begin, end: 1.0}) ws
-processEnd m r (Just (TransposedEnd id n)) ws = findReferredEnd r ws (Tuple id n) m 
-processEnd _ r (Just (End span eList)) ws = spanEnd span (fromFoldable eList) ws r
-processEnd _ _ _ _ = []
-
-findReferredEnd:: Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number} -> (Tuple String Int) -> Voices -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number, end:: Number}
-findReferredEnd r ws (Tuple id n) mapa = processEnd mapa r newVal ws
-    where newVal = cycleAurals n $ M.lookup id mapa -- Maybe (Voice Temporal (List Aural))
-
-
-spanEnd:: Span -> Array Number -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number} -> Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number, end:: Number}
-spanEnd CycleEvent xs ws _ = map (processEnd xs) ws
-  where processEnd xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: w.begin, end: end} 
-              where end = fromMaybe 0.9666 $ xs !! (getEventIndex w.event `mod` length xs)
-spanEnd CycleBlock xs ws _ = map (processEnd xs) ws
-  where processEnd xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: w.begin, end: end}  
-              where end = fromMaybe 0.9666 $ xs !! (getBlockIndex w.event `mod` length xs)
-spanEnd CycleInBlock xs ws _ = map (processEnd xs) ws
-  where processEnd xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: w.begin, end: end} 
-              where end = fromMaybe 0.9666 $ xs !! (getStructureIndex w.event `mod` length xs)
-spanEnd SpreadBlock xs ws rhythmic = map (processEnd xs) ws
-  where processEnd xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: w.begin, end: end} 
-              where percenPositions = map (\(Onset b p) -> p) $ rhythmicToOnsets rhythmic 
-                    modIndex = (getEventIndex w.event) `mod` (length $ fromFoldable percenPositions)
-                    percenPos = fromMaybe 0.0 $ (fromFoldable percenPositions) !! modIndex
-                    segment = 1.0 / toNumber (length xs)
-                    limitsFst = cons 0.0 (scanl (+) 0.0 $ replicate ((length xs) - 1) segment)
-                    limitsSnd = snoc (scanl (+) 0.0 $ replicate ((length xs) - 1) segment) 1.0
-                    limits = zip limitsFst limitsSnd
-                    endLimits = zip xs limits
-                    end = fromMaybe 0.9666 $ head $ map f $ filter isJust $ spreadEnds percenPos endLimits
-                        where f (Just x) = x
-                              f Nothing = 0.9666
-
-spreadEnds:: Number -> Array (Tuple Number (Tuple Number Number)) -> Array (Maybe Number)
-spreadEnds percenPos bLimits = map (\sLimit -> spreadEnd percenPos sLimit) bLimits
-
-spreadEnd::  Number -> Tuple Number (Tuple Number Number) -> Maybe Number
-spreadEnd percenPos (Tuple b limit) = if (percenPos >= fst limit) && (percenPos < snd limit) then Just b else Nothing
-
-getEnd:: List Value -> Maybe Value
-getEnd aural = head $ filter isEnd $ fromFoldable aural
-
-isEnd:: Value -> Boolean
-isEnd (End _ _) = true
-isEnd (TransposedEnd _ _) = true
-isEnd _ = false
-
--- begin
-processBegin:: Voices -> Rhythmic -> Maybe Value -> 
-               Array {event::Event, s::String, n::Int, gain::Number, pan::Number, speed::Number}  -> 
-               Array {event::Event, s::String, n::Int, gain::Number, pan::Number, speed::Number, begin::Number}
-processBegin _ _ _ [] = []
-processBegin _ _ Nothing ws = map (\w -> {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: 0.0}) ws
-processBegin m r (Just (TransposedBegin id n)) ws = findReferredBegin r ws (Tuple id n) m 
-processBegin _ r (Just (Begin span bList)) ws = spanBegin span (fromFoldable bList) ws r
-processBegin _ _ _ _ = []
-
-findReferredBegin:: Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number} -> Tuple String Int -> Voices -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number}
-findReferredBegin r ws (Tuple id n) mapa = processBegin mapa r newVal ws
-    where newVal = cycleAurals n $ M.lookup id mapa
-
-spanBegin:: Span -> Array Number -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number} -> Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number, begin:: Number}
-spanBegin CycleEvent xs ws _ = map (processBn xs) ws
-  where processBn xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: bn} 
-              where bn = fromMaybe 0.0666 $ xs !! (getEventIndex w.event `mod` length xs)
-spanBegin CycleBlock xs ws _ = map (processBn xs) ws
-  where processBn xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: bn}  
-              where bn = fromMaybe 0.0666 $ xs !! (getBlockIndex w.event `mod` length xs)
-spanBegin CycleInBlock xs ws _ = map (processBn xs) ws
-  where processBn xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: bn} 
-              where bn = fromMaybe 0.0666 $ xs !! (getStructureIndex w.event `mod` length xs)
-spanBegin SpreadBlock xs ws rhythmic = map (processBn xs) ws
-  where processBn xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: w.speed, begin: bn} 
-              where percenPositions = map (\(Onset b p) -> p) $ rhythmicToOnsets rhythmic 
-                    modIndex = (getEventIndex w.event) `mod` (length $ fromFoldable percenPositions)
-                    percenPos = fromMaybe 0.0 $ (fromFoldable percenPositions) !! modIndex
-                    segment = 1.0 / toNumber (length xs)
-                    limitsFst = cons 0.0 (scanl (+) 0.0 $ replicate ((length xs) - 1) segment)
-                    limitsSnd = snoc (scanl (+) 0.0 $ replicate ((length xs) - 1) segment) 1.0
-                    limits = zip limitsFst limitsSnd
-                    bnLimits = zip xs limits
-                    bn = fromMaybe 0.0666 $ head $ map f $ filter isJust $ spreadBegins percenPos bnLimits
-                        where f (Just x) = x
-                              f Nothing = 0.0666
-
-spreadBegins:: Number -> Array (Tuple Number (Tuple Number Number)) -> Array (Maybe Number)
-spreadBegins percenPos bLimits = map (\sLimit -> spreadBegin percenPos sLimit) bLimits
-
-spreadBegin::  Number -> Tuple Number (Tuple Number Number) -> Maybe Number
-spreadBegin percenPos (Tuple b limit) = if (percenPos >= fst limit) && (percenPos < snd limit) then Just b else Nothing
-
-getBegin:: List Value -> Maybe Value
-getBegin aural = head $ filter isBegin $ fromFoldable aural
-
-isBegin:: Value -> Boolean
-isBegin (Begin _ _) = true
-isBegin (TransposedBegin _ _) = true
-isBegin _ = false
-
--- speed
-processSpeed:: Voices -> Rhythmic -> Maybe Value -> 
-               Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number}  -> 
-               Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number}
-processSpeed _ _ _ [] = []
-processSpeed _ _ Nothing ws = map (\w -> {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: 1.0}) ws
-processSpeed m r (Just (TransposedSpeed id n)) ws = findOtherVoiceSpeed r ws (Tuple id n) m 
-processSpeed _ r (Just (Speed span spList)) ws = spanSpeed span (fromFoldable spList) ws r
-processSpeed _ _ _ _ = []
-
-findOtherVoiceSpeed:: Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number} -> Tuple String Int -> Voices -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number}
-findOtherVoiceSpeed r ws (Tuple id n) mapa = processSpeed mapa r newVal ws
-    where newVal = cycleAurals n $ M.lookup id mapa
-
-spanSpeed:: Span -> Array Number -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number} -> Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number, speed:: Number}
-spanSpeed CycleEvent xs ws _ = map (processSp xs) ws
-  where processSp xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: sp} 
-              where sp = fromMaybe 1.0666 $ xs !! (getEventIndex w.event `mod` length xs)
-spanSpeed CycleBlock xs ws _ = map (processSp xs) ws
-  where processSp xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: sp}  
-              where sp = fromMaybe 1.0666 $ xs !! (getBlockIndex w.event `mod` length xs)
-spanSpeed CycleInBlock xs ws _ = map (processSp xs) ws
-  where processSp xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: sp} 
-              where sp = fromMaybe 1.0666 $ xs !! (getStructureIndex w.event `mod` length xs)
-spanSpeed SpreadBlock xs ws rhythmic = map (processSp xs) ws
-  where processSp xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: w.pan, speed: sp} 
-              where percenPositions = map (\(Onset b p) -> p) $ rhythmicToOnsets rhythmic 
-                    modIndex = (getEventIndex w.event) `mod` (length $ fromFoldable percenPositions)
-                    percenPos = fromMaybe 0.0 $ (fromFoldable percenPositions) !! modIndex
-                    segment = 1.0 / toNumber (length xs)
-                    limitsFst = cons 0.0 (scanl (+) 0.0 $ replicate ((length xs) - 1) segment)
-                    limitsSnd = snoc (scanl (+) 0.0 $ replicate ((length xs) - 1) segment) 1.0
-                    limits = zip limitsFst limitsSnd
-                    spLimits = zip xs limits
-                    sp = fromMaybe 1.0666 $ head $ map f $ filter isJust $ spreadSpeeds percenPos spLimits
-                        where f (Just x) = x
-                              f Nothing = 1.0666
-
-spreadSpeeds:: Number -> Array (Tuple Number (Tuple Number Number)) -> Array (Maybe Number)
-spreadSpeeds percenPos spLimits = map (\sLimit -> spreadSpeed percenPos sLimit) spLimits
-
-spreadSpeed::  Number -> Tuple Number (Tuple Number Number) -> Maybe Number
-spreadSpeed percenPos (Tuple sp limit) = if (percenPos >= fst limit) && (percenPos < snd limit) then Just sp else Nothing
-
-getSpeed:: List Value -> Maybe Value
-getSpeed aural = head $ filter isSpeed $ fromFoldable aural
-
-isSpeed:: Value -> Boolean
-isSpeed (Speed _ _) = true
-isSpeed (TransposedSpeed _ _) = true
-isSpeed _ = false
-
--- pan
-processPan:: Voices -> Rhythmic -> Maybe Value -> Array {event:: Event, s:: String, n:: Int, gain:: Number}  -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number}
-processPan _ _ _ [] = []
-processPan _ _ Nothing ws = map (\w -> {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: 0.5}) ws
-processPan m r (Just (TransposedPan id n)) ws = findOtherVoicePan r ws (Tuple id n) m 
-processPan _ r (Just (Pan span pList)) ws = spanPan span (fromFoldable pList) ws r
-processPan _ _ _ _ = []
-
-findOtherVoicePan:: Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number} -> (Tuple String Int) -> Voices -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number}
-findOtherVoicePan r ws (Tuple id n) mapa = processPan mapa r newVal ws
-    where newVal = cycleAurals n $ M.lookup id mapa
-
-spanPan:: Span -> Array Number -> Array {event:: Event, s:: String, n:: Int, gain:: Number} -> Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number, pan:: Number}
-spanPan CycleEvent xs ws _ = map (processP xs) ws
-  where processP xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: p} 
-              where p = fromMaybe 0.5666 $ xs !! (getEventIndex w.event `mod` length xs)
-spanPan CycleBlock xs ws _ = map (processP xs) ws
-  where processP xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: p}  
-              where p = fromMaybe 0.5666 $ xs !! (getBlockIndex w.event `mod` length xs)
-spanPan CycleInBlock xs ws _ = map (processP xs) ws
-  where processP xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: p} 
-              where p = fromMaybe 0.5666 $ xs !! (getStructureIndex w.event `mod` length xs)
-spanPan SpreadBlock xs ws rhythmic = map (processP xs) ws
-  where processP xs w = {event: w.event, s: w.s, n: w.n, gain: w.gain, pan: p} 
-              where percenPositions = map (\(Onset b p) -> p) $ rhythmicToOnsets rhythmic 
-                    modIndex = (getEventIndex w.event) `mod` (length $ fromFoldable percenPositions)
-                    percenPos = fromMaybe 0.0 $ (fromFoldable percenPositions) !! modIndex
-                    segment = 1.0 / toNumber (length xs)
-                    limitsFst = cons 0.0 (scanl (+) 0.0 $ replicate ((length xs) - 1) segment)
-                    limitsSnd = snoc (scanl (+) 0.0 $ replicate ((length xs) - 1) segment) 1.0
-                    limits = zip limitsFst limitsSnd
-                    pLimits = zip xs limits
-                    p = fromMaybe 0.5666 $ head $ map f $ filter isJust $ spreadPans percenPos pLimits
-                        where f (Just x) = x
-                              f Nothing = 0.5666
-
-spreadPans:: Number -> Array (Tuple Number (Tuple Number Number)) -> Array (Maybe Number)
-spreadPans percenPos pLimits = map (\sLimit -> spreadPan percenPos sLimit) pLimits
-
-spreadPan::  Number -> Tuple Number (Tuple Number Number) -> Maybe Number
-spreadPan percenPos (Tuple p limit) = if (percenPos >= fst limit) && (percenPos < snd limit) then Just p else Nothing
-
-getPan:: List Value -> Maybe Value
-getPan aural = head $ filter isPan $ fromFoldable aural
-
-isPan:: Value -> Boolean
-isPan (Pan _ _) = true
-isPan (TransposedPan _ _) = true
-isPan _ = false
-
--- gain
-processGain:: Voices -> Rhythmic -> Maybe Value -> Array {event:: Event, s:: String, n:: Int}  -> Array {event:: Event, s:: String, n:: Int, gain:: Number}
-processGain _ _ _ [] = []
-processGain _ _ Nothing ws = map (\w -> {event: w.event, s: w.s, n: w.n, gain: 1.0}) ws
-processGain m r (Just (TransposedGain id n)) ws = findOtherVoiceGain r ws (Tuple id n) m 
-processGain _ r (Just (Gain span gList)) ws = spanGain span (fromFoldable gList) ws r
-processGain _ _ _ _ = [] 
-
-findOtherVoiceGain:: Rhythmic -> Array {event:: Event, s:: String, n:: Int} -> Tuple String Int -> Voices -> Array {event:: Event, s:: String, n:: Int, gain:: Number}
-findOtherVoiceGain r ws (Tuple id n) mapa = processGain mapa r newVal ws
-    where newVal = cycleAurals n $ M.lookup id mapa
-
-spanGain:: Span -> Array Number -> Array {event:: Event, s:: String, n:: Int} -> Rhythmic -> Array {event:: Event, s:: String, n:: Int, gain:: Number}
-spanGain CycleEvent xs ws _ = map (processG xs) ws
-  where processG xs w = {event: w.event, s: w.s, n: w.n, gain: g} 
-              where g = fromMaybe 0.02666 $ xs !! (getEventIndex w.event `mod` length xs)
-spanGain CycleBlock xs ws _ = map (processG xs) ws
-  where processG xs w = {event: w.event, s: w.s, n: w.n, gain: g}  
-              where g = fromMaybe 0.02666 $ xs !! (getBlockIndex w.event `mod` length xs)
-spanGain CycleInBlock xs ws _ = map (processG xs) ws
-  where processG xs w = {event: w.event, s: w.s, n: w.n, gain: g} 
-              where g = fromMaybe 0.02666 $ xs !! (getStructureIndex w.event `mod` length xs)
-spanGain SpreadBlock xs ws rhythmic = map (processG xs) ws
-  where processG xs w = {event: w.event, s: w.s, n: w.n, gain: g} 
-              where percenPositions = map (\(Onset b p) -> p) $ rhythmicToOnsets rhythmic 
-                    modIndex = (getEventIndex w.event) `mod` (length $ fromFoldable percenPositions)
-                    percenPos = fromMaybe 0.0 $ (fromFoldable percenPositions) !! modIndex
-                    segment = 1.0 / toNumber (length xs)
-                    limitsFst = cons 0.0 (scanl (+) 0.0 $ replicate ((length xs) - 1) segment)
-                    limitsSnd = snoc (scanl (+) 0.0 $ replicate ((length xs) - 1) segment) 1.0
-                    limits = zip limitsFst limitsSnd
-                    gLimits = zip xs limits
-                    g = fromMaybe 0.02666 $ head $ map f $ filter isJust $ spreadGains percenPos gLimits
-                        where f (Just x) = x
-                              f Nothing = 0.02666
-
-spreadGains:: Number -> Array (Tuple Number (Tuple Number Number)) -> Array (Maybe Number)
-spreadGains percenPos gLimits = map (\sLimit -> spreadG percenPos sLimit) gLimits
-
-spreadG::  Number -> Tuple Number (Tuple Number Number) -> Maybe Number
-spreadG percenPos (Tuple g limit) = if (percenPos >= fst limit) && (percenPos < snd limit) then Just g else Nothing
-
-getGain:: List Value -> Maybe Value
-getGain aural = head $ filter isGain $ fromFoldable aural
-
-isGain:: Value -> Boolean
-isGain (Gain _ _) = true
-isGain (TransposedGain _ _) = true
-isGain _ = false
-
--- N
-processN:: Voices -> Rhythmic -> Maybe Value -> Array {event:: Event, s:: String}  -> Array {event:: Event, s:: String, n:: Int}
-processN _ _ _ [] = []
-processN _ _ Nothing ws = map (\w -> {event: w.event, s: w.s, n: 0}) ws
--- processN m r (Just (TransposedNWith id l)) ws = findOtherNWith r ws id l m 
-processN m r (Just (TransposedN id n)) ws = findOtherVoiceN r ws (Tuple id n) m 
-processN _ r (Just (N span nList)) ws = spanN span (fromFoldable nList) ws r
-processN _ _ _ _ = [] 
-
-
--- findOtherNWithTest = newTransposition
---     where lista = [(add 1), (add 3), (add 10)]
---           transposed = [0,2,0,2,0,2,0,0]
---           patron = bjorklundAsInterval (length lista) (length transposed)
---           zipped = concat $ zipWith (\x n -> replicate n x) (fromFoldable lista) patron 
---           newTransposition = zipWith (\n newN -> newN n ) transposed zipped
-
-
--- this events are organised via their index, the array does not represent the position in the cycle. The lista and new transposition need to be organised in the same way
-
--- findOtherNWith:: Rhythmic -> Array {event:: Event, s:: String} -> String -> List Ops -> Voices -> Array {event:: Event, s:: String, n:: Int}
--- findOtherNWith r ws id lista mapa = newTransposition
-    -- where 
-          
-
-
-    --       patron = bjorklundAsInterval (L.length li) (length transposed) 
-    --       zipped = concat $ zipWith (\x n -> replicate n x) (fromFoldable li) patron 
-    --       newTransposition = zipWith (\esn newN -> {event: esn.event, s: esn.s, n: op newN esn.n} ) transposed zipped
-
-
--- getRefdN:: String -> Voices -> List Int
--- getRefdN id mapa = case M.lookup id mapa of
---       Nothing -> L.fromFoldable []
---       Just (TransposedN id) -> getRefdN 
---       Just (TransposedNWith id list) -> 
---       Just (N span list) ->
-
-findOtherVoiceN:: Rhythmic -> Array {event:: Event, s:: String} -> Tuple String Int -> Voices -> Array {event:: Event, s:: String, n:: Int}
-findOtherVoiceN r ws (Tuple id n) mapa = processN mapa r newVal ws
-    where newVal = cycleAurals n $ M.lookup id mapa
-
-spanN:: Span -> Array Int -> Array {event:: Event, s:: String} -> Rhythmic -> Array {event:: Event, s:: String, n:: Int}
-spanN CycleEvent xs ws _ = map (processN xs) ws
-  where processN xs w = {event: w.event, s: w.s, n: n'} 
-              where n' = fromMaybe 2666 $ xs !! (getEventIndex w.event `mod` length xs)
-spanN CycleBlock xs ws _ = map (processN xs) ws
-  where processN xs w = {event: w.event, s: w.s, n: n'} 
-              where n' = fromMaybe 2666 $ xs !! (getBlockIndex w.event `mod` length xs)
-spanN CycleInBlock xs ws _ = map (processN xs) ws
-  where processN xs w = {event: w.event, s: w.s, n: n'} 
-              where n' = fromMaybe 2666 $ xs !! (getStructureIndex w.event `mod` length xs)
-spanN SpreadBlock xs ws rhythmic = map (processN xs) ws
-  where processN xs w = {event: w.event, s: w.s, n: n'} 
-              where percenPositions = map (\(Onset b p) -> p) $ rhythmicToOnsets rhythmic 
-                    modIndex = (getEventIndex w.event) `mod` (length $ fromFoldable percenPositions)
-                    percenPos = fromMaybe 0.0 $ (fromFoldable percenPositions) !! modIndex
-                    segment = 1.0 / toNumber (length xs)
-                    limitsFst = cons 0.0 (scanl (+) 0.0 $ replicate ((length xs) - 1) segment)
-                    limitsSnd = snoc (scanl (+) 0.0 $ replicate ((length xs) - 1) segment) 1.0
-                    limits = zip limitsFst limitsSnd
-                    nLimits = zip xs limits
-                    n' = fromMaybe 2666 $ head $ map f $ filter isJust $ spreadNs percenPos nLimits
-                        where f (Just x) = x
-                              f Nothing = 2666
-  
-spreadNs:: Number -> Array (Tuple Int (Tuple Number Number)) -> Array (Maybe Int)
-spreadNs percenPos nLimits = map (\sLimit -> spreadN percenPos sLimit) nLimits
-
-spreadN::  Number -> Tuple Int (Tuple Number Number) -> Maybe Int
-spreadN percenPos (Tuple n limit) = if (percenPos >= fst limit) && (percenPos < snd limit) then Just n else Nothing
-
--- testGetN = getN au
---   where au = L.fromFoldable [N CycleBlock $ L.fromFoldable [0,1,2,3], Sound CycleBlock $ L.fromFoldable ["a","b","c"]]
-
-getN:: List Value -> Maybe Value
-getN aural = head $ filter isN $ fromFoldable aural
-
-getSpan:: Value -> Span
-getSpan (N s _) = s
-getSpan _ = CycleEvent
-
-isN:: Value -> Boolean
-isN (N _ _) = true
-isN (TransposedN _ _) = true
--- isN (TransposedNWith _ _ _) = true
-isN _ = false
-
--- Sound
-processSound:: Voices -> Rhythmic -> Maybe Value -> Array Event -> Array {event:: Event, s:: String} 
-processSound _ _ Nothing _ = []
-processSound m r (Just (TransposedSound id n)) es = findOtherVoiceSound r es (Tuple id n) m 
-processSound _ r (Just (Sound span sList)) events = spanSound span (fromFoldable sList) events r
-processSound _ _ _ _ = [] 
-
-findOtherVoiceSound:: Rhythmic -> Array Event -> Tuple String Int -> Voices -> Array {event:: Event, s:: String}
-findOtherVoiceSound r ws (Tuple id n) mapa = processSound mapa r newVal ws
-    where newVal = cycleAurals n $ M.lookup id mapa
-
-spanSound:: Span -> Array String -> Array Event -> Rhythmic -> Array {event:: Event, s:: String}  
-spanSound CycleEvent xs events _ = map (processSound xs) events
-  where processSound xs event' = {event: event', s: sound'} 
-              where sound' = fromMaybe "error assigning sound" $ xs !! (getEventIndex event' `mod` length xs)
-spanSound CycleBlock xs events _ = map (processSound xs) events
-  where processSound xs event' = {event: event', s: sound'}
-              where sound' = fromMaybe "error assigning sound" $ xs !! (getBlockIndex event' `mod` length xs)
-spanSound CycleInBlock xs events _ = map (processSound xs) events
-  where processSound xs event' = {event: event', s: sound'}
-              where sound' = fromMaybe "error assigning sound" $ xs !! (getStructureIndex event' `mod` length xs)
-spanSound SpreadBlock xs events rhythmic = map (processSound xs) events
-  where processSound xs event' = {event: event', s: sound'}
-              where percenPositions = map (\(Onset b p) -> p) $ rhythmicToOnsets rhythmic 
-                    modIndex = (getEventIndex event') `mod` (length $ fromFoldable percenPositions)
-                    percenPos = fromMaybe 0.0 $ (fromFoldable percenPositions) !! modIndex
-                    segment = 1.0 / toNumber (length xs)
-                    limitsFst = cons 0.0 (scanl (+) 0.0 $ replicate ((length xs) - 1) segment)
-                    limitsSnd = snoc (scanl (+) 0.0 $ replicate ((length xs) - 1) segment) 1.0
-                    limits = zip limitsFst limitsSnd
-                    soundLimits = zip xs limits
-                    sound' = fromMaybe "error assigning sound SpreadBlock" $ head $ map f $ filter isJust $ spreadSounds percenPos soundLimits
-                        where f (Just x) = x
-                              f Nothing = "error thingy"
-  
-spreadSounds:: Number -> Array (Tuple String (Tuple Number Number)) -> Array (Maybe String)
-spreadSounds percenPos soundLimits = map (\sLimit -> spreadSound percenPos sLimit) soundLimits
-
-spreadSound::  Number -> Tuple String (Tuple Number Number) -> Maybe String
-spreadSound percenPos (Tuple sound limit) = if (percenPos >= fst limit) && (percenPos < snd limit) then Just sound else Nothing
-  
-getSound:: List Value -> Maybe Value
-getSound aural = head $ filter isSound $ fromFoldable aural
-
-isSound:: Value -> Boolean
-isSound (Sound _ _) = true
-isSound (TransposedSound _ _) = true
-isSound _ = false
-
----
-testVoice = Voice defTemporal $ L.fromFoldable [L.fromFoldable [End CycleBlock Nil], L.fromFoldable [Gain CycleEvent Nil, End CycleInBlock Nil]]
-
-cycleAurals:: Int -> Maybe Voice -> Maybe Value
-cycleAurals n mVoice = do
+processNote _ _ _ _ _ _ = Nothing
+
+findRefdNote:: Voices -> M.Map String XenoPitch -> Rhythmic -> Event -> Tuple String Int -> Maybe Value -> Maybe Number
+findRefdNote m xp r e (Tuple id n) xn = processNote m xp r newVal xn e
+    where newVal = cycleAurals n (M.lookup id m) getNote
+
+mergeProgWithNote:: M.Map String XenoPitch -> Rhythmic -> Value -> Maybe Value -> Event -> Maybe Number 
+mergeProgWithNote xp r prog xnote ev = pitchSystemNoteToMIDI xp prog' <$> xnote'
+    where prog' = processProg r prog ev
+          xnote' = processXNotes r xnote ev
+
+pitchSystemNoteToMIDI:: M.Map String XenoPitch -> (Tuple String (Maybe Int)) -> Int -> Number
+pitchSystemNoteToMIDI mapa (Tuple id subset) nota = xenoPitchAsMIDINum (Tuple xn subset) nota 
+  where xn = fromMaybe (EDO 0.0 0) $ M.lookup id mapa
+
+processProg:: Rhythmic -> Value ->  Event -> Tuple String (Maybe Int)
+processProg r (Prog span xs) ev = fromMaybe (Tuple "error" Nothing) $ spanMaybe span (fromFoldable xs) ev r
+processProg r _ ev = Tuple "error" Nothing
+
+processXNotes:: Rhythmic -> Maybe Value ->  Event -> Maybe Int
+processXNotes r (Just (XNotes span xs)) ev = spanMaybe span (fromFoldable xs) ev r
+processXNotes r _ ev = Nothing
+
+
+--
+processCutOffH:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
+processCutOffH vs r Nothing ev = Nothing
+processCutOffH vs r (Just (TransposedCutOffH id n)) ev = findRefdCutOffH r ev (Tuple id n) vs 
+processCutOffH _  r (Just (CutOffH span nList)) ev = spanMaybe span (fromFoldable nList) ev r
+processCutOffH _ _ _ _ = Nothing
+
+findRefdCutOffH:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe Number
+findRefdCutOffH r ws (Tuple id n) mapa = processCutOffH mapa r newVal ws
+    where newVal = cycleAurals n (M.lookup id mapa) getCutOffH
+
+--
+processCutOff:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
+processCutOff vs r Nothing ev = Nothing
+processCutOff vs r (Just (TransposedCutOff id n)) ev = findRefdCutOff r ev (Tuple id n) vs 
+processCutOff _  r (Just (CutOff span nList)) ev = spanMaybe span (fromFoldable nList) ev r
+processCutOff _ _ _ _ = Nothing
+
+findRefdCutOff:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe Number
+findRefdCutOff r ws (Tuple id n) mapa = processCutOff mapa r newVal ws
+    where newVal = cycleAurals n (M.lookup id mapa) getCutOff
+
+--
+processVowel:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe String 
+processVowel vs r Nothing ev = Nothing
+processVowel vs r (Just (TransposedVowel id n)) ev = findRefdVowel r ev (Tuple id n) vs 
+processVowel _  r (Just (Vowel span nList)) ev = spanMaybe span (fromFoldable nList) ev r
+processVowel _ _ _ _ = Nothing
+
+findRefdVowel:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe String
+findRefdVowel r ws (Tuple id n) mapa = processVowel mapa r newVal ws
+    where newVal = cycleAurals n (M.lookup id mapa) getVowel
+
+--
+processEnd:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
+processEnd vs r Nothing ev = Nothing
+processEnd vs r (Just (TransposedEnd id n)) ev = findRefdEnd r ev (Tuple id n) vs 
+processEnd _  r (Just (End span nList)) ev = spanMaybe span (fromFoldable nList) ev r
+processEnd _ _ _ _ = Nothing
+
+findRefdEnd:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe Number
+findRefdEnd r ws (Tuple id n) mapa = processEnd mapa r newVal ws
+    where newVal = cycleAurals n (M.lookup id mapa) getEnd
+
+--
+processBegin:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
+processBegin vs r Nothing ev = Nothing
+processBegin vs r (Just (TransposedBegin id n)) ev = findRefdBegin r ev (Tuple id n) vs 
+processBegin _  r (Just (Begin span nList)) ev = spanMaybe span (fromFoldable nList) ev r
+processBegin _ _ _ _ = Nothing
+
+findRefdBegin:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe Number
+findRefdBegin r ws (Tuple id n) mapa = processBegin mapa r newVal ws
+    where newVal = cycleAurals n (M.lookup id mapa) getBegin
+
+--
+processSpeed:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
+processSpeed vs r Nothing ev = Nothing
+processSpeed vs r (Just (TransposedSpeed id n)) ev = findRefdSpeed r ev (Tuple id n) vs 
+processSpeed _  r (Just (Speed span nList)) ev = spanMaybe span (fromFoldable nList) ev r
+processSpeed _ _ _ _ = Nothing
+
+findRefdSpeed:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe Number
+findRefdSpeed r ws (Tuple id n) mapa = processSpeed mapa r newVal ws
+    where newVal = cycleAurals n (M.lookup id mapa) getSpeed
+
+--
+processPan:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
+processPan vs r Nothing ev = Nothing
+processPan vs r (Just (TransposedPan id n)) ev = findRefdP r ev (Tuple id n) vs 
+processPan _  r (Just (Pan span nList)) ev = spanMaybe span (fromFoldable nList) ev r
+processPan _ _ _ _ = Nothing
+
+findRefdP:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe Number
+findRefdP r ws (Tuple id n) mapa = processPan mapa r newVal ws
+    where newVal = cycleAurals n (M.lookup id mapa) getP
+--
+processGain:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
+processGain vs r Nothing ev = Nothing
+processGain vs r (Just (TransposedGain id n)) ev = findRefdG r ev (Tuple id n) vs 
+processGain _  r (Just (Gain span nList)) ev = spanMaybe span (fromFoldable nList) ev r
+processGain _ _ _ _ = Nothing
+
+findRefdG:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe Number
+findRefdG r ws (Tuple id n) mapa = processGain mapa r newVal ws
+    where newVal = cycleAurals n (M.lookup id mapa) getG
+--
+processN:: Voices -> Rhythmic -> Maybe Value -> Event -> Int 
+processN vs r Nothing ev = 0
+processN vs r (Just (TransposedN id n)) ev = findRefdN r ev (Tuple id n) vs 
+processN _  r (Just (N span nList)) ev = spanInt span (fromFoldable nList) ev r
+processN _ _ _ _ = 2666
+
+findRefdN:: Rhythmic -> Event -> Tuple String Int -> Voices -> Int
+findRefdN r ws (Tuple id n) mapa = processN mapa r newVal ws
+    where newVal = cycleAurals n (M.lookup id mapa) getN
+--
+processSound:: Voices -> Rhythmic -> Maybe Value -> Event -> String 
+processSound vs r Nothing ev = "no sound value even with check!"
+processSound vs r (Just (TransposedSound id n)) ev = findRefdSound r ev (Tuple id n) vs 
+processSound _  r (Just (Sound span sList)) ev = spanStr span (fromFoldable sList) ev r
+processSound _ _ _ _ = "processSound failed at pattern matching"
+
+findRefdSound:: Rhythmic -> Event -> Tuple String Int -> Voices -> String
+findRefdSound r ws (Tuple id n) mapa = processSound mapa r newVal ws
+    where newVal = cycleAurals n (M.lookup id mapa) getS
+
+-- Potential here for crazyness: delay, anticipate, swing, contratiempo, microrhythm, snap...
+processWhen:: Event -> Number
+processWhen (Event o i) = (\(Onset b p) -> p) o 
+
+---- span functions, three flavours: String, Int, Num
+spanMaybe:: forall a. Span -> Array a -> Event -> Rhythmic -> Maybe a
+spanMaybe CycleEvent xs event _ = xs !! (getEventIndex event `mod` length xs)
+spanMaybe CycleBlock xs event _ = xs !! (getBlockIndex event `mod` length xs)
+spanMaybe CycleInBlock xs event _ = xs !! (getStructureIndex event `mod` length xs)
+spanMaybe SpreadBlock xs event rhythmic = spreadInBlock xs event rhythmic
+spanMaybe _ _ _ _ = Nothing
+
+spanStr:: Span -> Array String -> Event -> Rhythmic -> String  
+spanStr CycleEvent xs event _ = strMaybe $ xs !! (getEventIndex event `mod` length xs)
+spanStr CycleBlock xs event _ = strMaybe $ xs !! (getBlockIndex event `mod` length xs)
+spanStr CycleInBlock xs event _ = strMaybe $ xs !! (getStructureIndex event `mod` length xs)
+spanStr SpreadBlock xs event rhythmic = strMaybe $ spreadInBlock xs event rhythmic
+spanStr _ _ _ _ = "error at spanStr, invalid span constructor"
+
+spanInt:: Span -> Array Int -> Event -> Rhythmic -> Int
+spanInt CycleEvent xs event _ = intMaybe $ xs !! (getEventIndex event `mod` length xs)
+spanInt CycleBlock xs event _ = intMaybe $ xs !! (getBlockIndex event `mod` length xs)
+spanInt CycleInBlock xs event _ = intMaybe $ xs !! (getStructureIndex event `mod` length xs)
+spanInt SpreadBlock xs event rhythmic = intMaybe $ spreadInBlock xs event rhythmic
+spanInt _ _ _ _ = 2666
+
+------
+-- spread functions are now general for all values!!! Bliss
+spreadInBlock:: forall a. Array a -> Event -> Rhythmic -> Maybe a
+spreadInBlock xs event rhythmic = spreadWrap percenPos xsLimits 
+  where percenPositions = map (\(Onset b p) -> p) $ rhythmicToOnsets rhythmic 
+        modIndex = (getEventIndex event) `mod` (length $ fromFoldable percenPositions)
+        percenPos = fromMaybe 0.0 $ (fromFoldable percenPositions) !! modIndex
+        segment = 1.0 / toNumber (length xs)
+        limitsFst = cons 0.0 (scanl (+) 0.0 $ replicate ((length xs) - 1) segment)
+        limitsSnd = snoc (scanl (+) 0.0 $ replicate ((length xs) - 1) segment) 1.0
+        xsLimits = zip xs $ zip limitsFst limitsSnd
+
+spreadWrap:: forall a. Number -> Array (Tuple a (Tuple Number Number)) -> Maybe a
+spreadWrap percenPos asWithlimits = fromMaybe Nothing $ head $ filter isJust $ map (\(Tuple as limits) -> spread percenPos as limits) asWithlimits
+
+spread:: forall a. Number -> a -> (Tuple Number Number) -> Maybe a
+spread percenPos a limits = if (percenPos >= fst limits) && (percenPos < snd limits) then (Just a) else Nothing
+
+---- helpers
+strMaybe:: Maybe String -> String
+strMaybe x = fromMaybe "error" x
+
+intMaybe:: Maybe Int -> Int
+intMaybe x = fromMaybe 2666 x
+
+numMaybe:: Maybe Number -> Number
+numMaybe x = fromMaybe 2.666 x
+
+cycleAurals:: Int -> Maybe Voice -> (List Value -> Maybe Value) -> Maybe Value
+cycleAurals n mVoice f = do
   voice <- mVoice
   let aurals = (\(Voice t aurals) -> aurals) voice
   let len = L.length aurals 
   newVal <- (fromFoldable aurals) !! (n`mod`len)
-  getEnd newVal
+  f newVal
 
+-- getters
+----- structure index is weird, think of nested levels
 getStructureIndex:: Event -> Int
 getStructureIndex (Event _ (Index _ xs _)) = fromMaybe 0 $ head $ xs
 
@@ -690,11 +305,102 @@ getBlockIndex (Event _ (Index n _ _)) = n
 getEventIndex:: Event -> Int
 getEventIndex (Event _ (Index _ _ n)) = n
 
----
-bjorklundAsInterval:: Int -> Int -> Array Int
-bjorklundAsInterval k n = zipped
-      where bjorkl = fromFoldable $ bjorklund (Tuple k n)
-            limit = map snd $ filter (\(Tuple bool n) -> bool) $ zipWith (\x y -> Tuple x y) bjorkl (0..(length bjorkl))
-            limit1 = snoc limit n
-            limit2 = fromMaybe {head: 2666, tail: []} $ uncons limit1
-            zipped = zipWith (\y x -> x - y) limit1 limit2.tail -- [2,2,3]
+getXNote:: List Value -> Maybe Value
+getXNote aural = head $ filter isXNote $ fromFoldable aural
+
+isXNote:: Value -> Boolean
+isXNote (XNotes _ _) = true
+isXNote _ = false
+
+getNote:: List Value -> Maybe Value
+getNote aural = head $ filter isNote $ fromFoldable aural
+
+isNote:: Value -> Boolean
+isNote (Dastgah _ _) = true
+isNote (Xeno _ _ _) = true
+isNote (Prog _ _) = true
+isNote _ = false
+
+getDastgahList:: Dastgah -> List Int
+getDastgahList (Shur ns) = ns
+getDastgahList _ = Nil
+
+getCutOffH:: List Value -> Maybe Value
+getCutOffH aural = head $ filter isCutOffH $ fromFoldable aural
+
+isCutOffH:: Value -> Boolean
+isCutOffH (CutOffH _ _) = true
+isCutOffH (TransposedCutOffH _ _) = true
+isCutOffH _ = false
+
+getCutOff:: List Value -> Maybe Value
+getCutOff aural = head $ filter isCutOff $ fromFoldable aural
+
+isCutOff:: Value -> Boolean
+isCutOff (CutOff _ _) = true
+isCutOff (TransposedCutOff _ _) = true
+isCutOff _ = false
+
+getVowel:: List Value -> Maybe Value
+getVowel aural = head $ filter isVowel $ fromFoldable aural
+
+isVowel:: Value -> Boolean
+isVowel (Vowel _ _) = true
+isVowel (TransposedVowel _ _) = true
+isVowel _ = false
+
+getEnd:: List Value -> Maybe Value
+getEnd aural = head $ filter isEnd $ fromFoldable aural
+
+isEnd:: Value -> Boolean
+isEnd (End _ _) = true
+isEnd (TransposedEnd _ _) = true
+isEnd _ = false
+
+getBegin:: List Value -> Maybe Value
+getBegin aural = head $ filter isBegin $ fromFoldable aural
+
+isBegin:: Value -> Boolean
+isBegin (Begin _ _) = true
+isBegin (TransposedBegin _ _) = true
+isBegin _ = false
+
+getSpeed:: List Value -> Maybe Value
+getSpeed aural = head $ filter isSpeed $ fromFoldable aural
+
+isSpeed:: Value -> Boolean
+isSpeed (Speed _ _) = true
+isSpeed (TransposedSpeed _ _) = true
+isSpeed _ = false
+
+getP:: List Value -> Maybe Value
+getP aural = head $ filter isP $ fromFoldable aural
+
+isP:: Value -> Boolean
+isP (Pan _ _) = true
+isP (TransposedPan _ _) = true
+isP _ = false
+
+getG:: List Value -> Maybe Value
+getG aural = head $ filter isG $ fromFoldable aural
+
+isG:: Value -> Boolean
+isG (Gain _ _) = true
+isG (TransposedGain _ _) = true
+isG _ = false
+
+getN:: List Value -> Maybe Value
+getN aural = head $ filter isN $ fromFoldable aural
+
+isN:: Value -> Boolean
+isN (N _ _) = true
+isN (TransposedN _ _) = true
+isN _ = false
+
+getS:: List Value -> Maybe Value
+getS aural = head $ filter isSound $ fromFoldable aural
+
+isSound:: Value -> Boolean
+isSound (Sound _ _) = true
+isSound (TransposedSound _ _) = true
+isSound _ = false

@@ -43,7 +43,7 @@ import Visualisation
 import AST
 import TimePacketOps
 import Parser
-import Calculations
+import Voices
 import Novus
 
 import Parsing
@@ -91,7 +91,7 @@ scheduleNoteEvents tk ws' we' = do
     let we = numToDateTime (we' * 1000.0000)
     program <- read tk.ast
     vantageMap <- read tk.vantageMap
-    log $ "vm: " <> show vantageMap
+    -- log $ "vm: " <> show vantageMap
     t <- read tk.tempo
     eval <- read tk.eval
     let tp = assambleTimePacket ws we eval t vantageMap
@@ -99,9 +99,14 @@ scheduleNoteEvents tk ws' we' = do
     -- log $ show ws
     -- log $ show we
     -- log $ show t
-    events <- programToWaste program tp
-    log $ show events
-    pure $ map unsafeToForeign events
+    programToForeign program tp
+    
+    -- programToForeign program tp
+    
+    
+    -- events <- programToWaste program tp
+    -- log $ show events
+    -- pure $ map unsafeToForeign events
 
 setTempo :: TimekNot -> ForeignTempo -> Effect Unit
 setTempo tk t = do
