@@ -1,149 +1,94 @@
-module Acceleration where
+module Acceleration (rhythmicToSinDur,sinusoidalAcceleration,rhythmicToOnsetsSin) where
 
 import Prelude
-
-import Data.Either
-import Data.Identity
-import Data.List hiding (many)
-import Data.Foldable (foldl)
-import Data.Int
-import Data.Tuple
-import Data.String (singleton, joinWith, take, split, trim, Pattern(..))
-import Data.Maybe hiding (optional)
-import Data.Functor
-import Control.Monad
-import Data.Array
-
-import Data.Rational (fromInt,(%))
-import Data.Rational as R
-
 import Effect (Effect)
 import Effect.Console (log)
 
-import Data.DateTime
-import Data.DateTime.Instant
-import Data.Time.Duration
-import Data.Tempo
-import Data.Enum
-import Partial.Unsafe
+import Data.Int (toNumber)
+import Data.Number
+import Data.Array
+import Data.Array (fromFoldable) 
+import Data.List (List(..))
+import Data.List (fromFoldable, (:)) as L
+import Data.Foldable (sum)
+import Data.Tuple
+import Data.Maybe (fromMaybe)
 
-import Data.Newtype
+import AST
+import DurationAndIndex
 
+rhythmicToOnsetsSin:: Rhythmic -> Number -> Number -> Number -> Number -> List Onset
+rhythmicToOnsetsSin rhy osc min max ph = L.fromFoldable $ zipWith Onset onsets pos
+    where onsets = map (\(Onset b p) -> b) $ fromFoldable $ rhythmicToOnsets rhy
+          rhyDur = rhythmicToSinDur rhy osc min max ph
+          folded' = fromMaybe {init: [], last: 2.666} $ unsnoc $ (scanl (+) 0.0 rhyDur)
+          pos = map (\fo -> fo / (sum rhyDur)) $ (0.0 : folded'.init)
 
--- valor del convergence point
--- 48.0
+acceleration :: Number -> Number -> Number -> Number -> Number -> Number
+acceleration startTime finalTime startSpeed endSpeed currentTime =
+  let
+    deltaTime = finalTime - startTime
+    deltaSpeed = endSpeed - startSpeed
+    acceleration = deltaSpeed / deltaTime
+    initialSpeed = startSpeed
+  in
+    initialSpeed + acceleration * currentTime
 
--- indice de desaceleracion 105%
--- [1.05,1.1025,1.157625,1.21550625]
+rhythmicToLinDur:: Rhythmic -> Array Number
+rhythmicToLinDur rhythmic = map (\(Tuple dur acc) -> (dur / (0.5 + acc))) zipped
+    where onsetDur = map (\(Onset b p) -> p) $ fromFoldable $ onsetDurations 1.0 rhythmic
+          onsetPos = map (\(Onset b p) -> p) $ rhythmicToOnsets rhythmic
+          onsetAcc = fromFoldable $ map (\pos -> acceleration 0.0 1.0 1.0 2.0 pos) onsetPos
+          zipped = zip onsetDur onsetAcc
 
--- --  48          1.05  4 
--- f oper startingPoint index howMany = scanl oper startP $ scanl (*) 1.0 $ replicate howMany index
+sinusoidalAcceleration :: Number -> Number -> Number -> Number -> Number
+sinusoidalAcceleration frequency currentTime amplitude phase =
+  amplitude * sin (2.0 * pi * frequency * currentTime + phase)
+  -- amplitude * sin (2.0 * pi * frequency * currentTime + phase)
 
+-- freq is actually cycles per block. 1 means one whole oscilation per block
+-- amplitud will determine the range. If amplitude 1 it will go from 0 to 1 and -1
 
--- parsing:
-
--- v <- (3 afterEval) (4) (tempomark) (acc. 5%) | xxxxxxxx ||
-
-
--- options:
--- acc.   at CP it is tempomark. After cp it is dur*0.95. Before is dur*1.05
--- (desacceleration is notated with: (acc. -5%)
--- weightL Starts at dur and in CP it is 'lighter' or 'heavier' 
--- weightR Ends at dur and in CP it is 'lighter' or 'heavier'
--- bendR at CP starts to acc
--- bendL at CP it finishes the process of acc
-
--- |  xxxxxxxx ~| the final bar with the ~ will loop by producing a palympsest (so it is a monopolar osc)
-
--- |~ xxxxxxxx ~| the pipes with the ~ will loop by producing a palympsest of the palympsest, producing more or less a bipolar oscilation
-
-
-
-
-
-
-
--- acc:: Number -> Number -> Number -> Number
--- acc velF velI tiempo = cambiodeVel / tiempo
---     where cambiodeVel = velF - velI
-
--- rampWrap:: Acceleration -> Tempo -> DateTime -> DateTime -> DateTime -> Number
--- rampWrap acc t anchor ws we = ramp' acc t countAnchor countWS countWE
---     where countWS = timeToCountNumber t ws
---           countWE = timeToCountNumber t we
---           countAnchor = timeToCountNumber t anchor
-
-
--- ramp':: Acceleration -> Tempo -> Number -> Number -> Number -> Number -> Number
--- ramp' (Acc durV startV endV) t startT endT ws we 
---     | startT >= ws = startV
---     | endT <= we = endV
---     | otherwise = 2.666
-
--- data Acceleration = Acc Number Number Number
-
--- instance Show Acceleration where
---     show (Acc dur start end) = show dur <> " " <> show start <> " " <> show end
+rhythmicToSinDur:: Rhythmic -> Number -> Number -> Number -> Number -> Array Number
+rhythmicToSinDur rhythmic freq min' max' ph = map (\(Tuple dur acc) -> dur / (min + ((amp) + acc))) zipped
+    where min = 1.0
+          max = max' / min'
+          amp = (max - min) / 2.0
+          phase = if ph == 0.0 then 0.0 else pi / ph
+          onsetDur = map (\(Onset b p) -> p) $ fromFoldable $ onsetDurations 1.0 rhythmic
+          onsetPos = map (\(Onset b p) -> p) $ rhythmicToOnsets rhythmic
+          onsetAcc = fromFoldable $ map (\pos -> sinusoidalAcceleration freq pos amp phase) onsetPos
+          zipped = zip onsetDur onsetAcc
 
 
--- ramp':: UTCTime -> UTCTime -> UTCTime -> Rational -> Rational -> Rational
--- ramp' renderTime startTime endTime startVal endVal -- delete what is not needed
---     | startTime >= renderTime = startVal
---     | endTime <= renderTime = endVal
---     | otherwise =    -- args: 3 secs of dur, startval: 0.2, endval: 0.7
---         let segmentVal = endVal - startVal -- 0.5
---             processInterval = realToFrac (diffUTCTime endTime startTime) :: Rational --  3 segs
---             momentAtRender = realToFrac (diffUTCTime renderTime startTime) :: Rational -- assuming render is half way through the process: 1.5 out of 3.0
---             percOfProcessAtRender = getPercentage momentAtRender processInterval segmentVal
---         in startVal + percOfProcessAtRender
 
---
--- te:: Tempo
--- te = {freq: (2%1),time: (DateTime (makeDate 2022 September 12) (makeTime 22 10 0 0)), count: fromInt 0 }
+-- trapezoidalRule:: (Number -> Number) -> Number -> Number -> Number
+-- trapezoidalRule f a b =
+--   let
+--     n = 1000
+--     h = (b - a) / toNumber n
+--     sum = foldl (\acc i -> acc + f (a + toNumber i * h)) 0.0 $ 1..(n-1)
+--   in
+--     h / 2.0 * (f a + 2.0 * sum + f b)
 
--- f secs  = timeToCountNumber te (DateTime (makeDate 2022 September 12) (makeTime 22 10 secs 0))
+-- areaUnderCurveSin:: Number -> Number -> Number
+-- areaUnderCurveSin start end = trapezoidalRule sin ((start*2.0) * pi) ((end*2.0) * pi)
 
--- testy t x x' = timeToCountNumber newT $ DateTime (makeDate 2022 September 12) (makeTime 22 10 x' 0)
---     where   tc = timeToCount t $ DateTime (makeDate 2022 September 12) (makeTime 22 10 x' 0) 
---             newT = {freq: x,time: (DateTime (makeDate 2022 September 12) (makeTime 22 10 0 0)), count: tc - x }
+-- areaUnderCurveLineal:: Number -> Number -> Number
+-- areaUnderCurveLineal start end = trapezoidalRule linearAcc start end
+--     where 
+--             linearAcc:: Number -> Number
+--             linearAcc t = 2.0 * t
 
--- ----
--- startT:: Number
--- startT = (timeToCountNumber t eval) + 1.0
+-- -- rhythmicToSinDur:: Rhythmic -> Array Number
+-- rhythmicToSinDur rhythmic = map (\(Tuple dur acc) -> 1.0/(dur * (1.0 + acc))) zipped
+--     where onsetDur = map (\(Onset b p) -> p) $ fromFoldable $ onsetDurations 1.0 rhythmic
+--           onsetPos = map (\(Onset b p) -> p) $ rhythmicToOnsets rhythmic
+--           onsetAcc = fromFoldable $ map (\pos -> areaUnderCurveSin 0.0 pos) onsetPos
+--           zipped = zip onsetDur onsetAcc
 
--- endT:: Number
--- endT = (timeToCountNumber t eval) + 3.0
-
--- startV = 90.0
-
--- endV = 120.0
-
--- wsNum:: Int -> Int -> Number
--- wsNum x y = timeToCountNumber t $ ws x y
-
--- weNum:: Int -> Int -> Number
--- weNum x y = timeToCountNumber t $ we x y
-
--- makeDate :: Int -> Month -> Int -> Date
--- makeDate y m d = 
---     unsafePartial $ fromJust $ 
---        canonicalDate <$> toEnum y <@> m <*> toEnum d
-
--- makeTime :: Int -> Int -> Int -> Int -> Time
--- makeTime h min sec milisec = 
---     unsafePartial $ fromJust $ Time <$> toEnum h <*> toEnum min <*> toEnum sec <*> toEnum milisec
-
--- t:: Tempo
--- t = {freq: (2%1),time: (DateTime (makeDate 2022 June 3) (makeTime 19 11 25 100)), count: fromInt 0 }
-
--- tAncient:: Tempo
--- tAncient = {freq: (2%1),time: (DateTime (makeDate 2012 June 3) (makeTime 19 11 25 100)), count: fromInt 0 }
-
--- ws:: Int -> Int -> DateTime
--- ws x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
-
--- we:: Int -> Int -> DateTime
--- we x y = (DateTime (makeDate 2022 June 3) (makeTime 19 15 x y))
-
--- eval:: DateTime
--- eval = (DateTime (makeDate 2022 June 3) (makeTime 19 15 0 0))
+-- rhythmicToLinDur rhythmic = map (\(Tuple dur acc) -> 1.0/(dur * (1.0 + acc))) zipped
+--     where onsetDur = map (\(Onset b p) -> p) $ fromFoldable $ onsetDurations 1.0 rhythmic
+--           onsetPos = map (\(Onset b p) -> p) $ rhythmicToOnsets rhythmic
+--           onsetAcc = fromFoldable $ map (\pos -> areaUnderCurveLineal 0.0 pos) onsetPos
+--           zipped = zip onsetDur onsetAcc

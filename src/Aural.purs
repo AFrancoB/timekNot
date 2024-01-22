@@ -49,7 +49,7 @@ value:: P Value
 value = do
     _ <- pure 1
     _ <- reservedOp "."
-    valType <- choice [try sound,try n, try gain, try pan, try speed, try begin, try end, try mayeh, try xeno, try prog]
+    valType <- choice [try sound,try n, try gain, try pan, try speed, try begin, try end, try vowel, try cutoff, try cutoffh, try mayeh, try prog, try xeNotes, xeno]
     pure valType
 
 prog:: P Value
@@ -58,7 +58,7 @@ prog = do
     _ <- choice [reserved "prog"]
     _ <- reservedOp "="
     sp <- parseSpan
-    xs <- parens $ many idOfPitch
+    xs <- many idOfPitch
     pure $ Prog sp $ fromFoldable xs
 
 idOfPitch:: P (Tuple String (Maybe Int))
@@ -70,11 +70,11 @@ idOfPitch = do
 xeNotes:: P Value 
 xeNotes = do
     _ <- pure 1
-    _ <- choice [reserved "xenotes"]
+    _ <- choice [reserved "xnotes"]
     _ <- reservedOp "="
     sp <- parseSpan
     l <- choice [try (fromFoldable <$> parseRangeInt), fromFoldable <$> many natural]
-    pure $ XeNotes sp l
+    pure $ XNotes sp l
 
 xeno:: P Value 
 xeno = do
@@ -121,6 +121,75 @@ makeShur = do
 
 
 --
+cutoffh:: P Value
+cutoffh = do
+    _ <- pure 1
+    _ <- choice [reserved "hcutoff"]
+    _ <- reservedOp "="
+    cutoffh <- choice [try makeCutOffH, transposeCutOffH]
+    pure cutoffh
+
+transposeCutOffH:: P Value
+transposeCutOffH = do
+    id <- voiceId
+    n <- brackets natural <|> pure 0
+    pure $ TransposedCutOffH id n
+
+makeCutOffH:: P Value
+makeCutOffH = do
+    _ <- pure 1
+    sp <- parseSpan
+    coLs <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
+    pure $ CutOffH sp $ fromFoldable coLs
+
+cutoff:: P Value
+cutoff = do
+    _ <- pure 1
+    _ <- choice [reserved "cutoff"]
+    _ <- reservedOp "="
+    cutoff <- choice [try makeCutOff, transposeCutOff]
+    pure cutoff
+
+transposeCutOff:: P Value
+transposeCutOff = do
+    id <- voiceId
+    n <- brackets natural <|> pure 0
+    pure $ TransposedCutOff id n
+
+makeCutOff:: P Value
+makeCutOff = do
+    _ <- pure 1
+    sp <- parseSpan
+    coLs <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
+    pure $ CutOff sp $ fromFoldable coLs
+
+vowel:: P Value
+vowel = do
+    _ <- pure 1
+    _ <- choice [reserved "vowel"]
+    _ <- reservedOp "="
+    vowel <- choice [try makeVowel, transposeVowel]
+    pure vowel
+
+transposeVowel:: P Value
+transposeVowel = do
+    id <- voiceId
+    n <- brackets natural <|> pure 0
+    pure $ TransposedVowel id n
+
+makeVowel:: P Value
+makeVowel = do
+    _ <- pure 1
+    sp <- parseSpan
+    vLs <- choice [many parseVowel]
+    pure $ Vowel sp $ fromFoldable vLs
+
+parseVowel:: P String
+parseVowel = do
+    _ <- pure 1
+    x <- choice [charWS 'a' *> pure "a", charWS 'e' *> pure "e", charWS 'i' *> pure "i", charWS 'o' *> pure "o", charWS 'u' *> pure "u"]
+    pure x
+
 end:: P Value
 end = do
     _ <- pure 1
@@ -205,7 +274,7 @@ makeSpeed = do
 pan:: P Value
 pan = do
     _ <- pure 1
-    _ <- choice [try $ reserved "pan",reserved "pan"]
+    _ <- choice [try $ reserved "pan",reserved "p"]
     _ <- reservedOp "="
     sound <- choice [try makePan, transposePan]
     pure sound
