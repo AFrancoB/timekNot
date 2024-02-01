@@ -18234,6 +18234,22 @@ var SpreadBlock = /* @__PURE__ */ function() {
   SpreadBlock2.value = new SpreadBlock2();
   return SpreadBlock2;
 }();
+var Every = /* @__PURE__ */ function() {
+  function Every2(value0, value1, value2) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+  }
+  ;
+  Every2.create = function(value0) {
+    return function(value1) {
+      return function(value2) {
+        return new Every2(value0, value1, value2);
+      };
+    };
+  };
+  return Every2;
+}();
 var XTempo = /* @__PURE__ */ function() {
   function XTempo2() {
   }
@@ -18469,14 +18485,17 @@ var Shur = /* @__PURE__ */ function() {
   return Shur2;
 }();
 var Sound = /* @__PURE__ */ function() {
-  function Sound2(value0, value1) {
+  function Sound2(value0, value1, value2) {
     this.value0 = value0;
     this.value1 = value1;
+    this.value2 = value2;
   }
   ;
   Sound2.create = function(value0) {
     return function(value1) {
-      return new Sound2(value0, value1);
+      return function(value2) {
+        return new Sound2(value0, value1, value2);
+      };
     };
   };
   return Sound2;
@@ -18495,14 +18514,17 @@ var TransposedSound = /* @__PURE__ */ function() {
   return TransposedSound2;
 }();
 var N = /* @__PURE__ */ function() {
-  function N2(value0, value1) {
+  function N2(value0, value1, value2) {
     this.value0 = value0;
     this.value1 = value1;
+    this.value2 = value2;
   }
   ;
   N2.create = function(value0) {
     return function(value1) {
-      return new N2(value0, value1);
+      return function(value2) {
+        return new N2(value0, value1, value2);
+      };
     };
   };
   return N2;
@@ -18521,14 +18543,17 @@ var TransposedN = /* @__PURE__ */ function() {
   return TransposedN2;
 }();
 var Gain = /* @__PURE__ */ function() {
-  function Gain2(value0, value1) {
+  function Gain2(value0, value1, value2) {
     this.value0 = value0;
     this.value1 = value1;
+    this.value2 = value2;
   }
   ;
   Gain2.create = function(value0) {
     return function(value1) {
-      return new Gain2(value0, value1);
+      return function(value2) {
+        return new Gain2(value0, value1, value2);
+      };
     };
   };
   return Gain2;
@@ -18547,14 +18572,17 @@ var TransposedGain = /* @__PURE__ */ function() {
   return TransposedGain2;
 }();
 var Pan = /* @__PURE__ */ function() {
-  function Pan2(value0, value1) {
+  function Pan2(value0, value1, value2) {
     this.value0 = value0;
     this.value1 = value1;
+    this.value2 = value2;
   }
   ;
   Pan2.create = function(value0) {
     return function(value1) {
-      return new Pan2(value0, value1);
+      return function(value2) {
+        return new Pan2(value0, value1, value2);
+      };
     };
   };
   return Pan2;
@@ -18573,14 +18601,17 @@ var TransposedPan = /* @__PURE__ */ function() {
   return TransposedPan2;
 }();
 var Speed = /* @__PURE__ */ function() {
-  function Speed2(value0, value1) {
+  function Speed2(value0, value1, value2) {
     this.value0 = value0;
     this.value1 = value1;
+    this.value2 = value2;
   }
   ;
   Speed2.create = function(value0) {
     return function(value1) {
-      return new Speed2(value0, value1);
+      return function(value2) {
+        return new Speed2(value0, value1, value2);
+      };
     };
   };
   return Speed2;
@@ -18599,14 +18630,17 @@ var TransposedSpeed = /* @__PURE__ */ function() {
   return TransposedSpeed2;
 }();
 var Begin = /* @__PURE__ */ function() {
-  function Begin2(value0, value1) {
+  function Begin2(value0, value1, value2) {
     this.value0 = value0;
     this.value1 = value1;
+    this.value2 = value2;
   }
   ;
   Begin2.create = function(value0) {
     return function(value1) {
-      return new Begin2(value0, value1);
+      return function(value2) {
+        return new Begin2(value0, value1, value2);
+      };
     };
   };
   return Begin2;
@@ -18625,14 +18659,17 @@ var TransposedBegin = /* @__PURE__ */ function() {
   return TransposedBegin2;
 }();
 var End = /* @__PURE__ */ function() {
-  function End2(value0, value1) {
+  function End2(value0, value1, value2) {
     this.value0 = value0;
     this.value1 = value1;
+    this.value2 = value2;
   }
   ;
   End2.create = function(value0) {
     return function(value1) {
-      return new End2(value0, value1);
+      return function(value2) {
+        return new End2(value0, value1, value2);
+      };
     };
   };
   return End2;
@@ -18651,14 +18688,17 @@ var TransposedEnd = /* @__PURE__ */ function() {
   return TransposedEnd2;
 }();
 var Vowel = /* @__PURE__ */ function() {
-  function Vowel2(value0, value1) {
+  function Vowel2(value0, value1, value2) {
     this.value0 = value0;
     this.value1 = value1;
+    this.value2 = value2;
   }
   ;
   Vowel2.create = function(value0) {
     return function(value1) {
-      return new Vowel2(value0, value1);
+      return function(value2) {
+        return new Vowel2(value0, value1, value2);
+      };
     };
   };
   return Vowel2;
@@ -18677,14 +18717,17 @@ var TransposedVowel = /* @__PURE__ */ function() {
   return TransposedVowel2;
 }();
 var CutOff = /* @__PURE__ */ function() {
-  function CutOff2(value0, value1) {
+  function CutOff2(value0, value1, value2) {
     this.value0 = value0;
     this.value1 = value1;
+    this.value2 = value2;
   }
   ;
   CutOff2.create = function(value0) {
     return function(value1) {
-      return new CutOff2(value0, value1);
+      return function(value2) {
+        return new CutOff2(value0, value1, value2);
+      };
     };
   };
   return CutOff2;
@@ -18703,14 +18746,17 @@ var TransposedCutOff = /* @__PURE__ */ function() {
   return TransposedCutOff2;
 }();
 var CutOffH = /* @__PURE__ */ function() {
-  function CutOffH2(value0, value1) {
+  function CutOffH2(value0, value1, value2) {
     this.value0 = value0;
     this.value1 = value1;
+    this.value2 = value2;
   }
   ;
   CutOffH2.create = function(value0) {
     return function(value1) {
-      return new CutOffH2(value0, value1);
+      return function(value2) {
+        return new CutOffH2(value0, value1, value2);
+      };
     };
   };
   return CutOffH2;
@@ -18771,14 +18817,17 @@ var Prog = /* @__PURE__ */ function() {
   return Prog2;
 }();
 var XNotes = /* @__PURE__ */ function() {
-  function XNotes2(value0, value1) {
+  function XNotes2(value0, value1, value2) {
     this.value0 = value0;
     this.value1 = value1;
+    this.value2 = value2;
   }
   ;
   XNotes2.create = function(value0) {
     return function(value1) {
-      return new XNotes2(value0, value1);
+      return function(value2) {
+        return new XNotes2(value0, value1, value2);
+      };
     };
   };
   return XNotes2;
@@ -42314,7 +42363,7 @@ var makeTokenParser = function(v) {
       return pure5(f2(n2));
     });
   });
-  var integer2 = withErrorMessage(lexeme($$int))("integer");
+  var integer3 = withErrorMessage(lexeme($$int))("integer");
   var natural4 = withErrorMessage(lexeme(nat))("natural");
   var comma3 = symbol(",");
   var commaSep = function(p) {
@@ -42475,7 +42524,7 @@ var makeTokenParser = function(v) {
     charLiteral,
     stringLiteral,
     natural: natural4,
-    integer: integer2,
+    integer: integer3,
     "float": $$float,
     naturalOrFloat: naturalOrFloat3,
     decimal: decimal2,
@@ -42547,11 +42596,11 @@ var discard2 = /* @__PURE__ */ discard(discardUnit)(bindParserT);
 var choice3 = /* @__PURE__ */ choice(foldableArray);
 var applySecond4 = /* @__PURE__ */ applySecond(applyParserT);
 var map14 = /* @__PURE__ */ map(functorParserT);
-var fromFoldable1 = /* @__PURE__ */ fromFoldable2(foldableList);
-var fromFoldable22 = /* @__PURE__ */ fromFoldable(foldableList);
+var fromFoldable1 = /* @__PURE__ */ fromFoldable(foldableList);
 var lookup3 = /* @__PURE__ */ lookup(ordString);
-var elem3 = /* @__PURE__ */ elem(foldableList)(eqBoolean);
 var alt6 = /* @__PURE__ */ alt(altParserT);
+var fromFoldable22 = /* @__PURE__ */ fromFoldable2(foldableList);
+var elem3 = /* @__PURE__ */ elem(foldableList)(eqBoolean);
 var unexpressPitch = function(v) {
   if (v instanceof XenoPitchExpression) {
     return v.value0;
@@ -42582,7 +42631,7 @@ var toNumber$prime = function(v) {
     return v.value0;
   }
   ;
-  throw new Error("Failed pattern match at Aural (line 414, column 1 - line 414, column 40): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Aural (line 489, column 1 - line 489, column 40): " + [v.constructor.name]);
 };
 var toListAurals = function(mapas) {
   var vals = concat2(map13(toUnfoldable5)(mapas));
@@ -42643,27 +42692,9 @@ var parseRangeInt = /* @__PURE__ */ bind8(natural)(function(x) {
     });
   });
 });
-var xeNotes = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
-  return bind8(choice3([reserved("xnotes")]))(function() {
-    return bind8(reservedOp("="))(function() {
-      return bind8(parseSpan)(function(sp) {
-        return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeInt)), map14(fromFoldable4)(many3(natural))]))(function(l) {
-          return pure6(new XNotes(sp, l));
-        });
-      });
-    });
-  });
-});
-var makeSound = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
-  return bind8(parseSpan)(function(sp) {
-    return bind8(sampleParser)(function(strList) {
-      return pure6(new Sound(sp, strList));
-    });
-  });
-});
 var makeShur = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return bind8(parseSpan)(function(sp) {
-    return bind8(choice3([$$try(map14(fromFoldable22)(parseRangeInt)), many3(natural)]))(function(shurList) {
+    return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeInt)), many3(natural)]))(function(shurList) {
       return pure6(new Dastgah(sp, new Shur(fromFoldable4(shurList))));
     });
   });
@@ -42680,13 +42711,6 @@ var shur = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
 var mayeh = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return choice3([$$try(shur)]);
 });
-var makeN = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
-  return bind8(parseSpan)(function(sp) {
-    return bind8(choice3([$$try(map14(fromFoldable22)(parseRangeInt)), many3(natural)]))(function(strList) {
-      return pure6(new N(sp, fromFoldable4(strList)));
-    });
-  });
-});
 var keepXeno = function(v) {
   if (v instanceof Xeno) {
     return new Just(v.value0);
@@ -42701,6 +42725,9 @@ var keepProg = function(v) {
   ;
   return Nothing.value;
 };
+var integer = /* @__PURE__ */ function() {
+  return tokenParser.integer;
+}();
 var identifier = /* @__PURE__ */ function() {
   return tokenParser.identifier;
 }();
@@ -42762,7 +42789,7 @@ var func = function(v) {
         return true;
       }
       ;
-      throw new Error("Failed pattern match at Aural (line 512, column 31 - line 514, column 48): " + [v2.constructor.name]);
+      throw new Error("Failed pattern match at Aural (line 587, column 31 - line 589, column 48): " + [v2.constructor.name]);
     }
     ;
     if (v1.value1 instanceof Just) {
@@ -42775,12 +42802,79 @@ var func = function(v) {
         return f(v2.value0)(v1.value1.value0);
       }
       ;
-      throw new Error("Failed pattern match at Aural (line 515, column 32 - line 517, column 50): " + [v2.constructor.name]);
+      throw new Error("Failed pattern match at Aural (line 590, column 32 - line 592, column 50): " + [v2.constructor.name]);
     }
     ;
-    throw new Error("Failed pattern match at Aural (line 511, column 1 - line 511, column 67): " + [v.constructor.name, v1.constructor.name]);
+    throw new Error("Failed pattern match at Aural (line 586, column 1 - line 586, column 67): " + [v.constructor.name, v1.constructor.name]);
   };
 };
+var everyStr = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(reserved("every"))(function() {
+    return bind8(integer)(function(n1) {
+      return bind8(parseSpan)(function(sp) {
+        return bind8(sampleParser)(function(xs) {
+          return pure6(new Every(n1, sp, xs));
+        });
+      });
+    });
+  });
+});
+var variationsStr = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(reserved("&"))(function() {
+    return bind8(sepBy(everyStr)(reserved("&")))(function(xs) {
+      return pure6(xs);
+    });
+  });
+});
+var makeSound = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(parseSpan)(function(sp) {
+    return bind8(sampleParser)(function(strList) {
+      return bind8(alt6(variationsStr)(pure6(Nil.value)))(function(vars) {
+        return pure6(new Sound(sp, strList, vars));
+      });
+    });
+  });
+});
+var everyInt = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(reserved("every"))(function() {
+    return bind8(integer)(function(n1) {
+      return bind8(parseSpan)(function(sp) {
+        return bind8(choice3([$$try(parseRangeInt), map14(fromFoldable4)(many3(natural))]))(function(xs) {
+          return pure6(new Every(n1, sp, xs));
+        });
+      });
+    });
+  });
+});
+var variationsInt = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(reserved("&"))(function() {
+    return bind8(sepBy(everyInt)(reserved("&")))(function(xs) {
+      return pure6(xs);
+    });
+  });
+});
+var makeN = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(parseSpan)(function(sp) {
+    return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeInt)), many3(natural)]))(function(nList) {
+      return bind8(alt6(variationsInt)(pure6(Nil.value)))(function(vars) {
+        return pure6(new N(sp, fromFoldable4(nList), vars));
+      });
+    });
+  });
+});
+var xeNotes = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(choice3([reserved("xnotes")]))(function() {
+    return bind8(reservedOp("="))(function() {
+      return bind8(parseSpan)(function(sp) {
+        return bind8(choice3([$$try(map14(fromFoldable22)(parseRangeInt)), map14(fromFoldable4)(many3(natural))]))(function(l) {
+          return bind8(alt6(variationsInt)(pure6(Nil.value)))(function(vars) {
+            return pure6(new XNotes(sp, l, vars));
+          });
+        });
+      });
+    });
+  });
+});
 var checkXPitch$prime = function(expressions) {
   var listOfPitchID = getXenoIDs(getAuralMap(expressions));
   var aXenoPitchMap = getXPitchMap(expressions);
@@ -42828,52 +42922,84 @@ var parseRangeNum = /* @__PURE__ */ bind8(parseSpecialNum)(function(x) {
     });
   });
 });
+var everyNum = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(reserved("every"))(function() {
+    return bind8(integer)(function(n1) {
+      return bind8(parseSpan)(function(sp) {
+        return bind8(choice3([$$try(parseRangeNum), map14(fromFoldable4)(many3(parseNumber))]))(function(xs) {
+          return pure6(new Every(n1, sp, xs));
+        });
+      });
+    });
+  });
+});
+var variationsNum = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(reserved("&"))(function() {
+    return bind8(sepBy(everyNum)(reserved("&")))(function(xs) {
+      return pure6(xs);
+    });
+  });
+});
 var makeBegin = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return bind8(parseSpan)(function(sp) {
-    return bind8(choice3([$$try(map14(fromFoldable22)(parseRangeNum)), many3(parseNumber)]))(function(panList) {
-      return pure6(new Begin(sp, fromFoldable4(panList)));
+    return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeNum)), many3(parseNumber)]))(function(panList) {
+      return bind8(alt6(variationsNum)(pure6(Nil.value)))(function(vars) {
+        return pure6(new Begin(sp, fromFoldable4(panList), vars));
+      });
     });
   });
 });
 var makeCutOff = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return bind8(parseSpan)(function(sp) {
-    return bind8(choice3([$$try(map14(fromFoldable22)(parseRangeNum)), many3(parseNumber)]))(function(coLs) {
-      return pure6(new CutOff(sp, fromFoldable4(coLs)));
+    return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeNum)), many3(parseNumber)]))(function(coLs) {
+      return bind8(alt6(variationsNum)(pure6(Nil.value)))(function(vars) {
+        return pure6(new CutOff(sp, fromFoldable4(coLs), vars));
+      });
     });
   });
 });
 var makeCutOffH = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return bind8(parseSpan)(function(sp) {
-    return bind8(choice3([$$try(map14(fromFoldable22)(parseRangeNum)), many3(parseNumber)]))(function(coLs) {
-      return pure6(new CutOffH(sp, fromFoldable4(coLs)));
+    return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeNum)), many3(parseNumber)]))(function(coLs) {
+      return bind8(alt6(variationsNum)(pure6(Nil.value)))(function(vars) {
+        return pure6(new CutOffH(sp, fromFoldable4(coLs), vars));
+      });
     });
   });
 });
 var makeEnd = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return bind8(parseSpan)(function(sp) {
-    return bind8(choice3([$$try(map14(fromFoldable22)(parseRangeNum)), many3(parseNumber)]))(function(spdList) {
-      return pure6(new End(sp, fromFoldable4(spdList)));
+    return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeNum)), many3(parseNumber)]))(function(spdList) {
+      return bind8(alt6(variationsNum)(pure6(Nil.value)))(function(vars) {
+        return pure6(new End(sp, fromFoldable4(spdList), vars));
+      });
     });
   });
 });
 var makeGain = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return bind8(parseSpan)(function(sp) {
-    return bind8(choice3([$$try(map14(fromFoldable22)(parseRangeNum)), many3(parseNumber)]))(function(gainList) {
-      return pure6(new Gain(sp, fromFoldable4(gainList)));
+    return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeNum)), many3(parseNumber)]))(function(gainList) {
+      return bind8(alt6(variationsNum)(pure6(Nil.value)))(function(vars) {
+        return pure6(new Gain(sp, fromFoldable4(gainList), vars));
+      });
     });
   });
 });
 var makePan = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return bind8(parseSpan)(function(sp) {
-    return bind8(choice3([$$try(map14(fromFoldable22)(parseRangeNum)), many3(parseNumber)]))(function(panList) {
-      return pure6(new Pan(sp, fromFoldable4(panList)));
+    return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeNum)), many3(parseNumber)]))(function(panList) {
+      return bind8(alt6(variationsNum)(pure6(Nil.value)))(function(vars) {
+        return pure6(new Pan(sp, fromFoldable4(panList), vars));
+      });
     });
   });
 });
 var makeSpeed = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return bind8(parseSpan)(function(sp) {
-    return bind8(choice3([$$try(map14(fromFoldable22)(parseRangeNum)), many3(parseNumber)]))(function(spdList) {
-      return pure6(new Speed(sp, fromFoldable4(spdList)));
+    return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeNum)), many3(parseNumber)]))(function(spdList) {
+      return bind8(alt6(variationsNum)(pure6(Nil.value)))(function(vars) {
+        return pure6(new Speed(sp, fromFoldable4(spdList), vars));
+      });
     });
   });
 });
@@ -42882,10 +43008,30 @@ var parseVowel = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
     return pure6(x);
   });
 });
+var everyVow = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(reserved("every"))(function() {
+    return bind8(integer)(function(n1) {
+      return bind8(parseSpan)(function(sp) {
+        return bind8(choice3([many3(parseVowel)]))(function(xs) {
+          return pure6(new Every(n1, sp, fromFoldable4(xs)));
+        });
+      });
+    });
+  });
+});
+var variationsVow = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(reserved("&"))(function() {
+    return bind8(sepBy(everyVow)(reserved("&")))(function(xs) {
+      return pure6(xs);
+    });
+  });
+});
 var makeVowel = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return bind8(parseSpan)(function(sp) {
     return bind8(choice3([many3(parseVowel)]))(function(vLs) {
-      return pure6(new Vowel(sp, fromFoldable4(vLs)));
+      return bind8(alt6(variationsVow)(pure6(Nil.value)))(function(vars) {
+        return pure6(new Vowel(sp, fromFoldable4(vLs), vars));
+      });
     });
   });
 });
@@ -42963,8 +43109,8 @@ var transposeGain = /* @__PURE__ */ bind8(voiceId)(function(id) {
 var gain = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return bind8(choice3([reserved("gain")]))(function() {
     return bind8(reservedOp("="))(function() {
-      return bind8(choice3([$$try(makeGain), transposeGain]))(function(n1) {
-        return pure6(n1);
+      return bind8(choice3([$$try(makeGain), transposeGain]))(function(g) {
+        return pure6(g);
       });
     });
   });
@@ -42991,8 +43137,8 @@ var transposePan = /* @__PURE__ */ bind8(voiceId)(function(id) {
 var pan = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return bind8(choice3([$$try(reserved("pan")), reserved("p")]))(function() {
     return bind8(reservedOp("="))(function() {
-      return bind8(choice3([$$try(makePan), transposePan]))(function(sound1) {
-        return pure6(sound1);
+      return bind8(choice3([$$try(makePan), transposePan]))(function(p) {
+        return pure6(p);
       });
     });
   });
@@ -43044,7 +43190,7 @@ var xeno = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
     return bind8(alt6(map14(Just.create)(brackets(natural)))(pure6(Nothing.value)))(function(n1) {
       return bind8(reservedOp("="))(function() {
         return bind8(parseSpan)(function(sp) {
-          return bind8(choice3([$$try(map14(fromFoldable22)(parseRangeInt)), many3(natural)]))(function(xnL) {
+          return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeInt)), many3(natural)]))(function(xnL) {
             return pure6(new Xeno(new Tuple(id, n1), sp, fromFoldable4(xnL)));
           });
         });
@@ -43055,8 +43201,8 @@ var xeno = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
 var begin = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return bind8(choice3([$$try(reserved("begin")), reserved("begin")]))(function() {
     return bind8(reservedOp("="))(function() {
-      return bind8(choice3([$$try(makeBegin), transposeBegin]))(function(sound1) {
-        return pure6(sound1);
+      return bind8(choice3([$$try(makeBegin), transposeBegin]))(function(b) {
+        return pure6(b);
       });
     });
   });
@@ -44240,7 +44386,7 @@ var parens2 = /* @__PURE__ */ function() {
 var natural2 = /* @__PURE__ */ function() {
   return tokenParser2.natural;
 }();
-var integer = /* @__PURE__ */ function() {
+var integer2 = /* @__PURE__ */ function() {
   return tokenParser2.integer;
 }();
 var comma = /* @__PURE__ */ function() {
@@ -44350,7 +44496,7 @@ var $lazy_parseRepeat = /* @__PURE__ */ $runtime_lazy8("parseRepeat", "Rhythm", 
     return bind10(charWS2("!"))(function() {
       return bind10($lazy_parseRhythms(77))(function(x) {
         return bind10(charWS2("#"))(function() {
-          return bind10(integer)(function(y) {
+          return bind10(integer2)(function(y) {
             return pure8(new Repeat(x, y));
           });
         });
@@ -46544,8 +46690,8 @@ var strMaybe = function(x) {
 var spread = function(percenPos) {
   return function(a) {
     return function(limits) {
-      var $129 = percenPos >= fst(limits) && percenPos < snd(limits);
-      if ($129) {
+      var $151 = percenPos >= fst(limits) && percenPos < snd(limits);
+      if ($151) {
         return new Just(a);
       }
       ;
@@ -46779,6 +46925,18 @@ var getXNote = function(aural2) {
 var getVowel = function(aural2) {
   return head(filter2(isVowel)(fromFoldable10(aural2)));
 };
+var getVSpan = function(v) {
+  return v.value1;
+};
+var getVListStr = function(v) {
+  return v.value2;
+};
+var getVListInt = function(v) {
+  return v.value2;
+};
+var getVList = function(v) {
+  return v.value2;
+};
 var getStructureIndex = function(v) {
   return fromMaybe(0)(head(v.value1.value1));
 };
@@ -46834,6 +46992,11 @@ var getCutOff = function(aural2) {
 var getBlockIndex = function(v) {
   return v.value1.value0;
 };
+var isVar = function(v) {
+  return function(v1) {
+    return mod6(getBlockIndex(v1))(v.value0) === 0;
+  };
+};
 var spanInt = function(v) {
   return function(v1) {
     return function(v2) {
@@ -46855,6 +47018,53 @@ var spanInt = function(v) {
         }
         ;
         return 2666;
+      };
+    };
+  };
+};
+var processVarsInt = function($copy_v) {
+  return function($copy_v1) {
+    return function($copy_v2) {
+      return function($copy_v3) {
+        return function($copy_v4) {
+          var $tco_var_v = $copy_v;
+          var $tco_var_v1 = $copy_v1;
+          var $tco_var_v2 = $copy_v2;
+          var $tco_var_v3 = $copy_v3;
+          var $tco_done = false;
+          var $tco_result;
+          function $tco_loop(v, v1, v2, v3, v4) {
+            if (v instanceof Nil) {
+              $tco_done = true;
+              return spanInt(v1)(fromFoldable10(v2))(v3)(v4);
+            }
+            ;
+            if (v instanceof Cons) {
+              var vSpan = getVSpan(v.value0);
+              var vList = getVListInt(v.value0);
+              var $299 = isVar(v.value0)(v3);
+              if ($299) {
+                $tco_done = true;
+                return spanInt(vSpan)(fromFoldable10(vList))(v3)(v4);
+              }
+              ;
+              $tco_var_v = v.value1;
+              $tco_var_v1 = v1;
+              $tco_var_v2 = v2;
+              $tco_var_v3 = v3;
+              $copy_v4 = v4;
+              return;
+            }
+            ;
+            throw new Error("Failed pattern match at AuralSpecs (line 241, column 1 - line 241, column 86): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
+          }
+          ;
+          while (!$tco_done) {
+            $tco_result = $tco_loop($tco_var_v, $tco_var_v1, $tco_var_v2, $tco_var_v3, $copy_v4);
+          }
+          ;
+          return $tco_result;
+        };
       };
     };
   };
@@ -46895,11 +47105,58 @@ var processProg = function(v) {
     };
   };
 };
+var processVarsMaybe = function($copy_v) {
+  return function($copy_v1) {
+    return function($copy_v2) {
+      return function($copy_v3) {
+        return function($copy_v4) {
+          var $tco_var_v = $copy_v;
+          var $tco_var_v1 = $copy_v1;
+          var $tco_var_v2 = $copy_v2;
+          var $tco_var_v3 = $copy_v3;
+          var $tco_done = false;
+          var $tco_result;
+          function $tco_loop(v, v1, v2, v3, v4) {
+            if (v instanceof Nil) {
+              $tco_done = true;
+              return spanMaybe(v1)(fromFoldable10(v2))(v3)(v4);
+            }
+            ;
+            if (v instanceof Cons) {
+              var vSpan = getVSpan(v.value0);
+              var vList = getVList(v.value0);
+              var $316 = isVar(v.value0)(v3);
+              if ($316) {
+                $tco_done = true;
+                return spanMaybe(vSpan)(fromFoldable10(vList))(v3)(v4);
+              }
+              ;
+              $tco_var_v = v.value1;
+              $tco_var_v1 = v1;
+              $tco_var_v2 = v2;
+              $tco_var_v3 = v3;
+              $copy_v4 = v4;
+              return;
+            }
+            ;
+            throw new Error("Failed pattern match at AuralSpecs (line 251, column 1 - line 251, column 98): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
+          }
+          ;
+          while (!$tco_done) {
+            $tco_result = $tco_loop($tco_var_v, $tco_var_v1, $tco_var_v2, $tco_var_v3, $copy_v4);
+          }
+          ;
+          return $tco_result;
+        };
+      };
+    };
+  };
+};
 var processXNotes = function(v) {
   return function(v1) {
     return function(v2) {
       if (v1 instanceof Just && v1.value0 instanceof XNotes) {
-        return spanMaybe(v1.value0.value0)(fromFoldable10(v1.value0.value1))(v2)(v);
+        return processVarsMaybe(v1.value0.value2)(v1.value0.value0)(v1.value0.value1)(v2)(v);
       }
       ;
       return Nothing.value;
@@ -46944,6 +47201,53 @@ var spanStr = function(v) {
     };
   };
 };
+var processVarsStr = function($copy_v) {
+  return function($copy_v1) {
+    return function($copy_v2) {
+      return function($copy_v3) {
+        return function($copy_v4) {
+          var $tco_var_v = $copy_v;
+          var $tco_var_v1 = $copy_v1;
+          var $tco_var_v2 = $copy_v2;
+          var $tco_var_v3 = $copy_v3;
+          var $tco_done = false;
+          var $tco_result;
+          function $tco_loop(v, v1, v2, v3, v4) {
+            if (v instanceof Nil) {
+              $tco_done = true;
+              return spanStr(v1)(fromFoldable10(v2))(v3)(v4);
+            }
+            ;
+            if (v instanceof Cons) {
+              var vSpan = getVSpan(v.value0);
+              var vList = getVListStr(v.value0);
+              var $335 = isVar(v.value0)(v3);
+              if ($335) {
+                $tco_done = true;
+                return spanStr(vSpan)(fromFoldable10(vList))(v3)(v4);
+              }
+              ;
+              $tco_var_v = v.value1;
+              $tco_var_v1 = v1;
+              $tco_var_v2 = v2;
+              $tco_var_v3 = v3;
+              $copy_v4 = v4;
+              return;
+            }
+            ;
+            throw new Error("Failed pattern match at AuralSpecs (line 232, column 1 - line 232, column 95): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
+          }
+          ;
+          while (!$tco_done) {
+            $tco_result = $tco_loop($tco_var_v, $tco_var_v1, $tco_var_v2, $tco_var_v3, $copy_v4);
+          }
+          ;
+          return $tco_result;
+        };
+      };
+    };
+  };
+};
 var getBegin = function(aural2) {
   return head(filter2(isBegin)(fromFoldable10(aural2)));
 };
@@ -46975,7 +47279,7 @@ var processBegin = function(v) {
         }
         ;
         if (v2 instanceof Just && v2.value0 instanceof Begin) {
-          return spanMaybe(v2.value0.value0)(fromFoldable10(v2.value0.value1))(v3)(v1);
+          return processVarsMaybe(v2.value0.value2)(v2.value0.value0)(v2.value0.value1)(v3)(v1);
         }
         ;
         return Nothing.value;
@@ -47006,7 +47310,7 @@ var processCutOff = function(v) {
         }
         ;
         if (v2 instanceof Just && v2.value0 instanceof CutOff) {
-          return spanMaybe(v2.value0.value0)(fromFoldable10(v2.value0.value1))(v3)(v1);
+          return processVarsMaybe(v2.value0.value2)(v2.value0.value0)(v2.value0.value1)(v3)(v1);
         }
         ;
         return Nothing.value;
@@ -47037,7 +47341,7 @@ var processCutOffH = function(v) {
         }
         ;
         if (v2 instanceof Just && v2.value0 instanceof CutOffH) {
-          return spanMaybe(v2.value0.value0)(fromFoldable10(v2.value0.value1))(v3)(v1);
+          return processVarsMaybe(v2.value0.value2)(v2.value0.value0)(v2.value0.value1)(v3)(v1);
         }
         ;
         return Nothing.value;
@@ -47068,7 +47372,7 @@ var processEnd = function(v) {
         }
         ;
         if (v2 instanceof Just && v2.value0 instanceof End) {
-          return spanMaybe(v2.value0.value0)(fromFoldable10(v2.value0.value1))(v3)(v1);
+          return processVarsMaybe(v2.value0.value2)(v2.value0.value0)(v2.value0.value1)(v3)(v1);
         }
         ;
         return Nothing.value;
@@ -47099,7 +47403,7 @@ var processGain = function(v) {
         }
         ;
         if (v2 instanceof Just && v2.value0 instanceof Gain) {
-          return spanMaybe(v2.value0.value0)(fromFoldable10(v2.value0.value1))(v3)(v1);
+          return processVarsMaybe(v2.value0.value2)(v2.value0.value0)(v2.value0.value1)(v3)(v1);
         }
         ;
         return Nothing.value;
@@ -47130,7 +47434,7 @@ var processN = function(v) {
         }
         ;
         if (v2 instanceof Just && v2.value0 instanceof N) {
-          return spanInt(v2.value0.value0)(fromFoldable10(v2.value0.value1))(v3)(v1);
+          return processVarsInt(v2.value0.value2)(v2.value0.value0)(v2.value0.value1)(v3)(v1);
         }
         ;
         return 2666;
@@ -47211,7 +47515,7 @@ var processPan = function(v) {
         }
         ;
         if (v2 instanceof Just && v2.value0 instanceof Pan) {
-          return spanMaybe(v2.value0.value0)(fromFoldable10(v2.value0.value1))(v3)(v1);
+          return processVarsMaybe(v2.value0.value2)(v2.value0.value0)(v2.value0.value1)(v3)(v1);
         }
         ;
         return Nothing.value;
@@ -47242,7 +47546,7 @@ var processSound = function(v) {
         }
         ;
         if (v2 instanceof Just && v2.value0 instanceof Sound) {
-          return spanStr(v2.value0.value0)(fromFoldable10(v2.value0.value1))(v3)(v1);
+          return processVarsStr(v2.value0.value2)(v2.value0.value0)(v2.value0.value1)(v3)(v1);
         }
         ;
         return "processSound failed at pattern matching";
@@ -47273,7 +47577,7 @@ var processSpeed = function(v) {
         }
         ;
         if (v2 instanceof Just && v2.value0 instanceof Speed) {
-          return spanMaybe(v2.value0.value0)(fromFoldable10(v2.value0.value1))(v3)(v1);
+          return processVarsMaybe(v2.value0.value2)(v2.value0.value0)(v2.value0.value1)(v3)(v1);
         }
         ;
         return Nothing.value;
@@ -47304,7 +47608,7 @@ var processVowel = function(v) {
         }
         ;
         if (v2 instanceof Just && v2.value0 instanceof Vowel) {
-          return spanMaybe(v2.value0.value0)(fromFoldable10(v2.value0.value1))(v3)(v1);
+          return processVarsMaybe(v2.value0.value2)(v2.value0.value0)(v2.value0.value1)(v3)(v1);
         }
         ;
         return Nothing.value;

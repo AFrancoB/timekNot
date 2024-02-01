@@ -1,4 +1,4 @@
-module Aural(aural, checkXPitch, getXPitchMap, prog) where
+module Aural(aural,variationsStr, checkXPitch, getXPitchMap, prog) where
 
 import Prelude
 
@@ -74,7 +74,8 @@ xeNotes = do
     _ <- reservedOp "="
     sp <- parseSpan
     l <- choice [try (fromFoldable <$> parseRangeInt), fromFoldable <$> many natural]
-    pure $ XNotes sp l
+    vars <- variationsInt <|> pure Nil
+    pure $ XNotes sp l vars
 
 xeno:: P Value 
 xeno = do
@@ -140,7 +141,8 @@ makeCutOffH = do
     _ <- pure 1
     sp <- parseSpan
     coLs <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
-    pure $ CutOffH sp $ fromFoldable coLs
+    vars <- variationsNum <|> pure Nil
+    pure $ CutOffH sp (fromFoldable coLs) vars
 
 cutoff:: P Value
 cutoff = do
@@ -161,7 +163,8 @@ makeCutOff = do
     _ <- pure 1
     sp <- parseSpan
     coLs <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
-    pure $ CutOff sp $ fromFoldable coLs
+    vars <- variationsNum <|> pure Nil
+    pure $ CutOff sp (fromFoldable coLs) vars
 
 vowel:: P Value
 vowel = do
@@ -182,7 +185,24 @@ makeVowel = do
     _ <- pure 1
     sp <- parseSpan
     vLs <- choice [many parseVowel]
-    pure $ Vowel sp $ fromFoldable vLs
+    vars <- variationsVow <|> pure Nil
+    pure $ Vowel sp (fromFoldable vLs) vars
+
+variationsVow:: P (List (Variation String))
+variationsVow = do
+    _ <- pure 1
+    _ <- reserved "&"
+    xs <- everyVow `sepBy` (reserved "&")
+    pure xs
+
+everyVow:: P (Variation String)
+everyVow = do
+    _ <- pure 1
+    _ <- reserved "every"
+    n <- integer
+    sp <- parseSpan
+    xs <- choice [many parseVowel]
+    pure $ Every n sp $ fromFoldable xs
 
 parseVowel:: P String
 parseVowel = do
@@ -215,15 +235,16 @@ makeEnd = do
     _ <- pure 1
     sp <- parseSpan
     spdList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
-    pure $ End sp $ fromFoldable spdList
+    vars <- variationsNum <|> pure Nil
+    pure $ End sp (fromFoldable spdList) vars
 
 begin:: P Value
 begin = do
     _ <- pure 1
     _ <- choice [try $ reserved "begin",reserved "begin"]
     _ <- reservedOp "="
-    sound <- choice [try makeBegin, transposeBegin]
-    pure sound
+    b <- choice [try makeBegin, transposeBegin]
+    pure b
 
 -- transposeBeginWith:: P Value
 -- transposeBeginWith = do
@@ -242,7 +263,8 @@ makeBegin = do
     _ <- pure 1
     sp <- parseSpan
     panList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
-    pure $ Begin sp $ fromFoldable panList
+    vars <- variationsNum <|> pure Nil
+    pure $ Begin sp (fromFoldable panList) vars
 
 speed:: P Value
 speed = do
@@ -269,15 +291,16 @@ makeSpeed = do
     _ <- pure 1
     sp <- parseSpan
     spdList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
-    pure $ Speed sp $ fromFoldable spdList
+    vars <- variationsNum <|> pure Nil
+    pure $ Speed sp (fromFoldable spdList) vars
 
 pan:: P Value
 pan = do
     _ <- pure 1
     _ <- choice [try $ reserved "pan",reserved "p"]
     _ <- reservedOp "="
-    sound <- choice [try makePan, transposePan]
-    pure sound
+    p <- choice [try makePan, transposePan]
+    pure p
 
 -- transposePanWith:: P Value
 -- transposePanWith = do
@@ -296,15 +319,16 @@ makePan = do
     _ <- pure 1
     sp <- parseSpan
     panList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
-    pure $ Pan sp $ fromFoldable panList
+    vars <- variationsNum <|> pure Nil
+    pure $ Pan sp (fromFoldable panList) vars
 
 gain:: P Value
 gain = do
     _ <- pure 1
     _ <- choice [reserved "gain"]
     _ <- reservedOp "="
-    n <- choice [try makeGain, transposeGain]
-    pure n
+    g <- choice [try makeGain, transposeGain]
+    pure g
 
 -- transposeGainWith:: P Value
 -- transposeGainWith = do
@@ -330,7 +354,8 @@ makeGain = do
     _ <- pure 1
     sp <- parseSpan
     gainList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
-    pure $ Gain sp $ fromFoldable gainList
+    vars <- variationsNum <|> pure Nil
+    pure $ Gain sp (fromFoldable gainList) vars
 
 n:: P Value
 n = do
@@ -357,8 +382,9 @@ makeN:: P Value
 makeN = do
     _ <- pure 1
     sp <- parseSpan
-    strList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
-    pure $ N sp $ fromFoldable strList
+    nList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
+    vars <- variationsInt <|> pure Nil
+    pure $ N sp (fromFoldable nList) vars
 
 sound:: P Value
 sound = do
@@ -367,7 +393,6 @@ sound = do
     _ <- reservedOp "="
     sound <- choice [try makeSound, transposeSound]
     pure sound
-
 
 transposeSound:: P Value
 transposeSound = do
@@ -380,7 +405,57 @@ makeSound = do
     _ <- pure 1
     sp <- parseSpan
     strList <- sampleParser 
-    pure $ Sound sp strList
+    vars <- variationsStr <|> pure Nil
+    pure $ Sound sp strList vars
+
+--
+variationsStr:: P (List (Variation String))
+variationsStr = do
+    _ <- pure 1
+    _ <- reserved "&"
+    xs <- everyStr `sepBy` (reserved "&")
+    pure xs
+
+everyStr:: P (Variation String)
+everyStr = do
+    _ <- pure 1
+    _ <- reserved "every"
+    n <- integer
+    sp <- parseSpan
+    xs <- sampleParser
+    pure $ Every n sp xs
+
+variationsInt:: P (List (Variation Int))
+variationsInt = do
+    _ <- pure 1
+    _ <- reserved "&"
+    xs <- everyInt `sepBy` (reserved "&")
+    pure xs
+
+everyInt:: P (Variation Int)
+everyInt = do
+    _ <- pure 1
+    _ <- reserved "every"
+    n <- integer
+    sp <- parseSpan
+    xs <- choice [try parseRangeInt, fromFoldable <$> many natural]
+    pure $ Every n sp xs
+
+variationsNum:: P (List (Variation Number))
+variationsNum = do
+    _ <- pure 1
+    _ <- reserved "&"
+    xs <- everyNum `sepBy` (reserved "&")
+    pure xs
+
+everyNum:: P (Variation Number)
+everyNum = do
+    _ <- pure 1
+    _ <- reserved "every"
+    n <- integer
+    sp <- parseSpan
+    xs <- choice [try parseRangeNum, fromFoldable <$> many parseNumber]
+    pure $ Every n sp xs
 
 --
 parseSpan:: P Span

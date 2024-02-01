@@ -121,7 +121,7 @@ processProg r (Prog span xs) ev = fromMaybe (Tuple "error" Nothing) $ spanMaybe 
 processProg r _ ev = Tuple "error" Nothing
 
 processXNotes:: Rhythmic -> Maybe Value ->  Event -> Maybe Int
-processXNotes r (Just (XNotes span xs)) ev = spanMaybe span (fromFoldable xs) ev r
+processXNotes r (Just (XNotes sp xs vars)) ev = processVarsMaybe vars sp xs ev r
 processXNotes r _ ev = Nothing
 
 
@@ -129,7 +129,7 @@ processXNotes r _ ev = Nothing
 processCutOffH:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
 processCutOffH vs r Nothing ev = Nothing
 processCutOffH vs r (Just (TransposedCutOffH id n)) ev = findRefdCutOffH r ev (Tuple id n) vs 
-processCutOffH _  r (Just (CutOffH span nList)) ev = spanMaybe span (fromFoldable nList) ev r
+processCutOffH _  r (Just (CutOffH sp xList vars)) ev = processVarsMaybe vars sp xList ev r
 processCutOffH _ _ _ _ = Nothing
 
 findRefdCutOffH:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe Number
@@ -140,7 +140,7 @@ findRefdCutOffH r ws (Tuple id n) mapa = processCutOffH mapa r newVal ws
 processCutOff:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
 processCutOff vs r Nothing ev = Nothing
 processCutOff vs r (Just (TransposedCutOff id n)) ev = findRefdCutOff r ev (Tuple id n) vs 
-processCutOff _  r (Just (CutOff span nList)) ev = spanMaybe span (fromFoldable nList) ev r
+processCutOff _  r (Just (CutOff sp xList vars)) ev = processVarsMaybe vars sp xList ev r
 processCutOff _ _ _ _ = Nothing
 
 findRefdCutOff:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe Number
@@ -151,7 +151,7 @@ findRefdCutOff r ws (Tuple id n) mapa = processCutOff mapa r newVal ws
 processVowel:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe String 
 processVowel vs r Nothing ev = Nothing
 processVowel vs r (Just (TransposedVowel id n)) ev = findRefdVowel r ev (Tuple id n) vs 
-processVowel _  r (Just (Vowel span nList)) ev = spanMaybe span (fromFoldable nList) ev r
+processVowel _  r (Just (Vowel sp xList vars)) ev = processVarsMaybe vars sp xList ev r
 processVowel _ _ _ _ = Nothing
 
 findRefdVowel:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe String
@@ -162,7 +162,7 @@ findRefdVowel r ws (Tuple id n) mapa = processVowel mapa r newVal ws
 processEnd:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
 processEnd vs r Nothing ev = Nothing
 processEnd vs r (Just (TransposedEnd id n)) ev = findRefdEnd r ev (Tuple id n) vs 
-processEnd _  r (Just (End span nList)) ev = spanMaybe span (fromFoldable nList) ev r
+processEnd _  r (Just (End sp xList vars)) ev = processVarsMaybe vars sp xList ev r
 processEnd _ _ _ _ = Nothing
 
 findRefdEnd:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe Number
@@ -173,7 +173,7 @@ findRefdEnd r ws (Tuple id n) mapa = processEnd mapa r newVal ws
 processBegin:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
 processBegin vs r Nothing ev = Nothing
 processBegin vs r (Just (TransposedBegin id n)) ev = findRefdBegin r ev (Tuple id n) vs 
-processBegin _  r (Just (Begin span nList)) ev = spanMaybe span (fromFoldable nList) ev r
+processBegin _  r (Just (Begin sp xList vars)) ev = processVarsMaybe vars sp xList ev r
 processBegin _ _ _ _ = Nothing
 
 findRefdBegin:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe Number
@@ -184,7 +184,7 @@ findRefdBegin r ws (Tuple id n) mapa = processBegin mapa r newVal ws
 processSpeed:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
 processSpeed vs r Nothing ev = Nothing
 processSpeed vs r (Just (TransposedSpeed id n)) ev = findRefdSpeed r ev (Tuple id n) vs 
-processSpeed _  r (Just (Speed span nList)) ev = spanMaybe span (fromFoldable nList) ev r
+processSpeed _  r (Just (Speed sp xList vars)) ev = processVarsMaybe vars sp xList ev r
 processSpeed _ _ _ _ = Nothing
 
 findRefdSpeed:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe Number
@@ -195,7 +195,7 @@ findRefdSpeed r ws (Tuple id n) mapa = processSpeed mapa r newVal ws
 processPan:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
 processPan vs r Nothing ev = Nothing
 processPan vs r (Just (TransposedPan id n)) ev = findRefdP r ev (Tuple id n) vs 
-processPan _  r (Just (Pan span nList)) ev = spanMaybe span (fromFoldable nList) ev r
+processPan _  r (Just (Pan sp xList vars)) ev = processVarsMaybe vars sp xList ev r
 processPan _ _ _ _ = Nothing
 
 findRefdP:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe Number
@@ -205,7 +205,7 @@ findRefdP r ws (Tuple id n) mapa = processPan mapa r newVal ws
 processGain:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
 processGain vs r Nothing ev = Nothing
 processGain vs r (Just (TransposedGain id n)) ev = findRefdG r ev (Tuple id n) vs 
-processGain _  r (Just (Gain span nList)) ev = spanMaybe span (fromFoldable nList) ev r
+processGain _  r (Just (Gain sp xList vars)) ev = processVarsMaybe vars sp xList ev r
 processGain _ _ _ _ = Nothing
 
 findRefdG:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe Number
@@ -215,7 +215,7 @@ findRefdG r ws (Tuple id n) mapa = processGain mapa r newVal ws
 processN:: Voices -> Rhythmic -> Maybe Value -> Event -> Int 
 processN vs r Nothing ev = 0
 processN vs r (Just (TransposedN id n)) ev = findRefdN r ev (Tuple id n) vs 
-processN _  r (Just (N span nList)) ev = spanInt span (fromFoldable nList) ev r
+processN _  r (Just (N span nList vars)) ev = processVarsInt vars span nList ev r
 processN _ _ _ _ = 2666
 
 findRefdN:: Rhythmic -> Event -> Tuple String Int -> Voices -> Int
@@ -225,8 +225,52 @@ findRefdN r ws (Tuple id n) mapa = processN mapa r newVal ws
 processSound:: Voices -> Rhythmic -> Maybe Value -> Event -> String 
 processSound vs r Nothing ev = "no sound value even with check!"
 processSound vs r (Just (TransposedSound id n)) ev = findRefdSound r ev (Tuple id n) vs 
-processSound _  r (Just (Sound span sList)) ev = spanStr span (fromFoldable sList) ev r
+processSound _  r (Just (Sound span sList vars)) ev = processVarsStr vars span sList ev r
 processSound _ _ _ _ = "processSound failed at pattern matching"
+
+--
+processVarsStr:: List (Variation String) -> Span -> List String -> Event -> Rhythmic -> String
+processVarsStr Nil sp xs ev r = spanStr sp (fromFoldable xs) ev r
+processVarsStr (Cons v vs) sp xs ev r = 
+    if isVar v ev 
+    then spanStr vSpan (fromFoldable vList) ev r
+    else processVarsStr vs sp xs ev r
+        where vSpan = getVSpan v
+              vList = getVListStr v
+
+processVarsInt:: List (Variation Int) -> Span -> List Int -> Event -> Rhythmic -> Int
+processVarsInt Nil sp xs ev r = spanInt sp (fromFoldable xs) ev r
+processVarsInt (Cons v vs) sp xs ev r = 
+    if isVar v ev 
+    then spanInt vSpan (fromFoldable vList) ev r
+    else processVarsInt vs sp xs ev r
+        where vSpan = getVSpan v
+              vList = getVListInt v
+
+---- work here with the maybes!!!!
+processVarsMaybe:: forall a. List (Variation a) -> Span -> List a -> Event -> Rhythmic -> Maybe a
+processVarsMaybe Nil sp xs ev r = spanMaybe sp (fromFoldable xs) ev r
+processVarsMaybe (Cons v vs) sp xs ev r = 
+    if isVar v ev 
+    then spanMaybe vSpan (fromFoldable vList) ev r
+    else processVarsMaybe vs sp xs ev r
+        where vSpan = getVSpan v
+              vList = getVList v
+
+getVSpan:: forall a. Variation a -> Span
+getVSpan (Every _ sp _) = sp
+
+getVListStr:: Variation String -> List String 
+getVListStr (Every _ _ xs) = xs
+
+getVListInt:: Variation Int -> List Int
+getVListInt (Every _ _ ns) = ns
+
+getVList:: forall a. Variation a -> List a
+getVList (Every _ _ xs) = xs
+
+isVar (Every n _ _) ev = ((getBlockIndex ev)`mod`n) == 0 
+isVar _ _ = false
 
 findRefdSound:: Rhythmic -> Event -> Tuple String Int -> Voices -> String
 findRefdSound r ws (Tuple id n) mapa = processSound mapa r newVal ws
@@ -309,7 +353,7 @@ getXNote:: List Value -> Maybe Value
 getXNote aural = head $ filter isXNote $ fromFoldable aural
 
 isXNote:: Value -> Boolean
-isXNote (XNotes _ _) = true
+isXNote (XNotes _ _ _) = true
 isXNote _ = false
 
 getNote:: List Value -> Maybe Value
@@ -329,7 +373,7 @@ getCutOffH:: List Value -> Maybe Value
 getCutOffH aural = head $ filter isCutOffH $ fromFoldable aural
 
 isCutOffH:: Value -> Boolean
-isCutOffH (CutOffH _ _) = true
+isCutOffH (CutOffH _ _ _) = true
 isCutOffH (TransposedCutOffH _ _) = true
 isCutOffH _ = false
 
@@ -337,7 +381,7 @@ getCutOff:: List Value -> Maybe Value
 getCutOff aural = head $ filter isCutOff $ fromFoldable aural
 
 isCutOff:: Value -> Boolean
-isCutOff (CutOff _ _) = true
+isCutOff (CutOff _ _ _) = true
 isCutOff (TransposedCutOff _ _) = true
 isCutOff _ = false
 
@@ -345,7 +389,7 @@ getVowel:: List Value -> Maybe Value
 getVowel aural = head $ filter isVowel $ fromFoldable aural
 
 isVowel:: Value -> Boolean
-isVowel (Vowel _ _) = true
+isVowel (Vowel _ _ _) = true
 isVowel (TransposedVowel _ _) = true
 isVowel _ = false
 
@@ -353,7 +397,7 @@ getEnd:: List Value -> Maybe Value
 getEnd aural = head $ filter isEnd $ fromFoldable aural
 
 isEnd:: Value -> Boolean
-isEnd (End _ _) = true
+isEnd (End _ _ _) = true
 isEnd (TransposedEnd _ _) = true
 isEnd _ = false
 
@@ -361,7 +405,7 @@ getBegin:: List Value -> Maybe Value
 getBegin aural = head $ filter isBegin $ fromFoldable aural
 
 isBegin:: Value -> Boolean
-isBegin (Begin _ _) = true
+isBegin (Begin _ _ _) = true
 isBegin (TransposedBegin _ _) = true
 isBegin _ = false
 
@@ -369,7 +413,7 @@ getSpeed:: List Value -> Maybe Value
 getSpeed aural = head $ filter isSpeed $ fromFoldable aural
 
 isSpeed:: Value -> Boolean
-isSpeed (Speed _ _) = true
+isSpeed (Speed _ _ _) = true
 isSpeed (TransposedSpeed _ _) = true
 isSpeed _ = false
 
@@ -377,7 +421,7 @@ getP:: List Value -> Maybe Value
 getP aural = head $ filter isP $ fromFoldable aural
 
 isP:: Value -> Boolean
-isP (Pan _ _) = true
+isP (Pan _ _ _) = true
 isP (TransposedPan _ _) = true
 isP _ = false
 
@@ -385,7 +429,7 @@ getG:: List Value -> Maybe Value
 getG aural = head $ filter isG $ fromFoldable aural
 
 isG:: Value -> Boolean
-isG (Gain _ _) = true
+isG (Gain _ _ _) = true
 isG (TransposedGain _ _) = true
 isG _ = false
 
@@ -393,7 +437,7 @@ getN:: List Value -> Maybe Value
 getN aural = head $ filter isN $ fromFoldable aural
 
 isN:: Value -> Boolean
-isN (N _ _) = true
+isN (N _ _ _) = true
 isN (TransposedN _ _) = true
 isN _ = false
 
@@ -401,6 +445,6 @@ getS:: List Value -> Maybe Value
 getS aural = head $ filter isSound $ fromFoldable aural
 
 isSound:: Value -> Boolean
-isSound (Sound _ _) = true
+isSound (Sound _ _ _) = true
 isSound (TransposedSound _ _) = true
 isSound _ = false
