@@ -1,4 +1,4 @@
-module AST(TimekNot(..),Vantage(..), TimePoint(..), VantageMap(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), Sinusoidal(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), XenoPitch(..), XenoNote(..), Subset(..), showEventIndex, showStructureIndex) where
+module AST(TimekNot(..),Vantage(..), TimePoint(..), VantageMap(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..), Variation(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), Sinusoidal(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), XenoPitch(..), XenoNote(..), Subset(..), showEventIndex, showStructureIndex) where
 
 import Prelude
 import Effect.Ref
@@ -62,65 +62,61 @@ instance timePoint :: Show TimePoint where
   show (Secs secs) = show secs <> " secs from eval"
   show (UTC utc) = show utc
 
-type AudioAttributes = {
-  sound:: List Value,
-  n:: List Value
-}
-
 -- future additions to Value: OSound | OTransposedSound | Full Sound OSound
 -- for now only X generates sounds, O should be allowed to invoke sound as well. Full will allow to invoke sound for X and O as pairs
 
--- refactor as {sound: string, n: Int, etc...} -- What was going to be auralAttributes
+data Variation a = Every Int Span (List a)
+
+instance showVariation :: Show a => Show (Variation a) where
+  show :: Variation a -> String
+  show (Every n sp xs) = "every " <> show n <> " " <> show sp <> " " <> show xs 
+
 data Value = 
-  Sound Span (List String) | TransposedSound String Int | 
-  N Span (List Int) | TransposedN String Int |
-  Gain Span (List Number) | TransposedGain String Int | 
-  Pan Span (List Number) | TransposedPan String Int | 
-  Speed Span (List Number) | TransposedSpeed String Int | 
-  Begin Span (List Number) | TransposedBegin String Int | 
-  End Span (List Number) | TransposedEnd String Int | 
-  Vowel Span (List String) | TransposedVowel String Int |
-  CutOff Span (List Number) | TransposedCutOff String Int |
-  CutOffH Span (List Number) | TransposedCutOffH String Int |
+  Sound Span (List String) (List (Variation String)) | TransposedSound String Int |
+  N Span (List Int) (List (Variation Int)) | TransposedN String Int |
+  Gain Span (List Number) (List (Variation Number)) | TransposedGain String Int | 
+  Pan Span (List Number) (List (Variation Number)) | TransposedPan String Int | 
+  Speed Span (List Number) (List (Variation Number)) | TransposedSpeed String Int | 
+  Begin Span (List Number) (List (Variation Number)) | TransposedBegin String Int | 
+  End Span (List Number) (List (Variation Number)) | TransposedEnd String Int | 
+  Vowel Span (List String) (List (Variation String)) | TransposedVowel String Int |
+  CutOff Span (List Number) (List (Variation Number)) | TransposedCutOff String Int |
+  CutOffH Span (List Number) (List (Variation Number)) | TransposedCutOffH String Int |
   Dastgah Span Dastgah | Xeno (Tuple String (Maybe Int)) Span (List Int) |
-  Prog Span (List (Tuple String (Maybe Int))) | XNotes Span (List Int) | TransposedPitch String Int
-
-data Dastgah = Shur (List Int) -- 1 to 8 then it cycles back
-
-instance showDatsgah :: Show Dastgah where
-  show (Shur l) = "shur " <> show l
+  Prog Span (List (Tuple String (Maybe Int))) | XNotes Span (List Int) (List (Variation Int)) | TransposedPitch String Int
 
 instance valueShow :: Show Value where
-  show (Sound x l) = show x <> " " <> show l
+  -- show (Soundy sp xs every) = show sp <> " " <> show xs <> show " " <> show every
+  show (Sound x l v) = show x <> " " <> show l <> " " <> show v
   show (TransposedSound voice n) = "s transposed from " <> voice
-  show (N x l) = show x <> " " <> show l
+  show (N x l v) = show x <> " " <> show l <> " " <> show v
   show (TransposedN voice n) = "n transposed from " <> voice
   -- show (TransposedNWith voice n l) = show l <> "n transposedWith from " <> voice
-  show (Gain x l) = show x <> " " <> show l
+  show (Gain x l v) = show x <> " " <> show l
   show (TransposedGain voice n) = "gain transposed from " <> voice
   -- show (TransposedGainWith voice n l) = "gain transposedWith from " <> voice
-  show (Pan x l) = show x <> " " <> show l
+  show (Pan x l v) = show x <> " " <> show l
   show (TransposedPan voice n) = "pan transposed from " <> voice
   -- show (TransposedPanWith voice n l) = "pan transposedWith from " <> voice
-  show (Speed x l) = show x <> " " <> show l
+  show (Speed x l v) = show x <> " " <> show l
   show (TransposedSpeed voice n) = "speed transposed from " <> voice
   -- show (TransposedSpeedWith voice n l) = "speed transposedWith from " <> voice
-  show (Begin x l) = show x <> " " <> show l
+  show (Begin x l v) = show x <> " " <> show l
   show (TransposedBegin voice n) = "begin transposed from " <> voice
   -- show (TransposedBeginWith voice n l) = "begin transposedWith from " <> voice
-  show (End x l) = show x <> " " <> show l
+  show (End x l v) = show x <> " " <> show l
   show (TransposedEnd voice n) = "end transposed from " <> voice
   -- show (TransposedEndWith voice n l) = "end transposedWith from " <> voice
-  show (Vowel x l) = show x <> " " <> show l
+  show (Vowel x l v) = show x <> " " <> show l
   show (TransposedVowel voice n) = "vowel transposed from " <> voice
-  show (CutOff x l) = show x <> " " <> show l
+  show (CutOff x l v) = show x <> " " <> show l
   show (TransposedCutOff voice n) = "cutoff transposed from " <> voice
-  show (CutOffH x l) = show x <> " " <> show l
+  show (CutOffH x l v) = show x <> " " <> show l
   show (TransposedCutOffH voice n) = "hcutoff transposed from " <> voice
   show (Dastgah span d) = show d
   show (Xeno id span l) = show l
   show (Prog span l) = "prog" <> show l
-  show (XNotes span l) = "xnotes " <> show l
+  show (XNotes span l v) = "xnotes " <> show l
   show (TransposedPitch voice n) = "pitch transposed from " <> voice
 
 data Span = CycleEvent | CycleBlock | CycleInBlock | SpreadBlock -- | Weight
@@ -132,6 +128,11 @@ instance spanShow :: Show Span where
   show SpreadBlock =   "_-_"
   -- show BySubdivision = "-"
   -- show Weight = "-_-"
+
+data Dastgah = Shur (List Int) -- 1 to 8 then it cycles back
+
+instance showDatsgah :: Show Dastgah where
+  show (Shur l) = "shur " <> show l
 
 data Temporal = Temporal Polytemporal Rhythmic Boolean | Replica String -- this will require a check and the recursive implementation now very familiar
 
