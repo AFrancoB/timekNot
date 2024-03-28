@@ -1,4 +1,4 @@
-module AssambleWebdirt (objectWithWhenSN, addGain, addPan, addSpeed, addBegin, addEnd, addVowel, addCutOff, addCutOffH, addNote) where
+module AssambleWebdirt (objectWithWhenSN, addGain, addPan, addSpeed, addBegin, addEnd, addVowel, addMaxW, addMinW, addInter, addCutOff, addCutOffH, addNote) where
 
 import Prelude
 import Effect (Effect)
@@ -30,6 +30,15 @@ foreign import addCutOff :: Foreign -> Number -> Effect Foreign
 -- export addCutoff = o => cutoff => () => { o.cutoff = cutoff; return o; }
 
 foreign import addCutOffH :: Foreign -> Number -> Effect Foreign
+-- export addCutoffH = o => cutoffh => () => { o.hcutoff = cutoffh; return o; }
+
+foreign import addMaxW :: Foreign -> Number -> Effect Foreign
+-- export addCutoffH = o => cutoffh => () => { o.hcutoff = cutoffh; return o; }
+
+foreign import addMinW :: Foreign -> Number -> Effect Foreign
+-- export addCutoffH = o => cutoffh => () => { o.hcutoff = cutoffh; return o; }
+
+foreign import addInter :: Foreign -> Number -> Effect Foreign
 -- export addCutoffH = o => cutoffh => () => { o.hcutoff = cutoffh; return o; }
 
 foreign import addNote :: Foreign -> Number -> Effect Foreign

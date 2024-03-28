@@ -580,7 +580,7 @@ tempoMark = do
   x <- choice [try cpm, try bpm, try cps, try ratio, acceleration]
   pure x
 
-acceleration:: P TempoMark
+acceleration:: P TempoMark -- (~ 1 << 0 range 100cpm, 1000cpm)
 acceleration = do 
   _ <- pure 1
   _ <- reserved "~"

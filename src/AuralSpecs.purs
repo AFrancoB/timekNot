@@ -67,11 +67,14 @@ processEvent v r vals xp ev = do
   let vowel = processVowel v r (getVowel vals) ev
   let cutoff = processCutOff v r (getCutOff vals) ev
   let cutoffh = processCutOffH v r (getCutOffH vals) ev
+  let maxw = processMaxW v r (getMaxW vals) ev
+  let minw = processMinW v r (getMinW vals) ev
+  let inter = processInter v r (getInter vals) ev
   let note = processNote v xp r (getNote vals) (getXNote vals) ev
-  makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh note
+  makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh maxw minw inter note
 
-makeWebDirtEvent:: Number -> String -> Int -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe String -> Maybe Number -> Maybe Number -> Maybe Number -> Effect Foreign
-makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh note = do
+makeWebDirtEvent:: Number -> String -> Int -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe String -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Effect Foreign
+makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh maxw minw inter note = do
   oEvent <- objectWithWhenSN when s n
   oG <- optVNum oEvent gain addGain
   oP <- optVNum oG pan addPan 
@@ -79,8 +82,11 @@ makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh note = d
   oB <- optVNum oSp begin addBegin
   oE <- optVNum oB end addEnd
   oCOff <- optVNum oE cutoff addCutOff
-  oCOffH <- optVNum oCOff cutoffh addCutOffH 
-  oV <- optVStr oCOffH vowel addVowel
+  oCOffH <- optVNum oCOff cutoffh addCutOffH
+  oMax <- optVNum oCOffH maxw addMaxW  
+  oMin <- optVNum oMax minw addMinW  
+  oInter <- optVNum oMin inter addInter  
+  oV <- optVStr oInter vowel addVowel
   oN <- optVNum oV note addNote
   pure oN
 
@@ -124,6 +130,38 @@ processXNotes:: Rhythmic -> Maybe Value ->  Event -> Maybe Int
 processXNotes r (Just (XNotes sp xs vars)) ev = processVarsMaybe vars sp xs ev r
 processXNotes r _ ev = Nothing
 
+--
+processInter:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
+processInter vs r Nothing ev = Nothing
+processInter vs r (Just (TransposedInter id n)) ev = findRefdInter r ev (Tuple id n) vs 
+processInter _  r (Just (Inter sp xList vars)) ev = processVarsMaybe vars sp xList ev r
+processInter _ _ _ _ = Nothing
+
+findRefdInter:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe Number
+findRefdInter r ws (Tuple id n) mapa = processInter mapa r newVal ws
+    where newVal = cycleAurals n (M.lookup id mapa) getInter
+
+--
+processMinW:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
+processMinW vs r Nothing ev = Nothing
+processMinW vs r (Just (TransposedMinW id n)) ev = findRefdMinW r ev (Tuple id n) vs 
+processMinW _  r (Just (MinW sp xList vars)) ev = processVarsMaybe vars sp xList ev r
+processMinW _ _ _ _ = Nothing
+
+findRefdMinW:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe Number
+findRefdMinW r ws (Tuple id n) mapa = processMinW mapa r newVal ws
+    where newVal = cycleAurals n (M.lookup id mapa) getMinW
+
+--
+processMaxW:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
+processMaxW vs r Nothing ev = Nothing
+processMaxW vs r (Just (TransposedMaxW id n)) ev = findRefdMaxW r ev (Tuple id n) vs 
+processMaxW _  r (Just (MaxW sp xList vars)) ev = processVarsMaybe vars sp xList ev r
+processMaxW _ _ _ _ = Nothing
+
+findRefdMaxW:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe Number
+findRefdMaxW r ws (Tuple id n) mapa = processMaxW mapa r newVal ws
+    where newVal = cycleAurals n (M.lookup id mapa) getMaxW
 
 --
 processCutOffH:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
@@ -368,6 +406,31 @@ isNote _ = false
 getDastgahList:: Dastgah -> List Int
 getDastgahList (Shur ns) = ns
 getDastgahList _ = Nil
+
+
+getMaxW:: List Value -> Maybe Value
+getMaxW aural = head $ filter isMaxW $ fromFoldable aural
+
+isMaxW:: Value -> Boolean
+isMaxW (MaxW _ _ _) = true
+isMaxW (TransposedMaxW _ _) = true
+isMaxW _ = false
+
+getMinW:: List Value -> Maybe Value
+getMinW aural = head $ filter isMinW $ fromFoldable aural
+
+isMinW:: Value -> Boolean
+isMinW (MinW _ _ _) = true
+isMinW (TransposedMinW _ _) = true
+isMinW _ = false
+
+getInter:: List Value -> Maybe Value
+getInter aural = head $ filter isInter $ fromFoldable aural
+
+isInter:: Value -> Boolean
+isInter (Inter _ _ _) = true
+isInter (TransposedInter _ _) = true
+isInter _ = false
 
 getCutOffH:: List Value -> Maybe Value
 getCutOffH aural = head $ filter isCutOffH $ fromFoldable aural

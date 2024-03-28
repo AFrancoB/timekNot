@@ -18774,6 +18774,93 @@ var TransposedCutOffH = /* @__PURE__ */ function() {
   };
   return TransposedCutOffH2;
 }();
+var MaxW = /* @__PURE__ */ function() {
+  function MaxW2(value0, value1, value2) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+  }
+  ;
+  MaxW2.create = function(value0) {
+    return function(value1) {
+      return function(value2) {
+        return new MaxW2(value0, value1, value2);
+      };
+    };
+  };
+  return MaxW2;
+}();
+var TransposedMaxW = /* @__PURE__ */ function() {
+  function TransposedMaxW2(value0, value1) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+  ;
+  TransposedMaxW2.create = function(value0) {
+    return function(value1) {
+      return new TransposedMaxW2(value0, value1);
+    };
+  };
+  return TransposedMaxW2;
+}();
+var MinW = /* @__PURE__ */ function() {
+  function MinW2(value0, value1, value2) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+  }
+  ;
+  MinW2.create = function(value0) {
+    return function(value1) {
+      return function(value2) {
+        return new MinW2(value0, value1, value2);
+      };
+    };
+  };
+  return MinW2;
+}();
+var TransposedMinW = /* @__PURE__ */ function() {
+  function TransposedMinW2(value0, value1) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+  ;
+  TransposedMinW2.create = function(value0) {
+    return function(value1) {
+      return new TransposedMinW2(value0, value1);
+    };
+  };
+  return TransposedMinW2;
+}();
+var Inter = /* @__PURE__ */ function() {
+  function Inter2(value0, value1, value2) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+  }
+  ;
+  Inter2.create = function(value0) {
+    return function(value1) {
+      return function(value2) {
+        return new Inter2(value0, value1, value2);
+      };
+    };
+  };
+  return Inter2;
+}();
+var TransposedInter = /* @__PURE__ */ function() {
+  function TransposedInter2(value0, value1) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+  ;
+  TransposedInter2.create = function(value0) {
+    return function(value1) {
+      return new TransposedInter2(value0, value1);
+    };
+  };
+  return TransposedInter2;
+}();
 var Dastgah = /* @__PURE__ */ function() {
   function Dastgah2(value0, value1) {
     this.value0 = value0;
@@ -42631,7 +42718,7 @@ var toNumber$prime = function(v) {
     return v.value0;
   }
   ;
-  throw new Error("Failed pattern match at Aural (line 489, column 1 - line 489, column 40): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Aural (line 557, column 1 - line 557, column 40): " + [v.constructor.name]);
 };
 var toListAurals = function(mapas) {
   var vals = concat2(map13(toUnfoldable5)(mapas));
@@ -42789,7 +42876,7 @@ var func = function(v) {
         return true;
       }
       ;
-      throw new Error("Failed pattern match at Aural (line 587, column 31 - line 589, column 48): " + [v2.constructor.name]);
+      throw new Error("Failed pattern match at Aural (line 655, column 31 - line 657, column 48): " + [v2.constructor.name]);
     }
     ;
     if (v1.value1 instanceof Just) {
@@ -42802,10 +42889,10 @@ var func = function(v) {
         return f(v2.value0)(v1.value1.value0);
       }
       ;
-      throw new Error("Failed pattern match at Aural (line 590, column 32 - line 592, column 50): " + [v2.constructor.name]);
+      throw new Error("Failed pattern match at Aural (line 658, column 32 - line 660, column 50): " + [v2.constructor.name]);
     }
     ;
-    throw new Error("Failed pattern match at Aural (line 586, column 1 - line 586, column 67): " + [v.constructor.name, v1.constructor.name]);
+    throw new Error("Failed pattern match at Aural (line 654, column 1 - line 654, column 67): " + [v.constructor.name, v1.constructor.name]);
   };
 };
 var everyStr = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
@@ -42985,6 +43072,33 @@ var makeGain = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
     });
   });
 });
+var makeInter = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(parseSpan)(function(sp) {
+    return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeNum)), many3(parseNumber)]))(function(coLs) {
+      return bind8(alt6(variationsNum)(pure6(Nil.value)))(function(vars) {
+        return pure6(new Inter(sp, fromFoldable4(coLs), vars));
+      });
+    });
+  });
+});
+var makeMaxw = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(parseSpan)(function(sp) {
+    return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeNum)), many3(parseNumber)]))(function(coLs) {
+      return bind8(alt6(variationsNum)(pure6(Nil.value)))(function(vars) {
+        return pure6(new MaxW(sp, fromFoldable4(coLs), vars));
+      });
+    });
+  });
+});
+var makeMinw = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(parseSpan)(function(sp) {
+    return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeNum)), many3(parseNumber)]))(function(coLs) {
+      return bind8(alt6(variationsNum)(pure6(Nil.value)))(function(vars) {
+        return pure6(new MinW(sp, fromFoldable4(coLs), vars));
+      });
+    });
+  });
+});
 var makePan = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return bind8(parseSpan)(function(sp) {
     return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeNum)), many3(parseNumber)]))(function(panList) {
@@ -43115,6 +43229,48 @@ var gain = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
     });
   });
 });
+var transposeInter = /* @__PURE__ */ bind8(voiceId)(function(id) {
+  return bind8(alt6(brackets(natural))(pure6(0)))(function(n1) {
+    return pure6(new TransposedInter(id, n1));
+  });
+});
+var inter = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(choice3([reserved("inter")]))(function() {
+    return bind8(reservedOp("="))(function() {
+      return bind8(choice3([$$try(makeInter), transposeInter]))(function(m) {
+        return pure6(m);
+      });
+    });
+  });
+});
+var transposeMaxw = /* @__PURE__ */ bind8(voiceId)(function(id) {
+  return bind8(alt6(brackets(natural))(pure6(0)))(function(n1) {
+    return pure6(new TransposedMaxW(id, n1));
+  });
+});
+var maxw = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(choice3([reserved("maxw")]))(function() {
+    return bind8(reservedOp("="))(function() {
+      return bind8(choice3([$$try(makeMaxw), transposeMaxw]))(function(m) {
+        return pure6(m);
+      });
+    });
+  });
+});
+var transposeMinw = /* @__PURE__ */ bind8(voiceId)(function(id) {
+  return bind8(alt6(brackets(natural))(pure6(0)))(function(n1) {
+    return pure6(new TransposedMinW(id, n1));
+  });
+});
+var minw = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(choice3([reserved("minw")]))(function() {
+    return bind8(reservedOp("="))(function() {
+      return bind8(choice3([$$try(makeMinw), transposeMinw]))(function(m) {
+        return pure6(m);
+      });
+    });
+  });
+});
 var transposeN = /* @__PURE__ */ bind8(voiceId)(function(id) {
   return bind8(alt6(brackets(natural))(pure6(0)))(function(n1) {
     return pure6(new TransposedN(id, n1));
@@ -43209,7 +43365,7 @@ var begin = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
 });
 var value = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return bind8(reservedOp("."))(function() {
-    return bind8(choice3([$$try(sound), $$try(n), $$try(gain), $$try(pan), $$try(speed), $$try(begin), $$try(end), $$try(vowel), $$try(cutoff), $$try(cutoffh), $$try(mayeh), $$try(prog), $$try(xeNotes), xeno]))(function(valType) {
+    return bind8(choice3([$$try(sound), $$try(n), $$try(gain), $$try(pan), $$try(speed), $$try(begin), $$try(end), $$try(vowel), $$try(cutoff), $$try(cutoffh), $$try(inter), $$try(maxw), $$try(minw), $$try(mayeh), $$try(prog), $$try(xeNotes), xeno]))(function(valType) {
       return pure6(valType);
     });
   });
@@ -46189,6 +46345,18 @@ var addCutOffH = (o) => (cutoffh2) => () => {
   o.hcutoff = cutoffh2;
   return o;
 };
+var addMaxW = (o) => (maxw2) => () => {
+  o.maxw = maxw2;
+  return o;
+};
+var addMinW = (o) => (minw2) => () => {
+  o.minw = minw2;
+  return o;
+};
+var addInter = (o) => (inter2) => () => {
+  o.inter = inter2;
+  return o;
+};
 var addNote = (o) => (note) => () => {
   o.note = note;
   return o;
@@ -46690,8 +46858,8 @@ var strMaybe = function(x) {
 var spread = function(percenPos) {
   return function(a) {
     return function(limits) {
-      var $151 = percenPos >= fst(limits) && percenPos < snd(limits);
-      if ($151) {
+      var $169 = percenPos >= fst(limits) && percenPos < snd(limits);
+      if ($169) {
         return new Just(a);
       }
       ;
@@ -46728,7 +46896,7 @@ var optVStr = function(v) {
         return v2(v)(v1.value0);
       }
       ;
-      throw new Error("Failed pattern match at AuralSpecs (line 91, column 1 - line 91, column 93): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
+      throw new Error("Failed pattern match at AuralSpecs (line 97, column 1 - line 97, column 93): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
     };
   };
 };
@@ -46743,7 +46911,7 @@ var optVNum = function(v) {
         return v2(v)(v1.value0);
       }
       ;
-      throw new Error("Failed pattern match at AuralSpecs (line 87, column 1 - line 87, column 93): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
+      throw new Error("Failed pattern match at AuralSpecs (line 93, column 1 - line 93, column 93): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
     };
   };
 };
@@ -46758,19 +46926,28 @@ var makeWebDirtEvent = function(when3) {
                 return function(vowel2) {
                   return function(cutoff2) {
                     return function(cutoffh2) {
-                      return function(note) {
-                        return function __do2() {
-                          var oEvent = objectWithWhenSN(when3)(s)(n2)();
-                          var oG = optVNum(oEvent)(gain2)(addGain)();
-                          var oP = optVNum(oG)(pan2)(addPan)();
-                          var oSp = optVNum(oP)(speed2)(addSpeed)();
-                          var oB = optVNum(oSp)(begin2)(addBegin)();
-                          var oE = optVNum(oB)(end2)(addEnd)();
-                          var oCOff = optVNum(oE)(cutoff2)(addCutOff)();
-                          var oCOffH = optVNum(oCOff)(cutoffh2)(addCutOffH)();
-                          var oV = optVStr(oCOffH)(vowel2)(addVowel)();
-                          var oN = optVNum(oV)(note)(addNote)();
-                          return oN;
+                      return function(maxw2) {
+                        return function(minw2) {
+                          return function(inter2) {
+                            return function(note) {
+                              return function __do2() {
+                                var oEvent = objectWithWhenSN(when3)(s)(n2)();
+                                var oG = optVNum(oEvent)(gain2)(addGain)();
+                                var oP = optVNum(oG)(pan2)(addPan)();
+                                var oSp = optVNum(oP)(speed2)(addSpeed)();
+                                var oB = optVNum(oSp)(begin2)(addBegin)();
+                                var oE = optVNum(oB)(end2)(addEnd)();
+                                var oCOff = optVNum(oE)(cutoff2)(addCutOff)();
+                                var oCOffH = optVNum(oCOff)(cutoffh2)(addCutOffH)();
+                                var oMax = optVNum(oCOffH)(maxw2)(addMaxW)();
+                                var oMin = optVNum(oMax)(minw2)(addMinW)();
+                                var oInter = optVNum(oMin)(inter2)(addInter)();
+                                var oV = optVStr(oInter)(vowel2)(addVowel)();
+                                var oN = optVNum(oV)(note)(addNote)();
+                                return oN;
+                              };
+                            };
+                          };
                         };
                       };
                     };
@@ -46856,6 +47033,39 @@ var isN = function(v) {
   }
   ;
   if (v instanceof TransposedN) {
+    return true;
+  }
+  ;
+  return false;
+};
+var isMinW = function(v) {
+  if (v instanceof MinW) {
+    return true;
+  }
+  ;
+  if (v instanceof TransposedMinW) {
+    return true;
+  }
+  ;
+  return false;
+};
+var isMaxW = function(v) {
+  if (v instanceof MaxW) {
+    return true;
+  }
+  ;
+  if (v instanceof TransposedMaxW) {
+    return true;
+  }
+  ;
+  return false;
+};
+var isInter = function(v) {
+  if (v instanceof Inter) {
+    return true;
+  }
+  ;
+  if (v instanceof TransposedInter) {
     return true;
   }
   ;
@@ -46955,6 +47165,15 @@ var getNote = function(aural2) {
 var getN = function(aural2) {
   return head(filter2(isN)(fromFoldable10(aural2)));
 };
+var getMinW = function(aural2) {
+  return head(filter2(isMinW)(fromFoldable10(aural2)));
+};
+var getMaxW = function(aural2) {
+  return head(filter2(isMaxW)(fromFoldable10(aural2)));
+};
+var getInter = function(aural2) {
+  return head(filter2(isInter)(fromFoldable10(aural2)));
+};
 var getG = function(aural2) {
   return head(filter2(isG)(fromFoldable10(aural2)));
 };
@@ -47042,8 +47261,8 @@ var processVarsInt = function($copy_v) {
             if (v instanceof Cons) {
               var vSpan = getVSpan(v.value0);
               var vList = getVListInt(v.value0);
-              var $299 = isVar(v.value0)(v3);
-              if ($299) {
+              var $335 = isVar(v.value0)(v3);
+              if ($335) {
                 $tco_done = true;
                 return spanInt(vSpan)(fromFoldable10(vList))(v3)(v4);
               }
@@ -47056,7 +47275,7 @@ var processVarsInt = function($copy_v) {
               return;
             }
             ;
-            throw new Error("Failed pattern match at AuralSpecs (line 241, column 1 - line 241, column 86): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
+            throw new Error("Failed pattern match at AuralSpecs (line 279, column 1 - line 279, column 86): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
           }
           ;
           while (!$tco_done) {
@@ -47125,8 +47344,8 @@ var processVarsMaybe = function($copy_v) {
             if (v instanceof Cons) {
               var vSpan = getVSpan(v.value0);
               var vList = getVList(v.value0);
-              var $316 = isVar(v.value0)(v3);
-              if ($316) {
+              var $352 = isVar(v.value0)(v3);
+              if ($352) {
                 $tco_done = true;
                 return spanMaybe(vSpan)(fromFoldable10(vList))(v3)(v4);
               }
@@ -47139,7 +47358,7 @@ var processVarsMaybe = function($copy_v) {
               return;
             }
             ;
-            throw new Error("Failed pattern match at AuralSpecs (line 251, column 1 - line 251, column 98): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
+            throw new Error("Failed pattern match at AuralSpecs (line 289, column 1 - line 289, column 98): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
           }
           ;
           while (!$tco_done) {
@@ -47221,8 +47440,8 @@ var processVarsStr = function($copy_v) {
             if (v instanceof Cons) {
               var vSpan = getVSpan(v.value0);
               var vList = getVListStr(v.value0);
-              var $335 = isVar(v.value0)(v3);
-              if ($335) {
+              var $371 = isVar(v.value0)(v3);
+              if ($371) {
                 $tco_done = true;
                 return spanStr(vSpan)(fromFoldable10(vList))(v3)(v4);
               }
@@ -47235,7 +47454,7 @@ var processVarsStr = function($copy_v) {
               return;
             }
             ;
-            throw new Error("Failed pattern match at AuralSpecs (line 232, column 1 - line 232, column 95): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
+            throw new Error("Failed pattern match at AuralSpecs (line 270, column 1 - line 270, column 95): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
           }
           ;
           while (!$tco_done) {
@@ -47417,6 +47636,99 @@ var findRefdG = function(r) {
       return function(mapa) {
         var newVal = cycleAurals(v.value1)(lookup6(v.value0)(mapa))(getG);
         return processGain(mapa)(r)(newVal)(ws);
+      };
+    };
+  };
+};
+var processInter = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v2 instanceof Nothing) {
+          return Nothing.value;
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof TransposedInter) {
+          return findRefdInter(v1)(v3)(new Tuple(v2.value0.value0, v2.value0.value1))(v);
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof Inter) {
+          return processVarsMaybe(v2.value0.value2)(v2.value0.value0)(v2.value0.value1)(v3)(v1);
+        }
+        ;
+        return Nothing.value;
+      };
+    };
+  };
+};
+var findRefdInter = function(r) {
+  return function(ws) {
+    return function(v) {
+      return function(mapa) {
+        var newVal = cycleAurals(v.value1)(lookup6(v.value0)(mapa))(getInter);
+        return processInter(mapa)(r)(newVal)(ws);
+      };
+    };
+  };
+};
+var processMaxW = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v2 instanceof Nothing) {
+          return Nothing.value;
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof TransposedMaxW) {
+          return findRefdMaxW(v1)(v3)(new Tuple(v2.value0.value0, v2.value0.value1))(v);
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof MaxW) {
+          return processVarsMaybe(v2.value0.value2)(v2.value0.value0)(v2.value0.value1)(v3)(v1);
+        }
+        ;
+        return Nothing.value;
+      };
+    };
+  };
+};
+var findRefdMaxW = function(r) {
+  return function(ws) {
+    return function(v) {
+      return function(mapa) {
+        var newVal = cycleAurals(v.value1)(lookup6(v.value0)(mapa))(getMaxW);
+        return processMaxW(mapa)(r)(newVal)(ws);
+      };
+    };
+  };
+};
+var processMinW = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v2 instanceof Nothing) {
+          return Nothing.value;
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof TransposedMinW) {
+          return findRefdMinW(v1)(v3)(new Tuple(v2.value0.value0, v2.value0.value1))(v);
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof MinW) {
+          return processVarsMaybe(v2.value0.value2)(v2.value0.value0)(v2.value0.value1)(v3)(v1);
+        }
+        ;
+        return Nothing.value;
+      };
+    };
+  };
+};
+var findRefdMinW = function(r) {
+  return function(ws) {
+    return function(v) {
+      return function(mapa) {
+        var newVal = cycleAurals(v.value1)(lookup6(v.value0)(mapa))(getMinW);
+        return processMinW(mapa)(r)(newVal)(ws);
       };
     };
   };
@@ -47642,8 +47954,11 @@ var processEvent = function(v) {
           var vowel2 = processVowel(v)(r)(getVowel(vals))(ev);
           var cutoff2 = processCutOff(v)(r)(getCutOff(vals))(ev);
           var cutoffh2 = processCutOffH(v)(r)(getCutOffH(vals))(ev);
+          var maxw2 = processMaxW(v)(r)(getMaxW(vals))(ev);
+          var minw2 = processMinW(v)(r)(getMinW(vals))(ev);
+          var inter2 = processInter(v)(r)(getInter(vals))(ev);
           var note = processNote(v)(xp)(r)(getNote(vals))(getXNote(vals))(ev);
-          return makeWebDirtEvent(when3)(s)(n2)(gain2)(pan2)(speed2)(begin2)(end2)(vowel2)(cutoff2)(cutoffh2)(note);
+          return makeWebDirtEvent(when3)(s)(n2)(gain2)(pan2)(speed2)(begin2)(end2)(vowel2)(cutoff2)(cutoffh2)(maxw2)(minw2)(inter2)(note);
         };
       };
     };

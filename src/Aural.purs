@@ -49,7 +49,7 @@ value:: P Value
 value = do
     _ <- pure 1
     _ <- reservedOp "."
-    valType <- choice [try sound,try n, try gain, try pan, try speed, try begin, try end, try vowel, try cutoff, try cutoffh, try mayeh, try prog, try xeNotes, xeno]
+    valType <- choice [try sound,try n, try gain, try pan, try speed, try begin, try end, try vowel, try cutoff, try cutoffh, try inter, try maxw, try minw, try mayeh, try prog, try xeNotes, xeno]
     pure valType
 
 prog:: P Value
@@ -120,6 +120,74 @@ makeShur = do
     shurList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
     pure $ Dastgah sp (Shur $ fromFoldable shurList)
 
+
+inter:: P Value
+inter = do
+    _ <- pure 1
+    _ <- choice [reserved "inter"]
+    _ <- reservedOp "="
+    m <- choice [try makeInter, transposeInter]
+    pure m
+
+transposeInter:: P Value
+transposeInter = do
+    id <- voiceId
+    n <- brackets natural <|> pure 0
+    pure $ TransposedInter id n
+
+makeInter:: P Value
+makeInter = do
+    _ <- pure 1
+    sp <- parseSpan
+    coLs <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
+    vars <- variationsNum <|> pure Nil
+    pure $ Inter sp (fromFoldable coLs) vars
+
+--
+minw:: P Value
+minw = do
+    _ <- pure 1
+    _ <- choice [reserved "minw"]
+    _ <- reservedOp "="
+    m <- choice [try makeMinw, transposeMinw]
+    pure m
+
+transposeMinw:: P Value
+transposeMinw = do
+    id <- voiceId
+    n <- brackets natural <|> pure 0
+    pure $ TransposedMinW id n
+
+makeMinw:: P Value
+makeMinw = do
+    _ <- pure 1
+    sp <- parseSpan
+    coLs <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
+    vars <- variationsNum <|> pure Nil
+    pure $ MinW sp (fromFoldable coLs) vars
+
+--
+maxw:: P Value
+maxw = do
+    _ <- pure 1
+    _ <- choice [reserved "maxw"]
+    _ <- reservedOp "="
+    m <- choice [try makeMaxw, transposeMaxw]
+    pure m
+
+transposeMaxw:: P Value
+transposeMaxw = do
+    id <- voiceId
+    n <- brackets natural <|> pure 0
+    pure $ TransposedMaxW id n
+
+makeMaxw:: P Value
+makeMaxw = do
+    _ <- pure 1
+    sp <- parseSpan
+    coLs <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
+    vars <- variationsNum <|> pure Nil
+    pure $ MaxW sp (fromFoldable coLs) vars
 
 --
 cutoffh:: P Value
