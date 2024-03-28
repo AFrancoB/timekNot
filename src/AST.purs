@@ -82,6 +82,9 @@ data Value =
   Vowel Span (List String) (List (Variation String)) | TransposedVowel String Int |
   CutOff Span (List Number) (List (Variation Number)) | TransposedCutOff String Int |
   CutOffH Span (List Number) (List (Variation Number)) | TransposedCutOffH String Int |
+  MaxW Span (List Number) (List (Variation Number)) | TransposedMaxW String Int |
+  MinW Span (List Number) (List (Variation Number)) | TransposedMinW String Int |
+  Inter Span (List Number) (List (Variation Number)) | TransposedInter String Int |
   Dastgah Span Dastgah | Xeno (Tuple String (Maybe Int)) Span (List Int) |
   Prog Span (List (Tuple String (Maybe Int))) | XNotes Span (List Int) (List (Variation Int)) | TransposedPitch String Int
 
@@ -113,6 +116,12 @@ instance valueShow :: Show Value where
   show (TransposedCutOff voice n) = "cutoff transposed from " <> voice
   show (CutOffH x l v) = show x <> " " <> show l
   show (TransposedCutOffH voice n) = "hcutoff transposed from " <> voice
+  show (MaxW x l v) = show x <> " " <> show l
+  show (TransposedMaxW voice n) = "maxw transposed from " <> voice
+  show (MinW x l v) = show x <> " " <> show l
+  show (TransposedMinW voice n) = "minw transposed from " <> voice
+  show (Inter x l v) = show x <> " " <> show l
+  show (TransposedInter voice n) = "w interpolation transposed from " <> voice
   show (Dastgah span d) = show d
   show (Xeno id span l) = show l
   show (Prog span l) = "prog" <> show l

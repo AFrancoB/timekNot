@@ -18,4 +18,10 @@ export const addCutOff = o => cutoff => () => { o.cutoff = cutoff; return o; }
 
 export const addCutOffH = o => cutoffh => () => { o.hcutoff = cutoffh; return o; }
 
+export const addMaxW = o => maxw => () => { o.maxw = maxw; return o; }
+
+export const addMinW = o => minw => () => { o.minw = minw; return o; }
+
+export const addInter = o => inter => () => { o.inter = inter; return o; }
+
 export const addNote = o => note => () => { o.note = note; return o; }
