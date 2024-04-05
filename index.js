@@ -18861,6 +18861,35 @@ var TransposedInter = /* @__PURE__ */ function() {
   };
   return TransposedInter2;
 }();
+var Legato = /* @__PURE__ */ function() {
+  function Legato2(value0, value1, value2) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+  }
+  ;
+  Legato2.create = function(value0) {
+    return function(value1) {
+      return function(value2) {
+        return new Legato2(value0, value1, value2);
+      };
+    };
+  };
+  return Legato2;
+}();
+var TransposedLegato = /* @__PURE__ */ function() {
+  function TransposedLegato2(value0, value1) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+  ;
+  TransposedLegato2.create = function(value0) {
+    return function(value1) {
+      return new TransposedLegato2(value0, value1);
+    };
+  };
+  return TransposedLegato2;
+}();
 var Dastgah = /* @__PURE__ */ function() {
   function Dastgah2(value0, value1) {
     this.value0 = value0;
@@ -42718,7 +42747,7 @@ var toNumber$prime = function(v) {
     return v.value0;
   }
   ;
-  throw new Error("Failed pattern match at Aural (line 557, column 1 - line 557, column 40): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Aural (line 580, column 1 - line 580, column 40): " + [v.constructor.name]);
 };
 var toListAurals = function(mapas) {
   var vals = concat2(map13(toUnfoldable5)(mapas));
@@ -42876,7 +42905,7 @@ var func = function(v) {
         return true;
       }
       ;
-      throw new Error("Failed pattern match at Aural (line 655, column 31 - line 657, column 48): " + [v2.constructor.name]);
+      throw new Error("Failed pattern match at Aural (line 678, column 31 - line 680, column 48): " + [v2.constructor.name]);
     }
     ;
     if (v1.value1 instanceof Just) {
@@ -42889,10 +42918,10 @@ var func = function(v) {
         return f(v2.value0)(v1.value1.value0);
       }
       ;
-      throw new Error("Failed pattern match at Aural (line 658, column 32 - line 660, column 50): " + [v2.constructor.name]);
+      throw new Error("Failed pattern match at Aural (line 681, column 32 - line 683, column 50): " + [v2.constructor.name]);
     }
     ;
-    throw new Error("Failed pattern match at Aural (line 654, column 1 - line 654, column 67): " + [v.constructor.name, v1.constructor.name]);
+    throw new Error("Failed pattern match at Aural (line 677, column 1 - line 677, column 67): " + [v.constructor.name, v1.constructor.name]);
   };
 };
 var everyStr = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
@@ -46357,6 +46386,10 @@ var addInter = (o) => (inter2) => () => {
   o.inter = inter2;
   return o;
 };
+var addLegato = (o) => (legato) => () => {
+  o.legato = legato;
+  return o;
+};
 var addNote = (o) => (note) => () => {
   o.note = note;
   return o;
@@ -46858,8 +46891,8 @@ var strMaybe = function(x) {
 var spread = function(percenPos) {
   return function(a) {
     return function(limits) {
-      var $169 = percenPos >= fst(limits) && percenPos < snd(limits);
-      if ($169) {
+      var $175 = percenPos >= fst(limits) && percenPos < snd(limits);
+      if ($175) {
         return new Just(a);
       }
       ;
@@ -46896,7 +46929,7 @@ var optVStr = function(v) {
         return v2(v)(v1.value0);
       }
       ;
-      throw new Error("Failed pattern match at AuralSpecs (line 97, column 1 - line 97, column 93): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
+      throw new Error("Failed pattern match at AuralSpecs (line 99, column 1 - line 99, column 93): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
     };
   };
 };
@@ -46911,7 +46944,7 @@ var optVNum = function(v) {
         return v2(v)(v1.value0);
       }
       ;
-      throw new Error("Failed pattern match at AuralSpecs (line 93, column 1 - line 93, column 93): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
+      throw new Error("Failed pattern match at AuralSpecs (line 95, column 1 - line 95, column 93): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
     };
   };
 };
@@ -46929,22 +46962,25 @@ var makeWebDirtEvent = function(when3) {
                       return function(maxw2) {
                         return function(minw2) {
                           return function(inter2) {
-                            return function(note) {
-                              return function __do2() {
-                                var oEvent = objectWithWhenSN(when3)(s)(n2)();
-                                var oG = optVNum(oEvent)(gain2)(addGain)();
-                                var oP = optVNum(oG)(pan2)(addPan)();
-                                var oSp = optVNum(oP)(speed2)(addSpeed)();
-                                var oB = optVNum(oSp)(begin2)(addBegin)();
-                                var oE = optVNum(oB)(end2)(addEnd)();
-                                var oCOff = optVNum(oE)(cutoff2)(addCutOff)();
-                                var oCOffH = optVNum(oCOff)(cutoffh2)(addCutOffH)();
-                                var oMax = optVNum(oCOffH)(maxw2)(addMaxW)();
-                                var oMin = optVNum(oMax)(minw2)(addMinW)();
-                                var oInter = optVNum(oMin)(inter2)(addInter)();
-                                var oV = optVStr(oInter)(vowel2)(addVowel)();
-                                var oN = optVNum(oV)(note)(addNote)();
-                                return oN;
+                            return function(legato) {
+                              return function(note) {
+                                return function __do2() {
+                                  var oEvent = objectWithWhenSN(when3)(s)(n2)();
+                                  var oG = optVNum(oEvent)(gain2)(addGain)();
+                                  var oP = optVNum(oG)(pan2)(addPan)();
+                                  var oSp = optVNum(oP)(speed2)(addSpeed)();
+                                  var oB = optVNum(oSp)(begin2)(addBegin)();
+                                  var oE = optVNum(oB)(end2)(addEnd)();
+                                  var oCOff = optVNum(oE)(cutoff2)(addCutOff)();
+                                  var oCOffH = optVNum(oCOff)(cutoffh2)(addCutOffH)();
+                                  var oMax = optVNum(oCOffH)(maxw2)(addMaxW)();
+                                  var oMin = optVNum(oMax)(minw2)(addMinW)();
+                                  var oInter = optVNum(oMin)(inter2)(addInter)();
+                                  var oLeg = optVNum(oInter)(legato)(addLegato)();
+                                  var oV = optVStr(oLeg)(vowel2)(addVowel)();
+                                  var oN = optVNum(oV)(note)(addNote)();
+                                  return oN;
+                                };
                               };
                             };
                           };
@@ -47055,6 +47091,17 @@ var isMaxW = function(v) {
   }
   ;
   if (v instanceof TransposedMaxW) {
+    return true;
+  }
+  ;
+  return false;
+};
+var isLegato = function(v) {
+  if (v instanceof Legato) {
+    return true;
+  }
+  ;
+  if (v instanceof TransposedLegato) {
     return true;
   }
   ;
@@ -47171,6 +47218,9 @@ var getMinW = function(aural2) {
 var getMaxW = function(aural2) {
   return head(filter2(isMaxW)(fromFoldable10(aural2)));
 };
+var getLegato = function(aural2) {
+  return head(filter2(isLegato)(fromFoldable10(aural2)));
+};
 var getInter = function(aural2) {
   return head(filter2(isInter)(fromFoldable10(aural2)));
 };
@@ -47261,8 +47311,8 @@ var processVarsInt = function($copy_v) {
             if (v instanceof Cons) {
               var vSpan = getVSpan(v.value0);
               var vList = getVListInt(v.value0);
-              var $335 = isVar(v.value0)(v3);
-              if ($335) {
+              var $347 = isVar(v.value0)(v3);
+              if ($347) {
                 $tco_done = true;
                 return spanInt(vSpan)(fromFoldable10(vList))(v3)(v4);
               }
@@ -47275,7 +47325,7 @@ var processVarsInt = function($copy_v) {
               return;
             }
             ;
-            throw new Error("Failed pattern match at AuralSpecs (line 279, column 1 - line 279, column 86): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
+            throw new Error("Failed pattern match at AuralSpecs (line 292, column 1 - line 292, column 86): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
           }
           ;
           while (!$tco_done) {
@@ -47344,8 +47394,8 @@ var processVarsMaybe = function($copy_v) {
             if (v instanceof Cons) {
               var vSpan = getVSpan(v.value0);
               var vList = getVList(v.value0);
-              var $352 = isVar(v.value0)(v3);
-              if ($352) {
+              var $364 = isVar(v.value0)(v3);
+              if ($364) {
                 $tco_done = true;
                 return spanMaybe(vSpan)(fromFoldable10(vList))(v3)(v4);
               }
@@ -47358,7 +47408,7 @@ var processVarsMaybe = function($copy_v) {
               return;
             }
             ;
-            throw new Error("Failed pattern match at AuralSpecs (line 289, column 1 - line 289, column 98): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
+            throw new Error("Failed pattern match at AuralSpecs (line 302, column 1 - line 302, column 98): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
           }
           ;
           while (!$tco_done) {
@@ -47440,8 +47490,8 @@ var processVarsStr = function($copy_v) {
             if (v instanceof Cons) {
               var vSpan = getVSpan(v.value0);
               var vList = getVListStr(v.value0);
-              var $371 = isVar(v.value0)(v3);
-              if ($371) {
+              var $383 = isVar(v.value0)(v3);
+              if ($383) {
                 $tco_done = true;
                 return spanStr(vSpan)(fromFoldable10(vList))(v3)(v4);
               }
@@ -47454,7 +47504,7 @@ var processVarsStr = function($copy_v) {
               return;
             }
             ;
-            throw new Error("Failed pattern match at AuralSpecs (line 270, column 1 - line 270, column 95): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
+            throw new Error("Failed pattern match at AuralSpecs (line 283, column 1 - line 283, column 95): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
           }
           ;
           while (!$tco_done) {
@@ -47667,6 +47717,37 @@ var findRefdInter = function(r) {
       return function(mapa) {
         var newVal = cycleAurals(v.value1)(lookup6(v.value0)(mapa))(getInter);
         return processInter(mapa)(r)(newVal)(ws);
+      };
+    };
+  };
+};
+var processLegato = function(v) {
+  return function(v1) {
+    return function(v2) {
+      return function(v3) {
+        if (v2 instanceof Nothing) {
+          return Nothing.value;
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof TransposedLegato) {
+          return findRefdLegato(v1)(v3)(new Tuple(v2.value0.value0, v2.value0.value1))(v);
+        }
+        ;
+        if (v2 instanceof Just && v2.value0 instanceof Legato) {
+          return processVarsMaybe(v2.value0.value2)(v2.value0.value0)(v2.value0.value1)(v3)(v1);
+        }
+        ;
+        return Nothing.value;
+      };
+    };
+  };
+};
+var findRefdLegato = function(r) {
+  return function(ws) {
+    return function(v) {
+      return function(mapa) {
+        var newVal = cycleAurals(v.value1)(lookup6(v.value0)(mapa))(getLegato);
+        return processLegato(mapa)(r)(newVal)(ws);
       };
     };
   };
@@ -47957,8 +48038,9 @@ var processEvent = function(v) {
           var maxw2 = processMaxW(v)(r)(getMaxW(vals))(ev);
           var minw2 = processMinW(v)(r)(getMinW(vals))(ev);
           var inter2 = processInter(v)(r)(getInter(vals))(ev);
+          var legato = processLegato(v)(r)(getLegato(vals))(ev);
           var note = processNote(v)(xp)(r)(getNote(vals))(getXNote(vals))(ev);
-          return makeWebDirtEvent(when3)(s)(n2)(gain2)(pan2)(speed2)(begin2)(end2)(vowel2)(cutoff2)(cutoffh2)(maxw2)(minw2)(inter2)(note);
+          return makeWebDirtEvent(when3)(s)(n2)(gain2)(pan2)(speed2)(begin2)(end2)(vowel2)(cutoff2)(cutoffh2)(maxw2)(minw2)(inter2)(legato)(note);
         };
       };
     };

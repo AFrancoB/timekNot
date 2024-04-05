@@ -121,6 +121,29 @@ makeShur = do
     pure $ Dastgah sp (Shur $ fromFoldable shurList)
 
 
+legato:: P Value
+legato = do
+    _ <- pure 1
+    _ <- choice [reserved "legato"]
+    _ <- reservedOp "="
+    m <- choice [try makeInter, transposeInter]
+    pure m
+
+transposeLegato:: P Value
+transposeLegato = do
+    id <- voiceId
+    n <- brackets natural <|> pure 0
+    pure $ TransposedLegato id n
+
+makeLegato:: P Value
+makeLegato = do
+    _ <- pure 1
+    sp <- parseSpan
+    coLs <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
+    vars <- variationsNum <|> pure Nil
+    pure $ Legato sp (fromFoldable coLs) vars
+
+--
 inter:: P Value
 inter = do
     _ <- pure 1

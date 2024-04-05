@@ -24,4 +24,6 @@ export const addMinW = o => minw => () => { o.minw = minw; return o; }
 
 export const addInter = o => inter => () => { o.inter = inter; return o; }
 
+export const addLegato = o => legato => () => { o.legato = legato; return o; }
+
 export const addNote = o => note => () => { o.note = note; return o; }
