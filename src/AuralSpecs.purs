@@ -70,11 +70,12 @@ processEvent v r vals xp ev = do
   let maxw = processMaxW v r (getMaxW vals) ev
   let minw = processMinW v r (getMinW vals) ev
   let inter = processInter v r (getInter vals) ev
+  let legato = processLegato v r (getLegato vals) ev
   let note = processNote v xp r (getNote vals) (getXNote vals) ev
-  makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh maxw minw inter note
+  makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh maxw minw inter legato note
 
-makeWebDirtEvent:: Number -> String -> Int -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe String -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Effect Foreign
-makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh maxw minw inter note = do
+makeWebDirtEvent:: Number -> String -> Int -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe String -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Effect Foreign
+makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh maxw minw inter legato note = do
   oEvent <- objectWithWhenSN when s n
   oG <- optVNum oEvent gain addGain
   oP <- optVNum oG pan addPan 
@@ -85,8 +86,9 @@ makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh maxw min
   oCOffH <- optVNum oCOff cutoffh addCutOffH
   oMax <- optVNum oCOffH maxw addMaxW  
   oMin <- optVNum oMax minw addMinW  
-  oInter <- optVNum oMin inter addInter  
-  oV <- optVStr oInter vowel addVowel
+  oInter <- optVNum oMin inter addInter
+  oLeg <- optVNum oInter legato addLegato  
+  oV <- optVStr oLeg vowel addVowel
   oN <- optVNum oV note addNote
   pure oN
 
@@ -129,6 +131,17 @@ processProg r _ ev = Tuple "error" Nothing
 processXNotes:: Rhythmic -> Maybe Value ->  Event -> Maybe Int
 processXNotes r (Just (XNotes sp xs vars)) ev = processVarsMaybe vars sp xs ev r
 processXNotes r _ ev = Nothing
+
+--
+processLegato:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
+processLegato vs r Nothing ev = Nothing
+processLegato vs r (Just (TransposedLegato id n)) ev = findRefdLegato r ev (Tuple id n) vs 
+processLegato _  r (Just (Legato sp xList vars)) ev = processVarsMaybe vars sp xList ev r
+processLegato _ _ _ _ = Nothing
+
+findRefdLegato:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe Number
+findRefdLegato r ws (Tuple id n) mapa = processLegato mapa r newVal ws
+    where newVal = cycleAurals n (M.lookup id mapa) getLegato
 
 --
 processInter:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
@@ -423,6 +436,14 @@ isMinW:: Value -> Boolean
 isMinW (MinW _ _ _) = true
 isMinW (TransposedMinW _ _) = true
 isMinW _ = false
+
+getLegato:: List Value -> Maybe Value
+getLegato aural = head $ filter isLegato $ fromFoldable aural
+
+isLegato:: Value -> Boolean
+isLegato (Legato _ _ _) = true
+isLegato (TransposedLegato _ _) = true
+isLegato _ = false
 
 getInter:: List Value -> Maybe Value
 getInter aural = head $ filter isInter $ fromFoldable aural
