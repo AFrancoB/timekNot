@@ -43272,6 +43272,15 @@ var inter = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
     });
   });
 });
+var legato = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(choice3([reserved("legato")]))(function() {
+    return bind8(reservedOp("="))(function() {
+      return bind8(choice3([$$try(makeInter), transposeInter]))(function(m) {
+        return pure6(m);
+      });
+    });
+  });
+});
 var transposeMaxw = /* @__PURE__ */ bind8(voiceId)(function(id) {
   return bind8(alt6(brackets(natural))(pure6(0)))(function(n1) {
     return pure6(new TransposedMaxW(id, n1));
@@ -43394,7 +43403,7 @@ var begin = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
 });
 var value = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return bind8(reservedOp("."))(function() {
-    return bind8(choice3([$$try(sound), $$try(n), $$try(gain), $$try(pan), $$try(speed), $$try(begin), $$try(end), $$try(vowel), $$try(cutoff), $$try(cutoffh), $$try(inter), $$try(maxw), $$try(minw), $$try(mayeh), $$try(prog), $$try(xeNotes), xeno]))(function(valType) {
+    return bind8(choice3([$$try(sound), $$try(n), $$try(gain), $$try(pan), $$try(speed), $$try(begin), $$try(end), $$try(vowel), $$try(cutoff), $$try(cutoffh), $$try(inter), $$try(maxw), $$try(minw), $$try(legato), $$try(mayeh), $$try(prog), $$try(xeNotes), xeno]))(function(valType) {
       return pure6(valType);
     });
   });
@@ -46386,8 +46395,8 @@ var addInter = (o) => (inter2) => () => {
   o.inter = inter2;
   return o;
 };
-var addLegato = (o) => (legato) => () => {
-  o.legato = legato;
+var addLegato = (o) => (legato2) => () => {
+  o.legato = legato2;
   return o;
 };
 var addNote = (o) => (note) => () => {
@@ -46962,7 +46971,7 @@ var makeWebDirtEvent = function(when3) {
                       return function(maxw2) {
                         return function(minw2) {
                           return function(inter2) {
-                            return function(legato) {
+                            return function(legato2) {
                               return function(note) {
                                 return function __do2() {
                                   var oEvent = objectWithWhenSN(when3)(s)(n2)();
@@ -46976,7 +46985,7 @@ var makeWebDirtEvent = function(when3) {
                                   var oMax = optVNum(oCOffH)(maxw2)(addMaxW)();
                                   var oMin = optVNum(oMax)(minw2)(addMinW)();
                                   var oInter = optVNum(oMin)(inter2)(addInter)();
-                                  var oLeg = optVNum(oInter)(legato)(addLegato)();
+                                  var oLeg = optVNum(oInter)(legato2)(addLegato)();
                                   var oV = optVStr(oLeg)(vowel2)(addVowel)();
                                   var oN = optVNum(oV)(note)(addNote)();
                                   return oN;
@@ -48038,9 +48047,9 @@ var processEvent = function(v) {
           var maxw2 = processMaxW(v)(r)(getMaxW(vals))(ev);
           var minw2 = processMinW(v)(r)(getMinW(vals))(ev);
           var inter2 = processInter(v)(r)(getInter(vals))(ev);
-          var legato = processLegato(v)(r)(getLegato(vals))(ev);
+          var legato2 = processLegato(v)(r)(getLegato(vals))(ev);
           var note = processNote(v)(xp)(r)(getNote(vals))(getXNote(vals))(ev);
-          return makeWebDirtEvent(when3)(s)(n2)(gain2)(pan2)(speed2)(begin2)(end2)(vowel2)(cutoff2)(cutoffh2)(maxw2)(minw2)(inter2)(legato)(note);
+          return makeWebDirtEvent(when3)(s)(n2)(gain2)(pan2)(speed2)(begin2)(end2)(vowel2)(cutoff2)(cutoffh2)(maxw2)(minw2)(inter2)(legato2)(note);
         };
       };
     };
