@@ -49,7 +49,7 @@ value:: P Value
 value = do
     _ <- pure 1
     _ <- reservedOp "."
-    valType <- choice [try sound,try n, try gain, try pan, try speed, try begin, try end, try vowel, try cutoff, try cutoffh, try inter, try maxw, try minw, try mayeh, try prog, try xeNotes, xeno]
+    valType <- choice [try sound,try n, try gain, try pan, try speed, try begin, try end, try vowel, try cutoff, try cutoffh, try inter, try maxw, try minw, try legato, try mayeh, try prog, try xeNotes, xeno]
     pure valType
 
 prog:: P Value
