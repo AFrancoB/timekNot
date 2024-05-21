@@ -126,7 +126,7 @@ orbit = do
     _ <- pure 1
     _ <- choice [reserved "orbit"]
     _ <- reservedOp "="
-    m <- choice [try makeInter, transposeInter]
+    m <- choice [try makeOrbit, transposeOrbit]
     pure m
 
 transposeOrbit:: P Value
@@ -148,7 +148,7 @@ legato = do
     _ <- pure 1
     _ <- choice [reserved "legato"]
     _ <- reservedOp "="
-    m <- choice [try makeInter, transposeInter]
+    m <- choice [try makeLegato, transposeLegato]
     pure m
 
 transposeLegato:: P Value

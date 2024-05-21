@@ -43007,6 +43007,15 @@ var makeN = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
     });
   });
 });
+var makeOrbit = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(parseSpan)(function(sp) {
+    return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeInt)), many3(natural)]))(function(nList) {
+      return bind8(alt6(variationsInt)(pure6(Nil.value)))(function(vars) {
+        return pure6(new Orbit(sp, fromFoldable4(nList), vars));
+      });
+    });
+  });
+});
 var xeNotes = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return bind8(choice3([reserved("xnotes")]))(function() {
     return bind8(reservedOp("="))(function() {
@@ -43135,6 +43144,15 @@ var makeInter = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
     return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeNum)), many3(parseNumber)]))(function(coLs) {
       return bind8(alt6(variationsNum)(pure6(Nil.value)))(function(vars) {
         return pure6(new Inter(sp, fromFoldable4(coLs), vars));
+      });
+    });
+  });
+});
+var makeLegato = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(parseSpan)(function(sp) {
+    return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeNum)), many3(parseNumber)]))(function(coLs) {
+      return bind8(alt6(variationsNum)(pure6(Nil.value)))(function(vars) {
+        return pure6(new Legato(sp, fromFoldable4(coLs), vars));
       });
     });
   });
@@ -43301,19 +43319,15 @@ var inter = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
     });
   });
 });
+var transposeLegato = /* @__PURE__ */ bind8(voiceId)(function(id) {
+  return bind8(alt6(brackets(natural))(pure6(0)))(function(n1) {
+    return pure6(new TransposedLegato(id, n1));
+  });
+});
 var legato = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return bind8(choice3([reserved("legato")]))(function() {
     return bind8(reservedOp("="))(function() {
-      return bind8(choice3([$$try(makeInter), transposeInter]))(function(m) {
-        return pure6(m);
-      });
-    });
-  });
-});
-var orbit = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
-  return bind8(choice3([reserved("orbit")]))(function() {
-    return bind8(reservedOp("="))(function() {
-      return bind8(choice3([$$try(makeInter), transposeInter]))(function(m) {
+      return bind8(choice3([$$try(makeLegato), transposeLegato]))(function(m) {
         return pure6(m);
       });
     });
@@ -43357,6 +43371,20 @@ var n = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
     return bind8(reservedOp("="))(function() {
       return bind8(choice3([$$try(makeN), transposeN]))(function(n1) {
         return pure6(n1);
+      });
+    });
+  });
+});
+var transposeOrbit = /* @__PURE__ */ bind8(voiceId)(function(id) {
+  return bind8(alt6(brackets(natural))(pure6(0)))(function(n1) {
+    return pure6(new TransposedOrbit(id, n1));
+  });
+});
+var orbit = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(choice3([reserved("orbit")]))(function() {
+    return bind8(reservedOp("="))(function() {
+      return bind8(choice3([$$try(makeOrbit), transposeOrbit]))(function(m) {
+        return pure6(m);
       });
     });
   });
