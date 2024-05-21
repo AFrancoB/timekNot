@@ -49,7 +49,7 @@ value:: P Value
 value = do
     _ <- pure 1
     _ <- reservedOp "."
-    valType <- choice [try sound,try n, try gain, try pan, try speed, try begin, try end, try vowel, try cutoff, try cutoffh, try inter, try maxw, try minw, try legato, try mayeh, try prog, try xeNotes, xeno]
+    valType <- choice [try sound,try n, try gain, try pan, try speed, try begin, try end, try vowel, try cutoff, try cutoffh, try inter, try maxw, try minw, try legato, try orbit, try mayeh, try prog, try xeNotes, xeno]
     pure valType
 
 prog:: P Value
@@ -120,6 +120,28 @@ makeShur = do
     shurList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
     pure $ Dastgah sp (Shur $ fromFoldable shurList)
 
+
+orbit:: P Value
+orbit = do
+    _ <- pure 1
+    _ <- choice [reserved "orbit"]
+    _ <- reservedOp "="
+    m <- choice [try makeInter, transposeInter]
+    pure m
+
+transposeOrbit:: P Value
+transposeOrbit = do
+    id <- voiceId
+    n <- brackets natural <|> pure 0
+    pure $ TransposedOrbit id n
+
+makeOrbit:: P Value
+makeOrbit = do
+    _ <- pure 1
+    sp <- parseSpan
+    nList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
+    vars <- variationsInt <|> pure Nil
+    pure $ Orbit sp (fromFoldable nList) vars
 
 legato:: P Value
 legato = do

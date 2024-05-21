@@ -71,11 +71,12 @@ processEvent v r vals xp ev = do
   let minw = processMinW v r (getMinW vals) ev
   let inter = processInter v r (getInter vals) ev
   let legato = processLegato v r (getLegato vals) ev
+  let orbit = processOrbit v r (getOrbit vals) ev
   let note = processNote v xp r (getNote vals) (getXNote vals) ev
-  makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh maxw minw inter legato note
+  makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh maxw minw inter legato orbit note
 
-makeWebDirtEvent:: Number -> String -> Int -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe String -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Effect Foreign
-makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh maxw minw inter legato note = do
+makeWebDirtEvent:: Number -> String -> Int -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe String -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Int -> Maybe Number -> Effect Foreign
+makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh maxw minw inter legato orbit note = do
   oEvent <- objectWithWhenSN when s n
   oG <- optVNum oEvent gain addGain
   oP <- optVNum oG pan addPan 
@@ -87,8 +88,9 @@ makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh maxw min
   oMax <- optVNum oCOffH maxw addMaxW  
   oMin <- optVNum oMax minw addMinW  
   oInter <- optVNum oMin inter addInter
-  oLeg <- optVNum oInter legato addLegato  
-  oV <- optVStr oLeg vowel addVowel
+  oLeg <- optVNum oInter legato addLegato
+  oOrbit <- optVInt oLeg orbit addOrbit
+  oV <- optVStr oOrbit vowel addVowel
   oN <- optVNum oV note addNote
   pure oN
 
@@ -99,6 +101,10 @@ optVNum o (Just x) f = f o x
 optVStr:: Foreign -> Maybe String -> (Foreign -> String -> Effect Foreign) -> Effect Foreign
 optVStr o Nothing _ = pure o
 optVStr o (Just x) f = f o x
+
+optVInt:: Foreign -> Maybe Int -> (Foreign -> Int -> Effect Foreign) -> Effect Foreign
+optVInt o Nothing _ = pure o
+optVInt o (Just x) f = f o x
 
 processNote:: Voices -> M.Map String XenoPitch -> Rhythmic -> Maybe Value -> Maybe Value -> Event -> Maybe Number 
 processNote _ xp r Nothing xNotes e = Nothing
@@ -131,6 +137,17 @@ processProg r _ ev = Tuple "error" Nothing
 processXNotes:: Rhythmic -> Maybe Value ->  Event -> Maybe Int
 processXNotes r (Just (XNotes sp xs vars)) ev = processVarsMaybe vars sp xs ev r
 processXNotes r _ ev = Nothing
+
+--
+processOrbit:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Int 
+processOrbit vs r Nothing ev = Nothing
+processOrbit vs r (Just (TransposedOrbit id n)) ev = findRefdOrbit r ev (Tuple id n) vs 
+processOrbit _  r (Just (Orbit sp xList vars)) ev = processVarsMaybe vars sp xList ev r
+processOrbit _ _ _ _ = Nothing
+
+findRefdOrbit:: Rhythmic -> Event -> Tuple String Int -> Voices -> Maybe Int
+findRefdOrbit r ws (Tuple id n) mapa = processOrbit mapa r newVal ws
+    where newVal = cycleAurals n (M.lookup id mapa) getOrbit
 
 --
 processLegato:: Voices -> Rhythmic -> Maybe Value -> Event -> Maybe Number 
@@ -436,6 +453,14 @@ isMinW:: Value -> Boolean
 isMinW (MinW _ _ _) = true
 isMinW (TransposedMinW _ _) = true
 isMinW _ = false
+
+getOrbit:: List Value -> Maybe Value
+getOrbit aural = head $ filter isOrbit $ fromFoldable aural
+
+isOrbit:: Value -> Boolean
+isOrbit (Orbit _ _ _) = true
+isOrbit (TransposedOrbit _ _) = true
+isOrbit _ = false
 
 getLegato:: List Value -> Maybe Value
 getLegato aural = head $ filter isLegato $ fromFoldable aural
