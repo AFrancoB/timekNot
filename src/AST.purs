@@ -86,6 +86,7 @@ data Value =
   MinW Span (List Number) (List (Variation Number)) | TransposedMinW String Int |
   Inter Span (List Number) (List (Variation Number)) | TransposedInter String Int |
   Legato Span (List Number) (List (Variation Number)) | TransposedLegato String Int |
+  Orbit Span (List Int) (List (Variation Int)) | TransposedOrbit String Int |
   Dastgah Span Dastgah | Xeno (Tuple String (Maybe Int)) Span (List Int) |
   Prog Span (List (Tuple String (Maybe Int))) | XNotes Span (List Int) (List (Variation Int)) | TransposedPitch String Int
 
@@ -125,6 +126,8 @@ instance valueShow :: Show Value where
   show (TransposedInter voice n) = "w interpolation transposed from " <> voice
   show (Legato x l v) = show x <> " " <> show l
   show (TransposedLegato voice n) = "legato transposed from " <> voice
+  show (Orbit x l v) = show x <> " " <> show l
+  show (TransposedOrbit voice n) = "orbit transposed from " <> voice
   show (Dastgah span d) = show d
   show (Xeno id span l) = show l
   show (Prog span l) = "prog" <> show l
