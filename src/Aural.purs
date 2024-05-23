@@ -80,19 +80,37 @@ xeNotes = do
 xeno:: P Value 
 xeno = do
     _ <- pure 1
-    id <- identifier
-    n <- (Just <$> brackets natural) <|> pure Nothing
+    xID <- choice [try shurNot, try centaura, xeno']
     _ <- reservedOp "="
     sp <- parseSpan
     xnL <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
-    pure $ Xeno (Tuple id n) sp $ fromFoldable xnL
+    pure $ Xeno xID sp $ fromFoldable xnL
+
+centaura:: P (Tuple String (Maybe Int))
+centaura = do
+    _ <- pure 1
+    _ <- reserved "centaura"
+    pure $ Tuple "centaura" Nothing
+
+shurNot:: P (Tuple String (Maybe Int))
+shurNot = do
+    _ <- pure 1
+    _ <- reserved "shurNot"
+    pure $ Tuple "shurNot" Nothing
+
+xeno':: P (Tuple String (Maybe Int))
+xeno' = do
+    _ <- pure 1 
+    id <- identifier
+    n <- (Just <$> brackets natural) <|> pure Nothing
+    pure $ Tuple id n
 
 -- Dastgah
 
 -- Intervals: Bozorg 182; Kuchak 114; Tanini 204; Baghie 90.
 
 -- shur: D Eqb F G Aqb Bb C 
--- normalised to 24ET: 0   175      300        500         675        800         1000        1200
+-- normalised to 24ET: 0   150      300        500         650        800         1000        1200
 -- using intervals:    0   182      114 (296)  204 (500) - 182 (682)- 114 (796) - 204 (1000) - 1200
 -- name of interfvals: 0 - Bozorg - Kuchak   -  Tanini   - Bozorg   - Kuchak    - Tanini  ??? how to get to the Octave? 
 
