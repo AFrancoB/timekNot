@@ -7,6 +7,7 @@ import Partial.Unsafe
 import Data.Array ((:), elem, filter,unsafeIndex, length, sortWith, zip, (!!), fromFoldable)
 import Data.Tuple
 import Data.Int (toNumber, floor)
+import Data.Number (floor) as N
 import Data.Maybe 
 
 import Data.Set (Set(..))
@@ -47,6 +48,9 @@ cycleAndOctavesOfPatternInSet' n setLen = Tuple cycledNote isOctave
           isOctave = toNumber $ (floor $ (toNumber n) / (toNumber setLen))*12
 
 xenoPitchAsAuralPattern:: Tuple XenoPitch (Maybe Int) -> Array Int -> Array Number
+xenoPitchAsAuralPattern (Tuple ShurNot Nothing) lista = [0.0]
+xenoPitchAsAuralPattern (Tuple Centaura Nothing) lista = midiNumber
+    where midiNumber = map (\n -> (centaura n) + (addOctave n)) lista
 xenoPitchAsAuralPattern (Tuple xn (Just i)) lista = asMIDI
     where   scaleAsMIDISubsets = xenoPitchToMIDIInterval xn -- Array Array Num
             subset = fromMaybe [0.0] $ scaleAsMIDISubsets !! i
@@ -64,6 +68,26 @@ cycleAndOctavesOfPatternInSet:: Array Int -> Int -> Array (Tuple Int Number)
 cycleAndOctavesOfPatternInSet ns setLen = zip cycledList isOctave
     where cycledList = map (\n -> n `mod` setLen) ns
           isOctave = map (\n -> toNumber $ (floor $ (toNumber n) / (toNumber setLen))*12 ) ns
+
+addOctave:: Int -> Number
+addOctave n = 12.0 * (N.floor $ (toNumber n) / 12.0)
+
+centaura:: Int -> Number
+centaura n = case n`mod`12 of
+                0 -> 0.0
+                1 -> 53.27294323014412*0.01
+                2 -> 203.91000173077484*0.01
+                3 -> 266.8709056037379*0.01
+                4 -> 386.3137138648348*0.01
+                5 -> 498.04499913461217*0.01
+                6 -> 551.3179423647567*0.01
+                7 -> 701.9550008653874*0.01
+                8 -> 764.9159047383506*0.01
+                9 -> 884.3587129994477*0.01
+                10 -> 968.8259064691249*0.01
+                11 -> 1088.2687147302222*0.01
+                _ -> 0.0
+
 
 
 ---- the ordering of subsets is still buggy, figure it out!! Jan 2024

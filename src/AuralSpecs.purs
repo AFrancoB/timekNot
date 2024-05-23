@@ -113,9 +113,15 @@ processNote _ xp r (Just (Prog span lista)) xNotes e = mergeProgWithNote xp r (P
 processNote _ xp r (Just (Dastgah span d)) _ e = spanMaybe span newList e r
   where newList = getMIDIInterval $ analysisDastgahPattern span r $ fromFoldable (getDastgahList d)
 processNote _ xp r (Just (Xeno id span lista)) xn e = spanMaybe span (fromFoldable midiIntervals) e r
-  where target = fromMaybe (EDO 0.0 0) $ M.lookup (fst id) xp 
+  where target = getXPTarget (fst id) xp
+        -- target = fromMaybe (EDO 0.0 0) $ M.lookup (fst id) xp 
         midiIntervals = xenoPitchAsAuralPattern (Tuple target (snd id)) $ fromFoldable lista
 processNote _ _ _ _ _ _ = Nothing
+
+getXPTarget:: String -> M.Map String XenoPitch -> XenoPitch
+getXPTarget "centaura" _ = Centaura
+getXPTarget "shurNot" _ = ShurNot
+getXPTarget id xp = fromMaybe (EDO 0.0 0) $ M.lookup id xp
 
 findRefdNote:: Voices -> M.Map String XenoPitch -> Rhythmic -> Event -> Tuple String Int -> Maybe Value -> Maybe Number
 findRefdNote m xp r e (Tuple id n) xn = processNote m xp r newVal xn e

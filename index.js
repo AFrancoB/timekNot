@@ -18206,6 +18206,20 @@ var EDO = /* @__PURE__ */ function() {
   };
   return EDO2;
 }();
+var Centaura = /* @__PURE__ */ function() {
+  function Centaura2() {
+  }
+  ;
+  Centaura2.value = new Centaura2();
+  return Centaura2;
+}();
+var ShurNot = /* @__PURE__ */ function() {
+  function ShurNot2() {
+  }
+  ;
+  ShurNot2.value = new ShurNot2();
+  return ShurNot2;
+}();
 var CycleEvent = /* @__PURE__ */ function() {
   function CycleEvent2() {
   }
@@ -42776,7 +42790,7 @@ var toNumber$prime = function(v) {
     return v.value0;
   }
   ;
-  throw new Error("Failed pattern match at Aural (line 602, column 1 - line 602, column 40): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Aural (line 620, column 1 - line 620, column 40): " + [v.constructor.name]);
 };
 var toListAurals = function(mapas) {
   var vals = concat2(map13(toUnfoldable5)(mapas));
@@ -42816,6 +42830,11 @@ var reservedOp = /* @__PURE__ */ function() {
 var reserved = /* @__PURE__ */ function() {
   return tokenParser.reserved;
 }();
+var shurNot = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(reserved("shurNot"))(function() {
+    return pure6(new Tuple("shurNot", Nothing.value));
+  });
+});
 var parseSpan = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return bind8(choice3([applySecond4(reserved("-_"))(pure6(CycleInBlock.value)), $$try(applySecond4(reserved("_-"))(pure6(CycleBlock.value))), $$try(applySecond4(reserved("_-_"))(pure6(SpreadBlock.value))), applySecond4(reserved("_"))(pure6(CycleEvent.value))]))(function(x) {
     return pure6(x);
@@ -42934,7 +42953,7 @@ var func = function(v) {
         return true;
       }
       ;
-      throw new Error("Failed pattern match at Aural (line 700, column 31 - line 702, column 48): " + [v2.constructor.name]);
+      throw new Error("Failed pattern match at Aural (line 718, column 31 - line 720, column 48): " + [v2.constructor.name]);
     }
     ;
     if (v1.value1 instanceof Just) {
@@ -42947,10 +42966,10 @@ var func = function(v) {
         return f(v2.value0)(v1.value1.value0);
       }
       ;
-      throw new Error("Failed pattern match at Aural (line 703, column 32 - line 705, column 50): " + [v2.constructor.name]);
+      throw new Error("Failed pattern match at Aural (line 721, column 32 - line 723, column 50): " + [v2.constructor.name]);
     }
     ;
-    throw new Error("Failed pattern match at Aural (line 699, column 1 - line 699, column 67): " + [v.constructor.name, v1.constructor.name]);
+    throw new Error("Failed pattern match at Aural (line 717, column 1 - line 717, column 67): " + [v.constructor.name, v1.constructor.name]);
   };
 };
 var everyStr = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
@@ -43225,6 +43244,11 @@ var makeVowel = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
     });
   });
 });
+var centaura = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(reserved("centaura"))(function() {
+    return pure6(new Tuple("centaura", Nothing.value));
+  });
+});
 var brackets = /* @__PURE__ */ function() {
   return tokenParser.brackets;
 }();
@@ -43445,14 +43469,19 @@ var vowel = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
     });
   });
 });
-var xeno = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+var xeno$prime = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return bind8(identifier)(function(id) {
     return bind8(alt6(map14(Just.create)(brackets(natural)))(pure6(Nothing.value)))(function(n1) {
-      return bind8(reservedOp("="))(function() {
-        return bind8(parseSpan)(function(sp) {
-          return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeInt)), many3(natural)]))(function(xnL) {
-            return pure6(new Xeno(new Tuple(id, n1), sp, fromFoldable4(xnL)));
-          });
+      return pure6(new Tuple(id, n1));
+    });
+  });
+});
+var xeno = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(choice3([$$try(shurNot), $$try(centaura), xeno$prime]))(function(xID) {
+    return bind8(reservedOp("="))(function() {
+      return bind8(parseSpan)(function(sp) {
+        return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeInt)), many3(natural)]))(function(xnL) {
+          return pure6(new Xeno(xID, sp, fromFoldable4(xnL)));
         });
       });
     });
@@ -44872,7 +44901,7 @@ var toNumber$prime2 = function(v) {
     return v.value0;
   }
   ;
-  throw new Error("Failed pattern match at Parser (line 787, column 1 - line 787, column 40): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Parser (line 807, column 1 - line 807, column 40): " + [v.constructor.name]);
 };
 var toListAurals2 = function(mapas) {
   var vals = concat2(map18(toUnfoldable6)(mapas));
@@ -45150,7 +45179,7 @@ var getTempoRef = function(v) {
     return Nothing.value;
   }
   ;
-  throw new Error("Failed pattern match at Parser (line 745, column 1 - line 745, column 39): " + [v.constructor.name]);
+  throw new Error("Failed pattern match at Parser (line 765, column 1 - line 765, column 39): " + [v.constructor.name]);
 };
 var getAuralMap2 = function(program) {
   var isAural = function(v) {
@@ -45319,10 +45348,10 @@ var checkTempi = function($copy_aMap) {
               return;
             }
             ;
-            throw new Error("Failed pattern match at Parser (line 740, column 34 - line 742, column 92): " + [v1.constructor.name]);
+            throw new Error("Failed pattern match at Parser (line 760, column 34 - line 762, column 92): " + [v1.constructor.name]);
           }
           ;
-          throw new Error("Failed pattern match at Parser (line 738, column 10 - line 742, column 92): " + [v.constructor.name]);
+          throw new Error("Failed pattern match at Parser (line 758, column 10 - line 762, column 92): " + [v.constructor.name]);
         }
         ;
         while (!$tco_done) {
@@ -45382,10 +45411,10 @@ var check2 = function($copy_v) {
                     return;
                   }
                   ;
-                  throw new Error("Failed pattern match at Parser (line 711, column 26 - line 713, column 102): " + [v7.constructor.name]);
+                  throw new Error("Failed pattern match at Parser (line 731, column 26 - line 733, column 102): " + [v7.constructor.name]);
                 }
                 ;
-                throw new Error("Failed pattern match at Parser (line 709, column 3 - line 713, column 102): " + [v6.constructor.name]);
+                throw new Error("Failed pattern match at Parser (line 729, column 3 - line 733, column 102): " + [v6.constructor.name]);
               }
               ;
               if (v5 instanceof Temporal && v5.value0 instanceof Novus) {
@@ -45413,10 +45442,10 @@ var check2 = function($copy_v) {
                     return false;
                   }
                   ;
-                  throw new Error("Failed pattern match at Parser (line 718, column 16 - line 720, column 35): " + [v7.constructor.name]);
+                  throw new Error("Failed pattern match at Parser (line 738, column 16 - line 740, column 35): " + [v7.constructor.name]);
                 }
                 ;
-                throw new Error("Failed pattern match at Parser (line 716, column 3 - line 720, column 35): " + [v6.constructor.name]);
+                throw new Error("Failed pattern match at Parser (line 736, column 3 - line 740, column 35): " + [v6.constructor.name]);
               }
               ;
               if (v5 instanceof Replica) {
@@ -45449,15 +45478,15 @@ var check2 = function($copy_v) {
                       return;
                     }
                     ;
-                    throw new Error("Failed pattern match at Parser (line 728, column 24 - line 730, column 83): " + [v7.constructor.name]);
+                    throw new Error("Failed pattern match at Parser (line 748, column 24 - line 750, column 83): " + [v7.constructor.name]);
                   }
                   ;
-                  throw new Error("Failed pattern match at Parser (line 726, column 5 - line 730, column 83): " + [v6.constructor.name]);
+                  throw new Error("Failed pattern match at Parser (line 746, column 5 - line 750, column 83): " + [v6.constructor.name]);
                 }
                 ;
               }
               ;
-              throw new Error("Failed pattern match at Parser (line 705, column 1 - line 705, column 114): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name, v5.constructor.name]);
+              throw new Error("Failed pattern match at Parser (line 725, column 1 - line 725, column 114): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name, v5.constructor.name]);
             }
             ;
             while (!$tco_done) {
@@ -45761,7 +45790,7 @@ var polytemporalRelation = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(func
   });
 });
 var temporal = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
-  return choice5([$$try(replica), polytemporalRelation]);
+  return choice5([$$try(replica), $$try(polytemporalRelation)]);
 });
 var timeExpression = /* @__PURE__ */ bind11(/* @__PURE__ */ pure9(1))(function() {
   return bind11(temporal)(function(x) {
@@ -46871,58 +46900,83 @@ var cycleAndOctavesOfPatternInSet = function(ns) {
     return zip(cycledList)(isOctave);
   };
 };
+var centaura2 = function(n2) {
+  var v = mod5(n2)(12);
+  if (v === 0) {
+    return 0;
+  }
+  ;
+  if (v === 1) {
+    return 53.27294323014412 * 0.01;
+  }
+  ;
+  if (v === 2) {
+    return 203.91000173077484 * 0.01;
+  }
+  ;
+  if (v === 3) {
+    return 266.8709056037379 * 0.01;
+  }
+  ;
+  if (v === 4) {
+    return 386.3137138648348 * 0.01;
+  }
+  ;
+  if (v === 5) {
+    return 498.04499913461217 * 0.01;
+  }
+  ;
+  if (v === 6) {
+    return 551.3179423647567 * 0.01;
+  }
+  ;
+  if (v === 7) {
+    return 701.9550008653874 * 0.01;
+  }
+  ;
+  if (v === 8) {
+    return 764.9159047383506 * 0.01;
+  }
+  ;
+  if (v === 9) {
+    return 884.3587129994477 * 0.01;
+  }
+  ;
+  if (v === 10) {
+    return 968.8259064691249 * 0.01;
+  }
+  ;
+  if (v === 11) {
+    return 1088.2687147302222 * 0.01;
+  }
+  ;
+  return 0;
+};
 var addSampleRoot = function(xs) {
   return cons(0)(xs);
 };
 var xenoPitchToMIDIInterval = function(v) {
   if (v instanceof CPSet && v.value2 instanceof Nothing) {
     var scale = makeCPSScale(v.value0)(v.value1);
-    return map24(function($98) {
-      return addSampleRoot(toMIDIInterval($98));
+    return map24(function($105) {
+      return addSampleRoot(toMIDIInterval($105));
     })([scale]);
   }
   ;
   if (v instanceof CPSet && v.value2 instanceof Just) {
     var scale = makeCPSScale(v.value0)(v.value1);
     var subs = map24(function() {
-      var $99 = getSubSet(scale);
-      return function($100) {
-        return orderSetofXNotes($99($100));
+      var $106 = getSubSet(scale);
+      return function($107) {
+        return orderSetofXNotes($106($107));
       };
     }())(v.value2.value0);
-    return map24(function($101) {
-      return addSampleRoot(toMIDIInterval($101));
+    return map24(function($108) {
+      return addSampleRoot(toMIDIInterval($108));
     })(cons(scale)(subs));
   }
   ;
   return [];
-};
-var xenoPitchAsAuralPattern = function(v) {
-  return function(v1) {
-    if (v.value1 instanceof Just) {
-      var scaleAsMIDISubsets = xenoPitchToMIDIInterval(v.value0);
-      var subset = fromMaybe([0])(index(scaleAsMIDISubsets)(v.value1.value0));
-      var lengthOfSet = length(subset);
-      var cyclesAndOctave = cycleAndOctavesOfPatternInSet(v1)(lengthOfSet);
-      var asMIDI = map24(function(v2) {
-        return fromMaybe(0)(index(subset)(v2.value0)) + v2.value1;
-      })(cyclesAndOctave);
-      return asMIDI;
-    }
-    ;
-    if (v.value1 instanceof Nothing) {
-      var scaleAsMIDISubsets = xenoPitchToMIDIInterval(v.value0);
-      var subset = fromMaybe([2.666])(index(scaleAsMIDISubsets)(0));
-      var lengthOfSet = length(subset);
-      var cyclesAndOctave = cycleAndOctavesOfPatternInSet(v1)(lengthOfSet);
-      var asMIDI = map24(function(v2) {
-        return fromMaybe(0)(index(subset)(v2.value0)) + v2.value1;
-      })(cyclesAndOctave);
-      return asMIDI;
-    }
-    ;
-    throw new Error("Failed pattern match at XenoPitch (line 49, column 1 - line 49, column 83): " + [v.constructor.name, v1.constructor.name]);
-  };
 };
 var xenoPitchAsMIDINum = function(v) {
   return function(v1) {
@@ -46944,7 +46998,48 @@ var xenoPitchAsMIDINum = function(v) {
       return asMIDI;
     }
     ;
-    throw new Error("Failed pattern match at XenoPitch (line 30, column 1 - line 30, column 66): " + [v.constructor.name, v1.constructor.name]);
+    throw new Error("Failed pattern match at XenoPitch (line 31, column 1 - line 31, column 66): " + [v.constructor.name, v1.constructor.name]);
+  };
+};
+var addOctave = function(n2) {
+  return 12 * floor(toNumber(n2) / 12);
+};
+var xenoPitchAsAuralPattern = function(v) {
+  return function(v1) {
+    if (v.value0 instanceof ShurNot && v.value1 instanceof Nothing) {
+      return [0];
+    }
+    ;
+    if (v.value0 instanceof Centaura && v.value1 instanceof Nothing) {
+      var midiNumber = map24(function(n2) {
+        return centaura2(n2) + addOctave(n2);
+      })(v1);
+      return midiNumber;
+    }
+    ;
+    if (v.value1 instanceof Just) {
+      var scaleAsMIDISubsets = xenoPitchToMIDIInterval(v.value0);
+      var subset = fromMaybe([0])(index(scaleAsMIDISubsets)(v.value1.value0));
+      var lengthOfSet = length(subset);
+      var cyclesAndOctave = cycleAndOctavesOfPatternInSet(v1)(lengthOfSet);
+      var asMIDI = map24(function(v2) {
+        return fromMaybe(0)(index(subset)(v2.value0)) + v2.value1;
+      })(cyclesAndOctave);
+      return asMIDI;
+    }
+    ;
+    if (v.value1 instanceof Nothing) {
+      var scaleAsMIDISubsets = xenoPitchToMIDIInterval(v.value0);
+      var subset = fromMaybe([2.666])(index(scaleAsMIDISubsets)(0));
+      var lengthOfSet = length(subset);
+      var cyclesAndOctave = cycleAndOctavesOfPatternInSet(v1)(lengthOfSet);
+      var asMIDI = map24(function(v2) {
+        return fromMaybe(0)(index(subset)(v2.value0)) + v2.value1;
+      })(cyclesAndOctave);
+      return asMIDI;
+    }
+    ;
+    throw new Error("Failed pattern match at XenoPitch (line 50, column 1 - line 50, column 83): " + [v.constructor.name, v1.constructor.name]);
   };
 };
 
@@ -46970,8 +47065,8 @@ var strMaybe = function(x) {
 var spread = function(percenPos) {
   return function(a) {
     return function(limits) {
-      var $184 = percenPos >= fst(limits) && percenPos < snd(limits);
-      if ($184) {
+      var $186 = percenPos >= fst(limits) && percenPos < snd(limits);
+      if ($186) {
         return new Just(a);
       }
       ;
@@ -47284,6 +47379,19 @@ var isBegin = function(v) {
 var intMaybe = function(x) {
   return fromMaybe(2666)(x);
 };
+var getXPTarget = function(v) {
+  return function(v1) {
+    if (v === "centaura") {
+      return Centaura.value;
+    }
+    ;
+    if (v === "shurNot") {
+      return ShurNot.value;
+    }
+    ;
+    return fromMaybe(new EDO(0, 0))(lookup6(v)(v1));
+  };
+};
 var getXNote = function(aural2) {
   return head(filter2(isXNote)(fromFoldable10(aural2)));
 };
@@ -47422,8 +47530,8 @@ var processVarsInt = function($copy_v) {
             if (v instanceof Cons) {
               var vSpan = getVSpan(v.value0);
               var vList = getVListInt(v.value0);
-              var $366 = isVar(v.value0)(v3);
-              if ($366) {
+              var $370 = isVar(v.value0)(v3);
+              if ($370) {
                 $tco_done = true;
                 return spanInt(vSpan)(fromFoldable10(vList))(v3)(v4);
               }
@@ -47436,7 +47544,7 @@ var processVarsInt = function($copy_v) {
               return;
             }
             ;
-            throw new Error("Failed pattern match at AuralSpecs (line 309, column 1 - line 309, column 86): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
+            throw new Error("Failed pattern match at AuralSpecs (line 315, column 1 - line 315, column 86): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
           }
           ;
           while (!$tco_done) {
@@ -47505,8 +47613,8 @@ var processVarsMaybe = function($copy_v) {
             if (v instanceof Cons) {
               var vSpan = getVSpan(v.value0);
               var vList = getVList(v.value0);
-              var $383 = isVar(v.value0)(v3);
-              if ($383) {
+              var $387 = isVar(v.value0)(v3);
+              if ($387) {
                 $tco_done = true;
                 return spanMaybe(vSpan)(fromFoldable10(vList))(v3)(v4);
               }
@@ -47519,7 +47627,7 @@ var processVarsMaybe = function($copy_v) {
               return;
             }
             ;
-            throw new Error("Failed pattern match at AuralSpecs (line 319, column 1 - line 319, column 98): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
+            throw new Error("Failed pattern match at AuralSpecs (line 325, column 1 - line 325, column 98): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
           }
           ;
           while (!$tco_done) {
@@ -47601,8 +47709,8 @@ var processVarsStr = function($copy_v) {
             if (v instanceof Cons) {
               var vSpan = getVSpan(v.value0);
               var vList = getVListStr(v.value0);
-              var $402 = isVar(v.value0)(v3);
-              if ($402) {
+              var $406 = isVar(v.value0)(v3);
+              if ($406) {
                 $tco_done = true;
                 return spanStr(vSpan)(fromFoldable10(vList))(v3)(v4);
               }
@@ -47615,7 +47723,7 @@ var processVarsStr = function($copy_v) {
               return;
             }
             ;
-            throw new Error("Failed pattern match at AuralSpecs (line 300, column 1 - line 300, column 95): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
+            throw new Error("Failed pattern match at AuralSpecs (line 306, column 1 - line 306, column 95): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name, v4.constructor.name]);
           }
           ;
           while (!$tco_done) {
@@ -47980,7 +48088,7 @@ var processNote = function(v) {
             }
             ;
             if (v3 instanceof Just && v3.value0 instanceof Xeno) {
-              var target = fromMaybe(new EDO(0, 0))(lookup6(fst(v3.value0.value0))(v1));
+              var target = getXPTarget(fst(v3.value0.value0))(v1);
               var midiIntervals = xenoPitchAsAuralPattern(new Tuple(target, snd(v3.value0.value0)))(fromFoldable10(v3.value0.value2));
               return spanMaybe(v3.value0.value1)(fromFoldable15(midiIntervals))(v5)(v2);
             }

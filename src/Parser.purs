@@ -3,7 +3,7 @@ module Parser(temporal, check, parseProgram, replica, getTemporalMap, getAuralMa
 import Prelude
 
 import Data.Identity
-import Data.List (List(..), head, tail, elem, (:), concat)
+import Data.List (List(..), head, tail, elem, (:), concat, (..), range)
 import Data.List (fromFoldable, filter) as L
 import Data.Array (fromFoldable) as A
 import Data.Either
@@ -308,7 +308,27 @@ timeExpression = do
 temporal:: P (Map String Temporal)
 temporal = do
   _ <- pure 1
-  choice [try replica, polytemporalRelation]
+  choice [try replica, try polytemporalRelation]
+
+-- inACan:: P (Map String Temporal)
+-- inACan = do
+--   _ <- pure 1
+--   id <- voiceId
+--   _ <- reserved "<-"
+--   voice <- voiceId
+--   cTo <- choice [try cToLast, try $ parens parsePercenTo, try $ parens parseProcessTo, parens parseStructureTo]
+--   cFrom <- choice [try cFromLast, try $ parens cFromPercen, try $ parens cFromProcess, parens cFromStructure]
+--   tm <- brackets $ many tempoMark <|> pure XTempo -- the alternative should be same as estuary tempo
+--   _ <- charWS '|'
+--   r <- rhythmic
+--   l <- choice [(strWS "||" *> pure false), (strWS ":|" *> pure true)]
+  -- pure $ singleton (fst p) $ Temporal (snd p) r l
+
+-- polytemporalList:: String -> ConvergeTo -> ConvergeFrom -> List TempoMark -> Map String Polytemporal
+-- polytemporalList id cTo cFrom tms = 
+--   let newIDs = map (\index -> id <> "-" <> (show index)) $ range 0 $ length tms
+--   in newIDs
+
 
 replica:: P (Map String Temporal)
 replica = do

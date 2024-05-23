@@ -160,13 +160,15 @@ data Polytemporal =
   -- Kairos starts a program at evaluation time (or as soon as possible), no underlying grid
   Metric ConvergeTo ConvergeFrom TempoMark | -- starts a program attached to a default underlying voice (a tempo grid basically) first number is the point to where the new voice will converge, second number is the point from which it converges. 
   Converge String ConvergeTo ConvergeFrom TempoMark | -- Args: String is the voice identifier, convergAt (where this voice converges with the identified voice) and convergedFrom (the point of this voice that converges with the identified voice)  -- Converge starts a program in relationship with another voice
-  Novus String ConvergeFrom TempoMark
+  Novus String ConvergeFrom TempoMark -- |
+  -- InACan (List Polytemporal)
 
 instance polytemporalShowInstance :: Show Polytemporal where
   show (Kairos asap t) = "kairos: " <> show asap <> " tempo mark: " <> show t
   show (Metric cTo cFrom t) = "(cTo "<>show cTo<>") (cFrom "<>show cFrom <> ") (tempo mark: " <> show t <> ")"
   show (Converge voice cTo cFrom t) = "toVoice "<>show voice<>" (cTo "<>show cTo<>") (cFrom "<>show cFrom <> ") (tempo mark: " <> show t <> ")"
   show (Novus vantageId cFrom t) = "vantagePoint "<>show vantageId<>" (cFrom "<>show cFrom <> ") (tempo mark: " <> show t <> ")"
+  -- show (InACan xs) = "InACan "<> show xs
 
 data Rhythmic =  -- whenPosix, thats it
   X | -- x
@@ -299,12 +301,14 @@ data Subset = Subset Int | Unions (Array Int) | Intersection Int Int | Differenc
 instance subsetShow :: Show Subset where
   show _ = "subset"
 
-data XenoPitch = CPSet Int (Array Int) (Maybe (Array Subset)) | MOS Int Int | EDO Number Int
+data XenoPitch = CPSet Int (Array Int) (Maybe (Array Subset)) | MOS Int Int | EDO Number Int | Centaura | ShurNot
 
 instance xenoShow :: Show XenoPitch where
     show (CPSet s f subs) = "cps " <> show s <> " " <> show f <> " " <> show subs
     show (MOS k n) = "mos " <> show k <> " " <> show n
     show (EDO p d) = "edo " <> show p <> " " <> show d
+    show Centaura = "Centaura"
+    show ShurNot = "ShurNot"
 
 type XenoNote = {
     set:: Array Int,
