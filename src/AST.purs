@@ -1,4 +1,4 @@
-module AST(TimekNot(..),Vantage(..), TimePoint(..), VantageMap(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..), Variation(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), Sinusoidal(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), XenoPitch(..), XenoNote(..), Subset(..), showEventIndex, showStructureIndex) where
+module AST(TimekNot(..),Vantage(..), TimePoint(..), VantageMap(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..), Variation(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), Sinusoidal(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), XenoPitch(..), XenoNote(..), DastgahNote(..), Interval(..), Subset(..), showEventIndex, showStructureIndex) where
 
 import Prelude
 import Effect.Ref
@@ -294,6 +294,15 @@ instance indexShow :: Show Index where
       where subdivisions = foldl (<>) "" $ map (\x -> show x <> ".") xs
             result = Str.take (Str.length subdivisions - 1) subdivisions
 
+-- Dastgah
+
+type DastgahNote = {
+  function:: String,
+  movement:: Interval,
+  midiInterval:: Number
+}
+
+
 -- xenopPitch
 
 data Subset = Subset Int | Unions (Array Int) | Intersection Int Int | Difference Int Int | Nested Subset 
@@ -317,3 +326,12 @@ type XenoNote = {
     "bounded-ratio":: Number,
     "bounding-period":: Int
 }
+
+data Interval = UpJump | UpNext | DownJump | DownNext | Unison 
+
+instance intervalShow :: Show Interval where
+  show UpJump = "UpJump"
+  show UpNext = "UpNext"
+  show DownJump = "DownJump"
+  show DownNext = "DownNext"
+  show Unison = "Unison"

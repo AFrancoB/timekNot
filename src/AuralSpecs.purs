@@ -115,8 +115,9 @@ processNote _ xp r (Just (Dastgah span d)) _ e = spanMaybe span newList e r
 processNote _ xp r (Just (Xeno id span lista)) xn e = spanMaybe span (fromFoldable midiIntervals) e r
   where target = getXPTarget (fst id) xp
         -- target = fromMaybe (EDO 0.0 0) $ M.lookup (fst id) xp 
-        midiIntervals = xenoPitchAsAuralPattern (Tuple target (snd id)) $ fromFoldable lista
+        midiIntervals = xenoPitchAsAuralPattern (Tuple target (snd id)) (fromFoldable lista) span r
 processNote _ _ _ _ _ _ = Nothing
+
 
 getXPTarget:: String -> M.Map String XenoPitch -> XenoPitch
 getXPTarget "centaura" _ = Centaura
