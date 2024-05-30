@@ -310,13 +310,13 @@ data Subset = Subset Int | Unions (Array Int) | Intersection Int Int | Differenc
 instance subsetShow :: Show Subset where
   show _ = "subset"
 
-data XenoPitch = CPSet Int (Array Int) (Maybe (Array Subset)) | MOS Int Int | EDO Number Int | Centaura | ShurNot
+data XenoPitch = CPSet Int (Array Int) (Maybe (Array Subset)) | MOS Int Int | EDO Number Int | ShurNot8 | ShurNot
 
 instance xenoShow :: Show XenoPitch where
     show (CPSet s f subs) = "cps " <> show s <> " " <> show f <> " " <> show subs
     show (MOS k n) = "mos " <> show k <> " " <> show n
     show (EDO p d) = "edo " <> show p <> " " <> show d
-    show Centaura = "Centaura"
+    show ShurNot8 = "ShurNot8"
     show ShurNot = "ShurNot"
 
 type XenoNote = {

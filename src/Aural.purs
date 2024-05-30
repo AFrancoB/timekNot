@@ -80,17 +80,17 @@ xeNotes = do
 xeno:: P Value 
 xeno = do
     _ <- pure 1
-    xID <- choice [try shurNot, try centaura, xeno']
+    xID <- choice [try shurNot, try shurNot8, xeno']
     _ <- reservedOp "="
     sp <- parseSpan
     xnL <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
     pure $ Xeno xID sp $ fromFoldable xnL
 
-centaura:: P (Tuple String (Maybe Int))
-centaura = do
+shurNot8:: P (Tuple String (Maybe Int))
+shurNot8 = do
     _ <- pure 1
-    _ <- reserved "centaura"
-    pure $ Tuple "centaura" Nothing
+    _ <- reserved "shurNot8"
+    pure $ Tuple "shurNot8" Nothing
 
 shurNot:: P (Tuple String (Maybe Int))
 shurNot = do
@@ -715,7 +715,7 @@ checkXPitch' expressions = not $ elem false $ map (\kn -> func aXenoPitchMap kn)
         listOfPitchID = getXenoIDs $ getAuralMap expressions
 
 func:: Map String XenoPitch -> Tuple String (Maybe Int) -> Boolean
-func mapa (Tuple "centaura" Nothing) = true
+func mapa (Tuple "shurNot8" Nothing) = true
 func mapa (Tuple "shurNot" Nothing) = true
 func mapa (Tuple k Nothing) = case lookup k mapa of
                                 Nothing -> false
@@ -726,7 +726,7 @@ func mapa (Tuple k (Just n)) = case lookup k mapa of
 
 f:: XenoPitch -> Int -> Boolean
 f (CPSet s f (Just subs)) indx = indx <= A.length subs  
-f Centaura _ = true
+f ShurNot8 _ = true
 f ShurNot  _ = true
 f _ _ = false
 

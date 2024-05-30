@@ -18206,12 +18206,12 @@ var EDO = /* @__PURE__ */ function() {
   };
   return EDO2;
 }();
-var Centaura = /* @__PURE__ */ function() {
-  function Centaura2() {
+var ShurNot8 = /* @__PURE__ */ function() {
+  function ShurNot82() {
   }
   ;
-  Centaura2.value = new Centaura2();
-  return Centaura2;
+  ShurNot82.value = new ShurNot82();
+  return ShurNot82;
 }();
 var ShurNot = /* @__PURE__ */ function() {
   function ShurNot2() {
@@ -42870,6 +42870,11 @@ var shurNot = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
     return pure6(new Tuple("shurNot", Nothing.value));
   });
 });
+var shurNot8 = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
+  return bind8(reserved("shurNot8"))(function() {
+    return pure6(new Tuple("shurNot8", Nothing.value));
+  });
+});
 var parseSpan = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   return bind8(choice3([applySecond4(reserved("-_"))(pure6(CycleInBlock.value)), $$try(applySecond4(reserved("_-"))(pure6(CycleBlock.value))), $$try(applySecond4(reserved("_-_"))(pure6(SpreadBlock.value))), applySecond4(reserved("_"))(pure6(CycleEvent.value))]))(function(x) {
     return pure6(x);
@@ -42973,7 +42978,7 @@ var f = function(v) {
       return v1 <= length(v.value2.value0);
     }
     ;
-    if (v instanceof Centaura) {
+    if (v instanceof ShurNot8) {
       return true;
     }
     ;
@@ -42986,7 +42991,7 @@ var f = function(v) {
 };
 var func = function(v) {
   return function(v1) {
-    if (v1.value0 === "centaura" && v1.value1 instanceof Nothing) {
+    if (v1.value0 === "shurNot8" && v1.value1 instanceof Nothing) {
       return true;
     }
     ;
@@ -43295,11 +43300,6 @@ var makeVowel = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
     });
   });
 });
-var centaura = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
-  return bind8(reserved("centaura"))(function() {
-    return pure6(new Tuple("centaura", Nothing.value));
-  });
-});
 var brackets = /* @__PURE__ */ function() {
   return tokenParser.brackets;
 }();
@@ -43528,7 +43528,7 @@ var xeno$prime = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
   });
 });
 var xeno = /* @__PURE__ */ bind8(/* @__PURE__ */ pure6(1))(function() {
-  return bind8(choice3([$$try(shurNot), $$try(centaura), xeno$prime]))(function(xID) {
+  return bind8(choice3([$$try(shurNot), $$try(shurNot8), xeno$prime]))(function(xID) {
     return bind8(reservedOp("="))(function() {
       return bind8(parseSpan)(function(sp) {
         return bind8(choice3([$$try(map14(fromFoldable1)(parseRangeInt)), many3(natural)]))(function(xnL) {
@@ -46960,6 +46960,114 @@ var shurIntToMIDIInt = function(n2) {
   ;
   return 0;
 };
+var shur8IntToMIDIInt = function(n2) {
+  var v = mod5(n2)(26);
+  if (v === 0) {
+    return 0 - 24;
+  }
+  ;
+  if (v === 1) {
+    return 701.955000865387 * 0.01 - 24;
+  }
+  ;
+  if (v === 2) {
+    return 0 - 12;
+  }
+  ;
+  if (v === 3) {
+    return 266.8709056037379 * 0.01 - 12;
+  }
+  ;
+  if (v === 4) {
+    return 498.04499913461217 * 0.01 - 12;
+  }
+  ;
+  if (v === 5) {
+    return 701.9550008653874 * 0.01 - 12;
+  }
+  ;
+  if (v === 6) {
+    return 968.8259064691249 * 0.01 - 12;
+  }
+  ;
+  if (v === 7) {
+    return 0;
+  }
+  ;
+  if (v === 8) {
+    return 203.91000173077484 * 0.01;
+  }
+  ;
+  if (v === 9) {
+    return 266.8709056037379 * 0.01;
+  }
+  ;
+  if (v === 10) {
+    return 498.04499913461217 * 0.01;
+  }
+  ;
+  if (v === 11) {
+    return 701.9550008653874 * 0.01;
+  }
+  ;
+  if (v === 12) {
+    return 884.3587129994477 * 0.01;
+  }
+  ;
+  if (v === 13) {
+    return 968.8259064691249 * 0.01;
+  }
+  ;
+  if (v === 14) {
+    return 12;
+  }
+  ;
+  if (v === 15) {
+    return 12 + 53.27294323014412 * 0.01;
+  }
+  ;
+  if (v === 16) {
+    return 12 + 203.91000173077484 * 0.01;
+  }
+  ;
+  if (v === 17) {
+    return 12 + 266.8709056037379 * 0.01;
+  }
+  ;
+  if (v === 18) {
+    return 12 + 386.3137138648348 * 0.01;
+  }
+  ;
+  if (v === 19) {
+    return 12 + 498.04499913461217 * 0.01;
+  }
+  ;
+  if (v === 20) {
+    return 12 + 551.3179423647567 * 0.01;
+  }
+  ;
+  if (v === 21) {
+    return 12 + 701.9550008653874 * 0.01;
+  }
+  ;
+  if (v === 22) {
+    return 12 + 764.9159047383506 * 0.01;
+  }
+  ;
+  if (v === 23) {
+    return 12 + 884.358712999447 * 0.01;
+  }
+  ;
+  if (v === 24) {
+    return 12 + 968.8259064691249 * 0.01;
+  }
+  ;
+  if (v === 25) {
+    return 12 + 1088.2687147302222 * 0.01;
+  }
+  ;
+  return 0;
+};
 var orderSetofXNotes = function(s) {
   return sortWith2(function(v) {
     return v["bounded-ratio"];
@@ -47036,7 +47144,7 @@ var getMovement2 = function(note) {
       return Unison.value;
     }
     ;
-    throw new Error("Failed pattern match at XenoPitch (line 152, column 1 - line 152, column 37): " + [note.constructor.name, target.constructor.name]);
+    throw new Error("Failed pattern match at XenoPitch (line 156, column 1 - line 156, column 37): " + [note.constructor.name, target.constructor.name]);
   };
 };
 var cycleAndOctavesOfPatternInSet$prime = function(n2) {
@@ -47083,72 +47191,28 @@ var checkSec = function(v) {
     return v1;
   };
 };
-var centaura2 = function(n2) {
-  var v = mod5(n2)(12);
-  if (v === 0) {
-    return 0;
-  }
-  ;
-  if (v === 1) {
-    return 53.27294323014412 * 0.01;
-  }
-  ;
-  if (v === 2) {
-    return 203.91000173077484 * 0.01;
-  }
-  ;
-  if (v === 3) {
-    return 266.8709056037379 * 0.01;
-  }
-  ;
-  if (v === 4) {
-    return 386.3137138648348 * 0.01;
-  }
-  ;
-  if (v === 5) {
-    return 498.04499913461217 * 0.01;
-  }
-  ;
-  if (v === 6) {
-    return 551.3179423647567 * 0.01;
-  }
-  ;
-  if (v === 7) {
-    return 701.9550008653874 * 0.01;
-  }
-  ;
-  if (v === 8) {
-    return 764.9159047383506 * 0.01;
-  }
-  ;
-  if (v === 9) {
-    return 884.3587129994477 * 0.01;
-  }
-  ;
-  if (v === 10) {
-    return 968.8259064691249 * 0.01;
-  }
-  ;
-  if (v === 11) {
-    return 1088.2687147302222 * 0.01;
-  }
-  ;
-  return 0;
+var assambleShurNot8 = function(v) {
+  var mov = getMovement2(v.value0)(v.value1);
+  var midiInter = shur8IntToMIDIInt(v.value0);
+  return {
+    movement: mov,
+    midiInterval: midiInter
+  };
 };
 var assambleShurNot = function(v) {
   var mov = getMovement2(v.value0)(v.value1);
   var midiInter = shurIntToMIDIInt(v.value0);
   var secondChecked = function() {
-    var $101 = v.value0 === 8;
-    if ($101) {
+    var $107 = v.value0 === 8;
+    if ($107) {
       return checkSec(mov)(midiInter);
     }
     ;
     return midiInter;
   }();
   var sixthChecked = function() {
-    var $102 = v.value0 === 12;
-    if ($102) {
+    var $108 = v.value0 === 12;
+    if ($108) {
       return checkSixth2(mov)(midiInter);
     }
     ;
@@ -47169,7 +47233,7 @@ var analysisShurNotPattern = function(v) {
         })(uncons(v2));
         var second2 = snoc(s.tail)(s.head);
         var zipped = zip(v2)(second2);
-        return map24(assambleShurNot)(zipped);
+        return zipped;
       }
       ;
       if (v instanceof CycleBlock) {
@@ -47179,7 +47243,7 @@ var analysisShurNotPattern = function(v) {
         })(uncons(v2));
         var second2 = snoc(s.tail)(s.head);
         var zipped = zip(v2)(second2);
-        return map24(assambleShurNot)(zipped);
+        return zipped;
       }
       ;
       if (v instanceof CycleInBlock) {
@@ -47197,7 +47261,7 @@ var analysisShurNotPattern = function(v) {
         })(uncons(seque));
         var second2 = snoc(s.tail)(s.head);
         var zipped = zip(seque)(second2);
-        return map24(assambleShurNot)(zipped);
+        return zipped;
       }
       ;
       if (v instanceof SpreadBlock) {
@@ -47225,10 +47289,10 @@ var analysisShurNotPattern = function(v) {
         })(uncons(realNS));
         var second2 = snoc(s.tail)(s.head);
         var zipped = zip(realNS)(second2);
-        return map24(assambleShurNot)(zipped);
+        return zipped;
       }
       ;
-      throw new Error("Failed pattern match at XenoPitch (line 97, column 1 - line 97, column 72): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
+      throw new Error("Failed pattern match at XenoPitch (line 97, column 1 - line 97, column 80): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
     };
   };
 };
@@ -47238,51 +47302,25 @@ var addSampleRoot = function(xs) {
 var xenoPitchToMIDIInterval = function(v) {
   if (v instanceof CPSet && v.value2 instanceof Nothing) {
     var scale = makeCPSScale(v.value0)(v.value1);
-    return map24(function($154) {
-      return addSampleRoot(toMIDIInterval($154));
+    return map24(function($160) {
+      return addSampleRoot(toMIDIInterval($160));
     })([scale]);
   }
   ;
   if (v instanceof CPSet && v.value2 instanceof Just) {
     var scale = makeCPSScale(v.value0)(v.value1);
     var subs = map24(function() {
-      var $155 = getSubSet(scale);
-      return function($156) {
-        return orderSetofXNotes($155($156));
+      var $161 = getSubSet(scale);
+      return function($162) {
+        return orderSetofXNotes($161($162));
       };
     }())(v.value2.value0);
-    return map24(function($157) {
-      return addSampleRoot(toMIDIInterval($157));
+    return map24(function($163) {
+      return addSampleRoot(toMIDIInterval($163));
     })(cons(scale)(subs));
   }
   ;
   return [];
-};
-var xenoPitchAsMIDINum = function(v) {
-  return function(v1) {
-    if (v.value1 instanceof Just) {
-      var scaleAsMIDISubsets = xenoPitchToMIDIInterval(v.value0);
-      var subset = fromMaybe([0])(index(scaleAsMIDISubsets)(v.value1.value0));
-      var lengthOfSet = length(subset);
-      var v2 = cycleAndOctavesOfPatternInSet$prime(v1)(lengthOfSet);
-      var asMIDI = fromMaybe(0)(index(subset)(v2.value0)) + v2.value1;
-      return asMIDI;
-    }
-    ;
-    if (v.value1 instanceof Nothing) {
-      var scaleAsMIDISubsets = xenoPitchToMIDIInterval(v.value0);
-      var subset = fromMaybe([2.666])(index(scaleAsMIDISubsets)(0));
-      var lengthOfSet = length(subset);
-      var v2 = cycleAndOctavesOfPatternInSet$prime(v1)(lengthOfSet);
-      var asMIDI = fromMaybe(0)(index(subset)(v2.value0)) + v2.value1;
-      return asMIDI;
-    }
-    ;
-    throw new Error("Failed pattern match at XenoPitch (line 35, column 1 - line 35, column 66): " + [v.constructor.name, v1.constructor.name]);
-  };
-};
-var addOctave = function(n2) {
-  return 12 * floor(toNumber(n2) / 12);
 };
 var xenoPitchAsAuralPattern = function(v) {
   return function(v1) {
@@ -47291,15 +47329,15 @@ var xenoPitchAsAuralPattern = function(v) {
         if (v.value0 instanceof ShurNot && v.value1 instanceof Nothing) {
           var shurNot2 = analysisShurNotPattern(v2)(v3)(v1);
           return map24(function(n2) {
-            return n2.midiInterval;
-          })(shurNot2);
+            return n2.midiInterval + 386.3137138648348 * 0.01;
+          })(map24(assambleShurNot)(shurNot2));
         }
         ;
-        if (v.value0 instanceof Centaura && v.value1 instanceof Nothing) {
-          var midiNumber = map24(function(n2) {
-            return centaura2(n2) + addOctave(n2);
-          })(v1);
-          return midiNumber;
+        if (v.value0 instanceof ShurNot8 && v.value1 instanceof Nothing) {
+          var shurNot82 = analysisShurNotPattern(v2)(v3)(v1);
+          return map24(function(n2) {
+            return n2.midiInterval;
+          })(map24(assambleShurNot8)(shurNot82));
         }
         ;
         if (v.value1 instanceof Just) {
@@ -47327,6 +47365,29 @@ var xenoPitchAsAuralPattern = function(v) {
         throw new Error("Failed pattern match at XenoPitch (line 54, column 1 - line 54, column 103): " + [v.constructor.name, v1.constructor.name, v2.constructor.name, v3.constructor.name]);
       };
     };
+  };
+};
+var xenoPitchAsMIDINum = function(v) {
+  return function(v1) {
+    if (v.value1 instanceof Just) {
+      var scaleAsMIDISubsets = xenoPitchToMIDIInterval(v.value0);
+      var subset = fromMaybe([0])(index(scaleAsMIDISubsets)(v.value1.value0));
+      var lengthOfSet = length(subset);
+      var v2 = cycleAndOctavesOfPatternInSet$prime(v1)(lengthOfSet);
+      var asMIDI = fromMaybe(0)(index(subset)(v2.value0)) + v2.value1;
+      return asMIDI;
+    }
+    ;
+    if (v.value1 instanceof Nothing) {
+      var scaleAsMIDISubsets = xenoPitchToMIDIInterval(v.value0);
+      var subset = fromMaybe([2.666])(index(scaleAsMIDISubsets)(0));
+      var lengthOfSet = length(subset);
+      var v2 = cycleAndOctavesOfPatternInSet$prime(v1)(lengthOfSet);
+      var asMIDI = fromMaybe(0)(index(subset)(v2.value0)) + v2.value1;
+      return asMIDI;
+    }
+    ;
+    throw new Error("Failed pattern match at XenoPitch (line 35, column 1 - line 35, column 66): " + [v.constructor.name, v1.constructor.name]);
   };
 };
 
@@ -47668,8 +47729,8 @@ var intMaybe = function(x) {
 };
 var getXPTarget = function(v) {
   return function(v1) {
-    if (v === "centaura") {
-      return Centaura.value;
+    if (v === "shurNot8") {
+      return ShurNot8.value;
     }
     ;
     if (v === "shurNot") {
