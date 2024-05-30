@@ -715,6 +715,8 @@ checkXPitch' expressions = not $ elem false $ map (\kn -> func aXenoPitchMap kn)
         listOfPitchID = getXenoIDs $ getAuralMap expressions
 
 func:: Map String XenoPitch -> Tuple String (Maybe Int) -> Boolean
+func mapa (Tuple "centaura" Nothing) = true
+func mapa (Tuple "shurNot" Nothing) = true
 func mapa (Tuple k Nothing) = case lookup k mapa of
                                 Nothing -> false
                                 Just xn -> true 

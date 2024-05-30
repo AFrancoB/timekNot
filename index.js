@@ -42951,6 +42951,14 @@ var f = function(v) {
 };
 var func = function(v) {
   return function(v1) {
+    if (v1.value0 === "centaura" && v1.value1 instanceof Nothing) {
+      return true;
+    }
+    ;
+    if (v1.value0 === "shurNot" && v1.value1 instanceof Nothing) {
+      return true;
+    }
+    ;
     if (v1.value1 instanceof Nothing) {
       var v2 = lookup3(v1.value0)(v);
       if (v2 instanceof Nothing) {
@@ -42961,7 +42969,7 @@ var func = function(v) {
         return true;
       }
       ;
-      throw new Error("Failed pattern match at Aural (line 718, column 31 - line 720, column 48): " + [v2.constructor.name]);
+      throw new Error("Failed pattern match at Aural (line 720, column 31 - line 722, column 48): " + [v2.constructor.name]);
     }
     ;
     if (v1.value1 instanceof Just) {
@@ -42974,7 +42982,7 @@ var func = function(v) {
         return f(v2.value0)(v1.value1.value0);
       }
       ;
-      throw new Error("Failed pattern match at Aural (line 721, column 32 - line 723, column 50): " + [v2.constructor.name]);
+      throw new Error("Failed pattern match at Aural (line 723, column 32 - line 725, column 50): " + [v2.constructor.name]);
     }
     ;
     throw new Error("Failed pattern match at Aural (line 717, column 1 - line 717, column 67): " + [v.constructor.name, v1.constructor.name]);
