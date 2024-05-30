@@ -47073,11 +47073,11 @@ var checkSixth2 = function(v) {
 var checkSec = function(v) {
   return function(v1) {
     if (v instanceof DownJump) {
-      return 165.00422849992202 * 0.01 - 111.73128526977847 * 0.01 - v1;
+      return v1 + (165.00422849992202 * 0.01 - 111.73128526977847 * 0.01 - v1);
     }
     ;
     if (v instanceof DownNext) {
-      return 165.00422849992202 * 0.01 - 111.73128526977847 * 0.01 - v1;
+      return v1 + (165.00422849992202 * 0.01 - 111.73128526977847 * 0.01 - v1);
     }
     ;
     return v1;
