@@ -1,4 +1,4 @@
-module Dastgah (analysisDastgahPattern, Interval(..), getMIDIInterval) where
+module Dastgah (analysisDastgahPattern, getMIDIInterval) where
 
 import Prelude
 import Data.Int (toNumber)
@@ -81,22 +81,6 @@ shurIntToFuncAndMIDIInt n = case (n-1)`mod`8 of
                           6 -> Tuple 9.98 "unknown"
                           7 -> Tuple 12.0 "unknown"
                           _ -> Tuple 0.0 "unknown"
-
-type DastgahNote = {
-  function:: String,
-  movement:: Interval,
-  midiInterval:: Number
-}
-
-data Interval = UpJump | UpNext | DownJump | DownNext | Unison 
-
-instance intervalShow :: Show Interval where
-  show UpJump = "UpJump"
-  show UpNext = "UpNext"
-  show DownJump = "DownJump"
-  show DownNext = "DownNext"
-  show Unison = "Unison"
-
 
 
 -- 0 1.82 2.96 5.0 7.04 7.94 9.98 12.0
