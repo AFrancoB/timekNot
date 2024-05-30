@@ -120,7 +120,7 @@ processNote _ _ _ _ _ _ = Nothing
 
 
 getXPTarget:: String -> M.Map String XenoPitch -> XenoPitch
-getXPTarget "centaura" _ = Centaura
+getXPTarget "shurNot8" _ = ShurNot8
 getXPTarget "shurNot" _ = ShurNot
 getXPTarget id xp = fromMaybe (EDO 0.0 0) $ M.lookup id xp
 

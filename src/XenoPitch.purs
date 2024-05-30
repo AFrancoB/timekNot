@@ -52,10 +52,10 @@ cycleAndOctavesOfPatternInSet' n setLen = Tuple cycledNote isOctave
           isOctave = toNumber $ (floor $ (toNumber n) / (toNumber setLen))*12
 
 xenoPitchAsAuralPattern:: Tuple XenoPitch (Maybe Int) -> Array Int -> Span -> Rhythmic -> Array Number
-xenoPitchAsAuralPattern (Tuple ShurNot Nothing) lista sp r = map (\n-> n.midiInterval) shurNot
+xenoPitchAsAuralPattern (Tuple ShurNot Nothing) lista sp r = map (\n-> n.midiInterval + (386.3137138648348*0.01)) $ map assambleShurNot shurNot
     where shurNot = analysisShurNotPattern sp r lista
-xenoPitchAsAuralPattern (Tuple Centaura Nothing) lista _ _ = midiNumber
-    where midiNumber = map (\n -> (centaura n) + (addOctave n)) lista
+xenoPitchAsAuralPattern (Tuple ShurNot8 Nothing) lista sp r = map (\n-> n.midiInterval) $ map assambleShurNot8 shurNot8
+    where shurNot8 = analysisShurNotPattern sp r lista
 xenoPitchAsAuralPattern (Tuple xn (Just i)) lista _ _ = asMIDI
     where   scaleAsMIDISubsets = xenoPitchToMIDIInterval xn -- Array Array Num
             subset = fromMaybe [0.0] $ scaleAsMIDISubsets !! i
@@ -94,25 +94,25 @@ centaura n = case n`mod`12 of
                 _ -> 0.0
 
 
-analysisShurNotPattern:: Span -> Rhythmic -> Array Int -> Array ShurNot
-analysisShurNotPattern CycleEvent _ ns = map assambleShurNot zipped
+analysisShurNotPattern:: Span -> Rhythmic -> Array Int -> Array (Tuple Int Int)
+analysisShurNotPattern CycleEvent _ ns = zipped
   where first = ns
         s = fromMaybe {head: 0, tail: []} $ uncons ns
         second = snoc s.tail s.head
         zipped = zip first second
-analysisShurNotPattern CycleBlock _ ns = map assambleShurNot zipped
+analysisShurNotPattern CycleBlock _ ns = zipped
   where first = ns
         s = fromMaybe {head: 0, tail: []} $ uncons ns
         second = snoc s.tail s.head
         zipped = zip first second
-analysisShurNotPattern CycleInBlock r ns = map assambleShurNot zipped
+analysisShurNotPattern CycleInBlock r ns = zipped
   where structure = map (\x -> (x `mod` (length ns))) $ map (\x -> fromMaybe 0 $ head x) $ rhythmicStructIndex r [0]  
         seque = map (\x -> fromMaybe 0 (ns !! x)) structure
         first = seque
         s = fromMaybe {head: 0, tail: []} $ uncons seque
         second = snoc s.tail s.head
         zipped = zip first second
-analysisShurNotPattern SpreadBlock r ns = map assambleShurNot zipped
+analysisShurNotPattern SpreadBlock r ns = zipped
   where percenPositions = map (\(Onset b p) -> p) $ rhythmicToOnsets r -- xxx[xx] : 0 0.25 0.5 0.75 0.875
         segment = 1.0 / toNumber (length ns)  -- 1 3 5 : 0.333333
         limitsFst = cons 0.0 (scanl (+) 0.0 $ replicate ((length ns) - 1) segment) -- [0, 0.333, 0.666]
@@ -126,6 +126,12 @@ analysisShurNotPattern SpreadBlock r ns = map assambleShurNot zipped
         s = fromMaybe {head: 0, tail: []} $ uncons realNS
         second = snoc s.tail s.head
         zipped = zip first second
+
+assambleShurNot8:: Tuple Int Int -> ShurNot
+assambleShurNot8 (Tuple x y) = {movement: mov, midiInterval: checkedMidiInt}
+  where midiInter = shur8IntToMIDIInt x
+        mov = getMovement x y
+        checkedMidiInt = midiInter
 
  --- this tuple is the interval to analyse
 assambleShurNot:: Tuple Int Int -> ShurNot
@@ -147,8 +153,6 @@ checkSixth UpNext midiInter = midiInter + (866.9592293653092 * 0.01) - (813.6862
 checkSixth _ midiInter = midiInter
 
 
-
-
 getMovement:: Int -> Int -> Interval
 getMovement note target 
   | (note < target) && (target == (note+1)) = UpNext
@@ -157,6 +161,51 @@ getMovement note target
   | (note > target) && (target /= (note-1)) = DownJump
   | note == target = Unison
   | otherwise = Unison
+
+
+shur8IntToMIDIInt:: Int -> Number
+shur8IntToMIDIInt n = case n`mod`26 of
+                          0 -> 0.0 - 24.0
+                          1 -> (701.955000865387 * 0.01) - 24.0
+                          2 -> 0.0 - 12.0
+                          3 -> (266.8709056037379*0.01) - 12.0
+                          4 -> (498.04499913461217*0.01) - 12.0
+                          5 -> (701.9550008653874*0.01) - 12.0
+                          6 -> (968.8259064691249*0.01) - 12.0
+                          7 -> 0.0
+                          8 -> 203.91000173077484 * 0.01 -- desciende con 111.73128526977847 
+                          9 -> 266.8709056037379 * 0.01
+                          10 -> 498.04499913461217 * 0.01
+                          11 -> 701.9550008653874 * 0.01
+                          12 -> 884.3587129994477 * 0.01  -- asciende con 866.9592293653092
+                          13 -> 968.8259064691249 * 0.01
+                          14 -> 12.0 
+                          15 -> 12.0 + (53.27294323014412 * 0.01)
+                          16 -> 12.0 + (203.91000173077484 * 0.01)
+                          17 -> 12.0 + (266.8709056037379 * 0.01)
+                          18 -> 12.0 + (386.3137138648348 * 0.01)
+                          19 -> 12.0 + (498.04499913461217 * 0.01)
+                          20 -> 12.0 + (551.3179423647567 * 0.01)
+                          21 -> 12.0 + (701.9550008653874 * 0.01)
+                          22 -> 12.0 + (764.9159047383506  * 0.01)
+                          23 -> 12.0 + (884.358712999447 * 0.01)
+                          24 -> 12.0 + (968.8259064691249 * 0.01)
+                          25 -> 12.0 + (1088.2687147302222 * 0.01)
+                          _ -> 0.0
+
+-- [0
+--   (0.0 *
+--    53.27294323014412
+--    203.91000173077484 *
+--    266.8709056037379 *
+--    386.3137138648348
+--    498.04499913461217 *
+--    551.3179423647567
+--    701.9550008653874 *
+--    764.9159047383506 
+--    884.3587129994477 *
+--    968.8259064691249 *
+--    1088.2687147302222)]
 
 
 shurIntToMIDIInt:: Int -> Number
