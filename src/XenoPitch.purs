@@ -137,8 +137,8 @@ assambleShurNot (Tuple x y) = {movement: mov, midiInterval: checkedMidiInt}
         checkedMidiInt = sixthChecked
 
 checkSec:: Interval -> Number -> Number
-checkSec DownJump midiInter = (165.00422849992202 * 0.01) - (111.73128526977847 * 0.01) - midiInter
-checkSec DownNext midiInter = (165.00422849992202 * 0.01) - (111.73128526977847 * 0.01) - midiInter
+checkSec DownJump midiInter = midiInter + ((165.00422849992202 * 0.01) - (111.73128526977847 * 0.01) - midiInter)
+checkSec DownNext midiInter = midiInter + ((165.00422849992202 * 0.01) - (111.73128526977847 * 0.01) - midiInter)
 checkSec _ midiInter = midiInter
 
 checkSixth:: Interval -> Number -> Number
