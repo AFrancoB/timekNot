@@ -42938,6 +42938,14 @@ var f = function(v) {
       return v1 <= length(v.value2.value0);
     }
     ;
+    if (v instanceof Centaura) {
+      return true;
+    }
+    ;
+    if (v instanceof ShurNot) {
+      return true;
+    }
+    ;
     return false;
   };
 };
