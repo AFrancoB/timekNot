@@ -47036,7 +47036,7 @@ var getMovement2 = function(note) {
       return Unison.value;
     }
     ;
-    throw new Error("Failed pattern match at XenoPitch (line 150, column 1 - line 150, column 37): " + [note.constructor.name, target.constructor.name]);
+    throw new Error("Failed pattern match at XenoPitch (line 152, column 1 - line 152, column 37): " + [note.constructor.name, target.constructor.name]);
   };
 };
 var cycleAndOctavesOfPatternInSet$prime = function(n2) {
@@ -47073,11 +47073,11 @@ var checkSixth2 = function(v) {
 var checkSec = function(v) {
   return function(v1) {
     if (v instanceof DownJump) {
-      return v1 - 165.00422849992202 * 0.01 - 111.73128526977847 * 0.01;
+      return 165.00422849992202 * 0.01 - 111.73128526977847 * 0.01 - v1;
     }
     ;
     if (v instanceof DownNext) {
-      return v1 - 165.00422849992202 * 0.01 - 111.73128526977847 * 0.01;
+      return 165.00422849992202 * 0.01 - 111.73128526977847 * 0.01 - v1;
     }
     ;
     return v1;
@@ -47228,7 +47228,7 @@ var analysisShurNotPattern = function(v) {
         return map24(assambleShurNot)(zipped);
       }
       ;
-      throw new Error("Failed pattern match at XenoPitch (line 98, column 1 - line 98, column 72): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
+      throw new Error("Failed pattern match at XenoPitch (line 97, column 1 - line 97, column 72): " + [v.constructor.name, v1.constructor.name, v2.constructor.name]);
     };
   };
 };

@@ -94,7 +94,6 @@ centaura n = case n`mod`12 of
                 _ -> 0.0
 
 
-
 analysisShurNotPattern:: Span -> Rhythmic -> Array Int -> Array ShurNot
 analysisShurNotPattern CycleEvent _ ns = map assambleShurNot zipped
   where first = ns
@@ -138,14 +137,17 @@ assambleShurNot (Tuple x y) = {movement: mov, midiInterval: checkedMidiInt}
         checkedMidiInt = sixthChecked
 
 checkSec:: Interval -> Number -> Number
-checkSec DownJump midiInter = midiInter - (165.00422849992202 * 0.01) - (111.73128526977847 * 0.01)
-checkSec DownNext midiInter = midiInter - (165.00422849992202 * 0.01) - (111.73128526977847 * 0.01)
+checkSec DownJump midiInter = (165.00422849992202 * 0.01) - (111.73128526977847 * 0.01) - midiInter
+checkSec DownNext midiInter = (165.00422849992202 * 0.01) - (111.73128526977847 * 0.01) - midiInter
 checkSec _ midiInter = midiInter
 
 checkSixth:: Interval -> Number -> Number
 checkSixth UpJump midiInter = midiInter + (866.9592293653092 * 0.01) - (813.6862861351652 * 0.01)
 checkSixth UpNext midiInter = midiInter + (866.9592293653092 * 0.01) - (813.6862861351652 * 0.01)
 checkSixth _ midiInter = midiInter
+
+
+
 
 getMovement:: Int -> Int -> Interval
 getMovement note target 
