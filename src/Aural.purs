@@ -724,6 +724,8 @@ func mapa (Tuple k (Just n)) = case lookup k mapa of
 
 f:: XenoPitch -> Int -> Boolean
 f (CPSet s f (Just subs)) indx = indx <= A.length subs  
+f Centaura _ = true
+f ShurNot  _ = true
 f _ _ = false
 
 getXenoIDs:: Map String (List Aural) -> List (Tuple String (Maybe Int))
