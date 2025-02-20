@@ -82,7 +82,8 @@ onsetDurations' dur O = L.fromFoldable [Onset false dur]
 onsetDurations' dur (Sd xs) = onsetDurations' dur xs
 onsetDurations' dur (Repeat xs n) = L.concat $ map (\x -> onsetDurations' newDur x) $ L.fromFoldable $ replicate n xs
     where newDur = dur / (toNumber n)
-onsetDurations' dur (Bjorklund eu k n r) = onsetDurations dur (simplifyBjorklund eu k n r)
+onsetDurations' dur (Bjorklund eu k n r) = onsetDurations newDur (simplifyBjorklund eu k n r)
+    where newDur = dur / (toNumber n)
 onsetDurations' dur (Rhythmics xs) = L.concat $ map (\x-> onsetDurations' newDur x) xs
     where newDur = dur / (toNumber $ L.length xs)
 

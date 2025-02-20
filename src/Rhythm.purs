@@ -42,8 +42,7 @@ type P = ParserT String Identity
 rhythmic:: P Rhythmic
 rhythmic = do
   _ <- pure 1
-  x <- choice [try parseRhythmList, try parseSD, try parseRepeat, try parseBjorklund, parseXO]
-  pure x
+  choice [try parseRhythmList, try parseSD, try parseRepeat, try parseBjorklund, parseXO]
 
 parseRhythms:: P Rhythmic
 parseRhythms = do
