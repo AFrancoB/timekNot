@@ -183,15 +183,18 @@ instance Show Rhythmic where
   show O = "o"
   show (Sd xs) = "[" <> show xs <> "]"
   show (Repeat xs n) = "!" <> show xs <> "#" <> show n
-  show (Bjorklund eu k n r) = "("<>show k<>","<>show n<>") "<>show eu
-  show (Rhythmics xs) = show xs
+  show (Bjorklund (Full x o) k n r) = "(" <> show x <> "," <> show o <> "," <> show k <> "," <> show n <> "," <> show r <> ")"
+  show (Bjorklund (K x) k n r) = "(" <> show x <> "," <> show k <> "," <> show n <> "," <> show r <> ")"
+  show (Bjorklund (InvK x) k n r) = "_(" <> show x <> "," <> show k <> "," <> show n <> "," <> show r <> ")"
+  show (Bjorklund (Simple) k n r) = "(" <> show k <> "," <> show n <> "," <> show r <>  ")"
+  show (Rhythmics xs) = foldl (<>) "" $ map show xs 
 
 data Euclidean = Full Rhythmic Rhythmic | K Rhythmic | InvK Rhythmic | Simple -- add simple inverse
 
 instance euclideanShowInstance :: Show Euclidean where
-  show (Full x y) = "full: " <> (show x) <> " " <> (show y)
-  show (K x) = show x
-  show (InvK x) = show x
+  show (Full x y) = "full euclidean"
+  show (K x) = "k"
+  show (InvK x) = "k-inversed"
   show (Simple) = "simple"
 
 -- CPAlign will provide a convergence point in relation to a part of the program.
