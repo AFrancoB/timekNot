@@ -593,12 +593,13 @@ parseSpan:: P Span
 parseSpan = do
     _ <- pure 1
     x <- choice [
-                   reserved "-_" *>  pure CycleInBlock
-                 , try $ reserved "_-" *>  pure CycleBlock
-                 , try $ reserved "_-_" *> pure SpreadBlock
-                 , reserved "_" *>   pure  CycleEvent
-                ]
+                   reserved "-_" *>  pure CycleInBlock <|> reserved ":cycleTrunc" *> pure CycleInBlock
+                 , try $ reserved "_-" *>  pure CycleBlock <|> reserved ":cycleBlock" *> pure CycleBlock
+                 , try $ reserved "_-_" *> pure SpreadBlock <|> reserved ":spread" *> pure SpreadBlock
+                 , reserved "_" *>   pure  CycleEvent <|> reserved ":cycle" *> pure CycleEvent
+                ]  <|> pure CycleEvent
     pure x
+
     ---
 
 sampleParser:: P (List String)

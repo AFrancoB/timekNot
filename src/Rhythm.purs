@@ -117,7 +117,7 @@ parseK = do
 parseInv:: P Rhythmic
 parseInv = do
   _ <- pure 1
-  _ <- string "'("
+  _ <- string "_("
   p <- bPattern 
   _ <- string ")"
   pure $ Bjorklund (InvK p.patt) p.k p.n p.rotate
@@ -139,7 +139,6 @@ parseXO = do
   _ <- pure 1
   x <- choice [charWS 'x' *> pure X, charWS 'o' *> pure O]
   pure x
-
 
 charWS:: Char -> P Char
 charWS x = do

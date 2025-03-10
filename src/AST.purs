@@ -149,7 +149,12 @@ data Dastgah = Shur (List Int) -- 1 to 8 then it cycles back
 instance showDatsgah :: Show Dastgah where
   show (Shur l) = "shur " <> show l
 
-data Temporal = Temporal Polytemporal Rhythmic Boolean | Replica String -- this will require a check and the recursive implementation now very familiar
+data Temporal = Temporal Polytemporal Rhythmic Boolean | 
+                Replica String -- |
+                -- Canonic (List Polytemporal) Rhythmic Boolean 
+
+
+ -- this will require a check and the recursive implementation now very familiar
 
 instance temporalShow :: Show Temporal where
     show (Temporal x y z) = show x <> " " <> show y <> (if z then " looped" else " unlooped")
@@ -161,6 +166,7 @@ data Polytemporal =
   Metric ConvergeTo ConvergeFrom TempoMark | -- starts a program attached to a default underlying voice (a tempo grid basically) first number is the point to where the new voice will converge, second number is the point from which it converges. 
   Converge String ConvergeTo ConvergeFrom TempoMark | -- Args: String is the voice identifier, convergAt (where this voice converges with the identified voice) and convergedFrom (the point of this voice that converges with the identified voice)  -- Converge starts a program in relationship with another voice
   Novus String ConvergeFrom TempoMark -- |
+--  Canonic (List Polytemporal)
   -- InACan (List Polytemporal)
 
 instance polytemporalShowInstance :: Show Polytemporal where
@@ -168,15 +174,27 @@ instance polytemporalShowInstance :: Show Polytemporal where
   show (Metric cTo cFrom t) = "(cTo "<>show cTo<>") (cFrom "<>show cFrom <> ") (tempo mark: " <> show t <> ")"
   show (Converge voice cTo cFrom t) = "toVoice "<>show voice<>" (cTo "<>show cTo<>") (cFrom "<>show cFrom <> ") (tempo mark: " <> show t <> ")"
   show (Novus vantageId cFrom t) = "vantagePoint "<>show vantageId<>" (cFrom "<>show cFrom <> ") (tempo mark: " <> show t <> ")"
-  -- show (InACan xs) = "InACan "<> show xs
+  -- show (Canonic xs) = show xs
+
+-- data Durations = 
+
 
 data Rhythmic =  -- whenPosix, thats it
   X | -- x
-  O |
+  O | -- o
   Sd Rhythmic | -- [x]
-  Repeat Rhythmic Int |
-  Bjorklund Euclidean Int Int Int | 
+  Repeat Rhythmic Int |     -- ! xoxo #3
+  Bjorklund Euclidean Int Int Int |  
   Rhythmics (List Rhythmic) -- xoxo
+
+instance Eq Rhythmic where 
+    eq X X = true 
+    eq O O = true
+    eq (Sd xs1) (Sd xs2) = xs1 == xs2
+    eq (Repeat r1 n1)  (Repeat r2 n2) = (r1 == r2) && (n1 == n2)
+    eq (Bjorklund eu1 k1 n1 r1) (Bjorklund eu2 k2 n2 r2) = ((eu1 == eu2) && (k1 == k2)) && ((n1 == n2) && (r1 == r2))   
+    eq (Rhythmics xs1) (Rhythmics xs2) = xs1 == xs2
+    eq _ _ = false
 
 instance Show Rhythmic where
   show X = "x"
@@ -188,8 +206,15 @@ instance Show Rhythmic where
   show (Bjorklund (InvK x) k n r) = "_(" <> show x <> "," <> show k <> "," <> show n <> "," <> show r <> ")"
   show (Bjorklund (Simple) k n r) = "(" <> show k <> "," <> show n <> "," <> show r <>  ")"
   show (Rhythmics xs) = foldl (<>) "" $ map show xs 
-
+ 
 data Euclidean = Full Rhythmic Rhythmic | K Rhythmic | InvK Rhythmic | Simple -- add simple inverse
+
+instance Eq Euclidean where 
+    eq (Full x1 y1) (Full x2 y2) = (x1 == x2) && (y1 == y2)
+    eq (K x1) (K x2) = x1 == x2
+    eq (InvK x1) (K x2) = x1 == x2
+    eq Simple Simple = true
+    eq _ _ = false
 
 instance euclideanShowInstance :: Show Euclidean where
   show (Full x y) = "full euclidean"
@@ -202,6 +227,9 @@ instance euclideanShowInstance :: Show Euclidean where
 
 -- data Align = Mod Number Number | Mod' Number | Snap Number | Snap' Number | Origin Number  -- this is the goal
 
+-- THIS IS DUE NOW:
+-- data CPAlign = CeilMod Int | CeilSnap | RoundMod Int | RoundSnap | FloorMod Int | FloorSnap | Origin 
+
 data CPAlign = Mod Int | Snap | Origin  -- this is the first stage
 
 instance Show CPAlign where
@@ -209,13 +237,14 @@ instance Show CPAlign where
   show  Snap = "closest to eval"
   show  Origin = "diverge at origin"
 
+
 -- Aligners:
 ---- Mod Multiple Offset (next start of voice/event multiple of N with an offset number becomes voice 0)
 ---- Mod' Multiple Offset (closest multiple, can be in the past already)
 ---- Snap cp happens at closest voice or event.
----- Origin will align the cp at 0 (1st of January, 1970: 12:00 am)
+---- Origin will align the cp at 0
 
-data ConvergeFrom = Structure Int (Array Int) | Process Int | Percen Number | Last
+data ConvergeFrom = Structure Int (Array Int) | Process Int | Percen Number | Last -- | Canonic Int ConvergeFrom
 
 instance Show ConvergeFrom where
   show (Structure x xs) = show x <>"-"<> result <> " "
@@ -224,8 +253,9 @@ instance Show ConvergeFrom where
   show (Process e) = show e
   show (Percen p) = show p <> "%"
   show Last = "last"
+  -- show (Canonic int cf) = show int <> ":" <> show cf 
 
-data ConvergeTo = StructureTo Int (Array Int) CPAlign | ProcessTo Int CPAlign | PercenTo Number CPAlign | LastTo CPAlign
+data ConvergeTo = StructureTo Int (Array Int) CPAlign | ProcessTo Int CPAlign | PercenTo Number CPAlign | LastTo CPAlign -- | CanonicTo Int ConvergeTo 
 
 instance Show ConvergeTo where
   show (StructureTo x xs a) = show x <>"-"<> result <> " " <> show a
@@ -234,6 +264,7 @@ instance Show ConvergeTo where
   show (ProcessTo e a) = show e <> " " <> show a
   show (PercenTo p a) = show p <> "% " <> show a
   show (LastTo a) = "last"
+--  show (CanonicTo int ct) = show int <> ":" <> show ct
 
 -- perhaps this is the output of processTempoMark, this will allow users to declare a total duration of a block (reverting more or less the additive logic to divisive)
 

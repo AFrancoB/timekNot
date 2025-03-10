@@ -1,4 +1,4 @@
-module Parser(temporal, check, parseProgram, replica, getTemporalMap, getAuralMap, test, testP,xPitchExpression, expression, getVantageMap, parseDate, utcA) where
+module Parser(temporal, check, parseProgram, replica, getTemporalMap, getAuralMap, testRecursive, testP,xPitchExpression, expression, getVantageMap, parseDate, utcA) where
 
 import Prelude
 
@@ -73,23 +73,8 @@ testP str = runParser str parseProgram
 
   -- events specific to concrete indexes: 2-0.1 "cp" -- should generate a cp sound only at 2-0.1
 
-  -- implement unleash parser 
+  -- implement unleash parser (as a substitute from kairos)
 
-  -- razgado  -- doable after concat
--- r <- razgado 0.2 5 -- donde 0.2 es dur en secs y 5 es numero de notas 
--- r.sound = "grandpiano" .speed = _-_ 1 1.1 1.2 1.3 1.4 1.5;
-
----- doable after razgado
-  -- canonise (tms) cp rhythmic <<- vantage (id index (_-4 means every fourth event in block)) 
--- v0 <- diverge | xxxx :|
--- c <- canonise cpm(100,200,300,400,500) cp: 5 | xxxxx || <<- v0 _-4
-
-  -- concat temporals  -- Doable soon
--- v0 <- (2 afterEval) (3)              | xxox ||
--- v1 <- (2 afterEval) (1) (v0 3:5) | xxx[xx]ox ||
--- w <- v0 <> v1 :|
-
-  -- refactor auralSpecs!!!!!!
 
   -- acceleration in unlooped events (how to represent this? and calculate the durations of the events??)
 
@@ -102,8 +87,6 @@ testP str = runParser str parseProgram
 -- Vantage.remove = "first"
 
 -- v <- first cFrom tm | xxxx :|
-
-
 
   -- grand project:
   -- Monoid programs:: Map ZoneIndex Voices
@@ -217,7 +200,7 @@ utcA = do
   _ <- pure 1
   d <- date
   t <- choice [parens timeOfDay, timeOfDay] 
-  local <- (parens $ local) <|> (reserved "so-called utc") *> pure 0
+  local <- (parens $ local) <|> (reserved "utc") *> pure 0
   tiempo <- liftEither $ parseDate (d <> " " <> t)
   result <- liftMaybe (\_ -> "Not a local time") $ adjust (Hours $ toNumber local) tiempo
   pure $ UTC result
@@ -243,7 +226,7 @@ timeOfDay = do
 local:: P Int
 local = do
   _ <- pure 1
-  _ <- reserved "so-called utc"
+  _ <- reserved "utc"
   op <- choice [reservedOp "-" *> pure 1, reservedOp "+" *> pure (-1)]
   n <- natural
   pure (n * op)
@@ -298,6 +281,7 @@ removeA = do
   _ <- pure 1
   _ <- reserved ".remove"
   pure $ Remove
+--
 
 timeExpression:: P Expression
 timeExpression = do
@@ -313,21 +297,54 @@ temporal = do
 -- inACan:: P (Map String Temporal)
 -- inACan = do
 --   _ <- pure 1
---   id <- voiceId
---   _ <- reserved "<-"
---   voice <- voiceId
---   cTo <- choice [try cToLast, try $ parens parsePercenTo, try $ parens parseProcessTo, parens parseStructureTo]
---   cFrom <- choice [try cFromLast, try $ parens cFromPercen, try $ parens cFromProcess, parens cFromStructure]
---   tm <- brackets $ many tempoMark <|> pure XTempo -- the alternative should be same as estuary tempo
---   _ <- charWS '|'
---   r <- rhythmic
---   l <- choice [(strWS "||" *> pure false), (strWS ":|" *> pure true)]
-  -- pure $ singleton (fst p) $ Temporal (snd p) r l
+--   id <- voiceId  
+--   cFrom <- (brackets $ cFromCan) <|> Process 0
+--   cTo <- (cToCan) <|> ProcessTo 0 Origin
 
--- polytemporalList:: String -> ConvergeTo -> ConvergeFrom -> List TempoMark -> Map String Polytemporal
--- polytemporalList id cTo cFrom tms = 
---   let newIDs = map (\index -> id <> "-" <> (show index)) $ range 0 $ length tms
---   in newIDs
+-- -- miCan   -- nothing in cFrom or cTo means diverge fully
+-- -- miCan[3:0] <- mu[32 >>]
+-- -- miCan[3:1]        -- nothing in cTo means diverge 
+
+-- cToCan:: P ConvergeTo
+-- cToCan = do 
+--   _ <- pure 1 
+
+  
+--                             -- <- mu<>
+--   choice [externalTempoCTo, convergeCTo]
+
+
+-- convergeCTo:: P ConvergeTo
+-- convergeCTo = do
+--   _ <- pure 1
+--   _ <- reserved "<-"
+--   vIndex <- voiceIndex <|> (pure 0)
+--   x <- choice [try cFromPercen, try cFromProcess, cFromStructure]
+--   pure CanonicTo vIndex x
+ 
+-- externalTempoCTo:: P ConvergeTo
+-- externalTempoCTo = do
+--   _ <- pure 1
+--   _ <- reserved "<-"
+--   cTo <- choice [try $ brackets parsePercenTo, try $ brackets parseProcessTo, brackets parseStructureTo, reserved ">>" *> ProcessTo 0 Snap, reserved "<<" *> ProcessTo 0 Snap , reserved "<>" *> ProcessTo 0 Snap] -- >> SnapCeil, << SnapFloor, <> SnapRound!
+--   pure cTo
+
+
+
+
+-- cFromCan:: P ConvergeFrom
+-- cFromCan = do
+--   _ <- pure 1
+--   vIndex <- voiceIndex <|> (pure 0)
+--   x <- choice [try cFromPercen, try cFromProcess, cFromStructure]
+--   pure Canonic vIndex x
+
+-- voiceIndex:: P Int 
+-- voiceIndex = do
+--   _ <- pure 1
+--   x <- integer
+--   _ <- reserved ":"
+--   pure x 
 
 
 replica:: P (Map String Temporal)
@@ -343,10 +360,22 @@ polytemporalRelation:: P (Map String Temporal)
 polytemporalRelation = do
   _ <- pure 1
   p <- choice [try kairos, try metric, try converge]
+  rhydur <- choice [try rhythmicWrapper, durWrapper]
+  pure $ singleton (fst p) $ Temporal (snd p) (fst rhydur) (snd rhydur)
+
+rhythmicWrapper:: P (Tuple Rhythmic Boolean) 
+rhythmicWrapper = do
   _ <- charWS '|'
   r <- rhythmic
   l <- choice [(strWS "||" *> pure false), (strWS ":|" *> pure true)]
-  pure $ singleton (fst p) $ Temporal (snd p) r l
+  pure $ Tuple r l
+
+durWrapper:: P (Tuple Rhythmic Boolean) 
+durWrapper = do
+  _ <- charWS '<'
+  r <- rhythmic
+  l <- choice [(strWS ">" *> pure false), (strWS ":>" *> pure true)]
+  pure $ Tuple r l
 
 kairos:: P (Tuple String Polytemporal)
 kairos = do
@@ -517,7 +546,7 @@ percenSnap = do
   _ <- pure 1
   n <- naturalOrFloat
   _ <- charWS '%'
-  _ <- reserved "afterEval"
+  _ <- reserved "afterEval" <|> reserved ">>"
   pure $ PercenTo (toNumber' n) Snap
 
 percenMod:: P ConvergeTo
@@ -527,7 +556,7 @@ percenMod = do
   m <- natural
   n <- naturalOrFloat
   _ <- charWS '%'
-  _ <- reserved "afterEval"
+  _ <- reserved "afterEval" <|> reserved ">>"
   pure $ PercenTo (toNumber' n) (Mod m)
 
 processOrigin:: P ConvergeTo
@@ -540,7 +569,7 @@ processSnap:: P ConvergeTo
 processSnap = do
   _ <- pure 1
   n <- natural
-  _ <- reserved "afterEval"
+  _ <- reserved "afterEval" <|> reserved ">>"
   pure $ ProcessTo n Snap
 
 processMod:: P ConvergeTo
@@ -549,7 +578,7 @@ processMod = do
   _ <- reserved "mod"
   m <- natural
   n <- natural
-  _ <- reserved "afterEval"
+  _ <- reserved "afterEval" <|> reserved ">>"
   pure $ ProcessTo n (Mod m)
 
 structureOrigin:: P ConvergeTo
@@ -562,7 +591,7 @@ structureSnap:: P ConvergeTo
 structureSnap = do
   _ <- pure 1
   st <- forStructure
-  _ <- reserved "afterEval"
+  _ <- reserved "afterEval" <|> reserved ">>"
   pure $ StructureTo (fst st) (snd st) Snap
 
 structureMod:: P ConvergeTo
@@ -571,7 +600,7 @@ structureMod = do
   _ <- reserved "mod"
   m <- natural
   st <- forStructure
-  _ <- reserved "afterEval"
+  _ <- reserved "afterEval" <|> reserved ">>"
   pure $ StructureTo (fst st) (snd st) (Mod m)
 
 forStructure:: P (Tuple Int (Array Int)) 
@@ -603,9 +632,9 @@ tempoMark = do
 acceleration:: P TempoMark -- (~ 1 << 0 range 100cpm, 1000cpm)
 acceleration = do 
   _ <- pure 1
-  _ <- reserved "~"
+  _ <- reserved "sin"
   freq <- toNumber' <$> naturalOrFloat
-  _ <- reserved "<<"
+  _ <- reserved "phase:"
   ph <- toNumber' <$> naturalOrFloat
   _ <- reservedOp "range"
   max <- choice [try cpm, try bpm, try cps, try ratio]
@@ -654,8 +683,8 @@ ratio = do
   pure $ Prop id x y
 
 --
-test :: VantageMap -> String -> Either String Program
-test vm x =
+testRecursive :: VantageMap -> String -> Either String Program
+testRecursive vm x =
   case runParser x parseProgram of
     Left (ParseError err _) -> Left err
     Right prog -> case check vm prog of
@@ -695,23 +724,19 @@ unexpressVantage:: Expression -> Map String Vantage
 unexpressVantage (VantagePointExpression x) = x 
 unexpressVantage _ = empty
 
--- test' :: String -> Either String (Map String Temporal)
--- test' x =
---   case getTemporalMap <$> runParser x parseProgram of
---     Left (ParseError err _) -> Left err
---     Right aMap -> Right $ check aMap 
+-- checks!
 
 check :: VantageMap -> Program -> Boolean
 check vm program = checkedTempoAspects && checkedPitch
   where checkedTempoAspects = checkT vm (getVantageMap program) $ getTemporalMap program
         checkedPitch = checkXPitch program
 
-
 checkT :: VantageMap -> Map String Vantage -> Map String Temporal -> Boolean
 checkT vm vMNew aMap' = checkID && checkTempoMark
   where aReplicaMap = filter isReplica aMap'
         aMap = filter (not isReplica) aMap'
-        checkID = not $ elem false $ mapWithIndex (check2 vm vMNew aMap' Nil) aMap'  
+        checkID = not $ elem false $ mapWithIndex (check2 vm vMNew aMap Nil) aMap 
+        -- tempomarl check, needs its own function 
         checkTempoMark = not $ elem false $ mapWithIndex (checkTempi aMap Nil) aMap
 
 isReplica:: Temporal -> Boolean

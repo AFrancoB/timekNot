@@ -16,13 +16,58 @@ import Data.Tempo
 import Data.Enum
 import Partial.Unsafe
 import Data.Rational
--- import Data.Ratio
+import Data.Map (Map(..), empty)
 import Data.Int (floor, round, toNumber) as I
 import Data.List as L
 import Data.List.Lazy
 import Data.Maybe
 import Parsing
 
+
+import Rhythm
+import Parser
+
+main :: Effect Unit
+main = do
+  _ <- traverse quickCheck [
+    -- rhythmic parser tests:
+    (show <$> runParser "x" rhythmic) == Right "x" <?> "x broken in rhythm parser",
+    (show <$> runParser "o" rhythmic) == Right "o" <?> "o broken in rhythm parser",
+    (show <$> runParser "xxxxx" rhythmic) == Right "xxxxx" <?> "xxxx broken in rhythm parser",
+    (show <$> runParser "xxx xxx" rhythmic) == Right "xxxxxx" <?> "xxx xxx broken in rhythm parser",
+    (show <$> runParser "oxox" rhythmic) == Right "oxox" <?> "oxox broken in rhythm parser",
+    (show <$> runParser "oxo xox" rhythmic) == Right "oxoxox" <?> "oxo xox broken in rhythm parser",
+    (show <$> runParser "[x]" rhythmic) == Right "[x]" <?> "[x] broken in rhythm parser",
+    (show <$> runParser "[xxxx]" rhythmic) == Right "[xxxx]" <?> "[xxxx] broken in rhythm parser",
+    (show <$> runParser "[oxox]" rhythmic) == Right "[oxox]" <?> "[oxox] broken in rhythm parser",
+    (show <$> runParser "[oxox] x" rhythmic) == Right "[oxox]x" <?> " [oxox] x broken in rhythm parser",
+    (show <$> runParser "x [oxxxxo]" rhythmic) == Right "x[oxxxxo]" <?> " x[oxxxxo] broken in rhythm parser",
+    (show <$> runParser "[xoxox[oxoxo]]" rhythmic) == Right "[xoxox[oxoxo]]" <?> " [xoxox[oxoxo]] broken in rhythm parser",
+    (show <$> runParser "[xx[ox[xxx]]]" rhythmic) == Right "[xx[ox[xxx]]]" <?> " [xx[ox[xxx]]] broken in rhythm parser",
+    (show <$> runParser "xox  [xx  [ox  [xxx]]]" rhythmic) == Right "xox[xx[ox[xxx]]]" <?> " xox[xx[ox[xxx]]] broken in rhythm parser",
+    (show <$> runParser "[[[xx[o[oxo]o]xx]]]" rhythmic) == Right "[[[xx[o[oxo]o]xx]]]" <?> " [[[xx[o[oxo]o]xx]]] broken in rhythm parser",
+    (show <$> runParser "[(3,8,5)]" rhythmic) == Right "[(3,8,5)]" <?> " [(3,8,5)] broken in rhythm parser",
+    (show <$> runParser "[(x,3,8)]" rhythmic) == Right "[(x,3,8,0)]" <?> " [(x,3,8,0)] broken in rhythm parser",
+    (show <$> runParser "[(xx,ox,5,8)]" rhythmic) == Right "[(xx,ox,5,8,0)]" <?> " [(xx,ox,5,8,0)] broken in rhythm parser",
+    (show <$> runParser "[_(x,7,12)]" rhythmic) == Right "[_(x,7,12,0)]" <?> " [_(x,7,12,0)] broken in rhythm parser",
+    (show <$> runParser "[!oxox#2]" rhythmic) == Right "[!oxox#2]" <?> " [!oxox#2] broken in rhythm parser",
+    (show <$> runParser "(3,5)" rhythmic) == Right "(3,5,0)" <?> " (3,5,0) broken in rhythm parser",
+    (show <$> runParser "(x,4,7,1)" rhythmic) == Right "(x,4,7,1)" <?> " (x,4,7,1) broken in rhythm parser",
+    (show <$> runParser "(ox,xx,3,11)" rhythmic) == Right "(ox,xx,3,11,0)" <?> " (ox,xx,3,11,0) broken in rhythm parser",
+    (show <$> runParser "_(xox,5,9)" rhythmic) == Right "_(xox,5,9,0)" <?> " _(xox,5,9,0) broken in rhythm parser",
+    (show <$> runParser "(!oxxxo#3,5,7)" rhythmic) == Right "(!oxxxo#3,5,7,0)" <?> " (!oxxxo#3,5,7,0) broken in rhythm parser",
+    (show <$> runParser "([xxx],4,7)" rhythmic) == Right "([xxx],4,7,0)" <?> " ([xxx],4,7,0) broken in rhythm parser",
+    (show <$> runParser "((3,8),2,7,1)" rhythmic) == Right "((3,8,0),2,7,1)" <?> " ((3,8),2,7,1) broken in rhythm parser",
+    (show <$> runParser "![ox]#5" rhythmic) == Right "![ox]#5" <?> "![ox]#5 broken in rhythm parser",
+    (show <$> runParser "!_(ox,3,8)#4" rhythmic) == Right "!_(ox,3,8,0)#4" <?> "!_(ox,3,8,0)#4 broken in rhythm parser",
+    (show <$> runParser "!oxox xxx#2" rhythmic) == Right "!oxoxxxx#2" <?> "!oxox xxx#2 broken in rhythm parser",
+    (show <$> runParser "!ox [xx] (3,8) !xx#3 #4" rhythmic) == Right "!ox[xx](3,8,0)!xx#3#4" <?> "!ox [xx] (3,8) !xx#3 #4 broken in rhythm parser",
+    (show <$> runParser "ox (3,8) [xxx] !xx#2 ([xx[(3,5)]],4,7,2) x [(xx,3,5,1) !!xxx [ox] _(ox,2,6,3)#2 [xxx]#5]" rhythmic) == Right "ox(3,8,0)[xxx]!xx#2([xx[(3,5,0)]],4,7,2)x[(xx,3,5,1)!!xxx[ox]_(ox,2,6,3)#2[xxx]#5]" <?> "ox(3,8,0)[xxx]!xx#2([xx[(3,5,0)]],4,7,2)x[(xx,3,5,1)!!xxx[ox]_(ox,2,6,3)#2[xxx]#5] broken in rhythm parser",
+
+    -- recursive loop checks:
+    isRight (testRecursive empty "uno <- (20) (20) | x :|") <?> "external tempo convergence broken"
+    ]
+  pure unit
 
 
 -- -- tests for:
@@ -65,6 +110,7 @@ import Parsing
 
 --     ]
 --   pure unit
+
 ----   unpacking time funcion
 
 
