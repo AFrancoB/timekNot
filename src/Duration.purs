@@ -8,6 +8,7 @@ import Data.List hiding (many,take)
 import Data.List.Lazy (replicate,repeat,take)
 import Data.Foldable (foldl)
 import Data.Int
+import Data.Number (pow)
 import Data.Tuple
 import Data.String (singleton, joinWith)
 import Data.Maybe hiding (optional)
@@ -25,76 +26,113 @@ import Parsing
 import Parsing.String
 import Parsing.String.Basic
 import Parsing.Combinators
+import Parsing.Combinators as C
 import Parsing.Language (haskellStyle)
 import Parsing.Token (makeTokenParser)
 
-
 import AST
-
-
-
 
 type P = ParserT String Identity 
 
 
--- data Expr = Add Expr Expr
---           | Sub Expr Expr
---           | Lit Number
+data Dur a = Dur' a
 
--- term:: P Expr
--- term = number -- <|> parens
+-- type Signal a = Tempo -> NominalDiffTime -> UTCTime -> UTCTime -> UTCTime -> a
 
--- op :: P (Expr -> Expr -> Expr)
--- op = (char '+' $> pure Add) <|> (char '-' $> pure Sub)
+instance durShow:: Show (Dur a) where
+  show (Dur' a) = "dur"
 
--- expr :: Parser Expr
--- expr = term >>= rest
---   where
---     rest x = (op >>= \f -> term >>= \y -> rest (f x y)) <|> pure x
+instance durFunctor:: Functor Dur where
+  map f (Dur' a) = Dur' (f a)
+
+instance durApply:: Apply Dur where
+  apply (Dur' fn) a = (fn <$> a)
+
+-- instance applyMaybe :: Apply Maybe where
+--   apply (Just fn) x = fn <$> x
+--   apply Nothing   _ = Nothing
+
+instance durApplicative:: Applicative Dur where
+  pure = Dur'
+
+addDur :: Num a => Dur a -> Dur a -> Dur a
+addDur (Dur x) (Dur y) = Dur (x + y)
+
+-- instance durMonad:: Monad Dur where
+
+{- instance Functor Signal where
+  fmap f s = \t videoDur renderT evalT anchorT -> f (s t videoDur renderT evalT anchorT)
+
+instance Applicative Signal where
+  pure x = \_ _ _ _ _ -> x
+  f <*> x = \t videoDur renderT evalT anchorT -> f t videoDur renderT evalT anchorT $ x t videoDur renderT evalT anchorT
+
+instance Monad Signal where
+  a >>= f = \t videoDur renderT evalT anchorT -> f (a t videoDur renderT evalT anchorT) a t videoDur renderT evalT anchorT
+-}
 
 
--- I have math going on but precedence seems difficult to achieve...
 
-addRat:: Rational -> Rational -> Rational
-addRat x y = x + y
+durExpr:: P (List Number)
+durExpr = do
+  _ <- pure 1
+  whitespace
+  xs <- many expr
+  eof
+  pure $ fromFoldable xs
 
-subRat:: Rational -> Rational -> Rational
-subRat x y = x - y
+expr:: P Number
+expr = do
+  _ <- pure 1
+  whitespace
+  term `chainl1` addSubOp
 
-mulRat:: Rational -> Rational -> Rational
-mulRat x y = x * y
-
-divRat:: Rational -> Rational -> Rational
-divRat x y = x / y
-
-oper:: P Rational
-oper = do
+term:: P Number
+term = do 
   _ <- pure 1 
-  _ <- whitespace
-  x <- chainl1 (choice [try func, toRat <$> toNumber' <$> naturalOrFloat]) $ choice [(strWS "/" $> divRat), (strWS "*" $> mulRat),(strWS "-" $> subRat), (strWS "+" $> addRat)]
-  pure x
+  whitespace
+  power `chainl1` mulDivOp
 
+power:: P Number
+power = do 
+  _ <- pure 1 
+  whitespace 
+  factor `chainr1` expOp
 
-func':: P (List Rational)
-func' = do 
+factor:: P Number
+factor = do
+  _ <- pure 1 
+  whitespace
+  try (parens expr) <|> parseNumber
+
+addSubOp:: P (Number -> Number -> Number)
+addSubOp =  do
   _ <- pure 1
-  x <- many func
-  eof -- remove this when integrating to the program
-  pure x
+  whitespace
+  (char '+' *> pure (+))
+  <|> (char '-' *> pure (-))
 
-func:: P Rational
-func = do
+mulDivOp:: P (Number -> Number -> Number)
+mulDivOp =  do
   _ <- pure 1
-  x <- choice [toRat <$> try parseNumber, try $ parens oper, toRat <$> parens parseNumber ]
-  pure x
+  whitespace
+  (char '*' *> pure (*))
+  <|> (char '/' *> pure (/))
 
---- negative Numbers
+expOp:: P (Number -> Number -> Number)
+expOp = do
+  _ <- pure 1
+  whitespace
+  (char '^' *> pure (pow))
+
 parseNumber:: P Number
-parseNumber = choice [
-  try $ parens (toNumber' <$> naturalOrFloat),
+parseNumber = do
+  _ <- pure 0
+  whitespace
+  choice [
   try (toNumber' <$> naturalOrFloat),
-  negNum
-]
+  try (parens negNum)
+  ]
 
 negNum:: P Number
 negNum = do
@@ -115,6 +153,11 @@ strWS x = do
   x <- string x 
   whitespace
   pure x
+
+
+-- trasnform this parser to get rationals rather than numbers
+fromEitherToRat:: Either Int Number -> Rational
+fromEitherToRat x = toRat $ toNumber' x
 
 toNumber':: Either Int Number -> Number
 toNumber' (Left x) = toNumber x 

@@ -53,6 +53,8 @@ import Parsing
 
 -- command for copying into estuary devstaging: cp -Rf ~/Documents/repos/tk/timekNot /home/alejandro/Documents/repos/estuary/dev-staging/Estuary.jsexe
 
+-- do not forget branch name: exolang-pathway
+
 launch :: Effect TimekNot
 launch = do
   log "timekNot: launch"

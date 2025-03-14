@@ -99,14 +99,14 @@ type P = ParserT String Identity
 
 
 
-g:: List Number -> List Number -> Maybe Number
-g x y = do
-  m <- x!!0
-  n <- y!!2
-  pure (m + n)
+-- g:: List Number -> List Number -> Maybe Number
+-- g x y = do
+--   m <- x!!0
+--   n <- y!!2
+--   pure (m + n)
 
-h:: String -> Tuple Int ConvergeFrom -> String -> Tuple Int ConvergeTo -> List TempoMark -> Map String Polytemporal
-h id vIndcFrom idTo vIndcTo tms = 
+-- h:: String -> Tuple Int ConvergeFrom -> String -> Tuple Int ConvergeTo -> List TempoMark -> Map String Polytemporal
+-- h id vIndcFrom idTo vIndcTo tms = 
   
 
 
