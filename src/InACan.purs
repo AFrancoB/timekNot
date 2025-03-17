@@ -1,0 +1,145 @@
+module InACan (canonise) where
+
+import Prelude
+
+import Data.Identity
+import Data.List (List(..), zipWith, head, tail, elem, (:), concat, (..), range, (!!))
+import Data.List (fromFoldable, filter, length, filter) as L
+import Data.Array (fromFoldable) as A
+import Data.Either
+import Data.Int
+import Data.String (take, length)
+import Data.Tuple (Tuple(..), fst, snd)
+import Data.Map (Map(..), filter, lookup, keys, singleton, fromFoldable, toUnfoldable, member, unions, empty, alter)
+import Data.Maybe (Maybe(..), fromMaybe)
+import Data.Set as Set
+import Data.Maybe
+import Data.Rational (Rational(..), toRational, fromInt, (%))
+
+import Data.DateTime (exactDate, Year(..), Month(..), Day(..))
+
+import Data.FunctorWithIndex (mapWithIndex)
+
+import Data.String.CodeUnits (fromCharArray)
+import Data.String (split, Pattern)
+
+import Data.Formatter.DateTime (Formatter, parseFormatString, unformat)
+import Data.Formatter.Number (Formatter, parseFormatString, unformat) as N
+
+import Data.DateTime
+import Data.DateTime.Instant
+import Data.Time.Duration
+
+
+import Parsing
+import Parsing.String
+import Parsing.String.Basic
+import Parsing.Combinators
+import Parsing.Combinators.Array (many)
+import Parsing.Language (haskellStyle)
+import Parsing.Token (makeTokenParser)
+
+import AST
+import Rhythm
+import Aural
+
+type P = ParserT String Identity
+
+
+canonise:: String -> Maybe (Either String String) -> Maybe (Tuple Int ConvergeTo) -> Tuple Int ConvergeFrom -> List TempoMark -> Map String Polytemporal
+canonise id mIDTo mIndxCTo indxCFrom tempi = 
+  let main = createMainVoice id indxCFrom mIDTo mIndxCTo tempi 
+      canon = createCanonicPolytempi id indxCFrom tempi    
+  in alter (\n -> Just (snd main)) (fst main) canon
+
+createCanonicPolytempi:: String -> Tuple Int ConvergeFrom ->  List TempoMark -> Map String Polytemporal
+createCanonicPolytempi idOg indxCFrom tempi = nPoly
+  where genIDs = genericIDS idOg tempi  -- List Tuple Str TM
+        nPoly = fromFoldable $ map (\(Tuple id t) -> Tuple id $ createPolytemporal idOg indxCFrom tempi t) genIDs
+
+createPolytemporal:: String -> Tuple Int ConvergeFrom ->  List TempoMark -> TempoMark -> Polytemporal
+createPolytemporal idOg indxCFrom tempi t = Converge idCTo cTo cFrom t
+  where idCTo = createID idOg (fst indxCFrom)
+        cTo = convergeToFromconverge (snd indxCFrom)
+        cFrom = snd indxCFrom
+
+convergeToFromconverge:: ConvergeFrom -> ConvergeTo
+convergeToFromconverge (Process n) = ProcessTo n Origin 
+convergeToFromconverge (Structure n ns) = StructureTo n ns Origin 
+convergeToFromconverge (Percen x) = PercenTo x Origin 
+convergeToFromconverge Last = LastTo Origin
+
+genericIDS:: String -> List TempoMark -> List (Tuple String TempoMark)
+genericIDS id tempi = map (\n -> createIDandTM id n tempi) n 
+  where n = (0..(L.length tempi - 1))
+
+createMainVoice:: String -> Tuple Int ConvergeFrom -> Maybe (Either String String) -> Maybe (Tuple Int ConvergeTo) -> List TempoMark -> Tuple String Polytemporal
+createMainVoice id cFrom idCTo cTo tempi = 
+  let Tuple newID t = createIDandTM id (fst cFrom) tempi
+      nPolytemporal = newPolytemporal (snd cFrom) idCTo cTo tempi t
+  in Tuple newID nPolytemporal
+
+createIDandTM:: String -> Int -> List TempoMark -> Tuple String TempoMark
+createIDandTM id n tempi = Tuple (id <> "-" <> (show m)) tempo
+  where m = n `mod` (L.length tempi)
+        tempo = fromMaybe XTempo $ tempi!!m
+
+newPolytemporal:: ConvergeFrom -> Maybe (Either String String) -> Maybe (Tuple Int ConvergeTo) -> List TempoMark -> TempoMark -> Polytemporal
+newPolytemporal cFrom mIDCTo mCTo tempi t = r
+  where r = case mIDCTo of
+              Nothing -> Metric (ProcessTo 0 Origin) cFrom t
+              Just x -> case x of
+                          Left str -> Novus str cFrom t 
+                          Right str -> Converge idTo cTo cFrom t 
+                              where cTo = fromMaybe (ProcessTo 0 Origin) $ (snd <$> mCTo)
+                                    idTo = createID str $ fromMaybe 0 $ (fst <$> mCTo) 
+newPolytemporal cFrom mIDCTo Nothing tempi t = r
+  where r = case mIDCTo of
+              Nothing -> Metric (ProcessTo 0 Origin) (Process 0) t
+              Just x -> case x of
+                          Left str -> Novus str cFrom t 
+                          Right str -> Converge str (ProcessTo 0 Origin) cFrom t 
+                              where idTo = createID str 0
+newPolytemporal cFrom Nothing mCTo tempi t = Metric cTo cFrom t
+  where cTo = fromMaybe (ProcessTo 2666 Origin) $ (snd <$> mCTo)
+newPolytemporal cFrom _ _ _ t = Metric (ProcessTo 0 Origin) (Process 0) t
+
+createID:: String -> Int -> String
+createID id n = id <> "-" <> show n
+
+
+
+
+
+
+
+charWS:: Char -> P Char
+charWS x = do
+  _ <- pure 1
+  x <- char x 
+  whitespace
+  pure x
+
+strWS:: String -> P String
+strWS x = do
+  _ <- pure 1
+  x <- string x 
+  whitespace
+  pure x
+
+tokenParser = makeTokenParser haskellStyle
+parens      = tokenParser.parens
+braces      = tokenParser.braces
+identifier  = tokenParser.identifier
+reserved    = tokenParser.reserved
+naturalOrFloat = tokenParser.naturalOrFloat
+natural = tokenParser.natural
+float = tokenParser.float
+whitespace = tokenParser.whiteSpace
+colon = tokenParser.colon
+brackets = tokenParser.brackets
+comma = tokenParser.comma
+semi = tokenParser.semi
+integer = tokenParser.integer
+stringLiteral = tokenParser.stringLiteral
+reservedOp = tokenParser.reservedOp

@@ -169,6 +169,8 @@ data Polytemporal =
 --  Canonic (List Polytemporal)
   -- InACan (List Polytemporal)
 
+
+
 instance polytemporalShowInstance :: Show Polytemporal where
   show (Kairos asap t) = "kairos: " <> show asap <> " tempo mark: " <> show t
   show (Metric cTo cFrom t) = "(cTo "<>show cTo<>") (cFrom "<>show cFrom <> ") (tempo mark: " <> show t <> ")"

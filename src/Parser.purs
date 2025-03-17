@@ -1,4 +1,4 @@
-module Parser(temporal, check, parseProgram, replica, getTemporalMap, getAuralMap, testRecursive, testP,xPitchExpression, expression, getVantageMap, parseDate, utcA) where
+module Parser(cFromParser, polytemporalRelation', temporal, check, parseProgram, replica, getTemporalMap, getAuralMap, testRecursive, testP,xPitchExpression, expression, getVantageMap, parseDate, utcA) where
 
 import Prelude
 
@@ -10,7 +10,7 @@ import Data.Either
 import Data.Int
 import Data.String (take, length)
 import Data.Tuple (Tuple(..), fst, snd)
-import Data.Map (Map(..), filter, lookup, keys, singleton, fromFoldable, toUnfoldable, member, unions, empty)
+import Data.Map (Map(..), filter, lookup, keys, singleton, fromFoldable, mapMaybe, toUnfoldable, member, unions, empty)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Set as Set
 import Data.Maybe
@@ -43,9 +43,148 @@ import AST
 import Rhythm
 import Aural
 
+import InACan
+
 type P = ParserT String Identity
 
 testP str = runParser str parseProgram
+
+---------
+
+tempoMark':: P (List TempoMark)
+tempoMark' = do
+  _ <- pure 1
+  x <- choice [try cpm, try bpm, try cps, try ratio, acceleration]
+  pure (x:Nil)
+
+tempoMarks:: P (List TempoMark)
+tempoMarks = do
+  _ <- pure 1
+  xs <- brackets $ many $ choice [try cpm, try bpm, try cps, try ratio, acceleration]
+  pure $ L.fromFoldable xs
+
+-- CONSIDER: at entry point add a -0 to all voices that do not have any
+
+polytemporalRelation':: P (Map String Polytemporal)
+polytemporalRelation' = do
+  _ <- pure 0
+  whitespace
+  idFrom <- voiceId
+  cFrom <- try (brackets $ cFromParser) <|> pure (Tuple 0 (Process 0))
+  cTo <- try (cToParser) <|> pure {idCTo: Nothing, indxCTo: Nothing} 
+  tempi <- choice [try tempoMark', tempoMarks] <|> pure (XTempo:Nil)
+  pure $ canonise idFrom cTo.idCTo cTo.indxCTo cFrom tempi
+
+cToParser:: P {idCTo:: Maybe (Either String String), indxCTo:: Maybe (Tuple Int ConvergeTo)}
+cToParser = do
+  _ <- pure 0
+  whitespace
+  _ <- strWS "<-"
+  cTo <- choice [try cToNovus, try cToExternal, cToConverge]
+  pure {idCTo: cTo.idCTo, indxCTo: cTo.indxCTo}
+
+cToExternal:: P {idCTo:: Maybe (Either String String), indxCTo:: Maybe (Tuple Int ConvergeTo)}
+cToExternal = do
+  _ <- pure 0
+  indxCTo <- brackets indexAndCTo -- <|> pure Nothing
+  pure {idCTo: Nothing, indxCTo: indxCTo}
+
+cToNovus:: P {idCTo:: Maybe (Either String String), indxCTo:: Maybe (Tuple Int ConvergeTo)}
+cToNovus = do
+  _ <- pure 0
+  idCTo <- voiceIdNovusToM -- <|> pure Nothing
+  pure {idCTo: idCTo, indxCTo: Nothing}
+
+cToConverge:: P {idCTo:: Maybe (Either String String), indxCTo:: Maybe (Tuple Int ConvergeTo)}
+cToConverge = do
+  _ <- pure 0
+  cToConv <- choice [try cToConv, defaultCTo]
+  pure cToConv
+
+defaultCTo:: P {idCTo:: Maybe (Either String String), indxCTo:: Maybe (Tuple Int ConvergeTo)}
+defaultCTo = do
+  _ <- pure 0
+  idCTo <- try voiceIdM 
+  pure {idCTo: idCTo, indxCTo: Just (Tuple 0 (ProcessTo 0 Origin))}
+
+cToConv:: P {idCTo:: Maybe (Either String String), indxCTo:: Maybe (Tuple Int ConvergeTo)}
+cToConv = do
+  _ <- pure 0
+  idCTo <- try voiceIdM -- <|> pure Nothing
+  indxCTo <- (brackets indexAndCTo) -- <|> pure Nothing
+  pure {idCTo: idCTo, indxCTo: indxCTo} 
+
+indexAndCTo:: P (Maybe (Tuple Int ConvergeTo))
+indexAndCTo = do
+  _ <- pure 0
+  whitespace
+  cTo  <- choice [try indxCTo, defaultIndxTo]
+  pure $ Just $ Tuple (fst cTo) (snd cTo)
+
+defaultIndxTo:: P (Tuple Int ConvergeTo)
+defaultIndxTo = do
+  _ <- pure 0
+  cTo <- choice [try cToLast, try parsePercenTo, try parseProcessTo, parseStructureTo]
+  pure $ Tuple 0 cTo
+
+indxCTo:: P (Tuple Int ConvergeTo)
+indxCTo = do
+  _ <- pure 0
+  indx <- indexParser <|> pure 0
+  cTo <- choice [try cToLast, try parsePercenTo, try parseProcessTo, parseStructureTo]
+  pure $ Tuple indx cTo
+
+voiceIdNovusToM:: P (Maybe (Either String String))
+voiceIdNovusToM = do
+    _ <- pure 1
+    whitespace
+    _ <- strWS "\\"
+    x <- identifier -- many $ noneOf ['\\','<',' ']
+    pure (Just $ Left x)
+
+voiceIdM:: P (Maybe (Either String String))
+voiceIdM = do
+    _ <- pure 1
+    whitespace
+    x <- identifier -- many $ noneOf ['\\','<',' ']
+    pure (Just $ Right x)
+
+cFromParser:: P (Tuple Int ConvergeFrom)
+cFromParser = do
+  _ <- pure 0
+  whitespace
+  cFrom <- choice [try indxCFrom, defaultIndx]
+  pure $ Tuple (fst cFrom) (snd cFrom)
+
+defaultIndx:: P (Tuple Int ConvergeFrom)
+defaultIndx = do
+  _ <- pure 0
+  cFrom <- choice [try cFromLast, try cFromPercen, try cFromProcess, cFromStructure]
+  pure $ Tuple 0 cFrom
+
+indxCFrom:: P (Tuple Int ConvergeFrom)
+indxCFrom = do
+  _ <- pure 0
+  indx <- indexParser <|> pure 0
+  cFrom <- try $ choice [try cFromLast, try cFromPercen, try cFromProcess, cFromStructure]
+  pure $ Tuple indx cFrom
+
+indexParser:: P Int 
+indexParser = do
+  _ <- pure 0 
+  whitespace
+  n <- integer
+  _ <- strWS ":"
+  pure n
+----------
+
+
+
+
+
+
+
+
 
 -- ISSUES
 ---- range of Numbers is absolutely broken. DO NOT USE
@@ -359,9 +498,14 @@ replica = do
 polytemporalRelation:: P (Map String Temporal)
 polytemporalRelation = do
   _ <- pure 1
-  p <- choice [try kairos, try metric, try converge]
+  -- p <- choice [try kairos, try metric, try converge]
+  p <- polytemporalRelation'
   rhydur <- choice [try rhythmicWrapper, durWrapper]
-  pure $ singleton (fst p) $ Temporal (snd p) (fst rhydur) (snd rhydur)
+  pure $ inACan p rhydur
+  -- pure $ singleton (fst p) $ Temporal (snd p) (fst rhydur) (snd rhydur)
+
+inACan:: Map String Polytemporal -> Tuple Rhythmic Boolean -> Map String  Temporal
+inACan mapa rhy = mapMaybe (\p -> Just (Temporal p (fst rhy) (snd rhy))) mapa 
 
 rhythmicWrapper:: P (Tuple Rhythmic Boolean) 
 rhythmicWrapper = do
@@ -377,6 +521,12 @@ durWrapper = do
   l <- choice [(strWS ">" *> pure false), (strWS ":>" *> pure true)]
   pure $ Tuple r l
 
+
+--- 
+----Kairos: Layer where:
+-- Tuple String Polytemporal -> Map String Polytemporal -> Map String Polytemporal
+--  receive a single 
+--- kairos:: P (Map String Polytemporal)
 kairos:: P (Tuple String Polytemporal)
 kairos = do
   _ <- pure 1
@@ -399,6 +549,11 @@ atEval = do
   _ <- reserved "atEval"
   pure 0.01
 
+--- 
+----Metric: Layer where:
+-- Tuple String Polytemporal -> Map String Polytemporal -> Map String Polytemporal
+--  receive a single 
+--- metric:: P (Map String Polytemporal)
 metric:: P (Tuple String Polytemporal)
 metric = do 
   _ <- pure 1
@@ -422,6 +577,12 @@ convergingMetric = do
   tm <- parens tempoMark <|> pure XTempo -- the alternative should be same as estuary tempo
   pure $ Metric cTo cFrom tm
 
+--- 
+----converge: Layer where:
+-- Tuple String Polytemporal -> Map String Polytemporal -> Map String Polytemporal
+--  receive a single 
+---
+---- converge:: P (Map String Polytemporal)
 converge:: P (Tuple String Polytemporal)
 converge = do
   _ <- pure 1
@@ -443,11 +604,11 @@ converging:: P Polytemporal
 converging = do
   _ <- pure 1
   _ <- whitespace
-  voice <- voiceId -- choice between metricVoice or arbitrary name of a voice
+  voiceTo <- voiceId -- choice between metricVoice or arbitrary name of a voice
   cTo <- choice [try cToLast, try $ parens parsePercenTo, try $ parens parseProcessTo, parens parseStructureTo]
   cFrom <- choice [try cFromLast, try $ parens cFromPercen, try $ parens cFromProcess, parens cFromStructure]
   tm <- parens tempoMark <|> pure XTempo -- the alternative should be same as estuary tempo
-  pure $ Converge voice cTo cFrom tm
+  pure $ Converge voiceTo cTo cFrom tm
 
 novus:: P Polytemporal
 novus = do

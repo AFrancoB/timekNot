@@ -35,44 +35,6 @@ import AST
 type P = ParserT String Identity 
 
 
-data Dur a = Dur' a
-
--- type Signal a = Tempo -> NominalDiffTime -> UTCTime -> UTCTime -> UTCTime -> a
-
-instance durShow:: Show (Dur a) where
-  show (Dur' a) = "dur"
-
-instance durFunctor:: Functor Dur where
-  map f (Dur' a) = Dur' (f a)
-
-instance durApply:: Apply Dur where
-  apply (Dur' fn) a = (fn <$> a)
-
--- instance applyMaybe :: Apply Maybe where
---   apply (Just fn) x = fn <$> x
---   apply Nothing   _ = Nothing
-
-instance durApplicative:: Applicative Dur where
-  pure = Dur'
-
-addDur :: Num a => Dur a -> Dur a -> Dur a
-addDur (Dur x) (Dur y) = Dur (x + y)
-
--- instance durMonad:: Monad Dur where
-
-{- instance Functor Signal where
-  fmap f s = \t videoDur renderT evalT anchorT -> f (s t videoDur renderT evalT anchorT)
-
-instance Applicative Signal where
-  pure x = \_ _ _ _ _ -> x
-  f <*> x = \t videoDur renderT evalT anchorT -> f t videoDur renderT evalT anchorT $ x t videoDur renderT evalT anchorT
-
-instance Monad Signal where
-  a >>= f = \t videoDur renderT evalT anchorT -> f (a t videoDur renderT evalT anchorT) a t videoDur renderT evalT anchorT
--}
-
-
-
 durExpr:: P (List Number)
 durExpr = do
   _ <- pure 1
@@ -188,3 +150,66 @@ comma = tokenParser.comma
 semi = tokenParser.semi
 integer = tokenParser.integer
 stringLit = tokenParser.stringLiteral
+
+
+-- to understand functional programming better:
+
+data Box a = Box a | Boxes (List a)
+
+instance showBox :: Show a => Show (Box a) where
+  show :: Box a -> String
+  show (Box a) = "box " <> show a
+  show (Boxes xs) = "boxes " <> show xs
+
+instance eqBox :: Eq a => Eq (Box a) where
+  -- eq :: Box a -> boolean
+  eq (Box a) (Box b) = a == b
+  eq (Boxes xs) (Boxes ys) = xs == ys
+  eq _ _ = false
+
+instance numBox :: Semiring a => Semiring (Box a) where
+  add (Box x) (Box y) = Box (x + y)
+  add (Box x) (Boxes xs) = Boxes (map (\n -> x + n) xs)
+  add (Boxes xs) (Box y) = Boxes (map (\n -> y + n) xs)
+  add (Boxes xs) (Boxes ys) = Boxes $ zipWith (\x y -> x + y) xs ys
+  mul (Box x) (Box y) = Box (x * y)
+  mul (Box x) (Boxes xs) = Boxes (map (\n -> x * n) xs) 
+  mul (Boxes xs) (Box y) = Boxes (map (\n -> y * n) xs) 
+  mul (Boxes xs) (Boxes ys) = Boxes $ zipWith (\x y -> x * y) xs ys
+  zero = Box zero 
+  one = Box one   
+  
+-- instance monBox :: Monoid a => Monoid (Box a) where
+--   append (Box x) (Box y) = Box (x <> y)
+--   append (Box x) (Boxes ys) = Box (x <> ys)
+
+instance Functor Box where
+  map :: forall a b. (a -> b) -> Box a ->  Box  b
+  map                 f         (Box a) =  Box (f a)
+  map                 f       (Boxes xs) = Boxes (map f xs)
+
+
+
+-- instance Apply Box where
+--   apply :: forall a b. Box (a -> b) -> Box a -> Box  b
+--   apply               (Box   f  )     (Box a)    = Box (f a)
+--   apply               (Box   f  )    (Boxes xs)  = Boxes (map f xs) 
+--   apply                    _             _       = zero
+--   -- apply               (Boxes fs )     (Box a)    = Box a
+--   -- apply               (Boxes fs )    (Boxes xs)  = Boxes xs
+
+-- instance Applicative Box where
+--   pure :: forall a. a -> Box a
+--   pure              a =  Box a
+
+-- instance Bind Box where
+--   bind :: forall a b.  Box a -> (a -> Box b) -> Box b
+--   bind                (Box a)    f            = f a
+
+-- instance Monad Box
+
+
+-- Box a -> (a -> Box b) -> Box b
+
+-- f:: String -> Box String
+-- f a = pure (a <> "!!!")
