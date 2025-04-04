@@ -27,33 +27,33 @@ var setTempo = function (tk) {
         return Effect_Ref.write(Data_Tempo.fromForeignTempo(t))(tk.tempo);
     };
 };
-var scheduleNoteEvents = function (tk) {
-    return function (ws$prime) {
-        return function (we$prime) {
-            var ws = TimePacketOps.numToDateTime(ws$prime * 1000.0);
-            var we = TimePacketOps.numToDateTime(we$prime * 1000.0);
-            return function __do() {
-                var program = Effect_Ref.read(tk.ast)();
-                var vantageMap = Effect_Ref.read(tk.vantageMap)();
-                var t = Effect_Ref.read(tk.tempo)();
-                var $$eval = Effect_Ref.read(tk["eval"])();
-                var tp = TimePacketOps.assambleTimePacket(ws)(we)($$eval)(t)(vantageMap);
-                return Voices.programToForeign(program)(tp)();
-            };
+var render = function (tk) {
+    return function (args) {
+        var ws = TimePacketOps.numToDateTime(args.windowStartTime * 1000.0);
+        var we = TimePacketOps.numToDateTime(args.windowEndTime * 1000.0);
+        return function __do() {
+            var program = Effect_Ref.read(tk.ast)();
+            var vantageMap = Effect_Ref.read(tk.vantageMap)();
+            var t = Effect_Ref.read(tk.tempo)();
+            var $$eval = Effect_Ref.read(tk["eval"])();
+            var tp = TimePacketOps.assambleTimePacket(ws)(we)($$eval)(t)(vantageMap);
+            return Voices.programToForeign(program)(tp)();
         };
     };
 };
-var launch = function __do() {
-    Effect_Console.log("timekNot: launch")();
-    var ast = Effect_Ref["new"](fromFoldable([ new AST.TimeExpression(Data_Map_Internal.empty) ]))();
-    var tempo = bind(Data_Tempo.newTempo(toRational(1)(1)))(Effect_Ref["new"])();
-    var $$eval = bind(Effect_Now.nowDateTime)(Effect_Ref["new"])();
-    var vantageMap = Effect_Ref["new"](Data_Map_Internal.empty)();
-    return {
-        ast: ast,
-        tempo: tempo,
-        "eval": $$eval,
-        vantageMap: vantageMap
+var launch = function (v) {
+    return function __do() {
+        Effect_Console.log("timekNot: launch")();
+        var ast = Effect_Ref["new"](fromFoldable([ new AST.TimeExpression(Data_Map_Internal.empty) ]))();
+        var tempo = bind(Data_Tempo.newTempo(toRational(1)(1)))(Effect_Ref["new"])();
+        var $$eval = bind(Effect_Now.nowDateTime)(Effect_Ref["new"])();
+        var vantageMap = Effect_Ref["new"](Data_Map_Internal.empty)();
+        return {
+            ast: ast,
+            tempo: tempo,
+            "eval": $$eval,
+            vantageMap: vantageMap
+        };
     };
 };
 var check$prime = function (v) {
@@ -69,20 +69,20 @@ var check$prime = function (v) {
             if (!v2) {
                 return new Data_Either.Left("failed the check, time bites it's own tail");
             };
-            throw new Error("Failed pattern match at Main (line 84, column 30 - line 86, column 89): " + [ v2.constructor.name ]);
+            throw new Error("Failed pattern match at Main (line 85, column 30 - line 87, column 89): " + [ v2.constructor.name ]);
         };
-        throw new Error("Failed pattern match at Main (line 82, column 1 - line 82, column 74): " + [ v.constructor.name, v1.constructor.name ]);
+        throw new Error("Failed pattern match at Main (line 83, column 1 - line 83, column 74): " + [ v.constructor.name, v1.constructor.name ]);
     };
 };
-var evaluate = function (tk) {
-    return function (str) {
+var define = function (tk) {
+    return function (args) {
         return function __do() {
             Effect_Console.log("timekNot: evaluate")();
             var currentVM = Effect_Ref.read(tk.vantageMap)();
             Effect_Console.log("currentVM" + show(currentVM))();
             var tempo = Effect_Ref.read(tk.tempo)();
             var $$eval = Effect_Now.nowDateTime();
-            var pr = check$prime(currentVM)(Parsing.runParser(str)(Parser.parseProgram));
+            var pr = check$prime(currentVM)(Parsing.runParser(args.text)(Parser.parseProgram));
             if (pr instanceof Data_Either.Left) {
                 return {
                     success: false,
@@ -98,14 +98,14 @@ var evaluate = function (tk) {
                     error: "bad syntax"
                 };
             };
-            throw new Error("Failed pattern match at Main (line 74, column 3 - line 80, column 52): " + [ pr.constructor.name ]);
+            throw new Error("Failed pattern match at Main (line 75, column 3 - line 81, column 52): " + [ pr.constructor.name ]);
         };
     };
 };
 export {
     launch,
-    evaluate,
+    define,
     check$prime,
-    scheduleNoteEvents,
+    render,
     setTempo
 };

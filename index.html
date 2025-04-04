@@ -1,5 +1,54 @@
+<!DOCTYPE html>
 <html>
-    <body>
-        <script src="./timekNot.js" type="module"></script>
-    </body>
+<head>
+ <meta charset="UTF-8"></meta>
+ <title>timeknot</title>
+ <!-- <link href="style.css" rel="stylesheet" type="text/css"/> -->
+</head>
+
+<body onLoad="window.doLaunch()">
+
+  <script type="module">
+  import * as Tk from "./timeknot.js";
+
+  window.doLaunch = function () {
+    window.timeknot = new Tk.TimekNot( { } );
+  }
+
+  window.doEval = function () {
+    var t = document.getElementById("editorArea").value;
+    window.timeknot.define({zone:0, time: Date.now()/1000.0, text:t})
+    // .then( r => {
+    //   document.getElementById('info').textContent = r.info;
+    //   document.getElementById('errors').textContent = "";
+    // })
+    // .catch( e => {
+    //   var eString = e.toString();
+    //   document.getElementById('errors').textContent = eString;
+    // });
+  }
+
+  window.addEventListener('keydown', function (e) {
+    e = e || window.event;
+    if(e.shiftKey && e.key=="Enter") {
+      // e.preventDefault();
+      window.doEval();
+    }
+  });
+  </script>
+
+<div class="editorAndStatus">
+  <div class="editor">
+<textarea class="editorArea" id="editorArea">
+
+  
+
+
+</textarea>
+  </div>
+</div>
+
+
+</body>
+
 </html>
