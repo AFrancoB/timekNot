@@ -28,6 +28,8 @@ import Parsing.Token (makeTokenParser)
 
 import AST
 import Rhythm
+import Variant
+import AuralInACan
 
 type P = ParserT String Identity
 
@@ -38,26 +40,78 @@ aural = do
     _ <- reserved ";" -- this need to be fixed!
     pure $ AuralExpression x -- (Map Strg Aural)
 
+-- parseValues:: P (Map String Aural)
+-- parseValues = do
+--     _ <- pure 1
+--     id <- voiceId
+--     xs <- many value
+--     pure $ singleton id (fromFoldable xs)
+
+-- can[0].s = "bd cp hh" .n = 0 3 2 4 .pan = 0.5 0.4 0.7 0.4 0.5 .gain = 0.9 0.7 0.8 0.9 1.1 0.9 1.2 0.7 0.8 0.9;
+
+
 parseValues:: P (Map String Aural)
 parseValues = do
     _ <- pure 1
+    whitespace
     id <- voiceId
-    xs <- many value
-    pure $ singleton id (fromFoldable xs)
+    index <- indexForID
+    xs <- many value -- List (Tuple Value Variant)
+    pure $ auralInACan id index $ fromFoldable xs
 
-value:: P Value
+indexForID:: P (Maybe (List Int))
+indexForID = do 
+    _ <- pure 1
+    whitespace
+    xs <- indexForID' <|> pure Nothing
+    pure xs
+
+indexForID':: P (Maybe (List Int))
+indexForID' = do 
+    _ <- pure 1
+    xs <- brackets (naturalOrFloat `sepBy` comma)
+    pure $ Just $ map toInt' $ fromFoldable xs
+
+toInt':: Either Int Number -> Int 
+toInt' (Left n) = n
+toInt' (Right x) = round x
+
+-- value:: P Value
+-- value = do
+--     _ <- pure 1
+--     _ <- reservedOp "."
+--     valType <- choice [try sound,try n, try gain, try pan, try speed, try begin, try end, try vowel, try cutoff, try cutoffh, try inter, try maxw, try minw, try legato, try orbit, try mayeh, try prog, try xeNotes, xeno]
+--     pure valType
+
+value:: P (Tuple Value Variant) -- WORKS
 value = do
     _ <- pure 1
     _ <- reservedOp "."
-    valType <- choice [try sound,try n, try gain, try pan, try speed, try begin, try end, try vowel, try cutoff, try cutoffh, try inter, try maxw, try minw, try legato, try orbit, try mayeh, try prog, try xeNotes, xeno]
-    pure valType
+    val <- choice [try sound,try n, try gain, try pan, try speed, try begin, try end, try vowel, try cutoff, try cutoffh, try inter, try maxw, try minw, try legato, try orbit, try mayeh, try prog, try xeNotes, xeno] -- should be a tuple value variant
+    op <- operadores <|> (pure mulVar)
+    trans <- transposer <|> (pure $ VList (VInt 1:Nil))
+    pure $ Tuple val $ operate val trans op
 
+transposer:: P Variant
+transposer = do 
+    _ <- pure 0
+    xs <- brackets $ (toVariant <$> naturalOrFloat) `sepBy` comma
+    pure $ VList $ fromFoldable xs
+
+toVariant:: Either Int Number -> Variant
+toVariant (Left n) = VInt n 
+toVariant (Right x) = VNum x
+
+operadores:: P (Variant -> Variant -> Variant)
+operadores = choice [reservedOp "*" *> pure mulVar, reservedOp "+" *> pure addVar]
+
+--
 prog:: P Value
 prog = do
     _ <- pure 1
     _ <- choice [reserved "prog"]
     _ <- reservedOp "="
-    sp <- parseSpan
+    sp <- parseSpan <|> pure CycleEvent
     xs <- many idOfPitch
     pure $ Prog sp $ fromFoldable xs
 
@@ -72,7 +126,7 @@ xeNotes = do
     _ <- pure 1
     _ <- choice [reserved "xnotes"]
     _ <- reservedOp "="
-    sp <- parseSpan
+    sp <- parseSpan <|> pure CycleEvent
     l <- choice [try (fromFoldable <$> parseRangeInt), fromFoldable <$> many natural]
     vars <- variationsInt <|> pure Nil
     pure $ XNotes sp l vars
@@ -82,7 +136,7 @@ xeno = do
     _ <- pure 1
     xID <- choice [try shurNot, try shurNot8, xeno']
     _ <- reservedOp "="
-    sp <- parseSpan
+    sp <- parseSpan <|> pure CycleEvent
     xnL <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
     pure $ Xeno xID sp $ fromFoldable xnL
 
@@ -105,21 +159,10 @@ xeno' = do
     n <- (Just <$> brackets natural) <|> pure Nothing
     pure $ Tuple id n
 
--- Dastgah
-
--- Intervals: Bozorg 182; Kuchak 114; Tanini 204; Baghie 90.
-
--- shur: D Eqb F G Aqb Bb C 
--- normalised to 24ET: 0   150      300        500         650        800         1000        1200
--- using intervals:    0   182      114 (296)  204 (500) - 182 (682)- 114 (796) - 204 (1000) - 1200
--- name of interfvals: 0 - Bozorg - Kuchak   -  Tanini   - Bozorg   - Kuchak    - Tanini  ??? how to get to the Octave? 
-
--- corrected by Mehdad: 0 1.82 2.96 5.0 7.04 7.94 9.98 12.0
-
 mayeh:: P Value
 mayeh = do
     _ <- pure 1
-    choice [try shur]
+    choice [try shur, try segah, try nava, try homayun, try chahargah, try mahur, rastPanjgah]
 
 shur:: P Value
 shur = do
@@ -129,34 +172,157 @@ shur = do
     shur <- makeShur
     pure shur
 
--- Dastgah Span Dastgah
-
 makeShur:: P Value 
 makeShur = do
     _ <- pure 1
-    sp <- parseSpan
-    shurList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
+    sp <- parseSpan  <|> pure CycleEvent
+    shurList <- choice [try (A.fromFoldable <$> parseRangeInt), many shurNote]
     pure $ Dastgah sp (Shur $ fromFoldable shurList)
 
+shurNote:: P Int
+shurNote = do
+    _ <- pure 1
+    x <- choice [(try $ reserved "\\a") *> pure 0, (try $ reserved "\\f") *> pure 1, (try $ reserved "\\m") *> pure 5, natural]
+    pure x
+
+segah:: P Value
+segah = do
+    _ <- pure 1
+    _ <- choice [reserved "segah"]
+    _ <- reservedOp "="
+    segah <- makeSegah
+    pure segah
+
+makeSegah:: P Value 
+makeSegah = do
+    _ <- pure 1
+    sp <- parseSpan <|> pure CycleEvent
+    segahList <- choice [try (A.fromFoldable <$> parseRangeInt), many segahNote]
+    pure $ Dastgah sp (Segah $ fromFoldable segahList)
+
+segahNote:: P Int
+segahNote = do
+    _ <- pure 1
+    x <- choice [(try $ reserved "\\m") *> pure 1, (try $ reserved "\\a") *> pure 2, (try $ reserved "\\f") *> pure 2, (try $ reserved "\\s") *> pure 2, natural]
+    pure x
+
+nava:: P Value
+nava = do
+    _ <- pure 1
+    _ <- choice [reserved "nava"]
+    _ <- reservedOp "="
+    nava <- makeNava
+    pure nava
+
+makeNava:: P Value 
+makeNava = do
+    _ <- pure 1
+    sp <- parseSpan <|> pure CycleEvent
+    navaList <- choice [try (A.fromFoldable <$> parseRangeInt), many navaNote]
+    pure $ Dastgah sp (Nava $ fromFoldable navaList)
+
+navaNote:: P Int
+navaNote = do
+    _ <- pure 1
+    x <- choice [(try $ reserved "\\i") *> pure 2, (try $ reserved "\\a") *> pure 3, (try $ reserved "\\f") *> pure 4, natural]
+    pure x
+
+homayun:: P Value
+homayun = do
+    _ <- pure 1
+    _ <- choice [reserved "homayun"]
+    _ <- reservedOp "="
+    homayun <- makeHomayun
+    pure homayun
+
+makeHomayun:: P Value 
+makeHomayun = do
+    _ <- pure 1
+    sp <- parseSpan <|> pure CycleEvent
+    homayunList <- choice [try (A.fromFoldable <$> parseRangeInt), many homayunNote]
+    pure $ Dastgah sp (Homayun $ fromFoldable homayunList)
+
+homayunNote:: P Int
+homayunNote = do
+    _ <- pure 1
+    x <- choice [(try $ reserved "\\i") *> pure 3, (try $ reserved "\\a") *> pure 2, (try $ reserved "\\f") *> pure 4, (try $ reserved "\\s") *> pure 5, natural]
+    pure x
+
+chahargah:: P Value
+chahargah = do
+    _ <- pure 1
+    _ <- choice [reserved "chahargah"]
+    _ <- reservedOp "="
+    chahargah <- makeChahargah
+    pure chahargah
+
+makeChahargah:: P Value 
+makeChahargah = do
+    _ <- pure 1
+    sp <- parseSpan <|> pure CycleEvent
+    chahargahList <- choice [try (A.fromFoldable <$> parseRangeInt), many chahargahNote]
+    pure $ Dastgah sp (Chahargah $ fromFoldable chahargahList)
+
+chahargahNote:: P Int
+chahargahNote = do
+    _ <- pure 1
+    x <- choice [(try $ reserved "\\f") *> pure 0, (try $ reserved "\\a") *> pure 5, natural]
+    pure x
+
+mahur:: P Value
+mahur = do
+    _ <- pure 1
+    _ <- choice [reserved "mahur"]
+    _ <- reservedOp "="
+    mahur <- makeMahur
+    pure mahur
+
+makeMahur:: P Value 
+makeMahur = do
+    _ <- pure 1
+    sp <- parseSpan <|> pure CycleEvent
+    mahurList <- choice [try (A.fromFoldable <$> parseRangeInt), many mahurNote]
+    pure $ Dastgah sp (Mahur $ fromFoldable mahurList)
+
+mahurNote:: P Int
+mahurNote = do
+    _ <- pure 1
+    x <- choice [(try $ reserved "\\f") *> pure 0, (try $ reserved "\\a") *> pure 0, (try $ reserved "\\s") *> pure 1, natural]
+    pure x
+
+rastPanjgah:: P Value
+rastPanjgah = do
+    _ <- pure 1
+    _ <- choice [reserved "rastPanjgah"]
+    _ <- reservedOp "="
+    rastPanjgah <- makeRastPanjgah
+    pure rastPanjgah
+
+makeRastPanjgah:: P Value 
+makeRastPanjgah = do
+    _ <- pure 1
+    sp <- parseSpan <|> pure CycleEvent
+    rastPanjgahList <- choice [try (A.fromFoldable <$> parseRangeInt), many rastPanjgahNote]
+    pure $ Dastgah sp (RastPanjgah $ fromFoldable rastPanjgahList)
+
+rastPanjgahNote:: P Int
+rastPanjgahNote = do
+    _ <- pure 1
+    x <- choice [(try $ reserved "\\f") *> pure 3, (try $ reserved "\\a") *> pure 3, natural]
+    pure x
 
 orbit:: P Value
 orbit = do
     _ <- pure 1
     _ <- choice [reserved "orbit"]
     _ <- reservedOp "="
-    m <- choice [try makeOrbit, transposeOrbit]
+    m <- choice [try makeOrbit]
     pure m
-
-transposeOrbit:: P Value
-transposeOrbit = do
-    id <- voiceId
-    n <- brackets natural <|> pure 0
-    pure $ TransposedOrbit id n
 
 makeOrbit:: P Value
 makeOrbit = do
     _ <- pure 1
-    sp <- parseSpan
+    sp <- parseSpan <|> pure CycleEvent
     nList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
     vars <- variationsInt <|> pure Nil
     pure $ Orbit sp (fromFoldable nList) vars
@@ -166,19 +332,13 @@ legato = do
     _ <- pure 1
     _ <- choice [reserved "legato"]
     _ <- reservedOp "="
-    m <- choice [try makeLegato, transposeLegato]
+    m <- choice [try makeLegato]
     pure m
-
-transposeLegato:: P Value
-transposeLegato = do
-    id <- voiceId
-    n <- brackets natural <|> pure 0
-    pure $ TransposedLegato id n
 
 makeLegato:: P Value
 makeLegato = do
     _ <- pure 1
-    sp <- parseSpan
+    sp <- parseSpan <|> pure CycleEvent
     coLs <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
     pure $ Legato sp (fromFoldable coLs) vars
@@ -189,19 +349,13 @@ inter = do
     _ <- pure 1
     _ <- choice [reserved "inter"]
     _ <- reservedOp "="
-    m <- choice [try makeInter, transposeInter]
+    m <- choice [try makeInter]
     pure m
-
-transposeInter:: P Value
-transposeInter = do
-    id <- voiceId
-    n <- brackets natural <|> pure 0
-    pure $ TransposedInter id n
 
 makeInter:: P Value
 makeInter = do
     _ <- pure 1
-    sp <- parseSpan
+    sp <- parseSpan <|> pure CycleEvent
     coLs <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
     pure $ Inter sp (fromFoldable coLs) vars
@@ -212,19 +366,13 @@ minw = do
     _ <- pure 1
     _ <- choice [reserved "minw"]
     _ <- reservedOp "="
-    m <- choice [try makeMinw, transposeMinw]
+    m <- choice [try makeMinw]
     pure m
-
-transposeMinw:: P Value
-transposeMinw = do
-    id <- voiceId
-    n <- brackets natural <|> pure 0
-    pure $ TransposedMinW id n
 
 makeMinw:: P Value
 makeMinw = do
     _ <- pure 1
-    sp <- parseSpan
+    sp <- parseSpan  <|> pure CycleEvent
     coLs <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
     pure $ MinW sp (fromFoldable coLs) vars
@@ -235,19 +383,13 @@ maxw = do
     _ <- pure 1
     _ <- choice [reserved "maxw"]
     _ <- reservedOp "="
-    m <- choice [try makeMaxw, transposeMaxw]
+    m <- choice [try makeMaxw]
     pure m
-
-transposeMaxw:: P Value
-transposeMaxw = do
-    id <- voiceId
-    n <- brackets natural <|> pure 0
-    pure $ TransposedMaxW id n
 
 makeMaxw:: P Value
 makeMaxw = do
     _ <- pure 1
-    sp <- parseSpan
+    sp <- parseSpan  <|> pure CycleEvent
     coLs <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
     pure $ MaxW sp (fromFoldable coLs) vars
@@ -258,19 +400,13 @@ cutoffh = do
     _ <- pure 1
     _ <- choice [reserved "hcutoff"]
     _ <- reservedOp "="
-    cutoffh <- choice [try makeCutOffH, transposeCutOffH]
+    cutoffh <- choice [try makeCutOffH]
     pure cutoffh
-
-transposeCutOffH:: P Value
-transposeCutOffH = do
-    id <- voiceId
-    n <- brackets natural <|> pure 0
-    pure $ TransposedCutOffH id n
 
 makeCutOffH:: P Value
 makeCutOffH = do
     _ <- pure 1
-    sp <- parseSpan
+    sp <- parseSpan  <|> pure CycleEvent
     coLs <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
     pure $ CutOffH sp (fromFoldable coLs) vars
@@ -280,19 +416,13 @@ cutoff = do
     _ <- pure 1
     _ <- choice [reserved "cutoff"]
     _ <- reservedOp "="
-    cutoff <- choice [try makeCutOff, transposeCutOff]
+    cutoff <- choice [try makeCutOff]
     pure cutoff
-
-transposeCutOff:: P Value
-transposeCutOff = do
-    id <- voiceId
-    n <- brackets natural <|> pure 0
-    pure $ TransposedCutOff id n
 
 makeCutOff:: P Value
 makeCutOff = do
     _ <- pure 1
-    sp <- parseSpan
+    sp <- parseSpan  <|> pure CycleEvent
     coLs <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
     pure $ CutOff sp (fromFoldable coLs) vars
@@ -302,19 +432,13 @@ vowel = do
     _ <- pure 1
     _ <- choice [reserved "vowel"]
     _ <- reservedOp "="
-    vowel <- choice [try makeVowel, transposeVowel]
+    vowel <- choice [try makeVowel]
     pure vowel
-
-transposeVowel:: P Value
-transposeVowel = do
-    id <- voiceId
-    n <- brackets natural <|> pure 0
-    pure $ TransposedVowel id n
 
 makeVowel:: P Value
 makeVowel = do
     _ <- pure 1
-    sp <- parseSpan
+    sp <- parseSpan  <|> pure CycleEvent
     vLs <- choice [many parseVowel]
     vars <- variationsVow <|> pure Nil
     pure $ Vowel sp (fromFoldable vLs) vars
@@ -331,7 +455,7 @@ everyVow = do
     _ <- pure 1
     _ <- reserved "every"
     n <- integer
-    sp <- parseSpan
+    sp <- parseSpan  <|> pure CycleEvent
     xs <- choice [many parseVowel]
     pure $ Every n sp $ fromFoldable xs
 
@@ -346,25 +470,13 @@ end = do
     _ <- pure 1
     _ <- choice [reserved "end"]
     _ <- reservedOp "="
-    end <- choice [try makeEnd, transposeEnd]
+    end <- choice [try makeEnd]
     pure end
-
--- transposeEndWith:: P Value
--- transposeEndWith = do
---     id <- voiceId
---     with <- parens transNumVal
---     pure $ TransposedEndWith id with
-
-transposeEnd:: P Value
-transposeEnd = do
-    id <- voiceId
-    n <- brackets natural <|> pure 0
-    pure $ TransposedEnd id n
 
 makeEnd:: P Value
 makeEnd = do
     _ <- pure 1
-    sp <- parseSpan
+    sp <- parseSpan  <|> pure CycleEvent
     spdList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
     pure $ End sp (fromFoldable spdList) vars
@@ -374,25 +486,13 @@ begin = do
     _ <- pure 1
     _ <- choice [try $ reserved "begin",reserved "begin"]
     _ <- reservedOp "="
-    b <- choice [try makeBegin, transposeBegin]
+    b <- choice [try makeBegin]
     pure b
-
--- transposeBeginWith:: P Value
--- transposeBeginWith = do
---     id <- voiceId
---     with <- parens transNumVal
---     pure $ TransposedBeginWith id with
-
-transposeBegin:: P Value
-transposeBegin = do
-    id <- voiceId
-    n <- brackets natural <|> pure 0
-    pure $ TransposedBegin id n
 
 makeBegin:: P Value
 makeBegin = do
     _ <- pure 1
-    sp <- parseSpan
+    sp <- parseSpan  <|> pure CycleEvent
     panList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
     pure $ Begin sp (fromFoldable panList) vars
@@ -402,25 +502,13 @@ speed = do
     _ <- pure 1
     _ <- choice [reserved "speed"]
     _ <- reservedOp "="
-    n <- choice [try makeSpeed, transposeSpeed]
+    n <- choice [try makeSpeed]
     pure n
-
--- transposeSpeedWith:: P Value
--- transposeSpeedWith = do
---     id <- voiceId
---     with <- parens transNumVal
---     pure $ TransposedSpeedWith id with
-
-transposeSpeed:: P Value
-transposeSpeed = do
-    id <- voiceId
-    n <- brackets natural <|> pure 0
-    pure $ TransposedSpeed id n
 
 makeSpeed:: P Value
 makeSpeed = do
     _ <- pure 1
-    sp <- parseSpan
+    sp <- parseSpan  <|> pure CycleEvent
     spdList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
     pure $ Speed sp (fromFoldable spdList) vars
@@ -430,25 +518,13 @@ pan = do
     _ <- pure 1
     _ <- choice [try $ reserved "pan",reserved "p"]
     _ <- reservedOp "="
-    p <- choice [try makePan, transposePan]
+    p <- choice [try makePan]
     pure p
-
--- transposePanWith:: P Value
--- transposePanWith = do
---     id <- voiceId
---     with <- parens transNumVal
---     pure $ TransposedPanWith id with
-
-transposePan:: P Value
-transposePan = do
-    id <- voiceId
-    n <- brackets natural <|> pure 0
-    pure $ TransposedPan id n
 
 makePan:: P Value
 makePan = do
     _ <- pure 1
-    sp <- parseSpan
+    sp <- parseSpan  <|> pure CycleEvent
     panList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
     pure $ Pan sp (fromFoldable panList) vars
@@ -458,32 +534,13 @@ gain = do
     _ <- pure 1
     _ <- choice [reserved "gain"]
     _ <- reservedOp "="
-    g <- choice [try makeGain, transposeGain]
+    g <- choice [try makeGain]
     pure g
-
--- transposeGainWith:: P Value
--- transposeGainWith = do
---     id <- voiceId
---     with <- parens transNumVal
---     pure $ TransposedGainWith id with
-
-transNumVal:: P (List (Number -> Number))
-transNumVal = do 
-    _ <- pure 1
-    op <- choice [reservedOp "+" *> pure add, reservedOp "*" *> pure mul]
-    numList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
-    pure $ map op $ fromFoldable numList
-
-transposeGain:: P Value
-transposeGain = do
-    id <- voiceId
-    n <- brackets natural <|> pure 0
-    pure $ TransposedGain id n
 
 makeGain:: P Value
 makeGain = do
     _ <- pure 1
-    sp <- parseSpan
+    sp <- parseSpan  <|> pure CycleEvent
     gainList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
     pure $ Gain sp (fromFoldable gainList) vars
@@ -493,26 +550,13 @@ n = do
     _ <- pure 1
     _ <- choice [reserved "n"]
     _ <- reservedOp "="
-    n <- choice [try makeN, {-try transposeNWith,-} transposeN]
+    n <- choice [try makeN]
     pure n
-
--- transposeNWith:: P Value
--- transposeNWith = do
---     id <- voiceId
---     n <- brackets natural <|> pure 0
---     with <- transIntVal
---     pure $ TransposedNWith id n with
-
-transposeN:: P Value
-transposeN = do
-    id <- voiceId
-    n <- brackets natural <|> pure 0
-    pure $ TransposedN id n
 
 makeN:: P Value
 makeN = do
     _ <- pure 1
-    sp <- parseSpan
+    sp <- parseSpan  <|> pure CycleEvent
     nList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
     vars <- variationsInt <|> pure Nil
     pure $ N sp (fromFoldable nList) vars
@@ -522,23 +566,23 @@ sound = do
     _ <- pure 1
     _ <- choice [try $ reserved "sound",reserved "s"]
     _ <- reservedOp "="
-    sound <- choice [try makeSound, transposeSound]
+    sound <- choice [try makeSound]
     pure sound
-
-transposeSound:: P Value
-transposeSound = do
-    id <- voiceId
-    n <- brackets natural <|> pure 0
-    pure $ TransposedSound id n
 
 makeSound:: P Value
 makeSound = do
     _ <- pure 1
-    sp <- parseSpan
+    sp <- parseSpan  <|> pure CycleEvent
     strList <- sampleParser 
     vars <- variationsStr <|> pure Nil
     pure $ Sound sp strList vars
 
+transNumVal:: P (List (Number -> Number))
+transNumVal = do 
+    _ <- pure 1
+    op <- choice [reservedOp "+" *> pure add, reservedOp "*" *> pure mul]
+    numList <- brackets $ choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
+    pure $ map op $ fromFoldable numList
 --
 variationsStr:: P (List (Variation String))
 variationsStr = do

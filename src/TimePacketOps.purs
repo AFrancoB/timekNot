@@ -1,4 +1,4 @@
-module TimePacketOps (assambleTimePacket,secsFromOriginAtVantage, secsFromOriginAtWS, secsFromOriginAtWE, secsFromOriginAtEval,metricFromOriginAtWS, metricFromOriginAtWE, metricFromOriginAtEval, voiceFromOriginToEval, fromDateTimeToPosix, fromDateTimeToPosixMaybe, numToDateTime) where
+module TimePacketOps (assambleTimePacket,secsFromOriginAtVantage, secsFromOriginAtWS, secsFromOriginAtWE, secsFromOriginAtEval,metricFromOriginAtWS, metricFromOriginAtWE, metricFromOriginAtEval, voiceFromOriginToEval, fromDateTimeToPosix, fromDateTimeToPosixMaybe, numToDateTime, metricToTempoMark) where
 
 import Prelude
 import Data.Maybe
@@ -45,6 +45,9 @@ secsFromOriginAtEval:: TimePacket -> Number
 secsFromOriginAtEval tp = eval - oPosix
     where oPosix = fromDateTimeToPosix tp.origin
           eval = fromDateTimeToPosix tp.eval
+
+metricToTempoMark:: TimePacket -> TempoMark
+metricToTempoMark tp = BPM (tp.tempo.freq * (60%1)) (2%1)
 
 metricFromOriginAtWS:: TimePacket -> Number  -- is this needed anyway?
 metricFromOriginAtWS tp = originSecsAtWS / voiceDur

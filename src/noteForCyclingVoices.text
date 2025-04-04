@@ -1,0 +1,26 @@
+Note:
+to make voices cycle to avoid failing programs:
+
+(
+    (
+        fromFoldable [
+            (Tuple "can-0" toVoice "can-1" (cTo 13 diverge at origin) (cFrom 13) (tempo mark: 300 % 1cpm) xxxx looped),
+            (Tuple "can-1" toVoice "mu-2" (cTo 17 diverge at origin) (cFrom 13) (tempo mark: 400 % 1cpm) xxxx looped),
+            (Tuple "can-2" toVoice "can-1" (cTo 13 diverge at origin) (cFrom 13) (tempo mark: 500 % 1cpm) xxxx looped)]) : 
+    (
+        fromFoldable [
+            (Tuple "mu-0" (cTo 0 diverge at origin) (cFrom 0) (tempo mark: 1200 % 1cpm) oxox looped),
+            (Tuple "mu-1" toVoice "mu-0" (cTo 0 diverge at origin) (cFrom 0) (tempo mark: 800 % 1cpm) oxox looped)]) : 
+    
+    Nil)
+
+   1. find mu-2 as a convergeTo:
+         1.1. compare everything before '-' between idFrom and idTo in a Converge Polytemporal
+         1.2. If not equal then grab convergeTo
+   2. create a list with the id and grab its length
+         2.1. once grabbed convergeTo string compare it to another map, if map key before '-' is equal then look for same. If same exist return result
+         2.2. If equal does not exist then grab prefix and length 
+    3. use that length to mod and create new ID
+    4. create new convergeTo for can-1
+
+

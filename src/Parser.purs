@@ -60,7 +60,7 @@ tempoMark' = do
 tempoMarks:: P (List TempoMark)
 tempoMarks = do
   _ <- pure 1
-  xs <- brackets $ many $ choice [try cpm, try bpm, try cps, try ratio, acceleration]
+  xs <- brackets $ (choice [try cpm, try bpm, try cps, try ratio, acceleration] `sepBy1` comma)
   pure $ L.fromFoldable xs
 
 -- CONSIDER: at entry point add a -0 to all voices that do not have any
@@ -433,59 +433,6 @@ temporal = do
   _ <- pure 1
   choice [try replica, try polytemporalRelation]
 
--- inACan:: P (Map String Temporal)
--- inACan = do
---   _ <- pure 1
---   id <- voiceId  
---   cFrom <- (brackets $ cFromCan) <|> Process 0
---   cTo <- (cToCan) <|> ProcessTo 0 Origin
-
--- -- miCan   -- nothing in cFrom or cTo means diverge fully
--- -- miCan[3:0] <- mu[32 >>]
--- -- miCan[3:1]        -- nothing in cTo means diverge 
-
--- cToCan:: P ConvergeTo
--- cToCan = do 
---   _ <- pure 1 
-
-  
---                             -- <- mu<>
---   choice [externalTempoCTo, convergeCTo]
-
-
--- convergeCTo:: P ConvergeTo
--- convergeCTo = do
---   _ <- pure 1
---   _ <- reserved "<-"
---   vIndex <- voiceIndex <|> (pure 0)
---   x <- choice [try cFromPercen, try cFromProcess, cFromStructure]
---   pure CanonicTo vIndex x
- 
--- externalTempoCTo:: P ConvergeTo
--- externalTempoCTo = do
---   _ <- pure 1
---   _ <- reserved "<-"
---   cTo <- choice [try $ brackets parsePercenTo, try $ brackets parseProcessTo, brackets parseStructureTo, reserved ">>" *> ProcessTo 0 Snap, reserved "<<" *> ProcessTo 0 Snap , reserved "<>" *> ProcessTo 0 Snap] -- >> SnapCeil, << SnapFloor, <> SnapRound!
---   pure cTo
-
-
-
-
--- cFromCan:: P ConvergeFrom
--- cFromCan = do
---   _ <- pure 1
---   vIndex <- voiceIndex <|> (pure 0)
---   x <- choice [try cFromPercen, try cFromProcess, cFromStructure]
---   pure Canonic vIndex x
-
--- voiceIndex:: P Int 
--- voiceIndex = do
---   _ <- pure 1
---   x <- integer
---   _ <- reserved ":"
---   pure x 
-
-
 replica:: P (Map String Temporal)
 replica = do
   _ <- pure 1
@@ -506,6 +453,8 @@ polytemporalRelation = do
 
 inACan:: Map String Polytemporal -> Tuple Rhythmic Boolean -> Map String  Temporal
 inACan mapa rhy = mapMaybe (\p -> Just (Temporal p (fst rhy) (snd rhy))) mapa 
+
+-- inACanCheck:: Map String Polytemporal -> Map String Polytemporal
 
 rhythmicWrapper:: P (Tuple Rhythmic Boolean) 
 rhythmicWrapper = do
@@ -817,7 +766,6 @@ bpm = do
   _ <- charWS '='
   x <- toNumber' <$> naturalOrFloat
   _ <- reserved "bpm"
-  
   pure $ BPM (toRat x) fig
 
 figure:: P Rational
@@ -886,7 +834,6 @@ unexpressVantage (VantagePointExpression x) = x
 unexpressVantage _ = empty
 
 -- checks!
-
 check :: VantageMap -> Program -> Boolean
 check vm program = checkedTempoAspects && checkedPitch
   where checkedTempoAspects = checkT vm (getVantageMap program) $ getTemporalMap program

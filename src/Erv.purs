@@ -1,11 +1,12 @@
 module Erv where
 
-import AST (XenoNote)
+import AST (CPSNote)
 
 foreign import ratioToCents :: Number -> Number
 
-foreign import makeCPSScale :: Int -> Array Int -> Array XenoNote
+foreign import makeCPSScale :: Int -> Array Int -> Array CPSNote
 
+-- foreign import makeMOSScale :: Int -> Int -> Array MOSNote
 
 
 

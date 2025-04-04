@@ -266,11 +266,11 @@ xenoPitchToMIDIInterval (CPSet size factors (Just subsets)) = map (addSampleRoot
           subs = map (orderSetofXNotes <<< getSubSet scale) subsets
 xenoPitchToMIDIInterval _ = []
 
-getSubSet:: Array XenoNote -> Subset -> Array XenoNote
+getSubSet:: Array CPSNote -> Subset -> Array CPSNote
 getSubSet xn subset = fromFoldable $ getSubset' xn subset 
 
 ------ this function might not be working properly.... also check the ordering func above
-getSubset':: Array XenoNote -> Subset -> Set XenoNote
+getSubset':: Array CPSNote -> Subset -> Set CPSNote
 getSubset' xn (Subset isInSet) = Set.fromFoldable $ filter (\x -> elem isInSet x.set ) xn
 getSubset' xn (Unions ns) = Set.unions $ map f ns
     where f isInSet = Set.fromFoldable $ filter (\x -> elem isInSet x.set ) xn
@@ -282,17 +282,13 @@ getSubset' xn (Difference a b) = Set.difference a' b'
           b' = Set.fromFoldable $ filter (\x -> elem b x.set ) xn
 getSubset' _ _ = Set.fromFoldable []
 
-orderSetofXNotes:: Array XenoNote -> Array XenoNote
+orderSetofXNotes:: Array CPSNote -> Array CPSNote
 orderSetofXNotes s = sortWith (_."bounded-ratio") s 
 
--- sortWith (_.age) [{name: "Alice", age: 42}, {name: "Bob", age: 21}]
---    = [{name: "Bob", age: 21}, {name: "Alice", age: 42}]
-
-
-toMIDIInterval:: Array XenoNote -> Array Number
+toMIDIInterval:: Array CPSNote -> Array Number
 toMIDIInterval xns = map toMIDIInterval' xns
 
-toMIDIInterval':: XenoNote -> Number
+toMIDIInterval':: CPSNote -> Number
 toMIDIInterval' xn = (ratioToCents xn."bounded-ratio") / 100.0
 
 addSampleRoot:: Array Number -> Array Number

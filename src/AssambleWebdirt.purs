@@ -1,4 +1,4 @@
-module AssambleWebdirt (objectWithWhenSN, addGain, addPan, addSpeed, addBegin, addEnd, addVowel, addMaxW, addMinW, addInter, addLegato, addOrbit, addCutOff, addCutOffH, addNote) where
+module AssambleWebdirt (objectWithWhenSN, addGain, addPan, addSpeed, addBegin, addEnd, addVowel, addMaxW, addMinW, addInter, addLegato, addOrbit, addCutOff, addCutOffH, addNote, addVal) where
 
 import Prelude
 import Effect (Effect)
@@ -49,3 +49,9 @@ foreign import addOrbit :: Foreign -> Int -> Effect Foreign
 
 foreign import addNote :: Foreign -> Number -> Effect Foreign
 -- export const addNote = o => note => () => { o.note = note; return o; }
+
+foreign import addVal :: Foreign -> String -> Number -> Effect Foreign
+
+
+-- foreign import addVal :: String -> Number -> Foreign -> Effect Foreign
+--export const addVal =  valId  =>  val   => o => () => { o[valId] = val; return o; };

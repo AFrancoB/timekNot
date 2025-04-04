@@ -7,6 +7,7 @@ import Data.List
 import Data.List (fromFoldable,concat,zip,zipWith,length,init,uncons) as L
 import Data.Maybe 
 import Data.Tuple
+import Data.Number (floor)
 
 
 import AST
@@ -15,26 +16,30 @@ import DurationAndIndex
 getMIDIInterval:: Array DastgahNote -> Array Number
 getMIDIInterval xs = map (\x -> x.midiInterval) xs
 
-analysisDastgahPattern::Span -> Rhythmic -> Array Int -> Array DastgahNote
-analysisDastgahPattern CycleEvent _ ns = map assambleDastgahNote zipped
-  where first = ns
+analysisDastgahPattern::Span -> Rhythmic -> Dastgah -> Array DastgahNote
+analysisDastgahPattern CycleEvent _ d = map (assambleDastgahNote d) zipped
+  where ns = fromFoldable (getDastgahList d)
+        first = ns
         s = fromMaybe {head: 0, tail: []} $ uncons ns
         second = snoc s.tail s.head
         zipped = zip first second
-analysisDastgahPattern CycleBlock _ ns = map assambleDastgahNote zipped
-  where first = ns
+analysisDastgahPattern CycleBlock _ d = map (assambleDastgahNote d) zipped
+  where ns = fromFoldable (getDastgahList d)
+        first = ns
         s = fromMaybe {head: 0, tail: []} $ uncons ns
         second = snoc s.tail s.head
         zipped = zip first second
-analysisDastgahPattern CycleInBlock r ns = map assambleDastgahNote zipped
-  where structure = map (\x -> (x `mod` (length ns))) $ map (\x -> fromMaybe 0 $ head x) $ rhythmicStructIndex r [0]  
+analysisDastgahPattern CycleInBlock r d = map (assambleDastgahNote d) zipped
+  where ns = fromFoldable (getDastgahList d)
+        structure = map (\x -> (x `mod` (length ns))) $ map (\x -> fromMaybe 0 $ head x) $ rhythmicStructIndex r [0]  
         seque = map (\x -> fromMaybe 0 (ns !! x)) structure
         first = seque
         s = fromMaybe {head: 0, tail: []} $ uncons seque
         second = snoc s.tail s.head
         zipped = zip first second
-analysisDastgahPattern SpreadBlock r ns = map assambleDastgahNote zipped
-  where percenPositions = map (\(Onset b p) -> p) $ rhythmicToOnsets r -- xxx[xx] : 0 0.25 0.5 0.75 0.875
+analysisDastgahPattern SpreadBlock r d = map (assambleDastgahNote d) zipped
+  where ns = fromFoldable (getDastgahList d)
+        percenPositions = map (\(Onset b p) -> p) $ rhythmicToOnsets r -- xxx[xx] : 0 0.25 0.5 0.75 0.875
         segment = 1.0 / toNumber (length ns)  -- 1 3 5 : 0.333333
         limitsFst = cons 0.0 (scanl (+) 0.0 $ replicate ((length ns) - 1) segment) -- [0, 0.333, 0.666]
         limitsSnd = snoc (scanl (+) 0.0 $ replicate ((length ns) - 1) segment) 1.0 -- [0.333, 0.666, 1]
@@ -48,16 +53,20 @@ analysisDastgahPattern SpreadBlock r ns = map assambleDastgahNote zipped
         second = snoc s.tail s.head
         zipped = zip first second
 
-assambleDastgahNote:: Tuple Int Int -> DastgahNote
-assambleDastgahNote (Tuple x y) = {function: fu, movement: mov, midiInterval: checkedMidiInt}
-  where (Tuple midiInter fu) = shurIntToFuncAndMIDIInt x
-        mov = getMovement x y
-        checkedMidiInt = if x == 6 then checkSixth mov midiInter else midiInter
+-- need to corroborate that octave works
+assambleDastgahNote:: Dastgah -> Tuple Int Int -> DastgahNote
+assambleDastgahNote d (Tuple x y) = {function: funcion, movement: mov, midiInterval: midiInter + octave}
+  where mov = getMovement x y
+        octave = getOctave x 
+        (Tuple midiInter funcion) = dastgahToNote d mov x -- shurIntToFuncAndMIDIInt x
 
-checkSixth:: Interval -> Number -> Number
-checkSixth UpJump midiInter = midiInter + 0.92
-checkSixth UpNext midiInter = midiInter + 0.92
-checkSixth _ midiInter = midiInter
+getOctave:: Int -> Number
+getOctave n = (floor ((toNumber n)/7.0))*12.0
+
+checkMoteghayyer:: Interval -> Number -> Number
+checkMoteghayyer UpJump midiInter = midiInter + 0.5
+checkMoteghayyer UpNext midiInter = midiInter + 0.5
+checkMoteghayyer _ midiInter = midiInter
 
 getMovement:: Int -> Int -> Interval
 getMovement note target 
@@ -68,33 +77,106 @@ getMovement note target
   | note == target = Unison
   | otherwise = Unison
 
+dastgahToNote:: Dastgah -> Interval -> Int -> Tuple Number String
+dastgahToNote (Shur _) mov n = Tuple checkedMidiInt funcion
+  where (Tuple midiInter funcion) = shurIntToFuncAndMIDIInt n
+        checkedMidiInt = if funcion == "Moteghayyer" then checkMoteghayyer mov midiInter else midiInter
+dastgahToNote (Segah _) mov n = Tuple checkedMidiInt funcion
+  where (Tuple midiInter funcion) = segahIntToFuncAndMIDIInt n
+        checkedMidiInt = if funcion == "Moteghayyer" then checkMoteghayyer mov midiInter else midiInter
+dastgahToNote (Nava _) mov n = Tuple checkedMidiInt funcion
+  where (Tuple midiInter funcion) = navaIntToFuncAndMIDIInt n
+        checkedMidiInt = if funcion == "Moteghayyer" then checkMoteghayyer mov midiInter else midiInter
+dastgahToNote (Homayun _) mov n = Tuple checkedMidiInt funcion
+  where (Tuple midiInter funcion) = homayunIntToFuncAndMIDIInt n
+        checkedMidiInt = if funcion == "Moteghayyer" then checkMoteghayyer mov midiInter else midiInter
+dastgahToNote (Chahargah _) mov n = Tuple checkedMidiInt funcion
+  where (Tuple midiInter funcion) = chahargahIntToFuncAndMIDIInt n
+        checkedMidiInt = if funcion == "Moteghayyer" then checkMoteghayyer mov midiInter else midiInter
+dastgahToNote (Mahur _) mov n = Tuple checkedMidiInt funcion
+  where (Tuple midiInter funcion) = chahargahIntToFuncAndMIDIInt n
+        checkedMidiInt = if funcion == "Moteghayyer" then checkMoteghayyer mov midiInter else midiInter
+dastgahToNote (RastPanjgah _) mov n = Tuple checkedMidiInt funcion
+  where (Tuple midiInter funcion) = chahargahIntToFuncAndMIDIInt n
+        checkedMidiInt = if funcion == "Moteghayyer" then checkMoteghayyer mov midiInter else midiInter
 
----- need octaves!!! -- start from 0 to 6
-shurIntToFuncAndMIDIInt:: Int -> Tuple Number String
-shurIntToFuncAndMIDIInt n = case (n-1)`mod`8 of
-                          0 -> Tuple 0.0 "unknown" 
-                          1 -> Tuple 1.82 "unknown"
-                          2 -> Tuple 2.96 "unknown"
-                          3 -> Tuple 5.0 "unknown"
-                          4 -> Tuple 7.04 "unknown"
-                          5 -> Tuple 7.94 "unknown" -- upwards move 8.86
-                          6 -> Tuple 9.98 "unknown"
-                          7 -> Tuple 12.0 "unknown"
+rastPanjgahIntToFuncAndMIDIInt:: Int -> Tuple Number String
+rastPanjgahIntToFuncAndMIDIInt n = case n of
+                          0 -> Tuple 0.0 "Āghāz Finalis" 
+                          1 -> Tuple 2.0 "Shāhed"
+                          2 -> Tuple 4.0 "note"
+                          3 -> Tuple 5.0 "Āghāz Finalis"
+                          4 -> Tuple 7.0 "note"
+                          5 -> Tuple 9.0 "note" 
+                          6 -> Tuple 10.0 "note"
                           _ -> Tuple 0.0 "unknown"
 
+mahurIntToFuncAndMIDIInt:: Int -> Tuple Number String
+mahurIntToFuncAndMIDIInt n = case n of
+                          0 -> Tuple 0.0 "Āghāz Finalis" 
+                          1 -> Tuple 2.0 "Shāhed"
+                          2 -> Tuple 4.0 "note"
+                          3 -> Tuple 5.0 "note"
+                          4 -> Tuple 7.0 "note"
+                          5 -> Tuple 9.0 "note" 
+                          6 -> Tuple 11.0 "note"
+                          _ -> Tuple 0.0 "unknown"
 
--- 0 1.82 2.96 5.0 7.04 7.94 9.98 12.0
--- data Dastgah = Shur (List Int)
-dToList:: Dastgah -> List Number
-dToList (Shur ns) = map f ns
-  where f n = case (n-1)`mod`8 of
-                0 -> 0.0 
-                1 -> 1.82
-                2 -> 2.96
-                3 -> 5.0
-                4 -> 7.04 
-                5 -> 7.94
-                6 -> 9.98
-                7 -> 12.0
-                _ -> 0.0
-dToList _ = Nil
+chahargahIntToFuncAndMIDIInt:: Int -> Tuple Number String
+chahargahIntToFuncAndMIDIInt n = case n of
+                          0 -> Tuple 0.0 "Finalis" 
+                          1 -> Tuple 1.5 "note"
+                          2 -> Tuple 4.0 "note"
+                          3 -> Tuple 5.0 "note"
+                          4 -> Tuple 7.0 "note"
+                          5 -> Tuple 8.5 "Āghāz" 
+                          6 -> Tuple 11.0 "note"
+                          _ -> Tuple 0.0 "unknown"
+
+homayunIntToFuncAndMIDIInt:: Int -> Tuple Number String
+homayunIntToFuncAndMIDIInt n = case n of
+                          0 -> Tuple 0.0 "note" 
+                          1 -> Tuple 2.0 "note"
+                          2 -> Tuple 3.0 "Āghāz"
+                          3 -> Tuple 5.0 "Ist"
+                          4 -> Tuple 7.0 "Finalis"
+                          5 -> Tuple 8.5 "Shāhed" 
+                          6 -> Tuple 11.0 "note"
+                          _ -> Tuple 0.0 "unknown"
+
+navaIntToFuncAndMIDIInt:: Int -> Tuple Number String
+navaIntToFuncAndMIDIInt n = case n of
+                          0 -> Tuple 0.0 "note" 
+                          1 -> Tuple 2.0 "note"
+                          2 -> Tuple 3.5 "Ist"
+                          3 -> Tuple 5.0 "Āghāz"
+                          4 -> Tuple 7.0 "Finalis"
+                          5 -> Tuple 9.0 "note" 
+                          6 -> Tuple 10.0 "note"
+                          _ -> Tuple 0.0 "unknown"
+
+segahIntToFuncAndMIDIInt:: Int -> Tuple Number String
+segahIntToFuncAndMIDIInt n = case n of
+                          0 -> Tuple 0.0 "note" 
+                          1 -> Tuple 1.5 "Moteghayyer" -- upwards move to 2.0
+                          2 -> Tuple 3.5 "Āghāz, finalis, stop"
+                          3 -> Tuple 5.0 "note"
+                          4 -> Tuple 7.0 "note"
+                          5 -> Tuple 8.5 "note" 
+                          6 -> Tuple 10.0 "note"
+                          _ -> Tuple 0.0 "unknown"
+
+shurIntToFuncAndMIDIInt:: Int -> Tuple Number String
+shurIntToFuncAndMIDIInt n = case n of
+                          0 -> Tuple 0.0 "Āghāz" 
+                          1 -> Tuple 2.0 "Finalis"
+                          2 -> Tuple 3.5 "note"
+                          3 -> Tuple 5.0 "note"
+                          4 -> Tuple 7.0 "note"
+                          5 -> Tuple 8.5 "Moteghayyer" -- upwards move 9.0
+                          6 -> Tuple 10.0 "note"
+                          _ -> Tuple 0.0 "unknown"
+
+getDastgahList:: Dastgah -> List Int
+getDastgahList (Shur ns) = ns
+getDastgahList _ = Nil

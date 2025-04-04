@@ -1,4 +1,4 @@
-module AST(TimekNot(..),Vantage(..), TimePoint(..), VantageMap(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..), Variation(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), Sinusoidal(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), XenoPitch(..), XenoNote(..), DastgahNote(..), Interval(..), Subset(..), showEventIndex, showStructureIndex) where
+module AST(TimekNot(..),Vantage(..), TimePoint(..), VantageMap(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..), Variation(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), Sinusoidal(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), XenoPitch(..), CPSNote(..), DastgahNote(..), Interval(..), Subset(..), Variant(..), showEventIndex, showStructureIndex) where
 
 import Prelude
 import Effect.Ref
@@ -72,62 +72,43 @@ instance showVariation :: Show a => Show (Variation a) where
   show (Every n sp xs) = "every " <> show n <> " " <> show sp <> " " <> show xs 
 
 data Value = 
-  Sound Span (List String) (List (Variation String)) | TransposedSound String Int |
-  N Span (List Int) (List (Variation Int)) | TransposedN String Int |
-  Gain Span (List Number) (List (Variation Number)) | TransposedGain String Int | 
-  Pan Span (List Number) (List (Variation Number)) | TransposedPan String Int | 
-  Speed Span (List Number) (List (Variation Number)) | TransposedSpeed String Int | 
-  Begin Span (List Number) (List (Variation Number)) | TransposedBegin String Int | 
-  End Span (List Number) (List (Variation Number)) | TransposedEnd String Int | 
-  Vowel Span (List String) (List (Variation String)) | TransposedVowel String Int |
-  CutOff Span (List Number) (List (Variation Number)) | TransposedCutOff String Int |
-  CutOffH Span (List Number) (List (Variation Number)) | TransposedCutOffH String Int |
-  MaxW Span (List Number) (List (Variation Number)) | TransposedMaxW String Int |
-  MinW Span (List Number) (List (Variation Number)) | TransposedMinW String Int |
-  Inter Span (List Number) (List (Variation Number)) | TransposedInter String Int |
-  Legato Span (List Number) (List (Variation Number)) | TransposedLegato String Int |
-  Orbit Span (List Int) (List (Variation Int)) | TransposedOrbit String Int |
-  Dastgah Span Dastgah | Xeno (Tuple String (Maybe Int)) Span (List Int) |
-  Prog Span (List (Tuple String (Maybe Int))) | XNotes Span (List Int) (List (Variation Int)) | TransposedPitch String Int
+  Sound Span (List String) (List (Variation String)) |
+  N Span (List Int) (List (Variation Int)) |
+  Gain Span (List Number) (List (Variation Number)) | 
+  Pan Span (List Number) (List (Variation Number)) | 
+  Speed Span (List Number) (List (Variation Number)) | 
+  Begin Span (List Number) (List (Variation Number)) | 
+  End Span (List Number) (List (Variation Number)) | 
+  Vowel Span (List String) (List (Variation String)) |
+  CutOff Span (List Number) (List (Variation Number)) |
+  CutOffH Span (List Number) (List (Variation Number)) |
+  MaxW Span (List Number) (List (Variation Number)) |
+  MinW Span (List Number) (List (Variation Number)) |
+  Inter Span (List Number) (List (Variation Number)) |
+  Legato Span (List Number) (List (Variation Number)) |
+  Orbit Span (List Int) (List (Variation Int)) |
+  Dastgah Span Dastgah | 
+  Xeno (Tuple String (Maybe Int)) Span (List Int) |
+  Prog Span (List (Tuple String (Maybe Int))) | 
+  XNotes Span (List Int) (List (Variation Int)) | 
+  TransposedPitch String Int
 
 instance valueShow :: Show Value where
-  -- show (Soundy sp xs every) = show sp <> " " <> show xs <> show " " <> show every
   show (Sound x l v) = show x <> " " <> show l <> " " <> show v
-  show (TransposedSound voice n) = "s transposed from " <> voice
   show (N x l v) = show x <> " " <> show l <> " " <> show v
-  show (TransposedN voice n) = "n transposed from " <> voice
-  -- show (TransposedNWith voice n l) = show l <> "n transposedWith from " <> voice
   show (Gain x l v) = show x <> " " <> show l
-  show (TransposedGain voice n) = "gain transposed from " <> voice
-  -- show (TransposedGainWith voice n l) = "gain transposedWith from " <> voice
   show (Pan x l v) = show x <> " " <> show l
-  show (TransposedPan voice n) = "pan transposed from " <> voice
-  -- show (TransposedPanWith voice n l) = "pan transposedWith from " <> voice
   show (Speed x l v) = show x <> " " <> show l
-  show (TransposedSpeed voice n) = "speed transposed from " <> voice
-  -- show (TransposedSpeedWith voice n l) = "speed transposedWith from " <> voice
   show (Begin x l v) = show x <> " " <> show l
-  show (TransposedBegin voice n) = "begin transposed from " <> voice
-  -- show (TransposedBeginWith voice n l) = "begin transposedWith from " <> voice
   show (End x l v) = show x <> " " <> show l
-  show (TransposedEnd voice n) = "end transposed from " <> voice
-  -- show (TransposedEndWith voice n l) = "end transposedWith from " <> voice
   show (Vowel x l v) = show x <> " " <> show l
-  show (TransposedVowel voice n) = "vowel transposed from " <> voice
   show (CutOff x l v) = show x <> " " <> show l
-  show (TransposedCutOff voice n) = "cutoff transposed from " <> voice
   show (CutOffH x l v) = show x <> " " <> show l
-  show (TransposedCutOffH voice n) = "hcutoff transposed from " <> voice
   show (MaxW x l v) = show x <> " " <> show l
-  show (TransposedMaxW voice n) = "maxw transposed from " <> voice
   show (MinW x l v) = show x <> " " <> show l
-  show (TransposedMinW voice n) = "minw transposed from " <> voice
   show (Inter x l v) = show x <> " " <> show l
-  show (TransposedInter voice n) = "w interpolation transposed from " <> voice
   show (Legato x l v) = show x <> " " <> show l
-  show (TransposedLegato voice n) = "legato transposed from " <> voice
   show (Orbit x l v) = show x <> " " <> show l
-  show (TransposedOrbit voice n) = "orbit transposed from " <> voice
   show (Dastgah span d) = show d
   show (Xeno id span l) = show l
   show (Prog span l) = "prog" <> show l
@@ -144,10 +125,16 @@ instance spanShow :: Show Span where
   -- show BySubdivision = "-"
   -- show Weight = "-_-"
 
-data Dastgah = Shur (List Int) -- 1 to 8 then it cycles back
+data Dastgah = Shur (List Int) | Segah (List Int) | Nava (List Int) | Homayun (List Int) | Chahargah (List Int) | Mahur (List Int) | RastPanjgah (List Int)
 
 instance showDatsgah :: Show Dastgah where
   show (Shur l) = "shur " <> show l
+  show (Segah l) = "segah " <> show l
+  show (Nava l) = "nava " <> show l
+  show (Homayun l) = "homayun " <> show l
+  show (Chahargah l) = "chahargah " <> show l
+  show (Mahur l) = "mahur " <> show l
+  show (RastPanjgah l) = "rastPanjgah " <> show l
 
 data Temporal = Temporal Polytemporal Rhythmic Boolean | 
                 Replica String -- |
@@ -355,13 +342,17 @@ instance xenoShow :: Show XenoPitch where
     show ShurNot8 = "ShurNot8"
     show ShurNot = "ShurNot"
 
-type XenoNote = {
+type CPSNote = {
     set:: Array Int,
     "archi-set":: Array String,
     ratio:: Int,
     "bounded-ratio":: Number,
     "bounding-period":: Int
 }
+
+
+
+
 
 data Interval = UpJump | UpNext | DownJump | DownNext | Unison 
 
@@ -371,3 +362,14 @@ instance intervalShow :: Show Interval where
   show DownJump = "DownJump"
   show DownNext = "DownNext"
   show Unison = "Unison"
+
+data Variant = VInt Int | VNum Number | VString String | VList (List Variant) | VTempo TempoMark | VXTempo Variant | VFunc (Variant -> Variant)
+
+instance showVariant:: Show Variant where
+  show (VInt n) = show n
+  show (VNum x) = show x
+  show (VString s) = s
+  show (VList xs) = show xs
+  show (VTempo t) = show t
+  show (VXTempo v) = show v
+  show (VFunc _) = "funca"
