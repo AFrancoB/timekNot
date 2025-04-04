@@ -179,4 +179,10 @@ shurIntToFuncAndMIDIInt n = case n of
 
 getDastgahList:: Dastgah -> List Int
 getDastgahList (Shur ns) = ns
+getDastgahList (Segah ns) = ns
+getDastgahList (Nava ns) = ns
+getDastgahList (Homayun ns) = ns
+getDastgahList (Chahargah ns) = ns
+getDastgahList (Mahur ns) = ns
+getDastgahList (RastPanjgah ns) = ns
 getDastgahList _ = Nil
