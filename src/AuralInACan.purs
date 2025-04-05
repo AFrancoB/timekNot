@@ -131,8 +131,6 @@ getVListNum:: Variant -> List Number
 getVListNum (VList ns) = map getVarNum ns
 getVListNum _ = Nil
 
-
-
 -- List (Tuple Value Variant)
 -- need to get all Variants (which all must be VList) and get their length
 -- the biggest length determines the length of the rest. If the VList is smaller than this, then cycle through it until reaching this number:
@@ -177,7 +175,7 @@ g (MinW span lista variations) = VList $ map (\n -> VNum n) lista
 g (Inter span lista variations) = VList $ map (\n -> VNum n) lista
 g (Dastgah span d) = dastgahToVariant d
 g (Alpha span lista) = VList $ map (\n -> VInt n) lista
-g ( Beta span lista) = VList $ map (\n -> VInt n) lista
+g (Beta span lista) = VList $ map (\n -> VInt n) lista
 g (Gamma span lista) = VList $ map (\n -> VInt n) lista
 g (Xeno id span lista) = VList $ map (\n -> VInt n) lista 
 g _ = VInt 2666 -- add pitch stuff!!!

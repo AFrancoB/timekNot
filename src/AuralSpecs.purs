@@ -110,14 +110,14 @@ optVInt o (Just x) f = f o x
 processNote:: Voices -> M.Map String XenoPitch -> Rhythmic -> Maybe Value -> Maybe Value -> Event -> Maybe Number 
 processNote _ xp r Nothing xNotes e = Nothing
 processNote _ xp r (Just (Prog span lista)) xNotes e = mergeProgWithNote xp r (Prog span lista) xNotes e
-processNote _ xp r (Just (Dastgah span d)) _ e = spanMaybe span newList e r
-  where newList = getMIDIInterval $ analysisDastgahPattern span r d
 processNote _ xp r (Just (Alpha span lista)) _ e = spanMaybe span newList e r
   where newList = fromFoldable $ map alpha lista
 processNote _ xp r (Just (Beta span lista)) _ e = spanMaybe span newList e r
   where newList = fromFoldable $ map beta lista
 processNote _ xp r (Just (Gamma span lista)) _ e = spanMaybe span newList e r
   where newList = fromFoldable $ map gamma lista
+processNote _ xp r (Just (Dastgah span d)) _ e = spanMaybe span newList e r
+  where newList = getMIDIInterval $ analysisDastgahPattern span r d
 processNote _ xp r (Just (Xeno id span lista)) _ e = spanMaybe span (fromFoldable midiIntervals) e r
   where target = getXPTarget (fst id) xp
         -- target = fromMaybe (EDO 0.0 0) $ M.lookup (fst id) xp 
