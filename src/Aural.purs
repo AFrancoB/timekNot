@@ -87,7 +87,7 @@ value:: P (Tuple Value Variant) -- WORKS
 value = do
     _ <- pure 1
     _ <- reservedOp "."
-    val <- choice [try sound,try n, try gain, try pan, try speed, try begin, try end, try vowel, try cutoff, try cutoffh, try inter, try maxw, try minw, try legato, try orbit, try mayeh, try prog, try xeNotes, xeno] -- should be a tuple value variant
+    val <- choice [try sound,try n, try gain, try pan, try speed, try begin, try end, try vowel, try cutoff, try cutoffh, try inter, try maxw, try minw, try legato, try orbit, try mayeh, try alpha, try beta, try gamma, try prog, try xeNotes, xeno] -- should be a tuple value variant
     op <- operadores <|> (pure mulVar)
     trans <- transposer <|> (pure $ VList (VInt 1:Nil))
     pure $ Tuple val $ operate val trans op

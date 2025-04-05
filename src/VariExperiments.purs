@@ -54,6 +54,7 @@ type P = ParserT String Identity
 -- 1) in the new tempo marks.
 -- 2) to canonise the lists of values in the aural parser.
 -- 3) in the duration notation.
+-- 4) creating taylor made tuning systems
 
 
 data Vari = VString String | VNum Number | VInt Int | VList (List Vari)
