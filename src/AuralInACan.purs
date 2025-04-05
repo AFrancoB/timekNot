@@ -86,6 +86,9 @@ valInACan (Inter spn _ v') (VList xs) = map (\x -> Inter spn (getVListNum x) v')
 valInACan (Sound spn _ v') (VList sts) = map (\st -> Sound spn (getVListStr st) v') sts
 valInACan (Vowel spn _ v') (VList sts) = map (\st -> Vowel spn (getVListStr st) v') sts
 valInACan (Dastgah spn d) (VList ns) = dastgahInACan spn d ns
+valInACan (Alpha spn _) (VList ns) = map (\n -> Alpha spn (getVListInt n)) ns 
+valInACan (Beta spn _) (VList ns) = map (\n -> Beta spn (getVListInt n)) ns 
+valInACan (Gamma spn _) (VList ns) = map (\n -> Gamma spn (getVListInt n)) ns 
 valInACan (Xeno id spn _) (VList ns) = map (\n -> Xeno id spn (getVListInt n)) ns
 valInACan _ _ = Nil
 
@@ -173,6 +176,9 @@ g (MaxW span lista variations) = VList $ map (\n -> VNum n) lista
 g (MinW span lista variations) = VList $ map (\n -> VNum n) lista
 g (Inter span lista variations) = VList $ map (\n -> VNum n) lista
 g (Dastgah span d) = dastgahToVariant d
+g (Alpha span lista) = VList $ map (\n -> VInt n) lista
+g ( Beta span lista) = VList $ map (\n -> VInt n) lista
+g (Gamma span lista) = VList $ map (\n -> VInt n) lista
 g (Xeno id span lista) = VList $ map (\n -> VInt n) lista 
 g _ = VInt 2666 -- add pitch stuff!!!
 
