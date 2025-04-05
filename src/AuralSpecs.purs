@@ -427,6 +427,9 @@ getNote aural = head $ filter isNote $ fromFoldable aural
 
 isNote:: Value -> Boolean
 isNote (Dastgah _ _) = true
+isNote (Alpha _) = true
+isNote (Beta _) = true
+isNote (Gamma _) = true
 isNote (Xeno _ _ _) = true
 isNote (Prog _ _) = true
 isNote _ = false
