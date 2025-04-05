@@ -41,11 +41,6 @@ type P = ParserT String Identity
 -- can.sound = "hh cp bd me" *> ["drum hat pum pas", "hi cp", "808"]  .n = 0 1 2 3 4 5 * [2, 10] .segah = 0 3 2 4 5 + [7,14,(-7)]
 
 
-
-
-
-
-
 ---- math operations:
 
 durExpr:: P (List Number)
@@ -152,22 +147,22 @@ toRat x =
 
 ---- qwerty notation:
 
-qwertyRange:: P (List Number)
-qwertyRange = do 
-  _ <- pure 1
-  x <- parseNumber
-  _ <- reserved ","
-  y <- parseNumber
-  _ <- reserved "|"
-  ns <- many qwertyVal
-  _ <- reserved "|"
-  pure $ map (\n -> x + (n*(y-x))) $ fromFoldable ns
+-- qwertyRange:: P (List Number)
+-- qwertyRange = do 
+--   _ <- pure 1
+--   x <- parseNumber
+--   _ <- reserved ","
+--   y <- parseNumber
+--   _ <- reserved "|"
+--   ns <- many qwertyVal
+--   _ <- reserved "|"
+--   pure $ map (\n -> x + (n*(y-x))) $ fromFoldable ns
 
-qwertyVal:: P Number
-qwertyVal = do 
-  _ <- pure 1
-  x <- choice [char 'q' *> pure (0.0/9.0), char 'w' *> pure (1.0/9.0), char 'e' *> pure (2.0/9.0), char 'r' *> pure (3.0/9.0), char 't' *> pure (4.0/9.0), char 'y' *> pure (5.0/9.0), char 'u' *> pure (6.0/9.0), char 'i' *> pure (7.0/9.0), char 'o' *> pure (8.0/9.0), char 'p' *> pure (9.0/9.0)]
-  pure x
+-- qwertyVal:: P Number
+-- qwertyVal = do 
+--   _ <- pure 1
+--   x <- choice [char 'q' *> pure (0.0/9.0), char 'w' *> pure (1.0/9.0), char 'e' *> pure (2.0/9.0), char 'r' *> pure (3.0/9.0), char 't' *> pure (4.0/9.0), char 'y' *> pure (5.0/9.0), char 'u' *> pure (6.0/9.0), char 'i' *> pure (7.0/9.0), char 'o' *> pure (8.0/9.0), char 'p' *> pure (9.0/9.0)]
+--   pure x
 
 
 tokenParser = makeTokenParser haskellStyle

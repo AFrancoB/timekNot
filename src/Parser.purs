@@ -1,4 +1,4 @@
-module Parser(cFromParser, polytemporalRelation', temporal, check, parseProgram, replica, getTemporalMap, getAuralMap, testRecursive, testP,xPitchExpression, expression, getVantageMap, parseDate, utcA) where
+module Parser(cFromParser, polytemporalRelation', temporal, check, parseProgram, replica, getTemporalMap, getAuralMap, testRecursive, testP,xPitchExpression, expression, getVantageMap, parseDate, utcA, tempoOperArray) where
 
 import Prelude
 
@@ -42,6 +42,7 @@ import Parsing.Token (makeTokenParser)
 import AST
 import Rhythm
 import Aural
+import Variant
 
 import InACan
 
@@ -50,6 +51,29 @@ type P = ParserT String Identity
 testP str = runParser str parseProgram
 
 ---------
+tempoOperArray:: P (List TempoMark)
+tempoOperArray = do 
+  _ <- pure 1
+  t <- tempoMark'
+  op <- operadores <|> (pure mulVar) 
+  trans <- transposer <|> (pure $ VList (VInt 1:Nil)) 
+  pure $ getListTempo $ (op trans $ buildVTempo t)
+
+buildVTempo:: List TempoMark -> Variant
+buildVTempo xs = VTempo $ fromMaybe XTempo $ head xs
+
+transposer:: P Variant
+transposer = do 
+    _ <- pure 0
+    xs <- brackets $ (toVariant <$> naturalOrFloat) `sepBy` comma
+    pure $ VList $ L.fromFoldable xs
+
+toVariant:: Either Int Number -> Variant
+toVariant (Left n) = VInt n 
+toVariant (Right x) = VNum x
+
+operadores:: P (Variant -> Variant -> Variant)
+operadores = choice [reservedOp "*" *> pure mulVar, reservedOp "+" *> pure addVar]
 
 tempoMark':: P (List TempoMark)
 tempoMark' = do
@@ -72,7 +96,7 @@ polytemporalRelation' = do
   idFrom <- voiceId
   cFrom <- try (brackets $ cFromParser) <|> pure (Tuple 0 (Process 0))
   cTo <- try (cToParser) <|> pure {idCTo: Nothing, indxCTo: Nothing} 
-  tempi <- choice [try tempoMark', tempoMarks] <|> pure (XTempo:Nil)
+  tempi <- choice [try tempoOperArray, try tempoMark',try tempoMarks] <|> pure (XTempo:Nil)
   pure $ canonise idFrom cTo.idCTo cTo.indxCTo cFrom tempi
 
 cToParser:: P {idCTo:: Maybe (Either String String), indxCTo:: Maybe (Tuple Int ConvergeTo)}
@@ -786,10 +810,22 @@ ratio:: P TempoMark
 ratio = do
   _ <- pure 1 
   id <- voiceId
+  indexID <- indexIDParse <|> pure "0"
   x <- natural
   _ <- reservedOp ":"
   y <- natural
-  pure $ Prop id x y
+  pure $ Prop (id <> "-" <> show indexID)  x y
+
+indexIDParse:: P String -- you are here
+indexIDParse = do
+  _ <- pure 1
+  n <- brackets $ natural
+  pure $ show n
+
+-- to do: tempo should be allowed to be multiplied by factors or added or something!
+-- like this: 300cpm * [1.1,2.1,3.2,0.9]
+-- add negative numbers to all this mess
+
 
 --
 testRecursive :: VantageMap -> String -> Either String Program

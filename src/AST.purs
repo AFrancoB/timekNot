@@ -88,6 +88,9 @@ data Value =
   Legato Span (List Number) (List (Variation Number)) |
   Orbit Span (List Int) (List (Variation Int)) |
   Dastgah Span Dastgah | 
+  Alpha Span (List Int) |
+  Beta Span (List Int) |
+  Gamma Span (List Int) |
   Xeno (Tuple String (Maybe Int)) Span (List Int) |
   Prog Span (List (Tuple String (Maybe Int))) | 
   XNotes Span (List Int) (List (Variation Int)) | 
@@ -110,6 +113,9 @@ instance valueShow :: Show Value where
   show (Legato x l v) = show x <> " " <> show l
   show (Orbit x l v) = show x <> " " <> show l
   show (Dastgah span d) = show d
+  show (Alpha span l) = show l 
+  show (Beta span l) = show l 
+  show (Gamma span l) = show l 
   show (Xeno id span l) = show l
   show (Prog span l) = "prog" <> show l
   show (XNotes span l v) = "xnotes " <> show l
@@ -325,6 +331,9 @@ type DastgahNote = {
   midiInterval:: Number
 }
 
+-- Wendy Carlos
+
+-- 77.965
 
 -- xenopPitch
 
@@ -349,10 +358,6 @@ type CPSNote = {
     "bounded-ratio":: Number,
     "bounding-period":: Int
 }
-
-
-
-
 
 data Interval = UpJump | UpNext | DownJump | DownNext | Unison 
 

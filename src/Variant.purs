@@ -1,4 +1,4 @@
-module Variant(mulVar, addVar) where
+module Variant(mulVar, addVar, getListTempo) where
 
 import Prelude
 
@@ -54,9 +54,11 @@ addVar (VList xs) (VTempo t) = tempoVarVarAdd t (VList xs)
 addVar (VInt n) (VInt n') = intVarVarAdd n (VInt n')
 addVar (VInt n) (VNum x) = intVarVarAdd n (VNum x)
 addVar (VInt n) (VList xs) = intVarVarAdd n (VList xs)
+addVar (VInt n) (VTempo t) = tempoVarVarAdd t (VInt n)
 addVar (VNum x) (VInt n) = intVarVarAdd n (VNum x)
 addVar (VNum x) (VNum x') = numVarVarAdd x (VNum x')
 addVar (VNum x) (VList xs) = numVarVarAdd x (VList xs)
+addVar (VNum x) (VTempo t) = tempoVarVarAdd t (VNum x)
 addVar (VInt n) (VString str) = VString str
 addVar (VNum x) (VString str) = VString str
 addVar (VTempo t) (VString str) =  VString str
@@ -117,9 +119,11 @@ mulVar (VList xs) (VTempo t) = tempoVarVarMul t (VList xs)
 mulVar (VInt n) (VInt n') = intVarVarMul n (VInt n')
 mulVar (VInt n) (VNum x) = intVarVarMul n (VNum x)
 mulVar (VInt n) (VList xs) = intVarVarMul n (VList xs)
+mulVar (VInt n) (VTempo t) = tempoVarVarMul t (VInt n)
 mulVar (VNum x) (VInt n) = intVarVarMul n (VNum x)
 mulVar (VNum x) (VNum x') = numVarVarMul x (VNum x')
 mulVar (VNum x) (VList xs) = numVarVarMul x (VList xs)
+mulVar (VNum x) (VTempo t) = tempoVarVarMul t (VNum x)
 mulVar (VInt n) (VString str) = VString str
 mulVar (VNum x) (VString str) = VString str
 mulVar (VTempo t) (VString str) =  VString str
@@ -166,6 +170,15 @@ tempVarVarMul (Sin sin) (VNum x) = VTempo $ Sin {min: sin.min, max: sin.max, osc
 tempVarVarMul (Dur r) (VNum x) = VTempo $ Dur (r * (toRat x))
 tempVarVarMul t (VList xs) =  VList $ map (\x -> tempVarVarMul t x) xs
 tempVarVarMul _ _ = VString "nothing to do here in tempVarVar"
+
+getTempo:: Variant -> TempoMark
+getTempo (VTempo t) = t
+-- getTempo (VList xs) = getListTempo xs 
+getTempo _ = CPS $ toRat 0.5
+
+getListTempo:: Variant -> List TempoMark
+getListTempo (VList xs) = map getTempo xs
+getListTempo _ = Nil
 
 
 toRat:: Number -> Rational

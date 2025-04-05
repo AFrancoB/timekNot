@@ -1,4 +1,4 @@
-module XenoPitch (xenoPitchAsAuralPattern, xenoPitchToMIDIInterval, testXN, xenoPitchAsMIDINum) where
+module XenoPitch (xenoPitchAsAuralPattern, xenoPitchToMIDIInterval, testXN, xenoPitchAsMIDINum, alpha, beta, gamma) where
 
 import Prelude
 
@@ -294,6 +294,19 @@ toMIDIInterval' xn = (ratioToCents xn."bounded-ratio") / 100.0
 addSampleRoot:: Array Number -> Array Number
 addSampleRoot xs = 0.0 : xs
 
+
+-- 77.965 cents intervals
+alpha:: Int -> Number
+alpha n = inAproxCents / 100.0 
+  where inAproxCents = ((toNumber n) * 77.965)
+
+beta:: Int -> Number
+beta n = inAproxCents / 100.0 
+  where inAproxCents = ((toNumber n) * 63.8)
+
+gamma:: Int -> Number
+gamma n = inAproxCents / 100.0 
+  where inAproxCents = ((toNumber n) * 35.099)
 
 -- parseo:
 -- v0.myCPS[0] = _ 0 1 2 3 4 5 6;

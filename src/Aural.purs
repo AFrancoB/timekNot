@@ -131,6 +131,51 @@ xeNotes = do
     vars <- variationsInt <|> pure Nil
     pure $ XNotes sp l vars
 
+alpha:: P Value
+alpha = do
+    _ <- pure 1
+    _ <- choice [reserved "alpha"]
+    _ <- reservedOp "="
+    a <- choice [try makeAlpha]
+    pure a
+
+makeAlpha:: P Value 
+makeAlpha = do
+    _ <- pure 1
+    sp <- parseSpan <|> pure CycleEvent
+    alphaList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
+    pure $ Alpha sp $ fromFoldable alphaList
+
+beta:: P Value
+beta = do
+    _ <- pure 1
+    _ <- choice [reserved "beta"]
+    _ <- reservedOp "="
+    b <- choice [try makeBeta]
+    pure b
+
+makeBeta:: P Value 
+makeBeta = do
+    _ <- pure 1
+    sp <- parseSpan <|> pure CycleEvent
+    betaList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
+    pure $ Beta sp $ fromFoldable betaList
+
+gamma:: P Value
+gamma = do
+    _ <- pure 1
+    _ <- choice [reserved "gamma"]
+    _ <- reservedOp "="
+    g <- choice [try makeGamma]
+    pure g
+
+makeGamma:: P Value 
+makeGamma = do
+    _ <- pure 1
+    sp <- parseSpan <|> pure CycleEvent
+    gammaList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
+    pure $ Gamma sp $ fromFoldable gammaList
+
 xeno:: P Value 
 xeno = do
     _ <- pure 1
