@@ -157,14 +157,14 @@ indexAndCTo = do
 defaultIndxTo:: P (Tuple Int ConvergeTo)
 defaultIndxTo = do
   _ <- pure 0
-  cTo <- choice [try cToLast, try parsePercenTo, try parseProcessTo, parseStructureTo]
+  cTo <- choice [try cToLast, try parsePercenTo, try parseStructureTo, parseProcessTo]
   pure $ Tuple 0 cTo
 
 indxCTo:: P (Tuple Int ConvergeTo)
 indxCTo = do
   _ <- pure 0
   indx <- indexParser <|> pure 0
-  cTo <- choice [try cToLast, try parsePercenTo, try parseProcessTo, parseStructureTo]
+  cTo <- choice [try cToLast, try parsePercenTo, try parseStructureTo, parseProcessTo]
   pure $ Tuple indx cTo
 
 voiceIdNovusToM:: P (Maybe (Either String String))
@@ -192,14 +192,14 @@ cFromParser = do
 defaultIndx:: P (Tuple Int ConvergeFrom)
 defaultIndx = do
   _ <- pure 0
-  cFrom <- choice [try cFromLast, try cFromPercen, try cFromProcess, cFromStructure]
+  cFrom <- choice [try cFromLast, try cFromPercen, try cFromStructure, cFromProcess]
   pure $ Tuple 0 cFrom
 
 indxCFrom:: P (Tuple Int ConvergeFrom)
 indxCFrom = do
   _ <- pure 0
   indx <- indexParser <|> pure 0
-  cFrom <- try $ choice [try cFromLast, try cFromPercen, try cFromProcess, cFromStructure]
+  cFrom <- try $ choice [try cFromLast, try cFromPercen, try cFromStructure, cFromProcess]
   pure $ Tuple indx cFrom
 
 indexParser:: P Int 

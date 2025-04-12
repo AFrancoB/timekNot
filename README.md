@@ -198,3 +198,11 @@ Aquí se alinea el evento 13 de b con el evento 27 de a. A su vez, el evento 10 
 
 ### El pilón: Expresiones de Puntos Temporales
 
+
+##timeknot
+
+clock 500cpm | x :|   
+a[2] <- clock[2>>] 300cpm * [1,1.1,1.2,1.3,1.4,1.5] | ox[xx]xo[ox]x :|
+a.s = "grandpiano" .speed = 1 .n = _-_ 6 7 8 7 6 10 5 
+.pan = 0.5 * [0, 0.5, 0.7, 1.3, 1.5, 2]
+.beta = _-_ 0 2 5 0 1 3 7 8 6 7 + [0,2,4,5,6,7];
