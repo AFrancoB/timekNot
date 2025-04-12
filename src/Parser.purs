@@ -1,3 +1,4 @@
+
 module Parser(cFromParser, polytemporalRelation', temporal, check, parseProgram, replica, getTemporalMap, getAuralMap, testRecursive, testP,xPitchExpression, expression, getVantageMap, parseDate, utcA, tempoOperArray) where
 
 import Prelude
@@ -94,10 +95,18 @@ polytemporalRelation' = do
   _ <- pure 0
   whitespace
   idFrom <- voiceId
+  subVoice <- subVoiceParser <|> pure ""
   cFrom <- try (brackets $ cFromParser) <|> pure (Tuple 0 (Process 0))
   cTo <- try (cToParser) <|> pure {idCTo: Nothing, indxCTo: Nothing} 
   tempi <- choice [try tempoOperArray, try tempoMark',try tempoMarks] <|> pure (XTempo:Nil)
-  pure $ canonise idFrom cTo.idCTo cTo.indxCTo cFrom tempi
+  pure $ canonise (idFrom <> subVoice) cTo.idCTo cTo.indxCTo cFrom tempi
+
+subVoiceParser:: P String
+subVoiceParser = do
+  _ <- pure 1
+  _ <- char '-'
+  n <- natural
+  pure $ "-" <> show n
 
 cToParser:: P {idCTo:: Maybe (Either String String), indxCTo:: Maybe (Tuple Int ConvergeTo)}
 cToParser = do
@@ -814,7 +823,7 @@ ratio = do
   x <- natural
   _ <- reservedOp ":"
   y <- natural
-  pure $ Prop (id <> "-" <> show indexID)  x y
+  pure $ Prop (id <> "-" <> indexID)  x y
 
 indexIDParse:: P String -- you are here
 indexIDParse = do

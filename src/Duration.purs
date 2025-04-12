@@ -40,6 +40,29 @@ type P = ParserT String Identity
 
 -- can.sound = "hh cp bd me" *> ["drum hat pum pas", "hi cp", "808"]  .n = 0 1 2 3 4 5 * [2, 10] .segah = 0 3 2 4 5 + [7,14,(-7)]
 
+-- if sound parser :: P (Either (Tuple Value Variant) Value)
+-- 
+
+-- if list len is 1 then Right Value, if len > 1 Left (Tuple Value Variant)
+samplesParser:: P (List (List String))
+samplesParser = do
+    sampleNames <- stringLit
+    pure $ (stringsToSamples <<< stringToStrings) sampleNames
+
+stringToStrings:: String -> List String
+stringToStrings s = fromFoldable $ Str.split (Str.Pattern ",") $ Str.trim s
+
+stringsToSamples:: List String -> List (List String) 
+stringsToSamples xs = map f xs
+  where f s = fromFoldable $ Str.split (Str.Pattern " ") $ Str.trim s
+
+sampleParser:: P (List String)
+sampleParser = do
+    sampleNames <- stringLit
+    pure $ stringToSamples sampleNames
+
+stringToSamples:: String -> List String -- what to do with commas??
+stringToSamples s = fromFoldable $ Str.split (Str.Pattern " ") $ Str.trim s
 
 ---- math operations:
 

@@ -85,23 +85,25 @@ createIDandTM id n tempi = Tuple (id <> "-" <> (show m)) tempo
         tempo = fromMaybe XTempo $ tempi!!m
 
 newPolytemporal:: ConvergeFrom -> Maybe (Either String String) -> Maybe (Tuple Int ConvergeTo) -> List TempoMark -> TempoMark -> Polytemporal
-newPolytemporal cFrom mIDCTo mCTo tempi t = r
-  where r = case mIDCTo of
-              Nothing -> Metric (ProcessTo 0 Origin) cFrom t
-              Just x -> case x of
-                          Left str -> Novus str cFrom t 
-                          Right str -> Converge idTo cTo cFrom t 
-                              where cTo = fromMaybe (ProcessTo 0 Origin) $ (snd <$> mCTo)
-                                    idTo = createID str $ fromMaybe 0 $ (fst <$> mCTo) 
+newPolytemporal cFrom Nothing Nothing tempi t = Metric cTo cFrom t
+  where cTo = ProcessTo 0 Origin
+newPolytemporal cFrom Nothing mCTo tempi t = Metric cTo cFrom t
+  where cTo = fromMaybe (ProcessTo 2666 Origin) $ (snd <$> mCTo)
 newPolytemporal cFrom mIDCTo Nothing tempi t = r
   where r = case mIDCTo of
               Nothing -> Metric (ProcessTo 0 Origin) (Process 0) t
               Just x -> case x of
                           Left str -> Novus str cFrom t 
-                          Right str -> Converge str (ProcessTo 0 Origin) cFrom t 
+                          Right str -> Converge idTo (ProcessTo 0 Origin) cFrom t 
                               where idTo = createID str 0
-newPolytemporal cFrom Nothing mCTo tempi t = Metric cTo cFrom t
-  where cTo = fromMaybe (ProcessTo 2666 Origin) $ (snd <$> mCTo)
+newPolytemporal cFrom mIDCTo mCTo tempi t = r
+  where r = case mIDCTo of
+              Nothing -> newPolytemporal cFrom Nothing mCTo tempi t  
+              Just x -> case x of
+                          Left str -> Novus str cFrom t 
+                          Right str -> Converge idTo cTo cFrom t 
+                              where cTo = fromMaybe (ProcessTo 0 Origin) $ (snd <$> mCTo)
+                                    idTo = createID str $ fromMaybe 0 $ (fst <$> mCTo) 
 newPolytemporal cFrom _ _ _ t = Metric (ProcessTo 0 Origin) (Process 0) t
 
 createID:: String -> Int -> String

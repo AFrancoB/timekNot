@@ -24,10 +24,10 @@ type Program = List Expression
 data Expression = TimeExpression (Map String Temporal) | AuralExpression (Map String Aural) | VantagePointExpression  (Map String Vantage) | XenoPitchExpression (Map String XenoPitch)
 
 instance expressionShow :: Show Expression where
-  show (TimeExpression x) = show x
-  show (AuralExpression x) = show x
-  show (XenoPitchExpression x) = show x
-  show (VantagePointExpression x) = show x
+  show (TimeExpression x) = "TimeExpression " <> show x
+  show (AuralExpression x) = "AuralExpression " <> show x
+  show (XenoPitchExpression x) = "XenoPitchExpression " <> show x
+  show (VantagePointExpression x) = "VantagePointExpression " <> show x
 
 -- Temporal values is short for TemporalRelationship and Aural is short for Aural Values. Polytemporal stands for TempoRelationship, Rhythmic stands shor for Rhythmic values
 
@@ -165,11 +165,10 @@ data Polytemporal =
 
 
 instance polytemporalShowInstance :: Show Polytemporal where
-  show (Kairos asap t) = "kairos: " <> show asap <> " tempo mark: " <> show t
-  show (Metric cTo cFrom t) = "(cTo "<>show cTo<>") (cFrom "<>show cFrom <> ") (tempo mark: " <> show t <> ")"
-  show (Converge voice cTo cFrom t) = "toVoice "<>show voice<>" (cTo "<>show cTo<>") (cFrom "<>show cFrom <> ") (tempo mark: " <> show t <> ")"
-  show (Novus vantageId cFrom t) = "vantagePoint "<>show vantageId<>" (cFrom "<>show cFrom <> ") (tempo mark: " <> show t <> ")"
-  -- show (Canonic xs) = show xs
+  show (Kairos asap t) = "Kairos " <> show asap <> " " <> show t
+  show (Metric cTo cFrom t) = "Metric "<>show cTo<>" "<>show cFrom<>" "<> show t
+  show (Converge id cTo cFrom t) = "Converge "<>show id<>" "<>show cTo<>" "<> show cFrom <>" "<> show t
+  show (Novus id cFrom t) = "Novus " <> show id <>" "<> show cFrom <>" "<> show t
 
 -- data Durations = 
 
@@ -212,10 +211,10 @@ instance Eq Euclidean where
     eq _ _ = false
 
 instance euclideanShowInstance :: Show Euclidean where
-  show (Full x y) = "full euclidean"
-  show (K x) = "k"
-  show (InvK x) = "k-inversed"
-  show (Simple) = "simple"
+  show (Full x y) = "Full " <> show x <>" "<> show y
+  show (K x) = "K " <> show x 
+  show (InvK x) = "InvK " <> show x
+  show (Simple) = "Simple"
 
 -- CPAlign will provide a convergence point in relation to a part of the program.
 -- mod 4 will align a cp with the next voice start multiple of 4. The convergenceTo value with 'mod 4' will converge to the other voice at the next voice muliplte of 4. If this would be the convergenceFrom, the voice will align to the other voice from its next voice multiple of 4.
@@ -228,9 +227,9 @@ instance euclideanShowInstance :: Show Euclidean where
 data CPAlign = Mod Int | Snap | Origin  -- this is the first stage
 
 instance Show CPAlign where
-  show (Mod m) = "cp after first multiple of " <> show m <> " ahead"
-  show  Snap = "closest to eval"
-  show  Origin = "diverge at origin"
+  show (Mod m) = "Mod " <> show m
+  show  Snap = "Snap"
+  show  Origin = "Origin"
 
 
 -- Aligners:
@@ -248,7 +247,6 @@ instance Show ConvergeFrom where
   show (Process e) = show e
   show (Percen p) = show p <> "%"
   show Last = "last"
-  -- show (Canonic int cf) = show int <> ":" <> show cf 
 
 data ConvergeTo = StructureTo Int (Array Int) CPAlign | ProcessTo Int CPAlign | PercenTo Number CPAlign | LastTo CPAlign -- | CanonicTo Int ConvergeTo 
 
@@ -259,7 +257,6 @@ instance Show ConvergeTo where
   show (ProcessTo e a) = show e <> " " <> show a
   show (PercenTo p a) = show p <> "% " <> show a
   show (LastTo a) = "last"
---  show (CanonicTo int ct) = show int <> ":" <> show ct
 
 -- perhaps this is the output of processTempoMark, this will allow users to declare a total duration of a block (reverting more or less the additive logic to divisive)
 
@@ -269,13 +266,13 @@ instance Show ConvergeTo where
 data TempoMark = XTempo | CPM Rational | BPM Rational Rational | CPS Rational | Prop String Int Int | Sin Sinusoidal | Dur Rational
 
 instance Show TempoMark where
-  show XTempo = "external"
+  show XTempo = "XTempo"
   show (CPM cpm) = show cpm <> "cpm"
-  show (BPM bpm figure) = show bpm <> "bpm the " <> show figure
+  show (BPM bpm fig) = show fig <> " = " <> show bpm <> "bpm"
   show (CPS cps) = show cps <> "cps"
-  show (Prop id x y) = "from voice: " <> id <> " " <> show x <> ":" <> show y 
+  show (Prop id x y) = id <> " " <> show x <> ":" <> show y 
   show (Sin acc) = show acc
-  show (Dur n) = "dur " <> show n
+  show (Dur n) = "Dur " <> show n
 
 type Sinusoidal = {
   min:: TempoMark,
@@ -345,9 +342,9 @@ instance subsetShow :: Show Subset where
 data XenoPitch = CPSet Int (Array Int) (Maybe (Array Subset)) | MOS Int Int | EDO Number Int | ShurNot8 | ShurNot
 
 instance xenoShow :: Show XenoPitch where
-    show (CPSet s f subs) = "cps " <> show s <> " " <> show f <> " " <> show subs
-    show (MOS k n) = "mos " <> show k <> " " <> show n
-    show (EDO p d) = "edo " <> show p <> " " <> show d
+    show (CPSet s f subs) = "CPSet " <> show s <> " " <> show f <> " " <> show subs
+    show (MOS k n) = "MOS " <> show k <> " " <> show n
+    show (EDO p d) = "EDO " <> show p <> " " <> show d
     show ShurNot8 = "ShurNot8"
     show ShurNot = "ShurNot"
 
@@ -371,10 +368,10 @@ instance intervalShow :: Show Interval where
 data Variant = VInt Int | VNum Number | VString String | VList (List Variant) | VTempo TempoMark | VXTempo Variant | VFunc (Variant -> Variant)
 
 instance showVariant:: Show Variant where
-  show (VInt n) = show n
-  show (VNum x) = show x
-  show (VString s) = s
-  show (VList xs) = show xs
-  show (VTempo t) = show t
-  show (VXTempo v) = show v
+  show (VInt n) = "VInt " <> show n
+  show (VNum x) = "VNum " <> show x
+  show (VString s) = "VString " <> s
+  show (VList xs) = "VList "<> show xs
+  show (VTempo t) = "VTempo " <> show t
+  show (VXTempo v) = "VXTempo " <> show v
   show (VFunc _) = "funca"

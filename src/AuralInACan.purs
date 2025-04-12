@@ -152,6 +152,17 @@ getVListNum _ = Nil
 
 -- where index 0 of each list becomes id-0, index 1 becomes id-1, etc...
 
+
+
+------------------------------------------------
+-- to open sample parser with variants and InACanization
+
+-- sound, n, pan, gain, etc, 
+--parser from :: P Value to :: P (Either (Tuple Value Variant) Value)
+
+-- then before operate need a function that checks Left (Tuple Value Variant) / Right Value. 
+-- Right goes to operate (:: Tuple Value Variant), Left returns the Tuple in the Left
+
 --
 operate:: Value -> Variant -> (Variant -> Variant -> Variant) -> Variant
 operate val trans op = op trans valAsVar --mulVar
