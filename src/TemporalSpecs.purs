@@ -411,7 +411,7 @@ durProp m xT (Sin sin) r prop = durOther / prop
 
 durProp m xT (Dur d) r prop = (R.toNumber d) / prop
 durProp m xT (Prop id x y) _ prop = durProp m xT otherTM otherRhy otherProp 
-  where otherProp = (toNumber x / toNumber y) * prop
+  where otherProp = (toNumber x / toNumber y) 
         otherTemporal = fromMaybe defTemporal $ M.lookup id m
         otherTM = tempoMark m otherTemporal
         otherRhy = getRhythmic m otherTemporal
