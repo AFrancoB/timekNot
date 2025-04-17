@@ -36,6 +36,86 @@ import TimePacketOps (metricToTempoMark)
 
 type P = ParserT String Identity 
 
+---- span lang:
+-- spr = _
+
+-- seq = &
+
+-- &:& sequence as transposition and sequence one item per block
+
+-- & sequence, one item per block. Infers no transposition (no transposition given will seq as transp)
+
+-- &:&-& sequence as transposition and sequence one item per x/o 
+
+-- &:&-&.&  sequence as trans and sequence one item per first level of recursion: [x/o]
+
+-- &:&-&.&.& sequence as trans and seq one item per second level of recursion [[x/o]]
+
+
+
+-- _:_ spread as transposition from first to last element of the block
+
+-- _ impossible, since blocks are looped (and repeat forever) there is no way to spread items. If this written, will act as &, which is sequence one item per block
+
+-- _:_-_ spread as transposition and from first to last element of the block 
+
+-- _:_-_._ spread as trans and from first to last element of the block taking into consideration first level of recursion [x]
+
+-- _:_-_._._ spread as trans and from first to last element of the block taking into consideration second level of recursion [[x]]
+
+-- --------
+-- _:_ and _:& spread as transp and one item pero block
+
+-- | xox[oxx][xox]oxx :| .s "cp bd sn"
+
+-- cp cp cp cp cp cp cp cp cp cp cp cp | bd bd bd bd bd bd bd bd bd | sn sn ...
+
+-- &:&-&._ sequence as transposition, sequence one item per block, spreads at first level of recursion
+
+-- | xox[oxx][xox]oxx :| .s "cp bd sn"
+
+-- cp cp cp [bd sn cp] [bd sn cp] bd bd bd
+
+-- _:_-_.& spread as transp, spread from first to last item of x and sequence first level of recursion
+
+-- | xox[oxx][xox]oxx :| .s "cp bd sn"
+
+-- cp cp cp bd sn cp bd sn cp bd sn sn    
+
+-- t:b-x.r1.r2.r3.r4.r5.rn 
+
+-- spr:x-spr.seq.spr
+
+
+
+-- _:_-_._ spread as trans and from first to last element of the block taking into consideration first level of recursion [x]
+
+-- | xox[oxx][xox]oxx :| .s "cp bd sn"
+
+-- Three ways here to deal with this:
+-- 1) taking into account duration determined by x, in this case, no matter how many subdivisions it will be the same spread 
+
+-- cp cp cp bd bd bd bd bd bd bd sn sn
+
+-- 2) taking into consideration the amount of triggers per block:
+
+-- cp cp cp cp bd bd bd bd sn sn sn sn 
+
+-- 3) each new level of recursion with a spread starts a new spread pattern in rotation of the original:
+
+-- cp cp cp bd sn cp bd sn cp bd sn sn
+
+
+-- 1 is implicit already in: _-_ and needs no other notation. it is possible for this to be articulated with 3. 
+
+-- 2 would be 
+
+
+
+
+
+
+
 ---- Aural:
 
 -- can.sound = "hh cp bd me" *> ["drum hat pum pas", "hi cp", "808"]  .n = 0 1 2 3 4 5 * [2, 10] .segah = 0 3 2 4 5 + [7,14,(-7)]

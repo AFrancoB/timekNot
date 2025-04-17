@@ -867,10 +867,6 @@ unexpressPitch _ = empty
 -- checkTransposition2 aMap refd id aurals = 
 
 
-
-
-
-
 tokenParser = makeTokenParser haskellStyle
 parens      = tokenParser.parens
 braces      = tokenParser.braces

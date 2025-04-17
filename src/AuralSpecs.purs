@@ -369,11 +369,12 @@ spanInt SpreadBlock xs event rhythmic = intMaybe $ spreadInBlock xs event rhythm
 spanInt _ _ _ _ = 2666
 
 ------
+-- here this function only works for a spread at the index level strange to solve it
 -- spread functions are now general for all values!!! Bliss
 spreadInBlock:: forall a. Array a -> Event -> Rhythmic -> Maybe a
 spreadInBlock xs event rhythmic = spreadWrap percenPos xsLimits 
   where percenPositions = map (\(Onset b p) -> p) $ rhythmicToOnsets rhythmic 
-        modIndex = (getEventIndex event) `mod` (length $ fromFoldable percenPositions)
+        modIndex = (getEventIndex event) `mod` (length $ fromFoldable percenPositions) -- aqui deberia de haber un ln -1 despues del mod, falta el len
         percenPos = fromMaybe 0.0 $ (fromFoldable percenPositions) !! modIndex
         segment = 1.0 / toNumber (length xs)
         limitsFst = cons 0.0 (scanl (+) 0.0 $ replicate ((length xs) - 1) segment)
