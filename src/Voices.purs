@@ -1,4 +1,4 @@
-module Voices (programToForeign,canAuralMap,mapT,mapA) where
+module Voices (programToForeign,canAuralMap,mapA) where
 
 import Prelude
 import Effect (Effect)
@@ -47,7 +47,7 @@ programToVoice program = M.intersectionWith (\x y -> Voice x y) tempoMap auralMa
 
 -- mapT = M.fromFoldable [Tuple "can-0" (Replica "chuchu"), Tuple "can-1" (Replica "chichi"), Tuple "can-2" (Replica "cheche")]
 
-mapT = M.fromFoldable [Tuple "can" (Replica "chuchu"), Tuple "muh" (Replica "chichi")]
+-- mapT = M.fromFoldable [Tuple "can" (Replica "chuchu"), Tuple "muh" (Replica "chichi")]
 
 -- Sound Span (List String) (List (Variation String))
 

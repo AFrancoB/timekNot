@@ -43,8 +43,6 @@ import AST
 import Rhythm
 import Aural
 
-type P = ParserT String Identity
-
 
 canonise:: String -> Maybe (Either String String) -> Maybe (Tuple Int ConvergeTo) -> Tuple Int ConvergeFrom -> List TempoMark -> Map String Polytemporal
 canonise id mIDTo mIndxCTo indxCFrom tempi = 
@@ -108,40 +106,3 @@ newPolytemporal cFrom _ _ _ t = Metric (ProcessTo 0 Origin) (Process 0) t
 
 createID:: String -> Int -> String
 createID id n = id <> "-" <> show n
-
-
-
-
-
-
-
-charWS:: Char -> P Char
-charWS x = do
-  _ <- pure 1
-  x <- char x 
-  whitespace
-  pure x
-
-strWS:: String -> P String
-strWS x = do
-  _ <- pure 1
-  x <- string x 
-  whitespace
-  pure x
-
-tokenParser = makeTokenParser haskellStyle
-parens      = tokenParser.parens
-braces      = tokenParser.braces
-identifier  = tokenParser.identifier
-reserved    = tokenParser.reserved
-naturalOrFloat = tokenParser.naturalOrFloat
-natural = tokenParser.natural
-float = tokenParser.float
-whitespace = tokenParser.whiteSpace
-colon = tokenParser.colon
-brackets = tokenParser.brackets
-comma = tokenParser.comma
-semi = tokenParser.semi
-integer = tokenParser.integer
-stringLiteral = tokenParser.stringLiteral
-reservedOp = tokenParser.reservedOp

@@ -25,11 +25,6 @@ import Data.Rational (toNumber) as R -- still need to convert all Number calcs i
 
 
 calculateTemporal:: M.Map String Temporal -> TimePacket -> String -> Temporal -> Effect (Array Event)
-calculateTemporal mapa tp aKey (Replica id) = do
-  let replicatedTemporal = fromMaybe defTemporal $ M.lookup id mapa
-  result <- calculateTemporal mapa tp aKey replicatedTemporal 
-  pure result 
-
 calculateTemporal m tp aKey (Temporal (Kairos asap tm) rhythmic loop) = do
   let dur = establishDur tm tp.tempo m rhythmic
       -- tempo = processTempoMark tempoMark tp.tempo mapa
@@ -78,8 +73,9 @@ calculateTemporal mapa tp aKey (Temporal (Metric cTo' cFrom' tm) rhythmic loop) 
 calculateTemporal mapa tp aKey (Temporal (Converge cKey cTo' cFrom' tm) rhythmic loop) = do
   -- let dur = durFromRhythmic rhythmic $ processTempoMark tm tp.tempo mapa 
   let dur = establishDur tm tp.tempo mapa rhythmic
-  let lengthRhythm = (length $ fromFoldable $ rhythmicToOnsets rhythmic)-1
-  let simCTo = simplifyCTo lengthRhythm cTo'
+  let lengthRhythm = (length $ fromFoldable $ rhythmicToOnsets rhythmic)-1 -- 2025::: What is this -1
+  let lengthRhythmTo = (length $ fromFoldable $ rhythmicToOnsets $ getRhythmicFromMap mapa cKey)-1
+  let simCTo = simplifyCTo lengthRhythmTo cTo'       --- 2025 APRIL:::::: LastTo needs a lengthOfRhythm different maybe.
   let simCFrom = simplifyCFrom lengthRhythm cFrom'
   x1 <- x1ConvergeVoice tp tm cKey simCTo simCFrom rhythmic mapa -- v1
   let posixAtOrigin = fromDateTimeToPosix (origin tp.tempo)
@@ -135,7 +131,7 @@ addPosixOriginToCalculation:: Number -> Array Event -> Array Event
 addPosixOriginToCalculation posix es = map (\(Event (Onset bool pos) i) -> Event (Onset bool (pos + posix)) i) es
 
 simplifyCTo:: Int -> ConvergeTo -> ConvergeTo
-simplifyCTo n (LastTo a) = ProcessTo n a  
+simplifyCTo n (LastTo a) = ProcessTo n a   ---- 2025::::: Here, that aligner appears odd 
 simplifyCTo n cTo = cTo 
 
 simplifyCFrom:: Int -> ConvergeFrom -> ConvergeFrom
@@ -166,10 +162,6 @@ x1ConvergeVoice  tp tm cKey cTo' cFrom' rhythmic mapa = do
   pure (refX1 + x1)
 
 findReferencedX1::TimePacket -> Temporal -> M.Map String Temporal -> Effect Number
-findReferencedX1 tp (Replica id) mapa = do
-  let replicatedTemporal = fromMaybe defTemporal $ M.lookup id mapa
-  result <- findReferencedX1 tp replicatedTemporal mapa 
-  pure result
 findReferencedX1 tp (Temporal (Kairos asap tm) rhy _) mapa = do
   let eval = secsFromOriginAtEval tp
   let x1 = eval + asap
@@ -257,9 +249,6 @@ recursiveRefX1 tp temporal mapa incomingKeyX1 (Cons x xs) = do
 
 convergences:: M.Map String Temporal -> Temporal -> Tuple ConvergeTo ConvergeFrom
 convergences _ (Temporal p _ _) = getConvergences p
-convergences m (Replica id) = case M.lookup id m of
-                                Nothing -> Tuple defConvergeTo defConvergeFrom
-                                Just t -> convergences m t
 
 getConvergences:: Polytemporal -> Tuple ConvergeTo ConvergeFrom
 getConvergences (Converge _ cTo cFrom _) = Tuple cTo cFrom
@@ -276,18 +265,11 @@ keysForReferencePath aKey {-v0-} mapa listOfReferences
 
 getKey _ (Temporal (Converge aKey _ _ _) _ _) = aKey
 getKey _ (Temporal _ _ _) = "2666"
-getKey m (Replica id) = 
-  case M.lookup id m of 
-    Nothing -> "2666"
-    Just t -> getKey m t
 
 isNotConvergent aKey mapa = f' mapa $ fromMaybe defTemporal $ M.lookup aKey mapa 
 
 f' m (Temporal (Converge _ _ _ _) _ _) = false
 f' m (Temporal _ _ _) = true
-f' m (Replica id) = case M.lookup id m of
-                        Nothing -> false 
-                        Just t -> f' m t
 
 elapsedVoiceAtEval:: TimePacket -> Number -> Number -> Effect Number
 elapsedVoiceAtEval tp x1 dur = do

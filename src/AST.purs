@@ -142,16 +142,12 @@ instance showDatsgah :: Show Dastgah where
   show (Mahur l) = "mahur " <> show l
   show (RastPanjgah l) = "rastPanjgah " <> show l
 
-data Temporal = Temporal Polytemporal Rhythmic Boolean | 
-                Replica String -- |
-                -- Canonic (List Polytemporal) Rhythmic Boolean 
-
+data Temporal = Temporal Polytemporal Rhythmic Boolean 
 
  -- this will require a check and the recursive implementation now very familiar
 
 instance temporalShow :: Show Temporal where
     show (Temporal x y z) = show x <> " " <> show y <> (if z then " looped" else " unlooped")
-    show (Replica id) = "replicated from " <> show id
 
 data Polytemporal = 
   Kairos Number TempoMark | -- last arg is tempo -- Arg: universal time unit (miliseconds and datetime in purs)
@@ -256,7 +252,7 @@ instance Show ConvergeTo where
             result = Str.take (Str.length subdivisions - 1) subdivisions
   show (ProcessTo e a) = show e <> " " <> show a
   show (PercenTo p a) = show p <> "% " <> show a
-  show (LastTo a) = "last"
+  show (LastTo a) = "last " <> show a
 
 -- perhaps this is the output of processTempoMark, this will allow users to declare a total duration of a block (reverting more or less the additive logic to divisive)
 

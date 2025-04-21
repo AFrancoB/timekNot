@@ -1,5 +1,5 @@
 
-module Parser(cFromParser, polytemporalRelation', temporal, check, parseProgram, replica, getTemporalMap, getAuralMap, testRecursive, testP,xPitchExpression, expression, getVantageMap, parseDate, utcA, tempoOperArray) where
+module Parser(cFromParser, polytemporalRelation', temporal, check, parseProgram, getTemporalMap, getAuralMap, testRecursive, testP,xPitchExpression, expression, getVantageMap, parseDate, utcA, tempoOperArray) where
 
 import Prelude
 
@@ -57,11 +57,13 @@ tempoOperArray = do
   _ <- pure 1
   t <- tempoMark'
   op <- operadores <|> (pure mulVar) 
-  trans <- transposer <|> (pure $ VList (VInt 1:Nil)) 
+  trans <- transposer <|> (pure $ VList (VInt 0:Nil)) 
   pure $ getListTempo $ (op trans $ buildVTempo t)
 
 buildVTempo:: List TempoMark -> Variant
 buildVTempo xs = VTempo $ fromMaybe XTempo $ head xs
+
+-- external tempo does not in canonic operators this is very important to understand!!!!
 
 transposer:: P Variant
 transposer = do 
@@ -87,8 +89,6 @@ tempoMarks = do
   _ <- pure 1
   xs <- brackets $ (choice [try cpm, try bpm, try cps, try ratio, acceleration] `sepBy1` comma)
   pure $ L.fromFoldable xs
-
--- CONSIDER: at entry point add a -0 to all voices that do not have any
 
 polytemporalRelation':: P (Map String Polytemporal)
 polytemporalRelation' = do
@@ -211,18 +211,9 @@ indexParser = do
   pure n
 ----------
 
-
-
-
-
-
-
-
-
 -- ISSUES
 ---- range of Numbers is absolutely broken. DO NOT USE
----- Make all tests: start testing all the checks: tempoCheck, idCheck replicaCheck!!!
-
+---- Make all tests: start testing all the checks: tempoCheck
 -- TO DO LIST October 17th:
 ---- refactor Aural and Value
 ---- finish refactor of transposeWith 
@@ -236,17 +227,13 @@ indexParser = do
 -- minor goals: 
 
 -- for now: pitch from the middle east DONE partially:structParser
--- refactor show of my data types. They mostly suck.
 
 -- implementaciones siguientes:
   -- xenopitch -- PATHWAY OPENED. CPS ARE IMPLEMENTED
 
-  -- refer to the most recent version of tempi-purs DONE (instead of pulling it from the internet I copied the code from the repo) DONE
-
   -- events specific to concrete indexes: 2-0.1 "cp" -- should generate a cp sound only at 2-0.1
 
   -- implement unleash parser (as a substitute from kairos)
-
 
   -- acceleration in unlooped events (how to represent this? and calculate the durations of the events??)
 
@@ -464,16 +451,7 @@ timeExpression = do
 temporal:: P (Map String Temporal)
 temporal = do
   _ <- pure 1
-  choice [try replica, try polytemporalRelation]
-
-replica:: P (Map String Temporal)
-replica = do
-  _ <- pure 1
-  id <- voiceId
-  _ <- reserved "<-"
-  id2 <- voiceId 
-  _ <- semi
-  pure $ singleton id $ Replica id2
+  choice [polytemporalRelation]
 
 polytemporalRelation:: P (Map String Temporal)
 polytemporalRelation = do
@@ -505,104 +483,6 @@ durWrapper = do
 
 
 --- 
-----Kairos: Layer where:
--- Tuple String Polytemporal -> Map String Polytemporal -> Map String Polytemporal
---  receive a single 
---- kairos:: P (Map String Polytemporal)
-kairos:: P (Tuple String Polytemporal)
-kairos = do
-  _ <- pure 1
-  id <- voiceId
-  _ <- reserved "<-"
-  n <- choice [secsFromEval, atEval]
-  tm <- parens tempoMark <|> pure XTempo
-  pure $ Tuple id $ Kairos n tm
-
-secsFromEval:: P Number 
-secsFromEval = do
-  _ <- pure 1
-  n <- naturalOrFloat
-  _ <- reserved "secsAfterEval"
-  pure $ toNumber' n
-
-atEval:: P Number
-atEval = do
-  _ <- pure 1
-  _ <- reserved "atEval"
-  pure 0.01
-
---- 
-----Metric: Layer where:
--- Tuple String Polytemporal -> Map String Polytemporal -> Map String Polytemporal
---  receive a single 
---- metric:: P (Map String Polytemporal)
-metric:: P (Tuple String Polytemporal)
-metric = do 
-  _ <- pure 1
-  id <- voiceId
-  _ <- reserved "<-"
-  polytemporal <- choice [try divergingMetric, convergingMetric]
-  pure $ Tuple id polytemporal
-
-divergingMetric:: P Polytemporal
-divergingMetric = do
-  _ <- pure 1
-  _ <- reserved "diverge"
-  tm <- parens tempoMark <|> pure XTempo -- the alternative should be same as estuary tempo
-  pure $ Metric (ProcessTo 0 Origin) (Process 0) tm
-
-convergingMetric:: P Polytemporal
-convergingMetric = do
-  _ <- pure 1
-  cTo <- choice [try $ parens parsePercenTo, try $ parens parseProcessTo, parens parseStructureTo] <|> (pure $ ProcessTo 0 Snap)
-  cFrom <- choice [try $ parens cFromPercen, try $ parens cFromProcess, parens cFromStructure]
-  tm <- parens tempoMark <|> pure XTempo -- the alternative should be same as estuary tempo
-  pure $ Metric cTo cFrom tm
-
---- 
-----converge: Layer where:
--- Tuple String Polytemporal -> Map String Polytemporal -> Map String Polytemporal
---  receive a single 
----
----- converge:: P (Map String Polytemporal)
-converge:: P (Tuple String Polytemporal)
-converge = do
-  _ <- pure 1
-  id <- voiceId
-  _ <- reserved "<-"
-  polytemporal <- choice [try diverging, try converging, novus]
-  pure $ Tuple id polytemporal
-
-diverging:: P Polytemporal
-diverging = do
-  _ <- pure 1
-  _ <- whitespace
-  voice <- voiceId
-  _ <- reserved "diverge"
-  tm <- parens tempoMark <|> pure XTempo -- the alternative should be same as estuary tempo
-  pure $ Converge voice (ProcessTo 0 Origin) (Process 0) tm
-
-converging:: P Polytemporal
-converging = do
-  _ <- pure 1
-  _ <- whitespace
-  voiceTo <- voiceId -- choice between metricVoice or arbitrary name of a voice
-  cTo <- choice [try cToLast, try $ parens parsePercenTo, try $ parens parseProcessTo, parens parseStructureTo]
-  cFrom <- choice [try cFromLast, try $ parens cFromPercen, try $ parens cFromProcess, parens cFromStructure]
-  tm <- parens tempoMark <|> pure XTempo -- the alternative should be same as estuary tempo
-  pure $ Converge voiceTo cTo cFrom tm
-
-novus:: P Polytemporal
-novus = do
-  _ <- pure 1
-  _ <- whitespace
-  _ <- reserved "Novus"
-  _ <- reservedOp "."
-  vantID <- voiceId 
-  cFrom <- choice [try cFromLast, try $ parens $ cFromPercen, try $ parens $ cFromProcess, parens cFromStructure]
-  tm <- parens tempoMark <|> pure XTempo 
-  pure $ Novus vantID cFrom tm
-
 cFromLast:: P ConvergeFrom
 cFromLast = do
   _ <- pure 1
@@ -885,20 +765,10 @@ check vm program = checkedTempoAspects && checkedPitch
         checkedPitch = checkXPitch program
 
 checkT :: VantageMap -> Map String Vantage -> Map String Temporal -> Boolean
-checkT vm vMNew aMap' = checkID && checkTempoMark
-  where aReplicaMap = filter isReplica aMap'
-        aMap = filter (not isReplica) aMap'
-        checkID = not $ elem false $ mapWithIndex (check2 vm vMNew aMap Nil) aMap 
+checkT vm vMNew aMap = checkID && checkTempoMark
+  where checkID = not $ elem false $ mapWithIndex (check2 vm vMNew aMap Nil) aMap 
         -- tempomarl check, needs its own function 
         checkTempoMark = not $ elem false $ mapWithIndex (checkTempi aMap Nil) aMap
-
-isReplica:: Temporal -> Boolean
-isReplica (Replica _) = true
-isReplica _ = false
-
-getReplicaKey:: Temporal -> String
-getReplicaKey (Replica id) = id
-getReplicaKey _ = "2666"
 
 check2 :: VantageMap -> Map String Vantage -> Map String Temporal -> List String -> String -> Temporal -> Boolean
 check2 _ _ aMap alreadyRefd aKey (Temporal (Kairos _ _) _ _) = true
@@ -916,16 +786,6 @@ check2 vm vMNew aMap alreadyRefd aKey (Temporal (Novus vantageKey _ _) _ _) =
     Nothing -> case lookup vantageKey vm of
                   (Just _) -> true
                   Nothing -> false
-
--- in case of replica
-check2 vm vMNew aMap alreadyRefd aKey (Replica id) 
-  | aKey == id = false
-  | otherwise = 
-    case lookup id aMap of
-          Nothing -> false
-          Just nVal -> case elem id alreadyRefd of
-                        true -> false
-                        false -> check2 vm vMNew aMap (aKey : alreadyRefd) id nVal
 
 isRemove Remove = true
 isRemove _ = false
@@ -945,7 +805,6 @@ getTempoRef (Temporal (Kairos _ tm) _ _) = isTempoRefd tm
 getTempoRef (Temporal (Metric _ _ tm) _ _) = isTempoRefd tm
 getTempoRef (Temporal (Converge _ _ _ tm) _ _) = isTempoRefd tm
 getTempoRef (Temporal (Novus _ _ tm) _ _) = isTempoRefd tm
-getTempoRef (Replica _) = Nothing
 
 isTempoRefd:: TempoMark -> Maybe String
 isTempoRefd (Prop id _ _) = Just id
