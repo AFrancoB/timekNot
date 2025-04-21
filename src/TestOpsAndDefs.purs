@@ -21,20 +21,23 @@ import Partial.Unsafe
 
 --- helpers
 
+-- if need to get polytempo, loop tempomark follow the model of getRhythmicFromMap
+-- get a map and a string: questions 1) if lookup finds nothing what to do? in theory this is addressed already at6 checkpoint
+
 getRhythmicFromMap:: M.Map String Temporal -> String -> Rhythmic
-getRhythmicFromMap mapa key = getRhythmic mapa $ fromMaybe defTemporal $ M.lookup key mapa
+getRhythmicFromMap mapa key = getRhythmic $ fromMaybe defTemporal $ M.lookup key mapa
 
-getPolytemporal:: M.Map String Temporal -> Temporal -> Polytemporal
-getPolytemporal _ (Temporal p _ _) = p 
+getPolytemporal:: Temporal -> Polytemporal
+getPolytemporal (Temporal p _ _) = p 
 
-getRhythmic:: M.Map String Temporal -> Temporal -> Rhythmic
-getRhythmic m (Temporal _ r _) = r
+getRhythmic:: Temporal -> Rhythmic
+getRhythmic (Temporal _ r _) = r
 
-getLoop:: M.Map String Temporal -> Temporal -> Boolean
-getLoop m (Temporal _ _ l) = l
+getLoop:: Temporal -> Boolean
+getLoop (Temporal _ _ l) = l
 
-tempoMark:: M.Map String Temporal -> Temporal -> TempoMark
-tempoMark m (Temporal p _ _) = getTempoMark p 
+tempoMark:: Temporal -> TempoMark
+tempoMark (Temporal p _ _) = getTempoMark p 
 
 getTempoMark:: Polytemporal -> TempoMark
 getTempoMark (Kairos _ tm) = tm
@@ -42,11 +45,11 @@ getTempoMark (Metric _ _ tm) = tm
 getTempoMark (Converge _ _ _ tm) = tm
 getTempoMark (Novus _ _ tm) = tm
 
-convergeTo:: M.Map String Temporal -> Temporal -> ConvergeTo
-convergeTo m (Temporal p _ _) = getConvergeTo p
+convergeTo:: Temporal -> ConvergeTo
+convergeTo (Temporal p _ _) = getConvergeTo p
 
-convergeFrom:: M.Map String Temporal -> Temporal -> ConvergeFrom
-convergeFrom m (Temporal p _ _ ) = getConvergeFrom p
+convergeFrom:: Temporal -> ConvergeFrom
+convergeFrom (Temporal p _ _ ) = getConvergeFrom p
 
 getConvergeTo:: Polytemporal -> ConvergeTo
 getConvergeTo (Converge _ cTo _ _) = cTo

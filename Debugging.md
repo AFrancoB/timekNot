@@ -26,3 +26,7 @@ This should not be constructors for ConvergeTo and ConvergeFrom. Rework it for i
 ----
 
 Spread is not working properly, fix it.
+
+----
+
+Ratio tempo mark is broken fix it!
