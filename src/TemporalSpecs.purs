@@ -123,7 +123,7 @@ addPosixOriginToCalculation:: Number -> Array Event -> Array Event
 addPosixOriginToCalculation posix es = map (\(Event (Onset bool pos) i) -> Event (Onset bool (pos + posix)) i) es
 
 simplifyCTo:: Int -> ConvergeTo -> ConvergeTo
-simplifyCTo n (LastTo a) = ProcessTo n a   ---- 2025::::: Here, that aligner appears odd 
+simplifyCTo n (LastTo a) = ProcessTo n Origin   ---- 2025::::: Here, that aligner appears odd 
 simplifyCTo n cTo = cTo 
 
 simplifyCFrom:: Int -> ConvergeFrom -> ConvergeFrom

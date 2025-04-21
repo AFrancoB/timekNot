@@ -21,8 +21,6 @@ d[last] <- clock[15>>] 128cpm*[0.9,1,1.1,1.2] | ([xx],[ox],3,5) ||
 d.s = "grandpiano" .n = 6 .shurNot8 = 0 1 0 1 2 + [0,2,4];```
 
 
-This should not be constructors for ConvergeTo and ConvergeFrom. Rework it for it to translate last into a process at parsing entry point.
-
 ----
 
 Spread is not working properly, fix it.
