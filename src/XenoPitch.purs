@@ -268,13 +268,12 @@ xenoPitchToMIDIInterval (CPSet size factors Nothing) = map (addSampleRoot <<< to
 xenoPitchToMIDIInterval (CPSet size factors (Just subsets)) = map (addSampleRoot <<< toMIDIInterval) (scale : subs)
     where scale = makeCPSScale size factors -- Array XenoNote
           subs = map (orderSetofXNotes <<< getSubSet scale) subsets
-xenoPitchToMIDIInterval (Scala len xs) = [toMIDIs xs]
+xenoPitchToMIDIInterval (Scala len xs) = [0.0 : toMIDIs xs]
   where toMIDIs xs = map toMIDI xs     -- :: Array (Either Rational Number) -> Array Number
         toMIDI (Left x) = ratioToCents (Rat.toNumber x) / 100.0
         toMIDI (Right x)= x / 100.0
-
-
 xenoPitchToMIDIInterval _ = []
+
 
 getSubSet:: Array CPSNote -> Subset -> Array CPSNote
 getSubSet xn subset = fromFoldable $ getSubset' xn subset 
