@@ -12,6 +12,8 @@ import Data.Tuple
 import Data.Int (toNumber, floor)
 import Data.Number (floor) as N
 import Data.Maybe 
+import Data.Rational as Rat
+import Data.Either
 
 import Data.Set (Set(..))
 import Data.Set as Set
@@ -19,6 +21,8 @@ import Data.Set as Set
 import Erv (makeCPSScale,ratioToCents)
 import AST
 import DurationAndIndex
+
+---- april 2025: test scala parser, add octaves, understand how to do subsets
 
 ---- this top is the list processed in AuralSpecs along with span and Value
 -- top:: XenoPitch -> Array Number
@@ -264,6 +268,12 @@ xenoPitchToMIDIInterval (CPSet size factors Nothing) = map (addSampleRoot <<< to
 xenoPitchToMIDIInterval (CPSet size factors (Just subsets)) = map (addSampleRoot <<< toMIDIInterval) (scale : subs)
     where scale = makeCPSScale size factors -- Array XenoNote
           subs = map (orderSetofXNotes <<< getSubSet scale) subsets
+xenoPitchToMIDIInterval (Scala len xs) = [toMIDIs xs]
+  where toMIDIs xs = map toMIDI xs     -- :: Array (Either Rational Number) -> Array Number
+        toMIDI (Left x) = ratioToCents (Rat.toNumber x) / 100.0
+        toMIDI (Right x)= x / 100.0
+
+
 xenoPitchToMIDIInterval _ = []
 
 getSubSet:: Array CPSNote -> Subset -> Array CPSNote

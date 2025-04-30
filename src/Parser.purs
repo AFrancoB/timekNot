@@ -98,7 +98,7 @@ polytemporalRelation' = do
   subVoice <- subVoiceParser <|> pure ""
   cFrom <- try (brackets $ cFromParser) <|> pure (Tuple 0 (Process 0))
   cTo <- try (cToParser) <|> pure {idCTo: Nothing, indxCTo: Nothing} 
-  tempi <- choice [try tempoOperArray, try tempoMark',try tempoMarks] <|> pure (XTempo:Nil)
+  tempi <- choice [try tempoMark', try tempoOperArray,try tempoMarks] <|> pure (XTempo:Nil)
   pure $ canonise (idFrom <> subVoice) cTo.idCTo cTo.indxCTo cFrom tempi
 
 subVoiceParser:: P String
@@ -279,9 +279,39 @@ xPitch = do
   _ <- pure 1
   id <- identifier
   _ <- reserved "<-"
-  x <- choice [try cpSet] --, try mos, try edo]
+  x <- choice [try cpSet, parseScala] --, try mos, try edo]
   _ <- reserved ";"
   pure $ singleton id x
+
+parseScala:: P XenoPitch -- this needs a check: if len is different from len xs then throw error else get through, if this check is correct then the data structure of Scala does not really need the len to be passed down
+parseScala = do 
+  _ <- pure 1
+  whitespace
+  _ <- reserved "scala"
+  len <- natural
+  _ <- reserved ":"
+  xs <- many parseRatioOrCent
+  pure $ Scala len $ A.fromFoldable xs
+
+parseRatioOrCent:: P (Either Rational Number)
+parseRatioOrCent = do 
+  _ <- pure 1
+  x <- choice [try $ Right <$> float, try ratioScala, try intToRatioScala]
+  pure x
+
+intToRatioScala:: P (Either Rational Number)
+intToRatioScala = do
+  _ <- pure 1
+  n <- natural
+  pure $ Left $ toRational n 1
+
+ratioScala:: P (Either Rational Number)
+ratioScala = do
+  _ <- pure 1
+  x <- natural
+  _ <- char '/'
+  y <- natural
+  pure $ Left $ toRational x y
 
 cpSet:: P XenoPitch
 cpSet = do

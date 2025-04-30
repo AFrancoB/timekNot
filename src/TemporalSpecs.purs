@@ -131,6 +131,7 @@ simplifyCFrom n Last = Process n
 simplifyCFrom n cfrom = cfrom
 
 -- find x1 and dur of referenceVoice for convergent temporal
+---- this needs a simplifyCTo and simplifyCFrom????????????
 x1ConvergeVoice:: TimePacket -> TempoMark -> String -> ConvergeTo -> ConvergeFrom -> Rhythmic -> M.Map String Temporal -> Effect Number 
 x1ConvergeVoice  tp tm cKey cTo' cFrom' rhythmic mapa = do
   let refTemporal = fromMaybe defTemporal $ M.lookup cKey mapa
