@@ -51,13 +51,6 @@ type P = ParserT String Identity
 -- Files for which Scala gives Error in file format are incorrectly formatted. They should give a read error and be rejected.
 
 
-
-
-
-
-
-
-
 -- ! meanquar.scl ! 1/4-comma meantone scale. Pietro Aaron's temperament (1523) 12 ! 76.04900 193.15686 310.26471 5/4 503.42157 579.47057 696.57843 25/16 889.73529 1006.84314 1082.89214 2/1
 
 -- ! meanquar.scl

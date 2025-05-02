@@ -4,7 +4,14 @@ import AST (CPSNote)
 
 foreign import ratioToCents :: Number -> Number
 
-foreign import makeCPSScale :: Int -> Array Int -> Array CPSNote
+-- foreign import ratiosToScale :: Array Number -> Scale -- o Array Note
+
+foreign import ratiosToScale :: Number -> Number
+
+foreign import makeCPSScale :: Int -> Array Int -> Array CPSNote -- :: Array Note  -- Scale
+
+-- foreign import degToFreq :: Array Note -> Number -> Int -> Number
+
 
 -- foreign import makeMOSScale :: Int -> Int -> Array MOSNote
 

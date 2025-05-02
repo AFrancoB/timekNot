@@ -224,6 +224,24 @@ Es posible determinar convergencias usando modulo para determinar cada cuantos b
 
 ## Expresiones Aurales
 
+Esta es una expresión aural:
+```
+a.sound = :cycleBlock "drum glitch" .n = :cycle 0 3 2 4 5 .pan = :spread 0.3 0.5 0.7 .gain = :cycleTrunc  0.8 0.9 0.8 1.1 1 0.9 0.8 0.9;
+```
+Es decir, un identificador con una serie de mensajes y cada mensaje un span y una serie de valores. Importante señalar que cualquier expresión aural debe de terminar en punto y coma. 
+
+Estos son los posibles mensajes que se le puede mandar a un identificador:
+
+1. s (también se puede usar sound). Identifica el banco de samples. 
+2. n. Identifica el índice del sample que se quiere tocar. 
+3. gain. Ganancia normalizada de 0 a 1 (donde 1 es 0db).  
+4. pan. Valor de paneo. 
+5. speed. Velocidad de reproducción de la muestra.
+
+
+
+
+
 ### Expansión de lo Aural a lo Canónico
 
 ## Expresiones de Alturas

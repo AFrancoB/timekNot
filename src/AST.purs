@@ -353,6 +353,13 @@ type CPSNote = {
     "bounding-period":: Int
 }
 
+-- data Scale = Array Note
+
+type Note = {
+    "bounded-ratio":: Number,
+    "bounding-period":: Int
+}
+
 data Interval = UpJump | UpNext | DownJump | DownNext | Unison 
 
 instance intervalShow :: Show Interval where

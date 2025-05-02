@@ -98,7 +98,7 @@ polytemporalRelation' = do
   subVoice <- subVoiceParser <|> pure ""
   cFrom <- try (brackets $ cFromParser) <|> pure (Tuple 0 (Process 0))
   cTo <- try (cToParser) <|> pure {idCTo: Nothing, indxCTo: Nothing} 
-  tempi <- choice [try tempoMark', try tempoOperArray,try tempoMarks] <|> pure (XTempo:Nil)
+  tempi <- choice [try tempoOperArray, try tempoMark', try tempoMarks] <|> pure (XTempo:Nil)
   pure $ canonise (idFrom <> subVoice) cTo.idCTo cTo.indxCTo cFrom tempi
 
 subVoiceParser:: P String
