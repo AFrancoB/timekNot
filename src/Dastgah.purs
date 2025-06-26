@@ -137,7 +137,7 @@ homayunIntToFuncAndMIDIInt:: Int -> Tuple Number String
 homayunIntToFuncAndMIDIInt n = case (n`mod`6) of
                           0 -> Tuple 0.0 "note" 
                           1 -> Tuple 2.0 "note"
-                          2 -> Tuple 3.0 "Āghāz"
+                          2 -> Tuple 3.0 "Moteghayyer" -- Moteghayyer
                           3 -> Tuple 5.0 "Ist"
                           4 -> Tuple 7.0 "Finalis"
                           5 -> Tuple 8.5 "Shāhed" 

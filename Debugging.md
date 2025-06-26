@@ -2,6 +2,9 @@
 
 To debug:
 
+tempo mark in non-canonic forms is broken!
+
+
 Canon expansion broke Last and LastTo.
 
 ```##timeknot
