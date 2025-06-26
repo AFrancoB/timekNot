@@ -61,7 +61,7 @@ assambleDastgahNote d (Tuple x y) = {function: funcion, movement: mov, midiInter
         (Tuple midiInter funcion) = dastgahToNote d mov x -- shurIntToFuncAndMIDIInt x
 
 getOctave:: Int -> Number
-getOctave n = (floor ((toNumber n)/7.0))*12.0
+getOctave n = (floor ((toNumber n)/8.0))*12.0
 
 checkMoteghayyer:: Interval -> Number -> Number
 checkMoteghayyer UpJump midiInter = midiInter + 0.5
