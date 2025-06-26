@@ -101,7 +101,7 @@ dastgahToNote (RastPanjgah _) mov n = Tuple checkedMidiInt funcion
         checkedMidiInt = if funcion == "Moteghayyer" then checkMoteghayyer mov midiInter else midiInter
 
 rastPanjgahIntToFuncAndMIDIInt:: Int -> Tuple Number String
-rastPanjgahIntToFuncAndMIDIInt n = case (n`mod`6) of
+rastPanjgahIntToFuncAndMIDIInt n = case (n`mod`7) of
                           0 -> Tuple 0.0 "Āghāz Finalis" 
                           1 -> Tuple 2.0 "Shāhed"
                           2 -> Tuple 4.0 "note"
@@ -112,7 +112,7 @@ rastPanjgahIntToFuncAndMIDIInt n = case (n`mod`6) of
                           _ -> Tuple 0.0 "unknown"
 
 mahurIntToFuncAndMIDIInt:: Int -> Tuple Number String
-mahurIntToFuncAndMIDIInt n = case (n`mod`6) of
+mahurIntToFuncAndMIDIInt n = case (n`mod`7) of
                           0 -> Tuple 0.0 "Āghāz Finalis" 
                           1 -> Tuple 2.0 "Shāhed"
                           2 -> Tuple 4.0 "note"
@@ -123,7 +123,7 @@ mahurIntToFuncAndMIDIInt n = case (n`mod`6) of
                           _ -> Tuple 0.0 "unknown"
 
 chahargahIntToFuncAndMIDIInt:: Int -> Tuple Number String
-chahargahIntToFuncAndMIDIInt n = case (n`mod`6) of
+chahargahIntToFuncAndMIDIInt n = case (n`mod`7) of
                           0 -> Tuple 0.0 "Finalis" 
                           1 -> Tuple 1.5 "note"
                           2 -> Tuple 4.0 "note"
@@ -134,7 +134,7 @@ chahargahIntToFuncAndMIDIInt n = case (n`mod`6) of
                           _ -> Tuple 0.0 "unknown"
 
 homayunIntToFuncAndMIDIInt:: Int -> Tuple Number String
-homayunIntToFuncAndMIDIInt n = case (n`mod`6) of
+homayunIntToFuncAndMIDIInt n = case (n`mod`7) of
                           0 -> Tuple 0.0 "note" 
                           1 -> Tuple 2.0 "note"
                           2 -> Tuple 3.0 "Moteghayyer" -- Moteghayyer
@@ -145,7 +145,7 @@ homayunIntToFuncAndMIDIInt n = case (n`mod`6) of
                           _ -> Tuple 0.0 "unknown"
 
 navaIntToFuncAndMIDIInt:: Int -> Tuple Number String
-navaIntToFuncAndMIDIInt n = case (n`mod`6) of
+navaIntToFuncAndMIDIInt n = case (n`mod`7) of
                           0 -> Tuple 0.0 "note" 
                           1 -> Tuple 2.0 "note"
                           2 -> Tuple 3.5 "Ist"
@@ -156,7 +156,7 @@ navaIntToFuncAndMIDIInt n = case (n`mod`6) of
                           _ -> Tuple 0.0 "unknown"
 
 segahIntToFuncAndMIDIInt:: Int -> Tuple Number String
-segahIntToFuncAndMIDIInt n = case (n`mod`6) of
+segahIntToFuncAndMIDIInt n = case (n`mod`7) of
                           0 -> Tuple 0.0 "note" 
                           1 -> Tuple 1.5 "Moteghayyer" -- upwards move to 2.0
                           2 -> Tuple 3.5 "Āghāz, finalis, stop"
@@ -167,7 +167,7 @@ segahIntToFuncAndMIDIInt n = case (n`mod`6) of
                           _ -> Tuple 0.0 "unknown"
 
 shurIntToFuncAndMIDIInt:: Int -> Tuple Number String
-shurIntToFuncAndMIDIInt n = case (n`mod`6) of
+shurIntToFuncAndMIDIInt n = case (n`mod`7) of
                           0 -> Tuple 0.0 "Āghāz" 
                           1 -> Tuple 2.0 "Finalis"
                           2 -> Tuple 3.5 "note"
