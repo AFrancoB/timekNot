@@ -57,7 +57,7 @@ analysisDastgahPattern SpreadBlock r d = map (assambleDastgahNote d) zipped
 assambleDastgahNote:: Dastgah -> Tuple Int Int -> DastgahNote
 assambleDastgahNote d (Tuple x y) = {function: funcion, movement: mov, midiInterval: midiInter + octave}
   where mov = getMovement x y
-        octave = getOctave x 
+        octave = 0.0 -- getOctave x 
         (Tuple midiInter funcion) = dastgahToNote d mov x -- shurIntToFuncAndMIDIInt x
 
 getOctave:: Int -> Number
