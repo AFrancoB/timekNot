@@ -172,7 +172,7 @@ shurIntToFuncAndMIDIInt n = case (n`mod`8) of
                           1 -> Tuple 2.0 "Finalis"
                           2 -> Tuple 3.5 "note"
                           3 -> Tuple 5.0 "note"
-                          4 -> Tuple 7.0 "note"
+                          4 -> Tuple 10.0 "note"
                           5 -> Tuple 8.5 "Moteghayyer" -- upwards move 9.0
                           6 -> Tuple 10.0 "note"
                           _ -> Tuple 0.0 "unknown"
