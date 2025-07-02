@@ -158,7 +158,7 @@ navaIntToFuncAndMIDIInt n = case (n`mod`7) of
 segahIntToFuncAndMIDIInt:: Int -> Tuple Number String
 segahIntToFuncAndMIDIInt n = case (n`mod`7) of
                           0 -> Tuple 0.0 "note" 
-                          1 -> Tuple 1.5 "Moteghayyer" -- upwards move to 2.0
+                          1 -> Tuple 2.0 "note" -- remove mote... keep 2.0 -- upwards move to 2.0
                           2 -> Tuple 3.5 "Āghāz, finalis, stop"
                           3 -> Tuple 5.0 "note"
                           4 -> Tuple 7.0 "note"
@@ -173,7 +173,7 @@ shurIntToFuncAndMIDIInt n = case (n`mod`7) of
                           2 -> Tuple 3.5 "note"
                           3 -> Tuple 5.0 "note"
                           4 -> Tuple 7.0 "note"
-                          5 -> Tuple 8.5 "Moteghayyer" -- upwards move 9.0
+                          5 -> Tuple 8.5 "Moteghayyer" -- The quarter should be closer to A Natural -- upwards move 9.0
                           6 -> Tuple 10.0 "note"
                           _ -> Tuple 0.0 "unknown"
 
