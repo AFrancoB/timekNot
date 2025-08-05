@@ -42,8 +42,8 @@ type Engine = {
   wE :: Ref DateTime
   }
 
-initialise:: Effect Engine
-initialise = do
+initialiseEngine:: Effect Engine
+initialiseEngine = do
   wS <- nowDateTime >>= new
   wE <- nowDateTime >>= new
   pure {wS, wE}  
@@ -57,6 +57,8 @@ renderStandalone engine = do
   if prevW <= futureTime then do
     let wS = prevW
     let wE = fromMaybe t $ adjust (Milliseconds 500.0) wS 
+
+    
     
     pure $ "wS: " <> show wS <> " wE: " <> show wE
   else

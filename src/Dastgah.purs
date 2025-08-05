@@ -13,6 +13,7 @@ import Data.Number (floor)
 import AST
 import DurationAndIndex
 
+
 getMIDIInterval:: Array DastgahNote -> Array Number
 getMIDIInterval xs = map (\x -> x.midiInterval) xs
 
@@ -129,18 +130,21 @@ chahargahIntToFuncAndMIDIInt n = case (n`mod`7) of
                           2 -> Tuple 4.0 "note"
                           3 -> Tuple 5.0 "note"
                           4 -> Tuple 7.0 "note"
-                          5 -> Tuple 8.5 "Āghāz" 
+                          5 -> Tuple 8.5 "Āghāz"  -- starting tone
                           6 -> Tuple 11.0 "note"
                           _ -> Tuple 0.0 "unknown"
+
+-- daramad: opening
+-- ouj: climax
 
 homayunIntToFuncAndMIDIInt:: Int -> Tuple Number String
 homayunIntToFuncAndMIDIInt n = case (n`mod`7) of
                           0 -> Tuple 0.0 "note" 
-                          1 -> Tuple 2.0 "note"
-                          2 -> Tuple 3.0 "Moteghayyer" -- Moteghayyer
-                          3 -> Tuple 5.0 "Ist"
-                          4 -> Tuple 7.0 "Finalis"
-                          5 -> Tuple 8.5 "Shāhed" 
+                          1 -> Tuple 2.0 "note" -- witness2
+                          2 -> Tuple 3.0 "Moteghayyer" -- Moteghayyer -- variable tone  ---- opening is a E natural
+                          3 -> Tuple 5.0 "Ist" -- pause  ---- actually this is Starting (Aghaz) AND Pause
+                          4 -> Tuple 7.0 "Finalis" -- finalis
+                          5 -> Tuple 8.5 "Shāhed" -- witness1
                           6 -> Tuple 11.0 "note"
                           _ -> Tuple 0.0 "unknown"
 

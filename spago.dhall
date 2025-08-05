@@ -13,6 +13,7 @@ to generate this file without the comments in this block.
 { name = "my-project"
 , dependencies =
   [ "arrays"
+  , "bifunctors"
   , "console"
   , "datetime"
   , "effect"
@@ -21,13 +22,16 @@ to generate this file without the comments in this block.
   , "foldable-traversable"
   , "foreign"
   , "formatters"
+  , "halogen"
   , "halogen-svg-elems"
   , "identity"
   , "integers"
+  , "js-timers"
   , "lists"
   , "maybe"
   , "newtype"
   , "now"
+  , "numbers"
   , "ordered-collections"
   , "parsing"
   , "partial"
@@ -41,9 +45,6 @@ to generate this file without the comments in this block.
   , "strings"
   , "svg-parser"
   , "tuples"
-  , "bifunctors"
-  , "halogen"
-  , "numbers"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]

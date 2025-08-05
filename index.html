@@ -15,12 +15,24 @@
   import * as Tk from "./timeknot.js";
 
   window.doLaunch = function () {
-    window.timeknot = new Tk.TimekNot( { } );
+    const now = Date.now();
+    console.log("now", now)
+    window.timeknot = new Tk.TimekNot( { } );  // the instance of my type TimekNot is stored in window.timeknot
+    window.cuenta = 0;
+    window.render(now);
   }
 
+
+
+//   TimekNot.prototype.define = function(args) {
+//   return Tk.define(this.timeknot)(args)();
+// }
+
+// { zone :: Int, time :: Number, text :: String } 
   window.doEval = function () {
     var t = document.getElementById("editorArea").value;
-    window.timeknot.define({zone:0, time: Date.now()/1000.0, text:t})
+    window.timeknot.define({zone:0, time: Date.now()/1000.0, text: t}); // zone, eval, code to parse
+    console.log("program:", typeof t)
     // .then( r => {
     //   document.getElementById('info').textContent = r.info;
     //   document.getElementById('errors').textContent = "";
@@ -31,10 +43,42 @@
     // });
   }
 
+
+// render:: TimekNot -> {zone :: Int, windowStartTime :: Number, windowEndTime :: Number} -> forall opts. Effect (Array Foreign)
+// to add a ws and we to my instance of TimekNot I need to invoke window.timeknot. just like define.
+    function render(moment) {
+      const windowStart = moment + (window.cuenta / 1000.0);
+      const windowEnd = moment + ((window.cuenta + 2) / 1000.0);
+      console.log("ws: ", windowStart);
+      console.log("we: ", windowEnd);
+
+      window.timeknot.render({zone: 0, windowStartTime: windowStart, windowEndTime: windowEnd});
+      window.cuenta += 1;
+      setTimeout(() => render(moment + (window.cuenta /1000.0)), 1);
+    }
+
+    window.render = render;
+
+    
+
+    // setInterval(window.timeknot.renderStandalone({me: "mu"}), 100);
+
+
+  //     function animate() {
+  //   window.requestAnimationFrame(animate);
+  //   var now = Date.now()/1000.0;
+  //   window.punctual.preRender({canDraw: true, nowTime: now});
+  //   window.punctual.render({canDraw: true, zone:0, nowTime: now});
+  //   window.punctual.postRender({canDraw: true, nowTime: now});
+  //   window.framesSinceFPSUpdate += 1;
+  // }
+// renderStandalone :: Engine -> TimekNot -> {zone :: Int, windowStartTime :: Number, windowEndTime :: Number} -> Effect String
+
+
   window.addEventListener('keydown', function (e) {
     e = e || window.event;
     if(e.shiftKey && e.key=="Enter") {
-      // e.preventDefault();
+      e.preventDefault();
       window.doEval();
     }
   });
@@ -71,3 +115,29 @@ Welcome to timekNot, hover on top to see options.
 </body>
 
 </html>
+
+<!-- //////***** this needs to be copied from toExolang to this document! *****/////// -->
+<!-- export function exoLang(args) {
+  return new TimekNot(args);
+}
+
+export function TimekNot(args) {
+  if (args==null) args = {};
+  this.timeknot = Tk.launch(args)();
+}
+
+TimekNot.prototype.define = function(args) {
+  return Tk.define(this.timeknot)(args)();
+}
+
+// TimekNot.prototype.clear = function(args) {
+//   return Tk.clear(this.timeknot)(args)();
+// }
+
+TimekNot.prototype.render = function(args) {
+  return Tk.render(this.timeknot)(args)();
+}
+
+TimekNot.prototype.setTempo = function(foreignTempo) {
+  return Tk.setTempo(this.timeknot)(foreignTempo)();
+} -->

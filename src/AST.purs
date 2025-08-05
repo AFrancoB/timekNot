@@ -13,7 +13,7 @@ import Data.Either
 import Data.Maybe
 
 type TimekNot = {
-  ast :: Ref Program,
+  program :: Ref Program,
   tempo :: Ref Tempo,
   eval :: Ref DateTime,
   vantageMap :: Ref (Map String DateTime)

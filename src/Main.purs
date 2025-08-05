@@ -26,7 +26,13 @@ import Foreign
 import Partial.Unsafe
 import Data.Enum
 
-import Data.DateTime (DateTime(..))
+-- import Data.DateTime (DateTime(..))
+
+-- import Data.Rational (Rational(..), (%), fromInt, toNumber)
+import Data.DateTime
+import Data.DateTime.Instant hiding (diff)
+import Data.Time.Duration
+
 
 import Data.Newtype
 
@@ -56,14 +62,16 @@ import Parsing
 launch:: {} -> Effect TimekNot
 launch _ = do
   log "timekNot: launch"
-  ast <- new $ L.fromFoldable [TimeExpression  M.empty]
+  program <- new $ L.fromFoldable [TimeExpression  M.empty]
   tempo <- newTempo (1 % 1) >>= new 
   eval <- nowDateTime >>= new
   vantageMap <- new $ (M.empty)
-  pure { ast, tempo, eval, vantageMap}  
+  -- wS <- nowDateTime >>= new
+  -- wE <- nowDateTime >>= new
+  pure { program, tempo, eval, vantageMap}  
 
 -- { zone :: Int, time :: Number, text :: String }
-define :: TimekNot -> { zone :: Int, time :: Number, text :: String } -> Effect { success :: Boolean, error :: String }
+define:: TimekNot -> { zone :: Int, time :: Number, text :: String } -> Effect { success :: Boolean, error :: String }
 define tk args = do
   log "timekNot: evaluate"
   -- program <- read tk.ast -- this does not do anything, can be erased...?
@@ -71,12 +79,12 @@ define tk args = do
   log $ "currentVM" <> show currentVM
   tempo <- read tk.tempo
   eval <- nowDateTime
-  let pr = check' currentVM $ runParser args.text parseProgram
+  let pr = check' currentVM $ runParser "" parseProgram --args.text parseProgram
   case pr of
     Left error -> pure $ { success: false, error }
     Right p -> do
       write eval tk.eval 
-      write p tk.ast 
+      write p tk.program 
       write (processVantage (getVantageMap p) currentVM eval tempo) $ tk.vantageMap
       pure $ { success: true, error: "bad syntax" }
 
@@ -91,15 +99,15 @@ render:: TimekNot -> {zone :: Int, windowStartTime :: Number, windowEndTime :: N
 render tk args = do
     let ws = numToDateTime (args.windowStartTime * 1000.0000) -- haskell comes in milliseconds, purescript needs seconds
     let we = numToDateTime (args.windowEndTime * 1000.0000)
-    program <- read tk.ast
+    program <- read tk.program
     vantageMap <- read tk.vantageMap
     -- log $ "vm: " <> show vantageMap
     t <- read tk.tempo
     eval <- read tk.eval
     let tp = assambleTimePacket ws we eval t vantageMap
     -- log $ show program
-    -- log $ show ws
-    -- log $ show we
+    log $ show ws
+    log $ show we
     -- log $ show t
     programToForeign program tp
     
@@ -107,7 +115,7 @@ render tk args = do
     -- log $ show events
     -- pure $ map unsafeToForeign events
 
-setTempo :: TimekNot -> ForeignTempo -> Effect Unit
+setTempo:: TimekNot -> ForeignTempo -> Effect Unit
 setTempo tk t = do
   -- log $ "setTempo is called" <> show (fromForeignTempo t)
-  write (fromForeignTempo t) tk.tempo
+  write (fromForeignTempo t) tk.tempo    

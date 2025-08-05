@@ -19,9 +19,10 @@ import * as Parsing from "../Parsing/index.js";
 import * as TimePacketOps from "../TimePacketOps/index.js";
 import * as Voices from "../Voices/index.js";
 var bind = /* #__PURE__ */ Control_Bind.bind(Effect.bindEffect);
+var show = /* #__PURE__ */ Data_Show.show(Data_DateTime.showDateTime);
 var fromFoldable = /* #__PURE__ */ Data_List.fromFoldable(Data_Foldable.foldableArray);
 var toRational = /* #__PURE__ */ Data_Rational.toRational(Data_Rational.toRationalInt);
-var show = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_Map_Internal.showMap(Data_Show.showString)(Data_DateTime.showDateTime));
+var show1 = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_Map_Internal.showMap(Data_Show.showString)(Data_DateTime.showDateTime));
 var setTempo = function (tk) {
     return function (t) {
         return Effect_Ref.write(Data_Tempo.fromForeignTempo(t))(tk.tempo);
@@ -32,11 +33,13 @@ var render = function (tk) {
         var ws = TimePacketOps.numToDateTime(args.windowStartTime * 1000.0);
         var we = TimePacketOps.numToDateTime(args.windowEndTime * 1000.0);
         return function __do() {
-            var program = Effect_Ref.read(tk.ast)();
+            var program = Effect_Ref.read(tk.program)();
             var vantageMap = Effect_Ref.read(tk.vantageMap)();
             var t = Effect_Ref.read(tk.tempo)();
             var $$eval = Effect_Ref.read(tk["eval"])();
             var tp = TimePacketOps.assambleTimePacket(ws)(we)($$eval)(t)(vantageMap);
+            Effect_Console.log(show(ws))();
+            Effect_Console.log(show(we))();
             return Voices.programToForeign(program)(tp)();
         };
     };
@@ -44,12 +47,12 @@ var render = function (tk) {
 var launch = function (v) {
     return function __do() {
         Effect_Console.log("timekNot: launch")();
-        var ast = Effect_Ref["new"](fromFoldable([ new AST.TimeExpression(Data_Map_Internal.empty) ]))();
+        var program = Effect_Ref["new"](fromFoldable([ new AST.TimeExpression(Data_Map_Internal.empty) ]))();
         var tempo = bind(Data_Tempo.newTempo(toRational(1)(1)))(Effect_Ref["new"])();
         var $$eval = bind(Effect_Now.nowDateTime)(Effect_Ref["new"])();
         var vantageMap = Effect_Ref["new"](Data_Map_Internal.empty)();
         return {
-            ast: ast,
+            program: program,
             tempo: tempo,
             "eval": $$eval,
             vantageMap: vantageMap
@@ -69,9 +72,9 @@ var check$prime = function (v) {
             if (!v2) {
                 return new Data_Either.Left("failed the check, time bites it's own tail");
             };
-            throw new Error("Failed pattern match at Main (line 85, column 30 - line 87, column 89): " + [ v2.constructor.name ]);
+            throw new Error("Failed pattern match at Main (line 93, column 30 - line 95, column 89): " + [ v2.constructor.name ]);
         };
-        throw new Error("Failed pattern match at Main (line 83, column 1 - line 83, column 74): " + [ v.constructor.name, v1.constructor.name ]);
+        throw new Error("Failed pattern match at Main (line 91, column 1 - line 91, column 74): " + [ v.constructor.name, v1.constructor.name ]);
     };
 };
 var define = function (tk) {
@@ -79,10 +82,10 @@ var define = function (tk) {
         return function __do() {
             Effect_Console.log("timekNot: evaluate")();
             var currentVM = Effect_Ref.read(tk.vantageMap)();
-            Effect_Console.log("currentVM" + show(currentVM))();
+            Effect_Console.log("currentVM" + show1(currentVM))();
             var tempo = Effect_Ref.read(tk.tempo)();
             var $$eval = Effect_Now.nowDateTime();
-            var pr = check$prime(currentVM)(Parsing.runParser(args.text)(Parser.parseProgram));
+            var pr = check$prime(currentVM)(Parsing.runParser("")(Parser.parseProgram));
             if (pr instanceof Data_Either.Left) {
                 return {
                     success: false,
@@ -91,14 +94,14 @@ var define = function (tk) {
             };
             if (pr instanceof Data_Either.Right) {
                 Effect_Ref.write($$eval)(tk["eval"])();
-                Effect_Ref.write(pr.value0)(tk.ast)();
+                Effect_Ref.write(pr.value0)(tk.program)();
                 Effect_Ref.write(Novus.processVantage(Parser.getVantageMap(pr.value0))(currentVM)($$eval)(tempo))(tk.vantageMap)();
                 return {
                     success: true,
                     error: "bad syntax"
                 };
             };
-            throw new Error("Failed pattern match at Main (line 75, column 3 - line 81, column 52): " + [ pr.constructor.name ]);
+            throw new Error("Failed pattern match at Main (line 83, column 3 - line 89, column 52): " + [ pr.constructor.name ]);
         };
     };
 };
