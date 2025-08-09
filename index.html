@@ -9,30 +9,27 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 
+
+
 <body onLoad="window.doLaunch()">
+
+ <script src="./src/WebDirt/WebDirt-packed.js" type="module"></script> <!-- import WebDirt JS library -->
+   
 
   <script type="module">
   import * as Tk from "./timeknot.js";
 
   window.doLaunch = function () {
-    const now = Date.now();
-    console.log("now", now)
     window.timeknot = new Tk.TimekNot( { } );  // the instance of my type TimekNot is stored in window.timeknot
-    window.cuenta = 0;
-    window.render(now);
+    window.dirt = window.timeknot.launchDirt();
+	  render();
   }
 
-
-
-//   TimekNot.prototype.define = function(args) {
-//   return Tk.define(this.timeknot)(args)();
-// }
 
 // { zone :: Int, time :: Number, text :: String } 
   window.doEval = function () {
     var t = document.getElementById("editorArea").value;
     window.timeknot.define({zone:0, time: Date.now()/1000.0, text: t}); // zone, eval, code to parse
-    console.log("program:", typeof t)
     // .then( r => {
     //   document.getElementById('info').textContent = r.info;
     //   document.getElementById('errors').textContent = "";
@@ -44,35 +41,12 @@
   }
 
 
-// render:: TimekNot -> {zone :: Int, windowStartTime :: Number, windowEndTime :: Number} -> forall opts. Effect (Array Foreign)
-// to add a ws and we to my instance of TimekNot I need to invoke window.timeknot. just like define.
-    function render(moment) {
-      const windowStart = moment + (window.cuenta / 1000.0);
-      const windowEnd = moment + ((window.cuenta + 2) / 1000.0);
-      console.log("ws: ", windowStart);
-      console.log("we: ", windowEnd);
-
-      window.timeknot.render({zone: 0, windowStartTime: windowStart, windowEndTime: windowEnd});
-      window.cuenta += 1;
-      setTimeout(() => render(moment + (window.cuenta /1000.0)), 1);
-    }
-
-    window.render = render;
-
-    
-
-    // setInterval(window.timeknot.renderStandalone({me: "mu"}), 100);
-
-
-  //     function animate() {
-  //   window.requestAnimationFrame(animate);
-  //   var now = Date.now()/1000.0;
-  //   window.punctual.preRender({canDraw: true, nowTime: now});
-  //   window.punctual.render({canDraw: true, zone:0, nowTime: now});
-  //   window.punctual.postRender({canDraw: true, nowTime: now});
-  //   window.framesSinceFPSUpdate += 1;
-  // }
-// renderStandalone :: Engine -> TimekNot -> {zone :: Int, windowStartTime :: Number, windowEndTime :: Number} -> Effect String
+    function render(){
+                window.timeknot.renderStandalone({ webdirt: window.dirt });
+                setTimeout(render,16); // evaluate each 20 miliseconds
+            }
+            
+            window.render = render;
 
 
   window.addEventListener('keydown', function (e) {
@@ -101,10 +75,10 @@
 <div class="editorAndStatus">
   <div class="editor">
 <textarea class="editorArea" id="editorArea">
-Welcome to timekNot, hover on top to see options. 
+--Welcome to timekNot, hover on top to see options. 
 
 -- uncomment this program and evaluate with shift + enter
--- a <- x | xxxx :|
+-- a [300cpm] | xxxx :|
 -- a.s = "stringy" .homayun = 0 3 0 3 3 3 4 5 4 2 1 0;
 
 </textarea>

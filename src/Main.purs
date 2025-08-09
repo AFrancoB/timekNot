@@ -46,6 +46,8 @@ import Data.Newtype
 -- import Visualisation
 -- import Svg.Parser
 
+import WebDirt
+
 import AST
 import TimePacketOps
 import Parser
@@ -54,32 +56,43 @@ import Novus
 
 import Parsing
 
+main :: Effect Unit 
+main = pure unit
+
 -- test editor view
 -- grid 2 1 [[label 1,code 2 0 []],[[label 5,code 3 0 []],[metre 2666]]]
 
 -- next steps: ask david what to do with clean before I deploy. 
 
+launchDirt :: Effect WebDirt
+launchDirt = do
+  dirt <- newWebDirt { sampleMapUrl: "./src/samples/sampleMap.json", sampleFolder: "./src/samples" }
+  initializeWebAudio dirt
+  pure dirt
+
 launch:: {} -> Effect TimekNot
 launch _ = do
   log "timekNot: launch"
+  launchTime <- nowDateTime
   program <- new $ L.fromFoldable [TimeExpression  M.empty]
   tempo <- newTempo (1 % 1) >>= new 
-  eval <- nowDateTime >>= new
   vantageMap <- new $ (M.empty)
-  -- wS <- nowDateTime >>= new
-  -- wE <- nowDateTime >>= new
-  pure { program, tempo, eval, vantageMap}  
+  eval <- new launchTime
+  wS <- new launchTime
+  wE <- new launchTime
+  pure { program, tempo, eval, vantageMap, wS, wE}  
 
 -- { zone :: Int, time :: Number, text :: String }
 define:: TimekNot -> { zone :: Int, time :: Number, text :: String } -> Effect { success :: Boolean, error :: String }
 define tk args = do
   log "timekNot: evaluate"
-  -- program <- read tk.ast -- this does not do anything, can be erased...?
+  program <- read tk.program -- this does not do anything, can be erased...?
   currentVM <- read tk.vantageMap
   log $ "currentVM" <> show currentVM
+  log $ "programDefined: " <> show program
   tempo <- read tk.tempo
   eval <- nowDateTime
-  let pr = check' currentVM $ runParser "" parseProgram --args.text parseProgram
+  let pr = check' currentVM $ runParser args.text parseProgram
   case pr of
     Left error -> pure $ { success: false, error }
     Right p -> do
@@ -105,17 +118,41 @@ render tk args = do
     t <- read tk.tempo
     eval <- read tk.eval
     let tp = assambleTimePacket ws we eval t vantageMap
-    -- log $ show program
-    log $ show ws
-    log $ show we
+    log $ show program
+    -- log $ "wsR: " <> show (fromDateTimeToPosix ws)
+    -- log $ show we
     -- log $ show t
     programToForeign program tp
-    
-    -- events <- programToWaste program tp
-    -- log $ show events
-    -- pure $ map unsafeToForeign events
+ -- programToForeign:: Program -> TimePacket -> Effect (Array Foreign)
+
 
 setTempo:: TimekNot -> ForeignTempo -> Effect Unit
 setTempo tk t = do
   -- log $ "setTempo is called" <> show (fromForeignTempo t)
   write (fromForeignTempo t) tk.tempo    
+
+renderStandalone :: TimekNot -> {webdirt:: WebDirt} -> Effect Unit
+renderStandalone tk d = do 
+  now <- nowDateTime  
+  prevWE <- read $ tk.wE  -- 500
+  let future = fromMaybe now $ adjust (Milliseconds 400.00) now -- :: Milliseconds -- 400
+  if prevWE <= future then do
+    let wS = prevWE
+    let wE = fromMaybe now $ adjust (Milliseconds 500.0) wS 
+    -- y <- log $ "wsS: " <> show (fromDateTimeToPosix wS)
+    -- z <- log $ "we: " <> show (fromDateTimeToPosix wE)
+    write wS tk.wS
+    write wE tk.wE
+    t <- read $ tk.tempo -- is this usefull??
+    -- pure unit
+    playDirty tk d.webdirt
+  else
+    log $ show "sleep"
+
+playDirty:: TimekNot -> WebDirt -> Effect Unit
+playDirty tk dirt = do
+  wStart <- read tk.wS
+  wEnd <- read tk.wE
+  events <- render tk {zone: 0, windowStartTime: fromDateTimeToPosix $ wStart, windowEndTime: fromDateTimeToPosix $ wEnd} -- Effect (Array Foreign)
+  x <- traverse_ (\x -> playSample dirt $ unsafeFromForeign x) events  -- type of this?? Unit
+  pure x

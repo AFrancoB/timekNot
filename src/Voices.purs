@@ -36,8 +36,8 @@ import AuralSpecs
 programToForeign:: Program -> TimePacket -> Effect (Array Foreign)
 programToForeign program timePacket = concat <$> calculatedVoices -- waste
   where voices' = programToVoice program -- Voices
-        xenoPitches = getXPitchMap program -- Map String XenoPitch
-        calculatedVoices = fromFoldable <$> M.values <$> calculateVoices (getTemporalMap program) voices' xenoPitches timePacket
+        tuning = getPitchMap program -- Map String XenoPitch
+        calculatedVoices = fromFoldable <$> M.values <$> calculateVoices (getTemporalMap program) voices' tuning timePacket
 
 programToVoice:: Program -> Voices
 programToVoice program = M.intersectionWith (\x y -> Voice x y) tempoMap auralMap
@@ -108,11 +108,11 @@ splitter str = fromMaybe (Tuple "2666" Nothing) $ funca strList
 ---------- Map String (List Aural) to:
 ------------- Map String (List (Tuple Aural Transposition))
 
-calculateVoices:: M.Map String Temporal -> Voices -> M.Map String XenoPitch -> TimePacket -> Effect (M.Map String (Array Foreign)) -- (M.Map String (Array AlmostWaste))
-calculateVoices tempoMap voiceMap xenopitches tp = traverseWithIndex (calculateVoice tempoMap voiceMap xenopitches tp) voiceMap  -- to get rid of Effect, change traverseWithIndex to mapWithIndex
+calculateVoices:: M.Map String Temporal -> Voices -> M.Map String Tuning -> TimePacket -> Effect (M.Map String (Array Foreign)) -- (M.Map String (Array AlmostWaste))
+calculateVoices tempoMap voiceMap tuning tp = traverseWithIndex (calculateVoice tempoMap voiceMap tuning tp) voiceMap  -- to get rid of Effect, change traverseWithIndex to mapWithIndex
 
-calculateVoice:: M.Map String Temporal -> Voices -> M.Map String XenoPitch-> TimePacket -> String -> Voice -> Effect (Array Foreign)-- (Array AlmostWaste)
-calculateVoice tempoMap voiceMap xenopitches tp aKey (Voice temporal aurals) = do 
+calculateVoice:: M.Map String Temporal -> Voices -> M.Map String Tuning-> TimePacket -> String -> Voice -> Effect (Array Foreign)-- (Array AlmostWaste)
+calculateVoice tempoMap voiceMap tuning tp aKey (Voice temporal aurals) = do 
     let events = calculateTemporal tempoMap tp aKey temporal -- Array Event
     let rhythmic = getRhythmic temporal
-    events >>= (auralSpecs voiceMap rhythmic aurals xenopitches) 
+    events >>= (auralSpecs voiceMap rhythmic aurals tuning) 

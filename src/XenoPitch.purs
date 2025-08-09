@@ -1,4 +1,4 @@
-module XenoPitch (xenoPitchAsAuralPattern, xenoPitchToMIDIInterval, testXN, xenoPitchAsMIDINum, alpha, beta, gamma) where
+module XenoPitch (pitchAsAuralPattern, xenoPitchToMIDIInterval, testXN, xenoPitchAsMIDINum, alpha, beta, gamma) where
 
 import Prelude
 
@@ -32,11 +32,11 @@ import DurationAndIndex
 
 -- data XenoPitch = CPSet Int (Array Int) (Array Int) | MOS Int Int | EDO Number Int
 testXP = CPSet 2 [1,3,5,7] (Just $ [Unions [1,3]])
-testXN = xenoPitchAsAuralPattern (Tuple testXP $ Just 1) [0,1,2,3]
+testXN = pitchAsAuralPattern (Tuple testXP $ Just 1) [0,1,2,3]
 
 --- new fucntion that receives tuning system / note and index and can produce the midiInterval required
 
-xenoPitchAsMIDINum:: Tuple XenoPitch (Maybe Int) -> Int -> Number
+xenoPitchAsMIDINum:: Tuple Tuning (Maybe Int) -> Int -> Number
 xenoPitchAsMIDINum (Tuple xn (Just i)) nota = asMIDI
     where   scaleAsMIDISubsets = xenoPitchToMIDIInterval xn -- Array Array Num
             subset = fromMaybe [0.0] $ scaleAsMIDISubsets !! i
@@ -55,18 +55,18 @@ cycleAndOctavesOfPatternInSet' n setLen = Tuple cycledNote isOctave
     where cycledNote = n `mod` setLen
           isOctave = toNumber $ (floor $ (toNumber n) / (toNumber setLen))*12
 
-xenoPitchAsAuralPattern:: Tuple XenoPitch (Maybe Int) -> Array Int -> Span -> Rhythmic -> Array Number
-xenoPitchAsAuralPattern (Tuple ShurNot Nothing) lista sp r = map (\n-> n.midiInterval + (386.3137138648348*0.01)) $ map assambleShurNot shurNot
+pitchAsAuralPattern:: Tuple Tuning (Maybe Int) -> Array Int -> Span -> Rhythmic -> Array Number
+pitchAsAuralPattern (Tuple ShurNot Nothing) lista sp r = map (\n-> n.midiInterval + (386.3137138648348*0.01)) $ map assambleShurNot shurNot
     where shurNot = analysisShurNotPattern sp r lista
-xenoPitchAsAuralPattern (Tuple ShurNot8 Nothing) lista sp r = map (\n-> n.midiInterval) $ map assambleShurNot8 shurNot8
+pitchAsAuralPattern (Tuple ShurNot8 Nothing) lista sp r = map (\n-> n.midiInterval) $ map assambleShurNot8 shurNot8
     where shurNot8 = analysisShurNotPattern sp r lista
-xenoPitchAsAuralPattern (Tuple xn (Just i)) lista _ _ = asMIDI
+pitchAsAuralPattern (Tuple xn (Just i)) lista _ _ = asMIDI
     where   scaleAsMIDISubsets = xenoPitchToMIDIInterval xn -- Array Array Num
             subset = fromMaybe [0.0] $ scaleAsMIDISubsets !! i
             lengthOfSet = length subset
             cyclesAndOctave = cycleAndOctavesOfPatternInSet lista lengthOfSet
             asMIDI = map (\(Tuple index octave) -> (fromMaybe (0.0) $ subset !! index) + octave) cyclesAndOctave
-xenoPitchAsAuralPattern (Tuple xn Nothing) lista _ _ = asMIDI
+pitchAsAuralPattern (Tuple xn Nothing) lista _ _ = asMIDI
     where   scaleAsMIDISubsets = xenoPitchToMIDIInterval xn -- Array Array Num
             subset = fromMaybe [2.666] $ scaleAsMIDISubsets !! 0
             lengthOfSet = length subset
@@ -262,13 +262,13 @@ type ShurNot = {
 --    1080.557191738903)]
 
 ---- the ordering of subsets is still buggy, figure it out!! Jan 2024
-xenoPitchToMIDIInterval:: XenoPitch -> Array (Array Number)
+xenoPitchToMIDIInterval:: Tuning -> Array (Array Number)
 xenoPitchToMIDIInterval (CPSet size factors Nothing) = map (addSampleRoot <<< toMIDIInterval) [scale]
     where scale = makeCPSScale size factors -- Array XenoNote
 xenoPitchToMIDIInterval (CPSet size factors (Just subsets)) = map (addSampleRoot <<< toMIDIInterval) (scale : subs)
     where scale = makeCPSScale size factors -- Array XenoNote
           subs = map (orderSetofXNotes <<< getSubSet scale) subsets
-xenoPitchToMIDIInterval (Scala len xs) = [0.0 : toMIDIs xs]
+xenoPitchToMIDIInterval (Scala xs) = [0.0 : toMIDIs xs]
   where toMIDIs xs = map toMIDI xs     -- :: Array (Either Rational Number) -> Array Number
         toMIDI (Left x) = ratioToCents (Rat.toNumber x) / 100.0
         toMIDI (Right x)= x / 100.0

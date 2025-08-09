@@ -1,4 +1,4 @@
-module Aural(aural,variationsStr, checkXPitch, getXPitchMap, prog) where
+module Aural(aural,variationsStr, checkXPitch, getPitchMap, prog) where
 
 import Prelude
 
@@ -788,7 +788,7 @@ checkXPitch exs = (checkXPitch' exs) && (checkProg exs)
 
 checkProg :: List Expression -> Boolean
 checkProg expressions = not $ elem false $ map (\kn -> func aXenoPitchMap kn) listOfPitchID
-  where aXenoPitchMap = getXPitchMap expressions
+  where aXenoPitchMap = getPitchMap expressions
         listOfPitchID = getProgIDs $ getAuralMap expressions
 
 getProgIDs:: Map String (List Aural) -> List (Tuple String (Maybe Int))
@@ -801,10 +801,10 @@ keepProg _ = Nothing
 
 checkXPitch' :: List Expression -> Boolean
 checkXPitch' expressions = not $ elem false $ map (\kn -> func aXenoPitchMap kn) listOfPitchID
-  where aXenoPitchMap = getXPitchMap expressions
+  where aXenoPitchMap = getPitchMap expressions
         listOfPitchID = getXenoIDs $ getAuralMap expressions
 
-func:: Map String XenoPitch -> Tuple String (Maybe Int) -> Boolean
+func:: Map String Tuning -> Tuple String (Maybe Int) -> Boolean
 func mapa (Tuple "shurNot8" Nothing) = true
 func mapa (Tuple "shurNot" Nothing) = true
 func mapa (Tuple k Nothing) = case lookup k mapa of
@@ -814,7 +814,7 @@ func mapa (Tuple k (Just n)) = case lookup k mapa of
                                 Nothing -> false
                                 Just xn -> f xn n 
 
-f:: XenoPitch -> Int -> Boolean
+f:: Tuning -> Int -> Boolean
 f (CPSet s f (Just subs)) indx = indx <= A.length subs  
 f ShurNot8 _ = true
 f ShurNot  _ = true
@@ -842,13 +842,13 @@ unexpressAural:: Expression -> Map String Aural
 unexpressAural (AuralExpression x) = x 
 unexpressAural _ = empty
 
-getXPitchMap:: Program -> Map String XenoPitch
-getXPitchMap program = unions $ map unexpressPitch $ filter (\ expression -> isXPitch expression) program
-  where isXPitch (XenoPitchExpression _) = true
-        isXPitch _ = false
+getPitchMap:: Program -> Map String Tuning
+getPitchMap program = unions $ map unexpressPitch $ filter (\ expression -> isPitch expression) program
+  where isPitch (PitchExpression _) = true
+        isPitch _ = false
 
-unexpressPitch:: Expression -> Map String XenoPitch
-unexpressPitch (XenoPitchExpression x) = x 
+unexpressPitch:: Expression -> Map String Tuning
+unexpressPitch (PitchExpression x) = x 
 unexpressPitch _ = empty
 
 -- there are three layers that need to be identified: the string that identifies the bounded temporal, the Int that identifies the index of the aural, and then I need a way to identify its type of Value:if it is a sound, gain, speed, etc. For this I could use the constructor of Value...? 

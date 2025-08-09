@@ -1,4 +1,4 @@
-module AST(TimekNot(..),Vantage(..), TimePoint(..), VantageMap(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..), Variation(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), Sinusoidal(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), XenoPitch(..), CPSNote(..), DastgahNote(..), Interval(..), Subset(..), Variant(..), showEventIndex, showStructureIndex) where
+module AST(TimekNot(..),Vantage(..), TimePoint(..), VantageMap(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..), Variation(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), Sinusoidal(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), Tuning(..), CPSNote(..), DastgahNote(..), Interval(..), Subset(..), Variant(..), showEventIndex, showStructureIndex) where
 
 import Prelude
 import Effect.Ref
@@ -16,17 +16,19 @@ type TimekNot = {
   program :: Ref Program,
   tempo :: Ref Tempo,
   eval :: Ref DateTime,
-  vantageMap :: Ref (Map String DateTime)
+  vantageMap :: Ref (Map String DateTime),
+  wS :: Ref DateTime,
+  wE :: Ref DateTime
   }
 
 type Program = List Expression
 
-data Expression = TimeExpression (Map String Temporal) | AuralExpression (Map String Aural) | VantagePointExpression  (Map String Vantage) | XenoPitchExpression (Map String XenoPitch)
+data Expression = TimeExpression (Map String Temporal) | AuralExpression (Map String Aural) | VantagePointExpression  (Map String Vantage) | PitchExpression (Map String Tuning)
 
 instance expressionShow :: Show Expression where
   show (TimeExpression x) = "TimeExpression " <> show x
   show (AuralExpression x) = "AuralExpression " <> show x
-  show (XenoPitchExpression x) = "XenoPitchExpression " <> show x
+  show (PitchExpression x) = "XenoPitchExpression " <> show x -- change to tunning expression
   show (VantagePointExpression x) = "VantagePointExpression " <> show x
 
 -- Temporal values is short for TemporalRelationship and Aural is short for Aural Values. Polytemporal stands for TempoRelationship, Rhythmic stands shor for Rhythmic values
@@ -324,24 +326,18 @@ type DastgahNote = {
   midiInterval:: Number
 }
 
--- Wendy Carlos
-
--- 77.965
-
--- xenopPitch
-
 data Subset = Subset Int | Unions (Array Int) | Intersection Int Int | Difference Int Int | Nested Subset 
 
 instance subsetShow :: Show Subset where
   show _ = "subset"
 
-data XenoPitch = CPSet Int (Array Int) (Maybe (Array Subset)) | MOS Int Int | EDO Number Int | Scala Int (Array (Either Rational Number)) | ShurNot8 | ShurNot
+data Tuning = CPSet Int (Array Int) (Maybe (Array Subset)) | MOS Int Int | EDO Number Int | Scala (Array (Either Rational Number)) | ShurNot8 | ShurNot
 
-instance xenoShow :: Show XenoPitch where
+instance tuningShow :: Show Tuning where
     show (CPSet s f subs) = "CPSet " <> show s <> " " <> show f <> " " <> show subs
     show (MOS k n) = "MOS " <> show k <> " " <> show n
     show (EDO p d) = "EDO " <> show p <> " " <> show d
-    show (Scala len ns) = "Scala " <> show len <> " " <> show ns 
+    show (Scala ns) = "Scala " <> show ns 
     show ShurNot8 = "ShurNot8"
     show ShurNot = "ShurNot"
 

@@ -39,14 +39,14 @@ import Data.DateTime.Instant
 import Data.Time.Duration
 
 -- aural specs maps on the list of aurals. One aural attribute at the time to process
-auralSpecs:: Voices -> Rhythmic -> List Aural -> M.Map String XenoPitch -> Array Event -> Effect (Array Foreign)
+auralSpecs:: Voices -> Rhythmic -> List Aural -> M.Map String Tuning -> Array Event -> Effect (Array Foreign)
 auralSpecs v r aurals x es' = map concat <$> traverseDefault (\a -> auralSpecs' v r a x es) $ fromFoldable aurals
     where es = filter checkOnset es' -- here O get removed!
 
-auralSpecs':: Voices -> Rhythmic -> Aural -> M.Map String XenoPitch -> Array Event -> Effect (Array Foreign)
-auralSpecs' voices rhy aural xenopitch events 
+auralSpecs':: Voices -> Rhythmic -> Aural -> M.Map String Tuning -> Array Event -> Effect (Array Foreign)
+auralSpecs' voices rhy aural tuning events 
    | (checkForSound aural) = pure []
-   | otherwise = traverseDefault (processEvent voices rhy aural xenopitch) events
+   | otherwise = traverseDefault (processEvent voices rhy aural tuning) events
 
 checkForSound:: List Value -> Boolean
 checkForSound aural = not $ elem true $ map isSound aural 
@@ -54,8 +54,8 @@ checkForSound aural = not $ elem true $ map isSound aural
 checkOnset:: Event -> Boolean
 checkOnset (Event o i) = (\(Onset b p) -> b) o 
 
-processEvent:: Voices -> Rhythmic -> List Value -> M.Map String XenoPitch -> Event -> Effect Foreign
-processEvent v r vals xp ev = do
+processEvent:: Voices -> Rhythmic -> List Value -> M.Map String Tuning -> Event -> Effect Foreign
+processEvent v r vals tu ev = do
   let when = processWhen ev 
   let s = processSound v r (getS vals) ev 
   let n = processN v r (getN vals) ev 
@@ -72,7 +72,7 @@ processEvent v r vals xp ev = do
   let inter = processInter v r (getInter vals) ev
   let legato = processLegato v r (getLegato vals) ev
   let orbit = processOrbit v r (getOrbit vals) ev
-  let note = processNote v xp r (getNote vals) (getXNote vals) ev
+  let note = processNote v tu r (getNote vals) (getXNote vals) ev
   makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh maxw minw inter legato orbit note
 
 makeWebDirtEvent:: Number -> String -> Int -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe String -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Int -> Maybe Number -> Effect Foreign
@@ -107,39 +107,39 @@ optVInt:: Foreign -> Maybe Int -> (Foreign -> Int -> Effect Foreign) -> Effect F
 optVInt o Nothing _ = pure o
 optVInt o (Just x) f = f o x
 
-processNote:: Voices -> M.Map String XenoPitch -> Rhythmic -> Maybe Value -> Maybe Value -> Event -> Maybe Number 
-processNote _ xp r Nothing xNotes e = Nothing
-processNote _ xp r (Just (Prog span lista)) xNotes e = mergeProgWithNote xp r (Prog span lista) xNotes e
-processNote _ xp r (Just (Alpha span lista)) _ e = spanMaybe span newList e r
+processNote:: Voices -> M.Map String Tuning -> Rhythmic -> Maybe Value -> Maybe Value -> Event -> Maybe Number 
+processNote _ tu r Nothing xNotes e = Nothing
+processNote _ tu r (Just (Prog span lista)) xNotes e = mergeProgWithNote tu r (Prog span lista) xNotes e
+processNote _ tu r (Just (Alpha span lista)) _ e = spanMaybe span newList e r
   where newList = fromFoldable $ map alpha lista
-processNote _ xp r (Just (Beta span lista)) _ e = spanMaybe span newList e r
+processNote _ tu r (Just (Beta span lista)) _ e = spanMaybe span newList e r
   where newList = fromFoldable $ map beta lista
-processNote _ xp r (Just (Gamma span lista)) _ e = spanMaybe span newList e r
+processNote _ tu r (Just (Gamma span lista)) _ e = spanMaybe span newList e r
   where newList = fromFoldable $ map gamma lista
-processNote _ xp r (Just (Dastgah span d)) _ e = spanMaybe span newList e r
+processNote _ tu r (Just (Dastgah span d)) _ e = spanMaybe span newList e r
   where newList = getMIDIInterval $ analysisDastgahPattern span r d
-processNote _ xp r (Just (Xeno id span lista)) _ e = spanMaybe span (fromFoldable midiIntervals) e r
-  where target = getXPTarget (fst id) xp
-        -- target = fromMaybe (EDO 0.0 0) $ M.lookup (fst id) xp 
-        midiIntervals = xenoPitchAsAuralPattern (Tuple target (snd id)) (fromFoldable lista) span r
+processNote _ tu r (Just (Xeno id span lista)) _ e = spanMaybe span (fromFoldable midiIntervals) e r
+  where target = getTUTarget (fst id) tu
+        -- target = fromMaybe (EDO 0.0 0) $ M.lookup (fst id) tu 
+        midiIntervals = pitchAsAuralPattern (Tuple target (snd id)) (fromFoldable lista) span r
 processNote _ _ _ _ _ _ = Nothing
 
 
-getXPTarget:: String -> M.Map String XenoPitch -> XenoPitch
-getXPTarget "shurNot8" _ = ShurNot8
-getXPTarget "shurNot" _ = ShurNot
-getXPTarget id xp = fromMaybe (EDO 0.0 0) $ M.lookup id xp
+getTUTarget:: String -> M.Map String Tuning -> Tuning
+getTUTarget "shurNot8" _ = ShurNot8
+getTUTarget "shurNot" _ = ShurNot
+getTUTarget id xp = fromMaybe (EDO 0.0 0) $ M.lookup id xp
 
-findRefdNote:: Voices -> M.Map String XenoPitch -> Rhythmic -> Event -> Tuple String Int -> Maybe Value -> Maybe Number
+findRefdNote:: Voices -> M.Map String Tuning -> Rhythmic -> Event -> Tuple String Int -> Maybe Value -> Maybe Number
 findRefdNote m xp r e (Tuple id n) xn = processNote m xp r newVal xn e
     where newVal = cycleAurals n (M.lookup id m) getNote
 
-mergeProgWithNote:: M.Map String XenoPitch -> Rhythmic -> Value -> Maybe Value -> Event -> Maybe Number 
+mergeProgWithNote:: M.Map String Tuning -> Rhythmic -> Value -> Maybe Value -> Event -> Maybe Number 
 mergeProgWithNote xp r prog xnote ev = pitchSystemNoteToMIDI xp prog' <$> xnote'
     where prog' = processProg r prog ev
           xnote' = processXNotes r xnote ev
 
-pitchSystemNoteToMIDI:: M.Map String XenoPitch -> (Tuple String (Maybe Int)) -> Int -> Number
+pitchSystemNoteToMIDI:: M.Map String Tuning -> (Tuple String (Maybe Int)) -> Int -> Number
 pitchSystemNoteToMIDI mapa (Tuple id subset) nota = xenoPitchAsMIDINum (Tuple xn subset) nota 
   where xn = fromMaybe (EDO 0.0 0) $ M.lookup id mapa
 

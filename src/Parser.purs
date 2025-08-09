@@ -63,7 +63,7 @@ tempoOperArray = do
 buildVTempo:: List TempoMark -> Variant
 buildVTempo xs = VTempo $ fromMaybe XTempo $ head xs
 
--- external tempo does not in canonic operators this is very important to understand!!!!
+-- external tempo does not work in canonic operators this is very important to understand!!!!
 
 transposer:: P Variant
 transposer = do 
@@ -272,9 +272,9 @@ xPitchExpression:: P Expression
 xPitchExpression = do
   _ <- pure 1
   x <- braces $ many $ xPitch
-  pure $ XenoPitchExpression $ unions x
+  pure $ PitchExpression $ unions x
 
-xPitch:: P (Map String XenoPitch)
+xPitch:: P (Map String Tuning)
 xPitch = do
   _ <- pure 1
   id <- identifier
@@ -283,15 +283,15 @@ xPitch = do
   _ <- reserved ";"
   pure $ singleton id x
 
-parseScala:: P XenoPitch -- this needs a check: if len is different from len xs then throw error else get through, if this check is correct then the data structure of Scala does not really need the len to be passed down
+parseScala:: P Tuning 
 parseScala = do 
   _ <- pure 1
   whitespace
   _ <- reserved "scala"
-  len <- natural
+  whitespace
   _ <- reserved ":"
   xs <- many parseRatioOrCent
-  pure $ Scala len $ A.fromFoldable xs
+  pure $ Scala $ A.fromFoldable xs
 
 parseRatioOrCent:: P (Either Rational Number)
 parseRatioOrCent = do 
@@ -313,7 +313,26 @@ ratioScala = do
   y <- natural
   pure $ Left $ toRational x y
 
-cpSet:: P XenoPitch
+-- my approach to EDO: edo (num of equal divisions) (period)
+-- { myEDO <- edo 12 2:1 | (2,1) --.---. | (2,1,3) -.---._.; }
+
+-- my approach to subsets: 
+-----    This for arbitrary subsets: (2,1) --.---.  == big big small big big big small: 0-2-4.5-7-9-11.12
+--------------------- adjust to octave? declare  octave? the subset can be arbitrary so octave does not matter?
+
+-- adding functions to subsets: \start, \finalis, \witness, \pause, \changeable
+-- create your own functions?
+-- how to define \changeable? 
+
+-- Example:
+-- { myGradyHarrisonScale <- scala  21/20(\s) 9/8(\f) 7/6 5/4 21/16 4/3 7/5 3/2(\ch-up) 63/40(\ch-down) 27/16 7/4 15/8(\p) 63/32 2/1;
+--  myEDO <- edo 24 2:1 functions: 
+-- }
+
+
+
+
+cpSet:: P Tuning
 cpSet = do
   _ <- pure 1
   _ <- reserved "cps"

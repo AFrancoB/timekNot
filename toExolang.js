@@ -9,6 +9,10 @@ export function TimekNot(args) {
   this.timeknot = Tk.launch(args)();
 }
 
+TimekNot.prototype.launchDirt = function(args) {
+  return Tk.launchDirt();
+}
+
 TimekNot.prototype.define = function(args) {
   return Tk.define(this.timeknot)(args)();
 }
@@ -19,6 +23,10 @@ TimekNot.prototype.define = function(args) {
 
 TimekNot.prototype.render = function(args) {
   return Tk.render(this.timeknot)(args)();
+}
+
+TimekNot.prototype.renderStandalone = function(args) {
+  return Tk.renderStandalone(this.timeknot)(args)();
 }
 
 TimekNot.prototype.setTempo = function(foreignTempo) {
