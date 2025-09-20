@@ -4,14 +4,11 @@
 "Instruments": ["Instruments/TrapSquareWav.wav"],
 "Percussion": ["Percussion/trapaholicBongo1.wav","Percussion/trapaholicBongo2.wav","Percussion/trapaholicClave.wav","Percussion/trapaholicHihat1.wav","Percussion/trapaholicHihat2.wav","Percussion/trapaholicRimshot.wav"],
 "Snares": ["Snares/trapaholicSnare1.wav"],
-"guitarBright": ["guitarBright/guitarBright0.wav","guitarBright/guitarBright1.wav","guitarBright/guitarBright10.wav","guitarBright/guitarBright11.wav","guitarBright/guitarBright12.wav","guitarBright/guitarBright13.wav","guitarBright/guitarBright14.wav","guitarBright/guitarBright15.wav","guitarBright/guitarBright16.wav","guitarBright/guitarBright17.wav","guitarBright/guitarBright18.wav","guitarBright/guitarBright19.wav","guitarBright/guitarBright2.wav","guitarBright/guitarBright3.wav","guitarBright/guitarBright4.wav","guitarBright/guitarBright5.wav","guitarBright/guitarBright6.wav","guitarBright/guitarBright7.wav","guitarBright/guitarBright8.wav","guitarBright/guitarBright9.wav"],
-"guitarMuted": ["guitarMuted/guitarMuted0.wav","guitarMuted/guitarMuted1.wav","guitarMuted/guitarMuted10.wav","guitarMuted/guitarMuted11.wav","guitarMuted/guitarMuted12.wav","guitarMuted/guitarMuted13.wav","guitarMuted/guitarMuted14.wav","guitarMuted/guitarMuted15.wav","guitarMuted/guitarMuted16.wav","guitarMuted/guitarMuted17.wav","guitarMuted/guitarMuted18.wav","guitarMuted/guitarMuted19.wav","guitarMuted/guitarMuted2.wav","guitarMuted/guitarMuted3.wav","guitarMuted/guitarMuted4.wav","guitarMuted/guitarMuted5.wav","guitarMuted/guitarMuted6.wav","guitarMuted/guitarMuted7.wav","guitarMuted/guitarMuted8.wav","guitarMuted/guitarMuted9.wav"],
-"kick": ["kick.mp3"],
-"hihat": ["hihat.mp3"],
-"claves": ["claves.mp3"],
-"pad": ["pad.mp3"],
-"synth": ["synth.mp3"]
+"bright": ["bright/guitarBright0.wav","bright/guitarBright1.wav","bright/guitarBright10.wav","bright/guitarBright11.wav","bright/guitarBright12.wav","bright/guitarBright13.wav","bright/guitarBright14.wav","bright/guitarBright15.wav","bright/guitarBright16.wav","bright/guitarBright17.wav","bright/guitarBright18.wav","bright/guitarBright19.wav","bright/guitarBright2.wav","bright/guitarBright3.wav","bright/guitarBright4.wav","bright/guitarBright5.wav","bright/guitarBright6.wav","bright/guitarBright7.wav","bright/guitarBright8.wav","bright/guitarBright9.wav"],
+"muted": ["muted/guitarMuted0.wav","muted/guitarMuted1.wav","muted/guitarMuted10.wav","muted/guitarMuted11.wav","muted/guitarMuted12.wav","muted/guitarMuted13.wav","muted/guitarMuted14.wav","muted/guitarMuted15.wav","muted/guitarMuted16.wav","muted/guitarMuted17.wav","muted/guitarMuted18.wav","muted/guitarMuted19.wav","muted/guitarMuted2.wav","muted/guitarMuted3.wav","muted/guitarMuted4.wav","muted/guitarMuted5.wav","muted/guitarMuted6.wav","muted/guitarMuted7.wav","muted/guitarMuted8.wav","muted/guitarMuted9.wav"],
+"sankoor": ["sankoor/c.wav","sankoor/c0.wav","sankoor/c1.wav","sankoor/c2.wav","sankoor/c3.wav","sankoor/c4.wav"]
 }
+
 
 
 
