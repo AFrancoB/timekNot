@@ -16,11 +16,6 @@ foreign import makeCPSScale :: Int -> Array Int -> Array CPSNote -- :: Array Not
 -- foreign import makeMOSScale :: Int -> Int -> Array MOSNote
 
 
-
-
--- foreign import pruebilla :: Int -> Int -> Int
-
-
 --- objeto resultante de cps.make , typear..?
 -- {
 --   meta: {

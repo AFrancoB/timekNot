@@ -318,7 +318,7 @@ instance indexShow :: Show Index where
       where subdivisions = foldl (<>) "" $ map (\x -> show x <> ".") xs
             result = Str.take (Str.length subdivisions - 1) subdivisions
 
--- Dastgah
+-- Tuning
 
 type DastgahNote = {
   function:: String,
@@ -341,6 +341,7 @@ instance tuningShow :: Show Tuning where
     show ShurNot8 = "ShurNot8"
     show ShurNot = "ShurNot"
 
+--- this gets eliminated, use only Note
 type CPSNote = {
     set:: Array Int,
     "archi-set":: Array String,

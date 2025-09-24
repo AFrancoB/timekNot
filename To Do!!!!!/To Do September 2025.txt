@@ -1,0 +1,31 @@
+
+
+TODO SEPTEMBER 2025: TIMEKNOT
+
+Fix the spread/isorhythm system of audio values within rhythmic strcutures
+
+
+como distribuir los sonidos en la estructura temporal?
+
+---- la que funcona es la q circula por todos los eventos:   xxxx  "bd sd cn"  == bd sd cn bd sd cn... etc   signo: _
+
+---- tambien funciona la q circula por todos los bloques ritmicos  xxxx "bd sd cn" == bd bd bd bd sd sd sd sd cn cn cn cn ... etc signo: _-
+----- cada bloque tiene uin valor
+
+
+---- despues de esto debe de haber algo q considere la recursividad:
+
+
+----  habilitar _:  cada voz debe de tener un valor ditribuido 
+
+----  habilitar _:_ cada voz debe de tener un valor circulando
+
+---- habilitar _:_- // _- cada bloque debe de tener un valor q circula
+
+---- hablitiar _:_-_ // _-_ cada bloque debe de tener valores distribuidos entre xs
+
+---- habilitar _:_-_- // _-_- cada bloque debe de tener valores circulando hasta primer grado de recursividad x y [x]
+
+---- habilitar _:_-_-_ // _-_-_ cada bloque debe de tener valores distribuidos entre x y [x]
+
+------- etc...

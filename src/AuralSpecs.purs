@@ -140,7 +140,7 @@ mergeProgWithNote xp r prog xnote ev = pitchSystemNoteToMIDI xp prog' <$> xnote'
           xnote' = processXNotes r xnote ev
 
 pitchSystemNoteToMIDI:: M.Map String Tuning -> (Tuple String (Maybe Int)) -> Int -> Number
-pitchSystemNoteToMIDI mapa (Tuple id subset) nota = xenoPitchAsMIDINum (Tuple xn subset) nota 
+pitchSystemNoteToMIDI mapa (Tuple id subset) nota = pitchAsMIDINum (Tuple xn subset) nota 
   where xn = fromMaybe (EDO 0.0 0) $ M.lookup id mapa
 
 processProg:: Rhythmic -> Value ->  Event -> Tuple String (Maybe Int)

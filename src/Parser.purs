@@ -379,6 +379,10 @@ difference = do
   b <- natural
   pure $ Difference a b
 
+
+
+
+
 --
 vantageExpression:: P Expression
 vantageExpression = do

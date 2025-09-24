@@ -1,10 +1,10 @@
-module XenoPitch (pitchAsAuralPattern, xenoPitchToMIDIInterval, testXN, xenoPitchAsMIDINum, alpha, beta, gamma) where
+module XenoPitch (pitchAsAuralPattern, pitchToMIDIInterval, testXN, pitchAsMIDINum, alpha, beta, gamma, testXP, testXN) where
 
 import Prelude
 
 import Partial.Unsafe
 
-import Data.Array ((:), elem, filter,unsafeIndex, length, sortWith, zip, (!!), fromFoldable, cons, uncons, snoc, init, tail, last,head,reverse, replicate, concat)
+import Data.Array ((:), elem, filter,unsafeIndex, length, sortWith, zip, (!!), fromFoldable, cons, uncons, snoc, unsnoc, init, tail, last,head,reverse, replicate, concat)
 
 import Data.List (scanl)
 
@@ -32,51 +32,60 @@ import DurationAndIndex
 
 -- data XenoPitch = CPSet Int (Array Int) (Array Int) | MOS Int Int | EDO Number Int
 testXP = CPSet 2 [1,3,5,7] (Just $ [Unions [1,3]])
-testXN = pitchAsAuralPattern (Tuple testXP $ Just 1) [0,1,2,3]
+--testXP = Scala [Right 200.0, Right 400.0, Right 500.0, Right 700.0, Right 900.0, Right 1100.0, Right 1200.0]
+testXN = pitchAsAuralPattern (Tuple testXP (Just 1)) [0,1,2,3,4,5,6] SpreadBlock O
 
 --- new fucntion that receives tuning system / note and index and can produce the midiInterval required
 
-xenoPitchAsMIDINum:: Tuple Tuning (Maybe Int) -> Int -> Number
-xenoPitchAsMIDINum (Tuple xn (Just i)) nota = asMIDI
-    where   scaleAsMIDISubsets = xenoPitchToMIDIInterval xn -- Array Array Num
-            subset = fromMaybe [0.0] $ scaleAsMIDISubsets !! i
-            lengthOfSet = length subset
-            (Tuple index octave) = cycleAndOctavesOfPatternInSet' nota lengthOfSet
-            asMIDI = (fromMaybe (0.0) $ subset !! index) + octave
-xenoPitchAsMIDINum (Tuple xn Nothing) nota = asMIDI
-    where   scaleAsMIDISubsets = xenoPitchToMIDIInterval xn -- Array Array Num
-            subset = fromMaybe [2.666] $ scaleAsMIDISubsets !! 0
-            lengthOfSet = length subset
-            (Tuple index octave) = cycleAndOctavesOfPatternInSet' nota lengthOfSet
-            asMIDI = (fromMaybe (0.0) $ subset !! index) + octave
 
-cycleAndOctavesOfPatternInSet':: Int -> Int -> Tuple Int Number
-cycleAndOctavesOfPatternInSet' n setLen = Tuple cycledNote isOctave
+
+---- this!!!!!! 22 Sept 2025!!!!!!!!!!!HERE BROKEN
+pitchAsMIDINum:: Tuple Tuning (Maybe Int) -> Int -> Number
+-- pitchAsMIDINum _ nota = 0.0
+pitchAsMIDINum (Tuple xn (Just i)) nota = asMIDI
+    where   scaleAsMIDISubsets = pitchToMIDIInterval xn -- Array {set: Array Num, len: int} 
+            subset = fromMaybe {set: [2.666], len: 0} $ scaleAsMIDISubsets !! i
+            lastNote = fromMaybe 2.666 $ last subset.set
+            (Tuple index octave) = cycleAndOctavesOfPatternInSet' nota subset.len lastNote
+            asMIDI = (fromMaybe (0.0) $ subset.set !! index) + octave
+pitchAsMIDINum (Tuple xn Nothing) nota = asMIDI
+    where   scaleAsMIDISubsets = pitchToMIDIInterval xn -- Array {set: Array Num, len: int}
+            subset = fromMaybe {set: [2.666], len: 0} $ scaleAsMIDISubsets !! 0
+            lastNote = fromMaybe 2.666 $ last subset.set
+            (Tuple index octave) = cycleAndOctavesOfPatternInSet' nota subset.len lastNote
+            asMIDI = (fromMaybe (0.0) $ subset.set !! index) + octave
+
+cycleAndOctavesOfPatternInSet':: Int -> Int -> Number -> Tuple Int Number
+cycleAndOctavesOfPatternInSet' n setLen lastNote = Tuple cycledNote isOctave
     where cycledNote = n `mod` setLen
-          isOctave = toNumber $ (floor $ (toNumber n) / (toNumber setLen))*12
+          isOctave = (toNumber (floor $ (toNumber n) / (toNumber setLen)))*lastNote
 
 pitchAsAuralPattern:: Tuple Tuning (Maybe Int) -> Array Int -> Span -> Rhythmic -> Array Number
 pitchAsAuralPattern (Tuple ShurNot Nothing) lista sp r = map (\n-> n.midiInterval + (386.3137138648348*0.01)) $ map assambleShurNot shurNot
     where shurNot = analysisShurNotPattern sp r lista
 pitchAsAuralPattern (Tuple ShurNot8 Nothing) lista sp r = map (\n-> n.midiInterval) $ map assambleShurNot8 shurNot8
     where shurNot8 = analysisShurNotPattern sp r lista
-pitchAsAuralPattern (Tuple xn (Just i)) lista _ _ = asMIDI
-    where   scaleAsMIDISubsets = xenoPitchToMIDIInterval xn -- Array Array Num
-            subset = fromMaybe [0.0] $ scaleAsMIDISubsets !! i
-            lengthOfSet = length subset
-            cyclesAndOctave = cycleAndOctavesOfPatternInSet lista lengthOfSet
-            asMIDI = map (\(Tuple index octave) -> (fromMaybe (0.0) $ subset !! index) + octave) cyclesAndOctave
-pitchAsAuralPattern (Tuple xn Nothing) lista _ _ = asMIDI
-    where   scaleAsMIDISubsets = xenoPitchToMIDIInterval xn -- Array Array Num
-            subset = fromMaybe [2.666] $ scaleAsMIDISubsets !! 0
-            lengthOfSet = length subset
-            cyclesAndOctave = cycleAndOctavesOfPatternInSet lista lengthOfSet
-            asMIDI = map (\(Tuple index octave) -> (fromMaybe (0.0) $ subset !! index) + octave) cyclesAndOctave
 
-cycleAndOctavesOfPatternInSet:: Array Int -> Int -> Array (Tuple Int Number)
-cycleAndOctavesOfPatternInSet ns setLen = zip cycledList isOctave
+pitchAsAuralPattern (Tuple xn (Just i)) lista _ _ = asMIDI
+    where   scaleAsMIDISubsets = pitchToMIDIInterval xn -- Array {set: Array Num, len: int}
+            subset = fromMaybe {set: [2.666], len: 0} $ scaleAsMIDISubsets !! i
+            lastNote = fromMaybe 2.666 $ last subset.set
+
+            cyclesAndOctave = cycleAndOctavesOfPatternInSet lista subset.len lastNote
+            asMIDI = map (\(Tuple index octave) -> (fromMaybe (0.0) $ subset.set !! index) + octave) cyclesAndOctave
+
+pitchAsAuralPattern (Tuple xn Nothing) lista _ _ = asMIDI
+    where   scaleAsMIDISubsets = pitchToMIDIInterval xn -- Array {set: Array Num, len: int}
+            subset = fromMaybe {set: [2.666], len: 0} $ scaleAsMIDISubsets !! 0
+            lastNote = fromMaybe 2.666 $ last subset.set
+
+            cyclesAndOctave = cycleAndOctavesOfPatternInSet lista subset.len lastNote
+            asMIDI = map (\(Tuple index octave) -> (fromMaybe (0.0) $ subset.set !! index) + octave) cyclesAndOctave
+
+cycleAndOctavesOfPatternInSet:: Array Int -> Int -> Number -> Array (Tuple Int Number)
+cycleAndOctavesOfPatternInSet ns setLen lastNote = zip cycledList isOctave
     where cycledList = map (\n -> n `mod` setLen) ns
-          isOctave = map (\n -> toNumber $ (floor $ (toNumber n) / (toNumber setLen))*12 ) ns
+          isOctave = map (\n -> (toNumber $ (floor $ (toNumber n) / (toNumber setLen)))*lastNote) ns
 
 addOctave:: Int -> Number
 addOctave n = 12.0 * (N.floor $ (toNumber n) / 12.0)
@@ -262,17 +271,21 @@ type ShurNot = {
 --    1080.557191738903)]
 
 ---- the ordering of subsets is still buggy, figure it out!! Jan 2024
-xenoPitchToMIDIInterval:: Tuning -> Array (Array Number)
-xenoPitchToMIDIInterval (CPSet size factors Nothing) = map (addSampleRoot <<< toMIDIInterval) [scale]
-    where scale = makeCPSScale size factors -- Array XenoNote
-xenoPitchToMIDIInterval (CPSet size factors (Just subsets)) = map (addSampleRoot <<< toMIDIInterval) (scale : subs)
-    where scale = makeCPSScale size factors -- Array XenoNote
+pitchToMIDIInterval:: Tuning ->  Array {set:: Array Number, len:: Int}
+pitchToMIDIInterval (CPSet size factors Nothing) = map (\scale -> {set: scale, len: (length scale) -1} ) [scaleNums]
+    where scaleNotes = makeCPSScale size factors -- Array Note
+          scaleNums = addSampleRoot $ toMIDIIntervals scaleNotes -- Array Number -- toMIDIIntervals:: Array CPSNote -> Array Number
+pitchToMIDIInterval (CPSet size factors (Just subsets)) = map (\scale -> {set: scale, len: (length scale) -1 } ) sts
+    where scale = makeCPSScale size factors -- Array Note
           subs = map (orderSetofXNotes <<< getSubSet scale) subsets
-xenoPitchToMIDIInterval (Scala xs) = [0.0 : toMIDIs xs]
-  where toMIDIs xs = map toMIDI xs     -- :: Array (Either Rational Number) -> Array Number
-        toMIDI (Left x) = ratioToCents (Rat.toNumber x) / 100.0
+          sts = map (addSampleRoot <<< toMIDIIntervals) (scale : subs)
+pitchToMIDIInterval (Scala xs) = 
+    let toMIDI (Left x) = ratioToCents (Rat.toNumber x) / 100.0
         toMIDI (Right x)= x / 100.0
-xenoPitchToMIDIInterval _ = []
+        toMIDIs val = map toMIDI val     -- :: Array (Either Rational Number) -> Array Number
+        scale = addSampleRoot $ toMIDIs xs
+    in [ {set: scale, len: (length scale)-1} ] 
+pitchToMIDIInterval _ = []
 
 
 getSubSet:: Array CPSNote -> Subset -> Array CPSNote
@@ -292,16 +305,24 @@ getSubset' xn (Difference a b) = Set.difference a' b'
 getSubset' _ _ = Set.fromFoldable []
 
 orderSetofXNotes:: Array CPSNote -> Array CPSNote
-orderSetofXNotes s = sortWith (_."bounded-ratio") s 
+orderSetofXNotes s = sortWith (_."bounded-ratio") s -- HERE is the problem!!!! Ratios are not ordered as CPS once you fold them into a scale
 
-toMIDIInterval:: Array CPSNote -> Array Number
-toMIDIInterval xns = map toMIDIInterval' xns
+toMIDIIntervals:: Array CPSNote -> Array Number
+toMIDIIntervals xns = snoc scale periodNote
+  where scale = map toMIDIInterval xns
+        lastNote = fromMaybe {init: [], last: {set: [], "archi-set": [], ratio: 0, "bounded-ratio": 0.0, "bounding-period": 0}} $ unsnoc xns 
+        periodNote = periodToMIDIInterval $ lastNote.last
 
-toMIDIInterval':: CPSNote -> Number
-toMIDIInterval' xn = (ratioToCents xn."bounded-ratio") / 100.0
+toMIDIInterval:: CPSNote -> Number
+toMIDIInterval xn = (ratioToCents xn."bounded-ratio") / 100.0
+
+periodToMIDIInterval:: CPSNote -> Number
+periodToMIDIInterval note = ratioToCents (toNumber note."bounding-period") / 100.0
 
 addSampleRoot:: Array Number -> Array Number
 addSampleRoot xs = 0.0 : xs
+
+-- choose bounding period for a scale most be reasoned more profoundly
 
 
 -- 77.965 cents intervals
