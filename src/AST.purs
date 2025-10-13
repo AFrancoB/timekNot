@@ -123,12 +123,13 @@ instance valueShow :: Show Value where
   show (XNotes span l v) = "xnotes " <> show l
   show (TransposedPitch voice n) = "pitch transposed from " <> voice
 
-data Span = CycleEvent | CycleBlock | CycleInBlock | SpreadBlock -- | Weight
+data Span = CycleEvent | CycleBlock | CycleInBlock | CycleInBlockRec Int | SpreadBlock -- | Weight
 
 instance spanShow :: Show Span where
   show CycleEvent =    "_"
   show CycleBlock =    "_-"
   show CycleInBlock =  "-_"
+  show (CycleInBlockRec n) = "-_ " <> show n 
   show SpreadBlock =   "_-_"
   -- show BySubdivision = "-"
   -- show Weight = "-_-"

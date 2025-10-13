@@ -31,7 +31,7 @@ import AuralSpecs
 ---- process-oriented index: an int identifier for each onset on a flow of onsets. 
 ---- eventIndex is the way I will refer to process oriented indexes
 ---- structure-oriented index: an int identifier for each segment on a voice and an array to identifier internal events in a voice: The head is the 'natural' subdivisions of the voice, each new element in the array is a new subdivision
----- a structure oriented index has a voice index and a structure index. A voice index is an Int while the Structure Index is an Array Int. The notation I have made for the structure oriented index is: 3-0.2.4  to the left of the (-) is the voice index and to the right of it is the event position in the rhythmic idea. The head of the array is the top level of the nested subdivisions and the last is the deepest level of the subdivisions.  
+---- a structure oriented index has a voice index and a structure index. A voice index is an Int while the Structure Index is an Array Int. The notation I have made for the structure oriented index is: 3-0.2.4  to the left of the (-) is the block index and to the right of it is the event position in the rhythmic idea. The head of the array is the top level of the nested subdivisions and the last is the deepest level of the subdivisions.  
 
 programToForeign:: Program -> TimePacket -> Effect (Array Foreign)
 programToForeign program timePacket = concat <$> calculatedVoices -- waste

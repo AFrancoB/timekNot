@@ -4,6 +4,7 @@ import Prelude
 
 import Data.Identity
 import Data.List (List(..), head, tail, elem, (:), filter, fromFoldable, (..), length, zip, concat, mapMaybe)
+import Data.List.NonEmpty (NonEmptyList, toList)
 import Data.Array (fromFoldable, length) as A
 import Data.Either
 import Data.Int
@@ -602,7 +603,7 @@ makeN:: P Value
 makeN = do
     _ <- pure 1
     sp <- parseSpan  <|> pure CycleEvent
-    nList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
+    nList <- choice [try (A.fromFoldable <$> parseRangeInt), A.fromFoldable <$> toList <$> many1 natural]
     vars <- variationsInt <|> pure Nil
     pure $ N sp (fromFoldable nList) vars
 
@@ -682,14 +683,14 @@ parseSpan:: P Span
 parseSpan = do
     _ <- pure 1
     x <- choice [
-                   reserved "-_" *>  pure CycleInBlock <|> reserved ":cycleTrunc" *> pure CycleInBlock
+                   reserved "-_" *>  pure CycleInBlock <|> reserved ":cycleIn" *> pure CycleInBlock
                  , try $ reserved "_-" *>  pure CycleBlock <|> reserved ":cycleBlock" *> pure CycleBlock
                  , try $ reserved "_-_" *> pure SpreadBlock <|> reserved ":spread" *> pure SpreadBlock
                  , reserved "_" *>   pure  CycleEvent <|> reserved ":cycle" *> pure CycleEvent
                 ]  <|> pure CycleEvent
     pure x
 
-    ---
+--
 
 sampleParser:: P (List String)
 sampleParser = do

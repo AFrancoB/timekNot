@@ -57,7 +57,7 @@ tempoOperArray = do
   _ <- pure 1
   t <- tempoMark'
   op <- operadores <|> (pure mulVar) 
-  trans <- transposer <|> (pure $ VList (VInt 0:Nil)) 
+  trans <- transposer -- <|> (pure $ VList (VInt 0:Nil)) 
   pure $ getListTempo $ (op trans $ buildVTempo t)
 
 buildVTempo:: List TempoMark -> Variant
@@ -81,13 +81,13 @@ operadores = choice [reservedOp "*" *> pure mulVar, reservedOp "+" *> pure addVa
 tempoMark':: P (List TempoMark)
 tempoMark' = do
   _ <- pure 1
-  x <- choice [try cpm, try bpm, try cps, try ratio, acceleration]
+  x <- try $ choice [try cpm, try bpm, try cps, try ratio, acceleration] -- added a try before choice for the broken parser situation
   pure (x:Nil)
 
 tempoMarks:: P (List TempoMark)
 tempoMarks = do
   _ <- pure 1
-  xs <- brackets $ (choice [try cpm, try bpm, try cps, try ratio, acceleration] `sepBy1` comma)
+  xs <- brackets $ (choice [try cpm, try bpm, try cps, try ratio, acceleration] `sepBy1` comma) 
   pure $ L.fromFoldable xs
 
 polytemporalRelation':: P (Map String Polytemporal)

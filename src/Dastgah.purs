@@ -12,6 +12,7 @@ import Data.Number (floor)
 
 import AST
 import DurationAndIndex
+import SpanOperations
 
 
 getMIDIInterval:: Array DastgahNote -> Array Number
@@ -38,6 +39,13 @@ analysisDastgahPattern CycleInBlock r d = map (assambleDastgahNote d) zipped
         s = fromMaybe {head: 0, tail: []} $ uncons seque
         second = snoc s.tail s.head
         zipped = zip first second
+analysisDastgahPattern (CycleInBlockRec lev) r d = map (assambleDastgahNote d) zipped
+  where ns = fromFoldable (getDastgahList d) -- list of Ints
+        seque = fromMaybe [] $ cycleInSubDivisionStruct ns r lev
+        first = seque
+        s = fromMaybe {head: 0, tail: []} $ uncons seque
+        second = snoc s.tail s.head
+        zipped = zip first second
 analysisDastgahPattern SpreadBlock r d = map (assambleDastgahNote d) zipped
   where ns = fromFoldable (getDastgahList d)
         percenPositions = map (\(Onset b p) -> p) $ rhythmicToOnsets r -- xxx[xx] : 0 0.25 0.5 0.75 0.875
@@ -53,6 +61,8 @@ analysisDastgahPattern SpreadBlock r d = map (assambleDastgahNote d) zipped
         s = fromMaybe {head: 0, tail: []} $ uncons realNS
         second = snoc s.tail s.head
         zipped = zip first second
+
+        -- cycleInSubDivision:: forall a. Array a -> Event -> Rhythmic -> Int -> Maybe a
 
 -- need to corroborate that octave works
 assambleDastgahNote:: Dastgah -> Tuple Int Int -> DastgahNote

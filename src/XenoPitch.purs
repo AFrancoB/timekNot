@@ -21,6 +21,7 @@ import Data.Set as Set
 import Erv (makeCPSScale,ratioToCents)
 import AST
 import DurationAndIndex
+import SpanOperations
 
 ---- april 2025: test scala parser, add octaves, understand how to do subsets
 
@@ -121,6 +122,12 @@ analysisShurNotPattern CycleBlock _ ns = zipped
 analysisShurNotPattern CycleInBlock r ns = zipped
   where structure = map (\x -> (x `mod` (length ns))) $ map (\x -> fromMaybe 0 $ head x) $ rhythmicStructIndex r [0]  
         seque = map (\x -> fromMaybe 0 (ns !! x)) structure
+        first = seque
+        s = fromMaybe {head: 0, tail: []} $ uncons seque
+        second = snoc s.tail s.head
+        zipped = zip first second
+analysisShurNotPattern (CycleInBlockRec lev) r ns = zipped
+  where seque = fromMaybe [] $ cycleInSubDivisionStruct ns r lev
         first = seque
         s = fromMaybe {head: 0, tail: []} $ uncons seque
         second = snoc s.tail s.head

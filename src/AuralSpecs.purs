@@ -13,7 +13,7 @@ import Data.Map as M
 import Data.Foldable (sum)
 import Data.Int
 import Data.FunctorWithIndex (mapWithIndex)
-import Data.Array (filter,fromFoldable,(!!), zipWith, replicate, concat, (..), (:), init, tail, last,head,reverse,zip, cons, uncons, snoc, length, singleton)
+import Data.Array (filter,fromFoldable,(!!), zipWith, replicate, take, concat, (..), (:), init, tail, last,head,reverse,zip, cons, uncons, snoc, length, singleton)
 import Data.List
 import Data.List (fromFoldable,concat,zip,zipWith,length,init) as L
 import Data.Traversable (scanl,traverseDefault,sequence)
@@ -25,6 +25,7 @@ import Data.Tempo
 
 import AST
 import DurationAndIndex
+import SpanOperations
 import Parser
 import Rhythm
 import TestOpsAndDefs
@@ -350,42 +351,26 @@ processWhen (Event o i) = (\(Onset b p) -> p) o
 spanMaybe:: forall a. Span -> Array a -> Event -> Rhythmic -> Maybe a
 spanMaybe CycleEvent xs event _ = xs !! (getEventIndex event `mod` length xs)
 spanMaybe CycleBlock xs event _ = xs !! (getBlockIndex event `mod` length xs)
-spanMaybe CycleInBlock xs event _ = xs !! (getStructureIndex event `mod` length xs)
+spanMaybe CycleInBlock xs event _ = xs !! (getStructureIndexHead event `mod` length xs)
+spanMaybe (CycleInBlockRec lev) xs event rhythmic = cycleInSubDivision xs event rhythmic lev
 spanMaybe SpreadBlock xs event rhythmic = spreadInBlock xs event rhythmic
 spanMaybe _ _ _ _ = Nothing
 
 spanStr:: Span -> Array String -> Event -> Rhythmic -> String  
 spanStr CycleEvent xs event _ = strMaybe $ xs !! (getEventIndex event `mod` length xs)
 spanStr CycleBlock xs event _ = strMaybe $ xs !! (getBlockIndex event `mod` length xs)
-spanStr CycleInBlock xs event _ = strMaybe $ xs !! (getStructureIndex event `mod` length xs)
+spanStr CycleInBlock xs event _ = strMaybe $ xs !! (getStructureIndexHead event `mod` length xs)
+spanStr (CycleInBlockRec lev) xs event rhythmic = strMaybe $ cycleInSubDivision xs event rhythmic lev
 spanStr SpreadBlock xs event rhythmic = strMaybe $ spreadInBlock xs event rhythmic
 spanStr _ _ _ _ = "error at spanStr, invalid span constructor"
 
 spanInt:: Span -> Array Int -> Event -> Rhythmic -> Int
 spanInt CycleEvent xs event _ = intMaybe $ xs !! (getEventIndex event `mod` length xs)
 spanInt CycleBlock xs event _ = intMaybe $ xs !! (getBlockIndex event `mod` length xs)
-spanInt CycleInBlock xs event _ = intMaybe $ xs !! (getStructureIndex event `mod` length xs)
+spanInt CycleInBlock xs event _ = intMaybe $ xs !! (getStructureIndexHead event `mod` length xs)
+spanInt (CycleInBlockRec lev) xs event rhythmic = intMaybe $ cycleInSubDivision xs event rhythmic lev
 spanInt SpreadBlock xs event rhythmic = intMaybe $ spreadInBlock xs event rhythmic
 spanInt _ _ _ _ = 2666
-
-------
--- here this function only works for a spread at the index level strange to solve it
--- spread functions are now general for all values!!! Bliss
-spreadInBlock:: forall a. Array a -> Event -> Rhythmic -> Maybe a
-spreadInBlock xs event rhythmic = spreadWrap percenPos xsLimits 
-  where percenPositions = map (\(Onset b p) -> p) $ rhythmicToOnsets rhythmic 
-        modIndex = (getEventIndex event) `mod` (length $ fromFoldable percenPositions) -- aqui deberia de haber un ln -1 despues del mod, falta el len
-        percenPos = fromMaybe 0.0 $ (fromFoldable percenPositions) !! modIndex
-        segment = 1.0 / toNumber (length xs)
-        limitsFst = cons 0.0 (scanl (+) 0.0 $ replicate ((length xs) - 1) segment)
-        limitsSnd = snoc (scanl (+) 0.0 $ replicate ((length xs) - 1) segment) 1.0
-        xsLimits = zip xs $ zip limitsFst limitsSnd
-
-spreadWrap:: forall a. Number -> Array (Tuple a (Tuple Number Number)) -> Maybe a
-spreadWrap percenPos asWithlimits = fromMaybe Nothing $ head $ filter isJust $ map (\(Tuple as limits) -> spread percenPos as limits) asWithlimits
-
-spread:: forall a. Number -> a -> (Tuple Number Number) -> Maybe a
-spread percenPos a limits = if (percenPos >= fst limits) && (percenPos < snd limits) then (Just a) else Nothing
 
 ---- helpers
 strMaybe:: Maybe String -> String
@@ -407,8 +392,11 @@ cycleAurals n mVoice f = do
 
 -- getters
 ----- structure index is weird, think of nested levels
-getStructureIndex:: Event -> Int
-getStructureIndex (Event _ (Index _ xs _)) = fromMaybe 0 $ head $ xs
+getStructureIndex:: Event -> Array Int
+getStructureIndex (Event _ (Index _ xs _)) = xs
+
+getStructureIndexHead:: Event -> Int
+getStructureIndexHead (Event _ (Index _ xs _)) = fromMaybe 0 $ head $ xs
 
 getBlockIndex:: Event -> Int
 getBlockIndex (Event _ (Index n _ _)) = n

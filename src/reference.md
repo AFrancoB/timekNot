@@ -1,14 +1,14 @@
-# TimekNot: a poly-temporal eso-lang for your time-oriented music explorations
+# TimekNot: a poly-temporal weirdo-lang for your time-oriented music explorations
 
 ## Rhythmic notation
 
-### Binary X/O notation.
+### X/O notation.
 
 The X/O notation has some advantages: 
 
 - Makes the rhythmic idea very explicit and visible.
-- Separates the sound parameters from the temporal ones.
-- The position of the 'x' and 'o' keys in many keyboards can allow the performer to tap the rhythm desired using body gestures. No, there is no computational trick involved here, just a way to tap your rhythms (aka, feeling them in your body) rather than xxxxxx them with your reason.
+- Separates the sound parameters from the temporal ones. This will be important in the near future for timeknit.
+- The position of the 'x' and 'o' keys in many keyboards can allow the performer to tap the rhythm desired using body gestures. No, there is no computational trick involved here, just a way to tap your rhythms (aka, feeling them in your body) rather than xxxxxxxxx.
 
 This is the most basic rhythm notation program:
 
@@ -28,7 +28,7 @@ Space is meaningless, only helpful to organise ideas.
 
 ### Subdivisions
 
-The x/o binary notation at the top level is additive. This means that any new onset represented by a `x` or `o` will make the duration of the musical idea longer. If a divisive paradigm is required the notation requires brackets:
+The x/o notation at the top level is additive. This means that any new onset represented by a `x` or `o` will make the duration of the musical idea longer. If a divisive paradigm is required the notation requires brackets:
 
 `[xxoxo]`
 
@@ -61,7 +61,7 @@ Or
 `[xxxx !ooxo#3 ooox]`
 
 
-### Eucledean distribution
+### Euclidean distribution
 
 The notation to produce euclidean distribution can be represented in the following ways:
 
