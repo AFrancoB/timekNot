@@ -4,11 +4,13 @@ Este software es una interfaz textual (un Domain Specific Language o quiza un Es
 
 Este lenguaje tiene sus precursores en Nanc-In-A-Can Canon Generator, FluentCan, y timeNot. De igual manera, su desarrollo está profundamente ligado a Estuary como un programa en línea para el live coding multilingüe, colectivo y en red.
 
-Por ahora este lenguaje puede ser utilizado en Estuary en modo solitario. Pero pronto podrá ser utilizado de modo colaborativo. De igual manera, este lenguaje tendrá una página red para analizar y experimentar de manera más didáctica con sus principiops conceptuales más interesantes. Esta pagina tendrá un visualisador de eventos y un dispositivo para desplegar y analizar sus componentes temporales, rítmicos, de afinación justa basados en la investigación de Diego Villaseñor, de sistemas de afinación basados en la investigación de Wendy Carlos y las afinaciones de asia occidental (Irán por ahora pero en un futuro próximo: Palestina y Turquía). 
+Por ahora este lenguaje puede ser utilizado en Estuary en modo solitario. Pronto podrá ser utilizado de modo colaborativo. También se le encuentra como standalone en mi pagina de github. Este standalone tendrá modos para analizar y experimentar de manera más didáctica con sus principiops conceptuales. Esta pagina tendrá un visualisador de eventos y un dispositivo para desplegar y analizar sus componentes temporales, rítmicos, de afinación justa basados en la investigación de Diego Villaseñor, de sistemas de afinación basados en la investigación de Wendy Carlos y las afinaciones de asia occidental (Irán por ahora pero en un futuro próximo: Palestina y Turquía). 
 
-Este eterno prototipo creció en una cariñosa familia llamada Pirarán, creció en una casita que se llama la Fábrica Colapsada, y fue a la escuelita en McMaster donde, si conoció varixs profesorxs y coleguillas chidillxs, se fue a la huelga con el resto de lxs maestrxs adjuntxs y protestó la presencia de los zionistas en todxs y cada uno de los espacios de esta universidad epistemicida.
+El standalone está en [https://afrancob.github.io/timekNot/](https://afrancob.github.io/timekNot/)
 
-## Cómo habilitar timekNot
+Este eterno prototipo creció en una cariñosa familia llamada Pirarán, en una obra gris que se llama la Fábrica Colapsada, y fue a la escuelita en McMaster donde, si bien conoció varixs profesorxs y coleguillas chidillxs, se fue a la huelga con el resto de lxs maestrxs adjuntxs y protestó la presencia zionista en los espacios de esta universidad epistemicida.
+
+## Cómo habilitar timekNot en Estuary
 
 ### Modo solitario
 
