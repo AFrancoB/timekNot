@@ -72,6 +72,7 @@ listVarVarAdd xs (VList ys) = VList $ map (\y -> addVar y xs) ys
 listVarVarAdd _ _ = VString "failed at listVarVarAdd"
 
 numVarVarAdd:: Number -> Variant -> Variant
+numVarVarAdd x (VInt n) = VNum (x + (toNumber n))
 numVarVarAdd x (VNum x') = VNum (x + x')
 numVarVarAdd x (VList xs) = VList $ map (\x' -> numVarVarAdd x x') xs 
 numVarVarAdd x (VString str) = VString str
@@ -137,6 +138,7 @@ listVarVarMul xs (VList ys) = VList $ map (\y -> mulVar y xs) ys
 listVarVarMul _ _ = VString "failed at listVarVarMul"
 
 numVarVarMul:: Number -> Variant -> Variant
+numVarVarMul x (VInt n) = VNum (x * (toNumber n))
 numVarVarMul x (VNum x') = VNum (x * x')
 numVarVarMul x (VList xs) = VList $ map (\x' -> numVarVarMul x x') xs 
 numVarVarMul x (VString str) = VString str

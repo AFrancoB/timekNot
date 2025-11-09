@@ -101,7 +101,7 @@ var theReservedNames = function (v) {
     if (Data_Boolean.otherwise) {
         return sort(map(Data_String_Common.toLower)(v.reservedNames));
     };
-    throw new Error("Failed pattern match at Parsing.Token (line 825, column 1 - line 825, column 70): " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at Parsing.Token (line 828, column 1 - line 828, column 70): " + [ v.constructor.name ]);
 };
 var simpleSpace = /* #__PURE__ */ Parsing_Combinators.skipMany1(/* #__PURE__ */ Parsing_String.satisfyCodePoint(Data_CodePoint_Unicode.isSpace));
 var oneLineComment = function (v) {
@@ -145,9 +145,9 @@ var isReserved = function ($copy_names) {
                     $tco_done = true;
                     return false;
                 };
-                throw new Error("Failed pattern match at Parsing.Token (line 820, column 35 - line 823, column 18): " + [ v1.constructor.name ]);
+                throw new Error("Failed pattern match at Parsing.Token (line 823, column 35 - line 826, column 18): " + [ v1.constructor.name ]);
             };
-            throw new Error("Failed pattern match at Parsing.Token (line 818, column 3 - line 823, column 18): " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Parsing.Token (line 821, column 3 - line 826, column 18): " + [ v.constructor.name ]);
         };
         while (!$tco_done) {
             $tco_result = $tco_loop($tco_var_names, $copy_name);
@@ -164,7 +164,7 @@ var isReservedName = function (v) {
             if (Data_Boolean.otherwise) {
                 return Data_String_Common.toLower(name);
             };
-            throw new Error("Failed pattern match at Parsing.Token (line 812, column 3 - line 814, column 31): " + [  ]);
+            throw new Error("Failed pattern match at Parsing.Token (line 815, column 3 - line 817, column 31): " + [  ]);
         })();
         return isReserved(theReservedNames(v))(caseName);
     };
@@ -203,7 +203,7 @@ var whiteSpace$prime = function (v) {
     if (Data_Boolean.otherwise) {
         return Parsing_Combinators.skipMany(alt(simpleSpace)(alt(oneLineComment(v))(Parsing_Combinators.withErrorMessage(multiLineComment(v))(""))));
     };
-    throw new Error("Failed pattern match at Parsing.Token (line 834, column 1 - line 834, column 74): " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at Parsing.Token (line 837, column 1 - line 837, column 74): " + [ v.constructor.name ]);
 };
 var makeTokenParser = function (v) {
     var stringLetter = Parsing_String.satisfy(function (c) {
@@ -233,7 +233,7 @@ var makeTokenParser = function (v) {
                             return (base * v1.value0 | 0) + v3 | 0;
                         })(Data_CodePoint_Unicode.hexDigitToInt(Data_String_CodePoints.codePointFromChar(v2)));
                     };
-                    throw new Error("Failed pattern match at Parsing.Token (line 704, column 5 - line 704, column 45): " + [ v1.constructor.name, v2.constructor.name ]);
+                    throw new Error("Failed pattern match at Parsing.Token (line 707, column 5 - line 707, column 45): " + [ v1.constructor.name, v2.constructor.name ]);
                 };
             };
             return bind(some(baseDigit))(function (digits) {
@@ -269,8 +269,8 @@ var makeTokenParser = function (v) {
     };
     var operator = (function () {
         var go = bind(oper)(function (name) {
-            var $114 = isReservedOp(name);
-            if ($114) {
+            var $115 = isReservedOp(name);
+            if ($115) {
                 return Parsing.fail("reserved operator " + name);
             };
             return pure(name);
@@ -287,8 +287,8 @@ var makeTokenParser = function (v) {
     })();
     var identifier = (function () {
         var go = bind(ident)(function (name) {
-            var $115 = isReservedName(v)(name);
-            if ($115) {
+            var $116 = isReservedName(v)(name);
+            if ($116) {
                 return Parsing.fail("reserved word " + show(name));
             };
             return pure(name);
@@ -307,7 +307,7 @@ var makeTokenParser = function (v) {
                         return pure1((v2.value0 + Data_Int.toNumber(int$prime)) / 10.0);
                     });
                 };
-                throw new Error("Failed pattern match at Parsing.Token (line 651, column 5 - line 651, column 47): " + [ v1.constructor.name, v2.constructor.name ]);
+                throw new Error("Failed pattern match at Parsing.Token (line 654, column 5 - line 654, column 47): " + [ v1.constructor.name, v2.constructor.name ]);
             };
         };
         return Parsing_Combinators.asErrorMessage("fraction")(bind(Parsing_String["char"]("."))(function () {
@@ -329,7 +329,7 @@ var makeTokenParser = function (v) {
             if (Data_Boolean.otherwise) {
                 return Data_Number.pow(10.0)(Data_Int.toNumber(e));
             };
-            throw new Error("Failed pattern match at Parsing.Token (line 664, column 5 - line 664, column 27): " + [ e.constructor.name ]);
+            throw new Error("Failed pattern match at Parsing.Token (line 667, column 5 - line 667, column 27): " + [ e.constructor.name ]);
         };
         return Parsing_Combinators.asErrorMessage("exponent")(bind(Parsing_String_Basic.oneOf([ "e", "E" ]))(function () {
             return bind(sign1)(function (f) {
@@ -359,7 +359,11 @@ var makeTokenParser = function (v) {
     var zeroNumFloat = alt(map2(Data_Either.Left.create)(alt(hexadecimal)(octal)))(alt(decimalFloat)(alt(fractFloat(0))(pure(new Data_Either.Left(0)))));
     var natFloat = alt(applySecond(Parsing_String["char"]("0"))(zeroNumFloat))(decimalFloat);
     var naturalOrFloat = Parsing_Combinators.withErrorMessage(lexeme(natFloat))("number");
-    var floating = bind(decimal)(fractExponent);
+    var floating = bind(map2(Data_Maybe.fromMaybe(identity))(Parsing_Combinators.optionMaybe(sign(Data_Ring.ringNumber))))(function (f) {
+        return bind(bind(decimal)(fractExponent))(function (x) {
+            return pure(f(x));
+        });
+    });
     var $$float = Parsing_Combinators.withErrorMessage(lexeme(floating))("float");
     var zeroNumber = Parsing_Combinators.withErrorMessage(applySecond(Parsing_String["char"]("0"))(alt(hexadecimal)(alt(octal)(alt(decimal)(pure(0))))))("");
     var nat = alt(zeroNumber)(decimal);
@@ -379,8 +383,8 @@ var makeTokenParser = function (v) {
     };
     var colon = symbol(":");
     var charNum = bind(alt(decimal)(alt(applySecond(Parsing_String["char"]("o"))(number(8)(Parsing_String_Basic.octDigit)))(applySecond(Parsing_String["char"]("x"))(number(16)(Parsing_String_Basic.hexDigit)))))(function (code) {
-        var $120 = code > 1114111;
-        if ($120) {
+        var $121 = code > 1114111;
+        if ($121) {
             return Parsing.fail("invalid escape sequence");
         };
         var v1 = Data_Char.fromCharCode(code);
@@ -426,13 +430,13 @@ var makeTokenParser = function (v) {
                     };
                     throw new Error("Failed pattern match at Parsing.Token (line 355, column 1 - line 355, column 80): " + [ c.constructor.name ]);
                 };
-                var $131 = Data_CodePoint_Unicode.isAlpha(Data_String_CodePoints.codePointFromChar(c));
-                if ($131) {
-                    var $132 = Data_String_CodeUnits.toChar(Data_String_Unicode.toLowerSimple(Data_String_CodeUnits.singleton(c)));
-                    if ($132 instanceof Data_Maybe.Just) {
-                        var $133 = Data_String_CodeUnits.toChar(Data_String_Unicode.toUpperSimple(Data_String_CodeUnits.singleton(c)));
-                        if ($133 instanceof Data_Maybe.Just) {
-                            return alt(Parsing_String["char"]($132.value0))(Parsing_String["char"]($133.value0));
+                var $132 = Data_CodePoint_Unicode.isAlpha(Data_String_CodePoints.codePointFromChar(c));
+                if ($132) {
+                    var $133 = Data_String_CodeUnits.toChar(Data_String_Unicode.toLowerSimple(Data_String_CodeUnits.singleton(c)));
+                    if ($133 instanceof Data_Maybe.Just) {
+                        var $134 = Data_String_CodeUnits.toChar(Data_String_Unicode.toUpperSimple(Data_String_CodeUnits.singleton(c)));
+                        if ($134 instanceof Data_Maybe.Just) {
+                            return alt(Parsing_String["char"]($133.value0))(Parsing_String["char"]($134.value0));
                         };
                         return v1(true);
                     };
@@ -448,11 +452,11 @@ var makeTokenParser = function (v) {
                 if (v1 instanceof Data_Maybe.Just) {
                     return applySecond(Parsing_Combinators.withErrorMessage(caseChar(v1.value0.head))(msg))(walk(v1.value0.tail));
                 };
-                throw new Error("Failed pattern match at Parsing.Token (line 757, column 22 - line 759, column 72): " + [ v1.constructor.name ]);
+                throw new Error("Failed pattern match at Parsing.Token (line 760, column 22 - line 762, column 72): " + [ v1.constructor.name ]);
             };
             return voidLeft(walk(name))(name);
         };
-        throw new Error("Failed pattern match at Parsing.Token (line 751, column 3 - line 751, column 50): " + [ name.constructor.name ]);
+        throw new Error("Failed pattern match at Parsing.Token (line 754, column 3 - line 754, column 50): " + [ name.constructor.name ]);
     };
     var reserved = function (name) {
         var go = applySecond(caseString(name))(Parsing_Combinators.withErrorMessage(Parsing_Combinators.notFollowedBy(v.identLetter))("end of " + name));
@@ -538,8 +542,8 @@ var makeTokenParser = function (v) {
     };
 };
 var eof = /* #__PURE__ */ bind(Parsing.getParserT)(function (v) {
-    var $147 = Data_List["null"](v.value0);
-    if ($147) {
+    var $148 = Data_List["null"](v.value0);
+    if ($148) {
         return Parsing.consume;
     };
     return Parsing.fail("Expected EOF");

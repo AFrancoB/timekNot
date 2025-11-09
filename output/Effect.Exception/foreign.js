@@ -6,6 +6,20 @@ export function error(msg) {
   return new Error(msg);
 }
 
+export function errorWithCause(msg) {
+  return function(cause) {
+    return new Error(msg, { cause });
+  };
+}
+
+export function errorWithName(msg) {
+  return function(name) {
+    const e = new Error(msg);
+    e.name = name;
+    return e;
+  };
+}
+
 export function message(e) {
   return e.message;
 }

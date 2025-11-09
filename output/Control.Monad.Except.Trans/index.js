@@ -8,6 +8,7 @@ import * as Control_Monad_Cont_Class from "../Control.Monad.Cont.Class/index.js"
 import * as Control_Monad_Error_Class from "../Control.Monad.Error.Class/index.js";
 import * as Control_Monad_Reader_Class from "../Control.Monad.Reader.Class/index.js";
 import * as Control_Monad_Rec_Class from "../Control.Monad.Rec.Class/index.js";
+import * as Control_Monad_ST_Class from "../Control.Monad.ST.Class/index.js";
 import * as Control_Monad_State_Class from "../Control.Monad.State.Class/index.js";
 import * as Control_Monad_Trans_Class from "../Control.Monad.Trans.Class/index.js";
 import * as Control_Monad_Writer_Class from "../Control.Monad.Writer.Class/index.js";
@@ -34,7 +35,7 @@ var withExceptT = function (dictFunctor) {
                     if (v2 instanceof Data_Either.Left) {
                         return new Data_Either.Left(v1(v2.value0));
                     };
-                    throw new Error("Failed pattern match at Control.Monad.Except.Trans (line 42, column 3 - line 42, column 32): " + [ v1.constructor.name, v2.constructor.name ]);
+                    throw new Error("Failed pattern match at Control.Monad.Except.Trans (line 43, column 3 - line 43, column 32): " + [ v1.constructor.name, v2.constructor.name ]);
                 };
             };
             return map1(mapLeft(f))(v);
@@ -75,9 +76,9 @@ var functorExceptT = function (dictFunctor) {
     };
 };
 var except = function (dictApplicative) {
-    var $185 = Control_Applicative.pure(dictApplicative);
-    return function ($186) {
-        return ExceptT($185($186));
+    var $191 = Control_Applicative.pure(dictApplicative);
+    return function ($192) {
+        return ExceptT($191($192));
     };
 };
 var monadExceptT = function (dictMonad) {
@@ -96,8 +97,8 @@ var bindExceptT = function (dictMonad) {
     return {
         bind: function (v) {
             return function (k) {
-                return bind(v)(Data_Either.either(function ($187) {
-                    return pure(Data_Either.Left.create($187));
+                return bind(v)(Data_Either.either(function ($193) {
+                    return pure(Data_Either.Left.create($193));
                 })(function (a) {
                     var v1 = k(a);
                     return v1;
@@ -121,9 +122,9 @@ var applyExceptT = function (dictMonad) {
 var applicativeExceptT = function (dictMonad) {
     return {
         pure: (function () {
-            var $188 = Control_Applicative.pure(dictMonad.Applicative0());
-            return function ($189) {
-                return ExceptT($188(Data_Either.Right.create($189)));
+            var $194 = Control_Applicative.pure(dictMonad.Applicative0());
+            return function ($195) {
+                return ExceptT($194(Data_Either.Right.create($195)));
             };
         })(),
         Apply0: function () {
@@ -183,10 +184,10 @@ var monadEffectExceptT = function (dictMonadEffect) {
     var monadExceptT1 = monadExceptT(Monad0);
     return {
         liftEffect: (function () {
-            var $190 = lift(Monad0);
-            var $191 = Effect_Class.liftEffect(dictMonadEffect);
-            return function ($192) {
-                return $190($191($192));
+            var $196 = lift(Monad0);
+            var $197 = Effect_Class.liftEffect(dictMonadEffect);
+            return function ($198) {
+                return $196($197($198));
             };
         })(),
         Monad0: function () {
@@ -202,7 +203,7 @@ var monadRecExceptT = function (dictMonadRec) {
     var monadExceptT1 = monadExceptT(Monad0);
     return {
         tailRecM: function (f) {
-            var $193 = tailRecM(function (a) {
+            var $199 = tailRecM(function (a) {
                 var v = f(a);
                 return bind(v)(function (m$prime) {
                     return pure((function () {
@@ -215,12 +216,12 @@ var monadRecExceptT = function (dictMonadRec) {
                         if (m$prime instanceof Data_Either.Right && m$prime.value0 instanceof Control_Monad_Rec_Class.Done) {
                             return new Control_Monad_Rec_Class.Done(new Data_Either.Right(m$prime.value0.value0));
                         };
-                        throw new Error("Failed pattern match at Control.Monad.Except.Trans (line 74, column 14 - line 77, column 43): " + [ m$prime.constructor.name ]);
+                        throw new Error("Failed pattern match at Control.Monad.Except.Trans (line 75, column 14 - line 78, column 43): " + [ m$prime.constructor.name ]);
                     })());
                 });
             });
-            return function ($194) {
-                return ExceptT($193($194));
+            return function ($200) {
+                return ExceptT($199($200));
             };
         },
         Monad0: function () {
@@ -248,10 +249,10 @@ var monadTellExceptT = function (dictMonadTell) {
     var monadExceptT1 = monadExceptT(Monad1);
     return {
         tell: (function () {
-            var $195 = lift(Monad1);
-            var $196 = Control_Monad_Writer_Class.tell(dictMonadTell);
-            return function ($197) {
-                return $195($196($197));
+            var $201 = lift(Monad1);
+            var $202 = Control_Monad_Writer_Class.tell(dictMonadTell);
+            return function ($203) {
+                return $201($202($203));
             };
         })(),
         Semigroup0: function () {
@@ -288,7 +289,7 @@ var monadWriterExceptT = function (dictMonadWriter) {
                     if (a instanceof Data_Either.Right) {
                         return new Data_Tuple.Tuple(new Data_Either.Right(a.value0.value0), a.value0.value1);
                     };
-                    throw new Error("Failed pattern match at Control.Monad.Except.Trans (line 134, column 10 - line 136, column 45): " + [ a.constructor.name ]);
+                    throw new Error("Failed pattern match at Control.Monad.Except.Trans (line 135, column 10 - line 137, column 45): " + [ a.constructor.name ]);
                 })());
             }));
         }),
@@ -304,9 +305,9 @@ var monadThrowExceptT = function (dictMonad) {
     var monadExceptT1 = monadExceptT(dictMonad);
     return {
         throwError: (function () {
-            var $198 = Control_Applicative.pure(dictMonad.Applicative0());
-            return function ($199) {
-                return ExceptT($198(Data_Either.Left.create($199)));
+            var $204 = Control_Applicative.pure(dictMonad.Applicative0());
+            return function ($205) {
+                return ExceptT($204(Data_Either.Left.create($205)));
             };
         })(),
         Monad0: function () {
@@ -324,13 +325,29 @@ var monadErrorExceptT = function (dictMonad) {
                 return bind(v)(Data_Either.either(function (a) {
                     var v1 = k(a);
                     return v1;
-                })(function ($200) {
-                    return pure(Data_Either.Right.create($200));
+                })(function ($206) {
+                    return pure(Data_Either.Right.create($206));
                 }));
             };
         },
         MonadThrow0: function () {
             return monadThrowExceptT1;
+        }
+    };
+};
+var monadSTExceptT = function (dictMonadST) {
+    var Monad0 = dictMonadST.Monad0();
+    var monadExceptT1 = monadExceptT(Monad0);
+    return {
+        liftST: (function () {
+            var $207 = lift(Monad0);
+            var $208 = Control_Monad_ST_Class.liftST(dictMonadST);
+            return function ($209) {
+                return $207($208($209));
+            };
+        })(),
+        Monad0: function () {
+            return monadExceptT1;
         }
     };
 };
@@ -369,10 +386,10 @@ var altExceptT = function (dictSemigroup) {
                                 if (rn instanceof Data_Either.Left) {
                                     return pure(new Data_Either.Left(append(rm.value0)(rn.value0)));
                                 };
-                                throw new Error("Failed pattern match at Control.Monad.Except.Trans (line 86, column 9 - line 88, column 49): " + [ rn.constructor.name ]);
+                                throw new Error("Failed pattern match at Control.Monad.Except.Trans (line 87, column 9 - line 89, column 49): " + [ rn.constructor.name ]);
                             });
                         };
-                        throw new Error("Failed pattern match at Control.Monad.Except.Trans (line 82, column 5 - line 88, column 49): " + [ rm.constructor.name ]);
+                        throw new Error("Failed pattern match at Control.Monad.Except.Trans (line 83, column 5 - line 89, column 49): " + [ rm.constructor.name ]);
                     });
                 };
             },
@@ -453,7 +470,8 @@ export {
     monadTellExceptT,
     monadWriterExceptT,
     semigroupExceptT,
-    monoidExceptT
+    monoidExceptT,
+    monadSTExceptT
 };
 export {
     catchError,

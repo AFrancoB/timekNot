@@ -190,186 +190,6 @@ var ordPosition = {
     }
 };
 var compare2 = /* #__PURE__ */ Data_Ord.compare(ordPosition);
-var applyParserT = {
-    apply: function (v) {
-        return function (v1) {
-            return function (state1, more, lift1, $$throw, done) {
-                return more(function (v2) {
-                    return v(state1, more, lift1, $$throw, function (state2, f) {
-                        return more(function (v3) {
-                            return v1(state2, more, lift1, $$throw, function (state3, a) {
-                                return more(function (v4) {
-                                    return done(state3, f(a));
-                                });
-                            });
-                        });
-                    });
-                });
-            };
-        };
-    },
-    Functor0: function () {
-        return functorParserT;
-    }
-};
-var lift2 = /* #__PURE__ */ Control_Apply.lift2(applyParserT);
-var bindParserT = {
-    bind: function (v) {
-        return function (next) {
-            return function (state1, more, lift1, $$throw, done) {
-                return more(function (v1) {
-                    return v(state1, more, lift1, $$throw, function (state2, a) {
-                        return more(function (v2) {
-                            var v3 = next(a);
-                            return v3(state2, more, lift1, $$throw, done);
-                        });
-                    });
-                });
-            };
-        };
-    },
-    Apply0: function () {
-        return applyParserT;
-    }
-};
-var bindFlipped = /* #__PURE__ */ Control_Bind.bindFlipped(bindParserT);
-var bind = /* #__PURE__ */ Control_Bind.bind(bindParserT);
-var semigroupParserT = function (dictSemigroup) {
-    return {
-        append: lift2(Data_Semigroup.append(dictSemigroup))
-    };
-};
-var applicativeParserT = {
-    pure: function (a) {
-        return function (state1, v, v1, v2, done) {
-            return done(state1, a);
-        };
-    },
-    Apply0: function () {
-        return applyParserT;
-    }
-};
-var pure = /* #__PURE__ */ Control_Applicative.pure(applicativeParserT);
-var monadParserT = {
-    Applicative0: function () {
-        return applicativeParserT;
-    },
-    Bind1: function () {
-        return bindParserT;
-    }
-};
-var monadAskParserT = function (dictMonadAsk) {
-    return {
-        ask: lift(dictMonadAsk.Monad0())(Control_Monad_Reader_Class.ask(dictMonadAsk)),
-        Monad0: function () {
-            return monadParserT;
-        }
-    };
-};
-var monadReaderParserT = function (dictMonadReader) {
-    var local = Control_Monad_Reader_Class.local(dictMonadReader);
-    var monadAskParserT1 = monadAskParserT(dictMonadReader.MonadAsk0());
-    return {
-        local: function (f) {
-            return function (v) {
-                return function (state1, more, lift1, $$throw, done) {
-                    return v(state1, more, (function () {
-                        var $279 = local(f);
-                        return function ($280) {
-                            return lift1($279($280));
-                        };
-                    })(), $$throw, done);
-                };
-            };
-        },
-        MonadAsk0: function () {
-            return monadAskParserT1;
-        }
-    };
-};
-var monadRecParserT = {
-    tailRecM: function (next) {
-        return function (initArg) {
-            return function (state1, more, lift1, $$throw, done) {
-                var $lazy_loop = $runtime_lazy("loop", "Parsing", function () {
-                    return function (state2, arg, gas) {
-                        var v = next(arg);
-                        return v(state2, more, lift1, $$throw, function (state3, step) {
-                            if (step instanceof Control_Monad_Rec_Class.Loop) {
-                                var $206 = gas === 0;
-                                if ($206) {
-                                    return more(function (v1) {
-                                        return $lazy_loop(277)(state3, step.value0, 30);
-                                    });
-                                };
-                                return $lazy_loop(279)(state3, step.value0, gas - 1 | 0);
-                            };
-                            if (step instanceof Control_Monad_Rec_Class.Done) {
-                                return done(state3, step.value0);
-                            };
-                            throw new Error("Failed pattern match at Parsing (line 273, column 39 - line 281, column 43): " + [ step.constructor.name ]);
-                        });
-                    };
-                });
-                var loop = $lazy_loop(270);
-                return loop(state1, initArg, 30);
-            };
-        };
-    },
-    Monad0: function () {
-        return monadParserT;
-    }
-};
-var monadStateParserT = function (dictMonadState) {
-    var lift1 = lift(dictMonadState.Monad0());
-    var state = Control_Monad_State_Class.state(dictMonadState);
-    return {
-        state: function (k) {
-            return lift1(state(k));
-        },
-        Monad0: function () {
-            return monadParserT;
-        }
-    };
-};
-var monadThrowParseErrorParse = {
-    throwError: function (err) {
-        return function (state1, v, v1, $$throw, v2) {
-            return $$throw(state1, err);
-        };
-    },
-    Monad0: function () {
-        return monadParserT;
-    }
-};
-var throwError = /* #__PURE__ */ Control_Monad_Error_Class.throwError(monadThrowParseErrorParse);
-var monadErrorParseErrorParse = {
-    catchError: function (v) {
-        return function (next) {
-            return function (state1, more, lift1, $$throw, done) {
-                return more(function (v1) {
-                    return v(state1, more, lift1, function (state2, err) {
-                        var v2 = next(err);
-                        return v2(state2, more, lift1, $$throw, done);
-                    }, done);
-                });
-            };
-        };
-    },
-    MonadThrow0: function () {
-        return monadThrowParseErrorParse;
-    }
-};
-var catchError = /* #__PURE__ */ Control_Monad_Error_Class.catchError(monadErrorParseErrorParse);
-var monoidParserT = function (dictMonoid) {
-    var semigroupParserT1 = semigroupParserT(dictMonoid.Semigroup0());
-    return {
-        mempty: pure(Data_Monoid.mempty(dictMonoid)),
-        Semigroup0: function () {
-            return semigroupParserT1;
-        }
-    };
-};
 var altParserT = {
     alt: function (v) {
         return function (v1) {
@@ -426,7 +246,7 @@ var runParserT$prime = function (dictMonadRec) {
                         $tco_done = true;
                         return pure1(new Control_Monad_Rec_Class.Done(new Data_Tuple.Tuple(v1.value1, v1.value0)));
                     };
-                    throw new Error("Failed pattern match at Parsing (line 152, column 13 - line 158, column 32): " + [ v1.constructor.name ]);
+                    throw new Error("Failed pattern match at Parsing (line 160, column 13 - line 166, column 32): " + [ v1.constructor.name ]);
                 };
                 while (!$tco_done) {
                     $tco_result = $tco_loop($copy_step);
@@ -441,13 +261,6 @@ var runParserT$prime = function (dictMonadRec) {
                 });
             });
         };
-    };
-};
-var region = function (context) {
-    return function (p) {
-        return catchError(p)(function (err) {
-            return throwError(context(err));
-        });
     };
 };
 var position = /* #__PURE__ */ stateParserT(function (v) {
@@ -474,7 +287,7 @@ var mapParserT = function (dictMonadRec) {
                             if (v1.value0 instanceof Data_Either.Right) {
                                 return done(v1.value1, v1.value0.value0);
                             };
-                            throw new Error("Failed pattern match at Parsing (line 192, column 13 - line 196, column 37): " + [ v1.value0.constructor.name ]);
+                            throw new Error("Failed pattern match at Parsing (line 200, column 13 - line 204, column 37): " + [ v1.value0.constructor.name ]);
                         };
                     })(f(runParserT$prime1(state1)(p))));
                 };
@@ -499,16 +312,16 @@ var runParserT = function (dictMonadRec) {
 };
 var runParserT1 = /* #__PURE__ */ runParserT(Control_Monad_Rec_Class.monadRecIdentity);
 var runParser = function (s) {
-    var $281 = runParserT1(s);
-    return function ($282) {
-        return unwrap($281($282));
+    var $295 = runParserT1(s);
+    return function ($296) {
+        return unwrap($295($296));
     };
 };
 var hoistParserT = function (f) {
     return function (v) {
         return function (state1, more, lift1, $$throw, done) {
-            return v(state1, more, function ($283) {
-                return lift1(f($283));
+            return v(state1, more, function ($297) {
+                return lift1(f($297));
             }, $$throw, done);
         };
     };
@@ -516,73 +329,10 @@ var hoistParserT = function (f) {
 var getParserT = function (state1, v, v1, v2, done) {
     return done(state1, state1);
 };
-var failWithPosition = function (message) {
-    return function (pos) {
-        return throwError(new ParseError(message, pos));
+var eqPositionFull = function (v) {
+    return function (v1) {
+        return v.index === v1.index && (v.line === v1.line && v.column === v1.column);
     };
-};
-var fail = function (message) {
-    return bindFlipped(failWithPosition(message))(position);
-};
-var liftEither = function (dictMonad) {
-    return function (f) {
-        if (f instanceof Data_Either.Left) {
-            return fail(f.value0);
-        };
-        if (f instanceof Data_Either.Right) {
-            return pure(f.value0);
-        };
-        throw new Error("Failed pattern match at Parsing (line 515, column 16 - line 517, column 20): " + [ f.constructor.name ]);
-    };
-};
-var liftExceptT = function (dictMonad) {
-    var lift1 = lift(dictMonad);
-    return function (f) {
-        return bind(lift1(Control_Monad_Except_Trans.runExceptT(f)))(function (v) {
-            if (v instanceof Data_Either.Left) {
-                return fail(v.value0);
-            };
-            if (v instanceof Data_Either.Right) {
-                return pure(v.value0);
-            };
-            throw new Error("Failed pattern match at Parsing (line 529, column 41 - line 531, column 20): " + [ v.constructor.name ]);
-        });
-    };
-};
-var liftMaybe = function (dictMonad) {
-    return function (message) {
-        return function (f) {
-            if (f instanceof Data_Maybe.Nothing) {
-                return fail(message(Data_Unit.unit));
-            };
-            if (f instanceof Data_Maybe.Just) {
-                return pure(f.value0);
-            };
-            throw new Error("Failed pattern match at Parsing (line 501, column 23 - line 503, column 19): " + [ f.constructor.name ]);
-        };
-    };
-};
-var plusParserT = {
-    empty: /* #__PURE__ */ fail("No alternative"),
-    Alt0: function () {
-        return altParserT;
-    }
-};
-var alternativeParserT = {
-    Applicative0: function () {
-        return applicativeParserT;
-    },
-    Plus1: function () {
-        return plusParserT;
-    }
-};
-var monadPlusParserT = {
-    Monad0: function () {
-        return monadParserT;
-    },
-    Alternative1: function () {
-        return alternativeParserT;
-    }
 };
 var eqParseError = {
     eq: function (x) {
@@ -611,6 +361,271 @@ var ordParseError = {
 var consume = /* #__PURE__ */ stateParserT(function (v) {
     return new Data_Tuple.Tuple(Data_Unit.unit, new ParseState(v.value0, v.value1, true));
 });
+var appendConsumed = function (v) {
+    return function (v1) {
+        if (v.value2 && !v1.value2) {
+            return new ParseState(v1.value0, v1.value1, true);
+        };
+        return v1;
+    };
+};
+var applyParserT = {
+    apply: function (v) {
+        return function (v1) {
+            return function (state1, more, lift1, $$throw, done) {
+                return more(function (v2) {
+                    return v(state1, more, lift1, $$throw, function (state2, f) {
+                        return more(function (v3) {
+                            var state2$prime = appendConsumed(state1)(state2);
+                            return v1(state2$prime, more, lift1, $$throw, function (state3, a) {
+                                return more(function (v4) {
+                                    return done(appendConsumed(state2$prime)(state3), f(a));
+                                });
+                            });
+                        });
+                    });
+                });
+            };
+        };
+    },
+    Functor0: function () {
+        return functorParserT;
+    }
+};
+var lift2 = /* #__PURE__ */ Control_Apply.lift2(applyParserT);
+var applicativeParserT = {
+    pure: function (a) {
+        return function (state1, v, v1, v2, done) {
+            return done(state1, a);
+        };
+    },
+    Apply0: function () {
+        return applyParserT;
+    }
+};
+var pure = /* #__PURE__ */ Control_Applicative.pure(applicativeParserT);
+var semigroupParserT = function (dictSemigroup) {
+    return {
+        append: lift2(Data_Semigroup.append(dictSemigroup))
+    };
+};
+var monoidParserT = function (dictMonoid) {
+    var semigroupParserT1 = semigroupParserT(dictMonoid.Semigroup0());
+    return {
+        mempty: pure(Data_Monoid.mempty(dictMonoid)),
+        Semigroup0: function () {
+            return semigroupParserT1;
+        }
+    };
+};
+var bindParserT = {
+    bind: function (v) {
+        return function (next) {
+            return function (state1, more, lift1, $$throw, done) {
+                return more(function (v1) {
+                    return v(state1, more, lift1, $$throw, function (state2, a) {
+                        return more(function (v2) {
+                            var v3 = next(a);
+                            return v3(appendConsumed(state1)(state2), more, lift1, $$throw, done);
+                        });
+                    });
+                });
+            };
+        };
+    },
+    Apply0: function () {
+        return applyParserT;
+    }
+};
+var bindFlipped = /* #__PURE__ */ Control_Bind.bindFlipped(bindParserT);
+var bind = /* #__PURE__ */ Control_Bind.bind(bindParserT);
+var monadParserT = {
+    Applicative0: function () {
+        return applicativeParserT;
+    },
+    Bind1: function () {
+        return bindParserT;
+    }
+};
+var monadAskParserT = function (dictMonadAsk) {
+    return {
+        ask: lift(dictMonadAsk.Monad0())(Control_Monad_Reader_Class.ask(dictMonadAsk)),
+        Monad0: function () {
+            return monadParserT;
+        }
+    };
+};
+var monadReaderParserT = function (dictMonadReader) {
+    var local = Control_Monad_Reader_Class.local(dictMonadReader);
+    var monadAskParserT1 = monadAskParserT(dictMonadReader.MonadAsk0());
+    return {
+        local: function (f) {
+            return function (v) {
+                return function (state1, more, lift1, $$throw, done) {
+                    return v(state1, more, (function () {
+                        var $298 = local(f);
+                        return function ($299) {
+                            return lift1($298($299));
+                        };
+                    })(), $$throw, done);
+                };
+            };
+        },
+        MonadAsk0: function () {
+            return monadAskParserT1;
+        }
+    };
+};
+var monadStateParserT = function (dictMonadState) {
+    var lift1 = lift(dictMonadState.Monad0());
+    var state = Control_Monad_State_Class.state(dictMonadState);
+    return {
+        state: function (k) {
+            return lift1(state(k));
+        },
+        Monad0: function () {
+            return monadParserT;
+        }
+    };
+};
+var monadThrowParseErrorParse = {
+    throwError: function (err) {
+        return function (state1, v, v1, $$throw, v2) {
+            return $$throw(state1, err);
+        };
+    },
+    Monad0: function () {
+        return monadParserT;
+    }
+};
+var throwError = /* #__PURE__ */ Control_Monad_Error_Class.throwError(monadThrowParseErrorParse);
+var failWithPosition = function (message) {
+    return function (pos) {
+        return throwError(new ParseError(message, pos));
+    };
+};
+var fail = function (message) {
+    return bindFlipped(failWithPosition(message))(position);
+};
+var liftEither = function (dictMonad) {
+    return function (f) {
+        if (f instanceof Data_Either.Left) {
+            return fail(f.value0);
+        };
+        if (f instanceof Data_Either.Right) {
+            return pure(f.value0);
+        };
+        throw new Error("Failed pattern match at Parsing (line 529, column 16 - line 531, column 20): " + [ f.constructor.name ]);
+    };
+};
+var liftExceptT = function (dictMonad) {
+    var lift1 = lift(dictMonad);
+    return function (f) {
+        return bind(lift1(Control_Monad_Except_Trans.runExceptT(f)))(function (v) {
+            if (v instanceof Data_Either.Left) {
+                return fail(v.value0);
+            };
+            if (v instanceof Data_Either.Right) {
+                return pure(v.value0);
+            };
+            throw new Error("Failed pattern match at Parsing (line 543, column 41 - line 545, column 20): " + [ v.constructor.name ]);
+        });
+    };
+};
+var liftMaybe = function (dictMonad) {
+    return function (message) {
+        return function (f) {
+            if (f instanceof Data_Maybe.Nothing) {
+                return fail(message(Data_Unit.unit));
+            };
+            if (f instanceof Data_Maybe.Just) {
+                return pure(f.value0);
+            };
+            throw new Error("Failed pattern match at Parsing (line 515, column 23 - line 517, column 19): " + [ f.constructor.name ]);
+        };
+    };
+};
+var plusParserT = {
+    empty: /* #__PURE__ */ fail("No alternative"),
+    Alt0: function () {
+        return altParserT;
+    }
+};
+var alternativeParserT = {
+    Applicative0: function () {
+        return applicativeParserT;
+    },
+    Plus1: function () {
+        return plusParserT;
+    }
+};
+var monadPlusParserT = {
+    Monad0: function () {
+        return monadParserT;
+    },
+    Alternative1: function () {
+        return alternativeParserT;
+    }
+};
+var monadErrorParseErrorParse = {
+    catchError: function (v) {
+        return function (next) {
+            return function (state1, more, lift1, $$throw, done) {
+                return more(function (v1) {
+                    return v(state1, more, lift1, function (state2, err) {
+                        var v2 = next(err);
+                        return v2(state2, more, lift1, $$throw, done);
+                    }, done);
+                });
+            };
+        };
+    },
+    MonadThrow0: function () {
+        return monadThrowParseErrorParse;
+    }
+};
+var catchError = /* #__PURE__ */ Control_Monad_Error_Class.catchError(monadErrorParseErrorParse);
+var region = function (context) {
+    return function (p) {
+        return catchError(p)(function (err) {
+            return throwError(context(err));
+        });
+    };
+};
+var monadRecParserT = {
+    tailRecM: function (next) {
+        return function (initArg) {
+            return function (state1, more, lift1, $$throw, done) {
+                var $lazy_loop = $runtime_lazy("loop", "Parsing", function () {
+                    return function (state2, arg, gas) {
+                        var v = next(arg);
+                        return v(state2, more, lift1, $$throw, function (state3, step) {
+                            var state3$prime = appendConsumed(state2)(state3);
+                            if (step instanceof Control_Monad_Rec_Class.Loop) {
+                                var $292 = gas === 0;
+                                if ($292) {
+                                    return more(function (v1) {
+                                        return $lazy_loop(288)(state3$prime, step.value0, 30);
+                                    });
+                                };
+                                return $lazy_loop(290)(state3$prime, step.value0, gas - 1 | 0);
+                            };
+                            if (step instanceof Control_Monad_Rec_Class.Done) {
+                                return done(state3$prime, step.value0);
+                            };
+                            throw new Error("Failed pattern match at Parsing (line 284, column 19 - line 292, column 46): " + [ step.constructor.name ]);
+                        });
+                    };
+                });
+                var loop = $lazy_loop(279);
+                return loop(state1, initArg, 30);
+            };
+        };
+    },
+    Monad0: function () {
+        return monadParserT;
+    }
+};
 export {
     runParser,
     ParserT,
@@ -634,6 +649,7 @@ export {
     getParserT,
     hoistParserT,
     mapParserT,
+    eqPositionFull,
     showParseError,
     eqParseError,
     ordParseError,

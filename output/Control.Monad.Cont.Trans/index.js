@@ -4,6 +4,7 @@ import * as Control_Apply from "../Control.Apply/index.js";
 import * as Control_Bind from "../Control.Bind/index.js";
 import * as Control_Monad_Cont_Class from "../Control.Monad.Cont.Class/index.js";
 import * as Control_Monad_Reader_Class from "../Control.Monad.Reader.Class/index.js";
+import * as Control_Monad_ST_Class from "../Control.Monad.ST.Class/index.js";
 import * as Control_Monad_State_Class from "../Control.Monad.State.Class/index.js";
 import * as Control_Monad_Trans_Class from "../Control.Monad.Trans.Class/index.js";
 import * as Data_Function from "../Data.Function/index.js";
@@ -153,9 +154,9 @@ var monadReaderContT = function (dictMonadReader) {
                 return function (k) {
                     return bind(ask)(function (r) {
                         return local(f)(v((function () {
-                            var $88 = local(Data_Function["const"](r));
-                            return function ($89) {
-                                return $88(k($89));
+                            var $94 = local(Data_Function["const"](r));
+                            return function ($95) {
+                                return $94(k($95));
                             };
                         })()));
                     });
@@ -190,10 +191,10 @@ var monadEffectContT = function (dictMonadEffect) {
     var monadContT1 = monadContT(Monad0);
     return {
         liftEffect: (function () {
-            var $90 = lift(Monad0);
-            var $91 = Effect_Class.liftEffect(dictMonadEffect);
-            return function ($92) {
-                return $90($91($92));
+            var $96 = lift(Monad0);
+            var $97 = Effect_Class.liftEffect(dictMonadEffect);
+            return function ($98) {
+                return $96($97($98));
             };
         })(),
         Monad0: function () {
@@ -206,10 +207,26 @@ var monadStateContT = function (dictMonadState) {
     var monadContT1 = monadContT(Monad0);
     return {
         state: (function () {
-            var $93 = lift(Monad0);
-            var $94 = Control_Monad_State_Class.state(dictMonadState);
-            return function ($95) {
-                return $93($94($95));
+            var $99 = lift(Monad0);
+            var $100 = Control_Monad_State_Class.state(dictMonadState);
+            return function ($101) {
+                return $99($100($101));
+            };
+        })(),
+        Monad0: function () {
+            return monadContT1;
+        }
+    };
+};
+var monadSTContT = function (dictMonadST) {
+    var Monad0 = dictMonadST.Monad0();
+    var monadContT1 = monadContT(Monad0);
+    return {
+        liftST: (function () {
+            var $102 = lift(Monad0);
+            var $103 = Control_Monad_ST_Class.liftST(dictMonadST);
+            return function ($104) {
+                return $102($103($104));
             };
         })(),
         Monad0: function () {
@@ -248,7 +265,8 @@ export {
     monadReaderContT,
     monadStateContT,
     semigroupContT,
-    monoidContT
+    monoidContT,
+    monadSTContT
 };
 export {
     callCC

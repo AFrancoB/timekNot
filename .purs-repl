@@ -18,8 +18,8 @@ import Control.Monad
 import Effect (Effect)
 import Effect.Console (log)
 
-import Data.Ratio
-import Data.Rational
+-- import Data.Ratio
+-- import Data.Rational
 
 import Parsing
 import Parsing.String

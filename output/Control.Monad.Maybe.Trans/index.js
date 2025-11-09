@@ -8,6 +8,7 @@ import * as Control_Monad_Cont_Class from "../Control.Monad.Cont.Class/index.js"
 import * as Control_Monad_Error_Class from "../Control.Monad.Error.Class/index.js";
 import * as Control_Monad_Reader_Class from "../Control.Monad.Reader.Class/index.js";
 import * as Control_Monad_Rec_Class from "../Control.Monad.Rec.Class/index.js";
+import * as Control_Monad_ST_Class from "../Control.Monad.ST.Class/index.js";
 import * as Control_Monad_State_Class from "../Control.Monad.State.Class/index.js";
 import * as Control_Monad_Trans_Class from "../Control.Monad.Trans.Class/index.js";
 import * as Control_Monad_Writer_Class from "../Control.Monad.Writer.Class/index.js";
@@ -32,9 +33,9 @@ var newtypeMaybeT = {
 };
 var monadTransMaybeT = {
     lift: function (dictMonad) {
-        var $157 = Control_Monad.liftM1(dictMonad)(Data_Maybe.Just.create);
-        return function ($158) {
-            return MaybeT($157($158));
+        var $163 = Control_Monad.liftM1(dictMonad)(Data_Maybe.Just.create);
+        return function ($164) {
+            return MaybeT($163($164));
         };
     }
 };
@@ -78,7 +79,7 @@ var bindMaybeT = function (dictMonad) {
                         var v2 = f(v1.value0);
                         return v2;
                     };
-                    throw new Error("Failed pattern match at Control.Monad.Maybe.Trans (line 54, column 11 - line 56, column 42): " + [ v1.constructor.name ]);
+                    throw new Error("Failed pattern match at Control.Monad.Maybe.Trans (line 55, column 11 - line 57, column 42): " + [ v1.constructor.name ]);
                 });
             };
         },
@@ -99,9 +100,9 @@ var applyMaybeT = function (dictMonad) {
 var applicativeMaybeT = function (dictMonad) {
     return {
         pure: (function () {
-            var $159 = Control_Applicative.pure(dictMonad.Applicative0());
-            return function ($160) {
-                return MaybeT($159(Data_Maybe.Just.create($160)));
+            var $165 = Control_Applicative.pure(dictMonad.Applicative0());
+            return function ($166) {
+                return MaybeT($165(Data_Maybe.Just.create($166)));
             };
         })(),
         Apply0: function () {
@@ -161,10 +162,10 @@ var monadEffectMaybe = function (dictMonadEffect) {
     var monadMaybeT1 = monadMaybeT(Monad0);
     return {
         liftEffect: (function () {
-            var $161 = lift(Monad0);
-            var $162 = Effect_Class.liftEffect(dictMonadEffect);
-            return function ($163) {
-                return $161($162($163));
+            var $167 = lift(Monad0);
+            var $168 = Effect_Class.liftEffect(dictMonadEffect);
+            return function ($169) {
+                return $167($168($169));
             };
         })(),
         Monad0: function () {
@@ -180,7 +181,7 @@ var monadRecMaybeT = function (dictMonadRec) {
     var monadMaybeT1 = monadMaybeT(Monad0);
     return {
         tailRecM: function (f) {
-            var $164 = tailRecM(function (a) {
+            var $170 = tailRecM(function (a) {
                 var v = f(a);
                 return bind(v)(function (m$prime) {
                     return pure((function () {
@@ -193,12 +194,12 @@ var monadRecMaybeT = function (dictMonadRec) {
                         if (m$prime instanceof Data_Maybe.Just && m$prime.value0 instanceof Control_Monad_Rec_Class.Done) {
                             return new Control_Monad_Rec_Class.Done(new Data_Maybe.Just(m$prime.value0.value0));
                         };
-                        throw new Error("Failed pattern match at Control.Monad.Maybe.Trans (line 82, column 16 - line 85, column 43): " + [ m$prime.constructor.name ]);
+                        throw new Error("Failed pattern match at Control.Monad.Maybe.Trans (line 83, column 16 - line 86, column 43): " + [ m$prime.constructor.name ]);
                     })());
                 });
             });
-            return function ($165) {
-                return MaybeT($164($165));
+            return function ($171) {
+                return MaybeT($170($171));
             };
         },
         Monad0: function () {
@@ -226,10 +227,10 @@ var monadTellMaybeT = function (dictMonadTell) {
     var monadMaybeT1 = monadMaybeT(Monad1);
     return {
         tell: (function () {
-            var $166 = lift(Monad1);
-            var $167 = Control_Monad_Writer_Class.tell(dictMonadTell);
-            return function ($168) {
-                return $166($167($168));
+            var $172 = lift(Monad1);
+            var $173 = Control_Monad_Writer_Class.tell(dictMonadTell);
+            return function ($174) {
+                return $172($173($174));
             };
         })(),
         Semigroup0: function () {
@@ -266,7 +267,7 @@ var monadWriterMaybeT = function (dictMonadWriter) {
                     if (a instanceof Data_Maybe.Just) {
                         return new Data_Tuple.Tuple(new Data_Maybe.Just(a.value0.value0), a.value0.value1);
                     };
-                    throw new Error("Failed pattern match at Control.Monad.Maybe.Trans (line 119, column 10 - line 121, column 43): " + [ a.constructor.name ]);
+                    throw new Error("Failed pattern match at Control.Monad.Maybe.Trans (line 120, column 10 - line 122, column 43): " + [ a.constructor.name ]);
                 })());
             }));
         }),
@@ -306,6 +307,22 @@ var monadErrorMaybeT = function (dictMonadError) {
         },
         MonadThrow0: function () {
             return monadThrowMaybeT1;
+        }
+    };
+};
+var monadSTMaybeT = function (dictMonadST) {
+    var Monad0 = dictMonadST.Monad0();
+    var monadMaybeT1 = monadMaybeT(Monad0);
+    return {
+        liftST: (function () {
+            var $175 = lift(Monad0);
+            var $176 = Control_Monad_ST_Class.liftST(dictMonadST);
+            return function ($177) {
+                return $175($176($177));
+            };
+        })(),
+        Monad0: function () {
+            return monadMaybeT1;
         }
     };
 };
@@ -402,7 +419,8 @@ export {
     monadTellMaybeT,
     monadWriterMaybeT,
     semigroupMaybeT,
-    monoidMaybeT
+    monoidMaybeT,
+    monadSTMaybeT
 };
 export {
     lift

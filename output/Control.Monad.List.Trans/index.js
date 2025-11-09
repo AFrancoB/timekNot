@@ -4,6 +4,7 @@ import * as Control_Bind from "../Control.Bind/index.js";
 import * as Control_Category from "../Control.Category/index.js";
 import * as Control_Monad from "../Control.Monad/index.js";
 import * as Control_Monad_Rec_Class from "../Control.Monad.Rec.Class/index.js";
+import * as Control_Monad_ST_Class from "../Control.Monad.ST.Class/index.js";
 import * as Control_Monad_Trans_Class from "../Control.Monad.Trans.Class/index.js";
 import * as Data_Function from "../Data.Function/index.js";
 import * as Data_Functor from "../Data.Functor/index.js";
@@ -57,8 +58,8 @@ var wrapLazy = function (dictApplicative) {
 var wrapEffect = function (dictFunctor) {
     var map2 = Data_Functor.map(dictFunctor);
     return function (v) {
-        return map2(function ($332) {
-            return Skip.create(Data_Lazy.defer(Data_Function["const"]($332)));
+        return map2(function ($338) {
+            return Skip.create(Data_Lazy.defer(Data_Function["const"]($338)));
         })(v);
     };
 };
@@ -75,7 +76,7 @@ var unfold = function (dictMonad) {
                 if (v instanceof Data_Maybe.Nothing) {
                     return Done.value;
                 };
-                throw new Error("Failed pattern match at Control.Monad.List.Trans (line 129, column 3 - line 129, column 60): " + [ v.constructor.name ]);
+                throw new Error("Failed pattern match at Control.Monad.List.Trans (line 130, column 3 - line 130, column 60): " + [ v.constructor.name ]);
             };
             return map2(g)(f(z));
         };
@@ -95,7 +96,7 @@ var uncons = function (dictMonad) {
             if (v1 instanceof Done) {
                 return pure1(Data_Maybe.Nothing.value);
             };
-            throw new Error("Failed pattern match at Control.Monad.List.Trans (line 194, column 3 - line 194, column 50): " + [ v1.constructor.name ]);
+            throw new Error("Failed pattern match at Control.Monad.List.Trans (line 195, column 3 - line 195, column 50): " + [ v1.constructor.name ]);
         };
         return bind(v)(g);
     };
@@ -120,8 +121,8 @@ var takeWhile = function (dictApplicative) {
     return function (f) {
         var g = function (v) {
             if (v instanceof Yield) {
-                var $249 = f(v.value0);
-                if ($249) {
+                var $255 = f(v.value0);
+                if ($255) {
                     return new Yield(v.value0, map1(takeWhile(dictApplicative)(f))(v.value1));
                 };
                 return Done.value;
@@ -132,7 +133,7 @@ var takeWhile = function (dictApplicative) {
             if (v instanceof Done) {
                 return Done.value;
             };
-            throw new Error("Failed pattern match at Control.Monad.List.Trans (line 153, column 3 - line 153, column 68): " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Control.Monad.List.Trans (line 154, column 3 - line 154, column 68): " + [ v.constructor.name ]);
         };
         return stepMap1(g);
     };
@@ -155,7 +156,7 @@ var scanl = function (dictMonad) {
                         if (v1 instanceof Done) {
                             return Data_Maybe.Nothing.value;
                         };
-                        throw new Error("Failed pattern match at Control.Monad.List.Trans (line 247, column 5 - line 247, column 78): " + [ v1.constructor.name ]);
+                        throw new Error("Failed pattern match at Control.Monad.List.Trans (line 248, column 5 - line 248, column 78): " + [ v1.constructor.name ]);
                     };
                     return map2(h)(v.value1);
                 };
@@ -208,7 +209,7 @@ var take = function (dictApplicative) {
                 if (v2 instanceof Done) {
                     return Done.value;
                 };
-                throw new Error("Failed pattern match at Control.Monad.List.Trans (line 146, column 3 - line 146, column 47): " + [ v2.constructor.name ]);
+                throw new Error("Failed pattern match at Control.Monad.List.Trans (line 147, column 3 - line 147, column 47): " + [ v2.constructor.name ]);
             };
             return stepMap1(f)(v1);
         };
@@ -239,7 +240,7 @@ var zipWith$prime = function (dictMonad) {
                         return zipWith$prime(dictMonad)(f)(v.value0.value1)(v1.value0.value1);
                     })))(f(v.value0.value0)(v1.value0.value0));
                 };
-                throw new Error("Failed pattern match at Control.Monad.List.Trans (line 259, column 3 - line 259, column 25): " + [ v.constructor.name, v1.constructor.name ]);
+                throw new Error("Failed pattern match at Control.Monad.List.Trans (line 260, column 3 - line 260, column 25): " + [ v.constructor.name, v1.constructor.name ]);
             };
         };
         var loop = function (fa) {
@@ -284,7 +285,7 @@ var mapMaybe = function (dictFunctor) {
             if (v instanceof Done) {
                 return Done.value;
             };
-            throw new Error("Failed pattern match at Control.Monad.List.Trans (line 182, column 3 - line 182, column 72): " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Control.Monad.List.Trans (line 183, column 3 - line 183, column 72): " + [ v.constructor.name ]);
         };
         return stepMap1(g);
     };
@@ -325,7 +326,7 @@ var functorListT = function (dictFunctor) {
                 if (v instanceof Done) {
                     return Done.value;
                 };
-                throw new Error("Failed pattern match at Control.Monad.List.Trans (line 279, column 5 - line 279, column 48): " + [ v.constructor.name ]);
+                throw new Error("Failed pattern match at Control.Monad.List.Trans (line 280, column 5 - line 280, column 48): " + [ v.constructor.name ]);
             };
             return stepMap1(g);
         }
@@ -367,7 +368,7 @@ var foldlRec$prime = function (dictMonadRec) {
                             }));
                         });
                     };
-                    throw new Error("Failed pattern match at Control.Monad.List.Trans (line 220, column 5 - line 220, column 45): " + [ v.constructor.name ]);
+                    throw new Error("Failed pattern match at Control.Monad.List.Trans (line 221, column 5 - line 221, column 45): " + [ v.constructor.name ]);
                 };
                 return bind(uncons1(l))(g);
             };
@@ -402,7 +403,7 @@ var foldlRec = function (dictMonadRec) {
                             b: v.value0.value1
                         }));
                     };
-                    throw new Error("Failed pattern match at Control.Monad.List.Trans (line 238, column 7 - line 238, column 47): " + [ v.constructor.name ]);
+                    throw new Error("Failed pattern match at Control.Monad.List.Trans (line 239, column 7 - line 239, column 47): " + [ v.constructor.name ]);
                 };
                 return bind(uncons1(l))(g);
             };
@@ -424,7 +425,7 @@ var foldl$prime = function (dictMonad) {
                     if (v instanceof Data_Maybe.Just) {
                         return bind(f(b)(v.value0.value0))(Data_Function.flip(loop)(v.value0.value1));
                     };
-                    throw new Error("Failed pattern match at Control.Monad.List.Trans (line 211, column 5 - line 211, column 35): " + [ v.constructor.name ]);
+                    throw new Error("Failed pattern match at Control.Monad.List.Trans (line 212, column 5 - line 212, column 35): " + [ v.constructor.name ]);
                 };
                 return bind(uncons1(l))(g);
             };
@@ -454,7 +455,7 @@ var foldl = function (dictMonad) {
                     if (v instanceof Data_Maybe.Just) {
                         return loop(f(b)(v.value0.value0))(v.value0.value1);
                     };
-                    throw new Error("Failed pattern match at Control.Monad.List.Trans (line 228, column 5 - line 228, column 35): " + [ v.constructor.name ]);
+                    throw new Error("Failed pattern match at Control.Monad.List.Trans (line 229, column 5 - line 229, column 35): " + [ v.constructor.name ]);
                 };
                 return bind(uncons1(l))(g);
             };
@@ -468,8 +469,8 @@ var filter = function (dictFunctor) {
         var g = function (v) {
             if (v instanceof Yield) {
                 var s$prime = map1(filter(dictFunctor)(f))(v.value1);
-                var $299 = f(v.value0);
-                if ($299) {
+                var $305 = f(v.value0);
+                if ($305) {
                     return new Yield(v.value0, s$prime);
                 };
                 return new Skip(s$prime);
@@ -481,7 +482,7 @@ var filter = function (dictFunctor) {
             if (v instanceof Done) {
                 return Done.value;
             };
-            throw new Error("Failed pattern match at Control.Monad.List.Trans (line 175, column 3 - line 175, column 80): " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Control.Monad.List.Trans (line 176, column 3 - line 176, column 80): " + [ v.constructor.name ]);
         };
         return stepMap1(g);
     };
@@ -491,8 +492,8 @@ var dropWhile = function (dictApplicative) {
     return function (f) {
         var g = function (v) {
             if (v instanceof Yield) {
-                var $304 = f(v.value0);
-                if ($304) {
+                var $310 = f(v.value0);
+                if ($310) {
                     return new Skip(map1(dropWhile(dictApplicative)(f))(v.value1));
                 };
                 return new Yield(v.value0, v.value1);
@@ -503,7 +504,7 @@ var dropWhile = function (dictApplicative) {
             if (v instanceof Done) {
                 return Done.value;
             };
-            throw new Error("Failed pattern match at Control.Monad.List.Trans (line 168, column 3 - line 168, column 70): " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Control.Monad.List.Trans (line 169, column 3 - line 169, column 70): " + [ v.constructor.name ]);
         };
         return stepMap1(g);
     };
@@ -525,7 +526,7 @@ var drop = function (dictApplicative) {
                 if (v2 instanceof Done) {
                     return Done.value;
                 };
-                throw new Error("Failed pattern match at Control.Monad.List.Trans (line 161, column 3 - line 161, column 44): " + [ v2.constructor.name ]);
+                throw new Error("Failed pattern match at Control.Monad.List.Trans (line 162, column 3 - line 162, column 44): " + [ v2.constructor.name ]);
             };
             return stepMap1(f)(v1);
         };
@@ -555,7 +556,7 @@ var unfoldable1ListT = function (dictMonad) {
                             return go(f(v.value1.value0));
                         }));
                     };
-                    throw new Error("Failed pattern match at Control.Monad.List.Trans (line 293, column 12 - line 295, column 67): " + [ v.constructor.name ]);
+                    throw new Error("Failed pattern match at Control.Monad.List.Trans (line 294, column 12 - line 296, column 67): " + [ v.constructor.name ]);
                 };
                 return go(f(b));
             };
@@ -579,7 +580,7 @@ var unfoldableListT = function (dictMonad) {
                             return go(f(v.value0.value1));
                         }));
                     };
-                    throw new Error("Failed pattern match at Control.Monad.List.Trans (line 286, column 12 - line 288, column 67): " + [ v.constructor.name ]);
+                    throw new Error("Failed pattern match at Control.Monad.List.Trans (line 287, column 12 - line 289, column 67): " + [ v.constructor.name ]);
                 };
                 return go(f(b));
             };
@@ -612,7 +613,7 @@ var concat = function (dictApplicative) {
                 if (v instanceof Done) {
                     return new Skip(Data_Lazy.defer(Data_Function["const"](y)));
                 };
-                throw new Error("Failed pattern match at Control.Monad.List.Trans (line 105, column 3 - line 105, column 43): " + [ v.constructor.name ]);
+                throw new Error("Failed pattern match at Control.Monad.List.Trans (line 106, column 3 - line 106, column 43): " + [ v.constructor.name ]);
             };
             return stepMap1(f)(x);
         };
@@ -661,7 +662,7 @@ var bindListT = function (dictMonad) {
                     if (v instanceof Done) {
                         return Done.value;
                     };
-                    throw new Error("Failed pattern match at Control.Monad.List.Trans (line 305, column 5 - line 307, column 31): " + [ v.constructor.name ]);
+                    throw new Error("Failed pattern match at Control.Monad.List.Trans (line 306, column 5 - line 308, column 31): " + [ v.constructor.name ]);
                 };
                 return stepMap1(g)(fa);
             };
@@ -693,10 +694,26 @@ var monadEffectListT = function (dictMonadEffect) {
     var monadListT1 = monadListT(Monad0);
     return {
         liftEffect: (function () {
-            var $333 = lift(Monad0);
-            var $334 = Effect_Class.liftEffect(dictMonadEffect);
-            return function ($335) {
-                return $333($334($335));
+            var $339 = lift(Monad0);
+            var $340 = Effect_Class.liftEffect(dictMonadEffect);
+            return function ($341) {
+                return $339($340($341));
+            };
+        })(),
+        Monad0: function () {
+            return monadListT1;
+        }
+    };
+};
+var monadSTListT = function (dictMonadST) {
+    var Monad0 = dictMonadST.Monad0();
+    var monadListT1 = monadListT(Monad0);
+    return {
+        liftST: (function () {
+            var $342 = lift(Monad0);
+            var $343 = Control_Monad_ST_Class.liftST(dictMonadST);
+            return function ($344) {
+                return $342($343($344));
             };
         })(),
         Monad0: function () {
@@ -797,7 +814,8 @@ export {
     plusListT,
     alternativeListT,
     monadPlusListT,
-    monadEffectListT
+    monadEffectListT,
+    monadSTListT
 };
 export {
     lift

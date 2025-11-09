@@ -5,6 +5,7 @@ import * as Control_Apply from "../Control.Apply/index.js";
 import * as Control_Bind from "../Control.Bind/index.js";
 import * as Control_Monad_Error_Class from "../Control.Monad.Error.Class/index.js";
 import * as Control_Monad_Rec_Class from "../Control.Monad.Rec.Class/index.js";
+import * as Control_Monad_ST_Class from "../Control.Monad.ST.Class/index.js";
 import * as Control_Monad_Trans_Class from "../Control.Monad.Trans.Class/index.js";
 import * as Control_Plus from "../Control.Plus/index.js";
 import * as Data_Functor from "../Data.Functor/index.js";
@@ -274,10 +275,10 @@ var monadEffectRWS = function (dictMonoid) {
         var monadRWST1 = monadRWST(Monad0)(dictMonoid);
         return {
             liftEffect: (function () {
-                var $274 = lift(Monad0);
-                var $275 = Effect_Class.liftEffect(dictMonadEffect);
-                return function ($276) {
-                    return $274($275($276));
+                var $284 = lift(Monad0);
+                var $285 = Effect_Class.liftEffect(dictMonadEffect);
+                return function ($286) {
+                    return $284($285($286));
                 };
             })(),
             Monad0: function () {
@@ -310,7 +311,7 @@ var monadRecRWST = function (dictMonadRec) {
                                     if (v2.value1 instanceof Control_Monad_Rec_Class.Done) {
                                         return new Control_Monad_Rec_Class.Done(new RWSResult(v2.value0, v2.value1.value0, append(v.value2)(v2.value2)));
                                     };
-                                    throw new Error("Failed pattern match at Control.Monad.RWS.Trans (line 128, column 16 - line 130, column 68): " + [ v2.value1.constructor.name ]);
+                                    throw new Error("Failed pattern match at Control.Monad.RWS.Trans (line 129, column 16 - line 131, column 68): " + [ v2.value1.constructor.name ]);
                                 })());
                             });
                         };
@@ -447,6 +448,25 @@ var monadErrorRWST = function (dictMonadError) {
         };
     };
 };
+var monadSTRWST = function (dictMonoid) {
+    var lift = Control_Monad_Trans_Class.lift(monadTransRWST(dictMonoid));
+    return function (dictMonadST) {
+        var Monad0 = dictMonadST.Monad0();
+        var monadRWST1 = monadRWST(Monad0)(dictMonoid);
+        return {
+            liftST: (function () {
+                var $287 = lift(Monad0);
+                var $288 = Control_Monad_ST_Class.liftST(dictMonadST);
+                return function ($289) {
+                    return $287($288($289));
+                };
+            })(),
+            Monad0: function () {
+                return monadRWST1;
+            }
+        };
+    };
+};
 var monoidRWST = function (dictMonad) {
     var applicativeRWST1 = applicativeRWST(dictMonad);
     var semigroupRWST1 = semigroupRWST(dictMonad.Bind1());
@@ -541,7 +561,8 @@ export {
     monadRecRWST,
     plusRWST,
     semigroupRWST,
-    monoidRWST
+    monoidRWST,
+    monadSTRWST
 };
 export {
     lift

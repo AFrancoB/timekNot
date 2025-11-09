@@ -7,6 +7,7 @@ import * as Control_Monad_Cont_Class from "../Control.Monad.Cont.Class/index.js"
 import * as Control_Monad_Error_Class from "../Control.Monad.Error.Class/index.js";
 import * as Control_Monad_Reader_Class from "../Control.Monad.Reader.Class/index.js";
 import * as Control_Monad_Rec_Class from "../Control.Monad.Rec.Class/index.js";
+import * as Control_Monad_ST_Class from "../Control.Monad.ST.Class/index.js";
 import * as Control_Monad_State_Class from "../Control.Monad.State.Class/index.js";
 import * as Control_Monad_Trans_Class from "../Control.Monad.Trans.Class/index.js";
 import * as Control_Monad_Writer_Class from "../Control.Monad.Writer.Class/index.js";
@@ -212,10 +213,10 @@ var monadEffectWriter = function (dictMonoid) {
         var monadWriterT2 = monadWriterT1(Monad0);
         return {
             liftEffect: (function () {
-                var $249 = lift(Monad0);
-                var $250 = Effect_Class.liftEffect(dictMonadEffect);
-                return function ($251) {
-                    return $249($250($251));
+                var $259 = lift(Monad0);
+                var $260 = Effect_Class.liftEffect(dictMonadEffect);
+                return function ($261) {
+                    return $259($260($261));
                 };
             })(),
             Monad0: function () {
@@ -247,7 +248,7 @@ var monadRecWriterT = function (dictMonoid) {
                                 if (v2.value0 instanceof Control_Monad_Rec_Class.Done) {
                                     return new Control_Monad_Rec_Class.Done(new Data_Tuple.Tuple(v2.value0.value0, append(v.value1)(v2.value1)));
                                 };
-                                throw new Error("Failed pattern match at Control.Monad.Writer.Trans (line 83, column 16 - line 85, column 47): " + [ v2.value0.constructor.name ]);
+                                throw new Error("Failed pattern match at Control.Monad.Writer.Trans (line 84, column 16 - line 86, column 47): " + [ v2.value0.constructor.name ]);
                             })());
                         });
                     };
@@ -285,10 +286,10 @@ var monadTellWriterT = function (dictMonoid) {
         var monadWriterT2 = monadWriterT1(dictMonad);
         return {
             tell: (function () {
-                var $252 = Control_Applicative.pure(dictMonad.Applicative0());
-                var $253 = Data_Tuple.Tuple.create(Data_Unit.unit);
-                return function ($254) {
-                    return WriterT($252($253($254)));
+                var $262 = Control_Applicative.pure(dictMonad.Applicative0());
+                var $263 = Data_Tuple.Tuple.create(Data_Unit.unit);
+                return function ($264) {
+                    return WriterT($262($263($264)));
                 };
             })(),
             Semigroup0: function () {
@@ -360,6 +361,26 @@ var monadErrorWriterT = function (dictMonoid) {
             },
             MonadThrow0: function () {
                 return monadThrowWriterT2;
+            }
+        };
+    };
+};
+var monadSTWriterT = function (dictMonoid) {
+    var lift = Control_Monad_Trans_Class.lift(monadTransWriterT(dictMonoid));
+    var monadWriterT1 = monadWriterT(dictMonoid);
+    return function (dictMonadST) {
+        var Monad0 = dictMonadST.Monad0();
+        var monadWriterT2 = monadWriterT1(Monad0);
+        return {
+            liftST: (function () {
+                var $265 = lift(Monad0);
+                var $266 = Control_Monad_ST_Class.liftST(dictMonadST);
+                return function ($267) {
+                    return $265($266($267));
+                };
+            })(),
+            Monad0: function () {
+                return monadWriterT2;
             }
         };
     };
@@ -461,7 +482,8 @@ export {
     monadTellWriterT,
     monadWriterWriterT,
     semigroupWriterT,
-    monoidWriterT
+    monoidWriterT,
+    monadSTWriterT
 };
 export {
     lift

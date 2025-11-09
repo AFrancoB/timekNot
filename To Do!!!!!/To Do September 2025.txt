@@ -2,6 +2,13 @@
 
 TODO SEPTEMBER 2025: TIMEKNOT
 
+
+implementar steps
+
+///////// implementar: scramble, reverse, palyndrome, repeat,  
+//////////////////////////// implemetar: sin, cosin, tan, perlin y rand 
+
+
 ////// Las funciones que hacen posible el isoritmo dentro del bloque funcionan. REPENSAR EL PARSER DE SPAN PARA QUE CYCLERECURSIVE PUEDA SER USADO
 
 

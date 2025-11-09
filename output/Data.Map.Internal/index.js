@@ -161,7 +161,7 @@ var unsafeNode = function (k, v, l, r) {
         if (r instanceof Node) {
             return new Node(1 + r.value0 | 0, 1 + r.value1 | 0, k, v, l, r);
         };
-        throw new Error("Failed pattern match at Data.Map.Internal (line 680, column 5 - line 684, column 39): " + [ r.constructor.name ]);
+        throw new Error("Failed pattern match at Data.Map.Internal (line 702, column 5 - line 706, column 39): " + [ r.constructor.name ]);
     };
     if (l instanceof Node) {
         if (r instanceof Leaf) {
@@ -169,16 +169,16 @@ var unsafeNode = function (k, v, l, r) {
         };
         if (r instanceof Node) {
             return new Node(1 + (function () {
-                var $277 = l.value0 > r.value0;
-                if ($277) {
+                var $280 = l.value0 > r.value0;
+                if ($280) {
                     return l.value0;
                 };
                 return r.value0;
             })() | 0, (1 + l.value1 | 0) + r.value1 | 0, k, v, l, r);
         };
-        throw new Error("Failed pattern match at Data.Map.Internal (line 686, column 5 - line 690, column 68): " + [ r.constructor.name ]);
+        throw new Error("Failed pattern match at Data.Map.Internal (line 708, column 5 - line 712, column 68): " + [ r.constructor.name ]);
     };
-    throw new Error("Failed pattern match at Data.Map.Internal (line 678, column 32 - line 690, column 68): " + [ l.constructor.name ]);
+    throw new Error("Failed pattern match at Data.Map.Internal (line 700, column 32 - line 712, column 68): " + [ l.constructor.name ]);
 };
 var toMapIter = /* #__PURE__ */ (function () {
     return Data_Function.flip(IterNode.create)(IterLeaf.value);
@@ -202,7 +202,7 @@ var stepWith = function (f) {
                         $copy_v = f(v.value1)(v.value0);
                         return;
                     };
-                    throw new Error("Failed pattern match at Data.Map.Internal (line 918, column 8 - line 924, column 20): " + [ v.constructor.name ]);
+                    throw new Error("Failed pattern match at Data.Map.Internal (line 940, column 8 - line 946, column 20): " + [ v.constructor.name ]);
                 };
                 while (!$tco_done) {
                     $tco_result = $tco_loop($copy_v);
@@ -220,7 +220,7 @@ var size = function (v) {
     if (v instanceof Node) {
         return v.value1;
     };
-    throw new Error("Failed pattern match at Data.Map.Internal (line 616, column 8 - line 618, column 24): " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at Data.Map.Internal (line 618, column 8 - line 620, column 24): " + [ v.constructor.name ]);
 };
 var singleton = function (k) {
     return function (v) {
@@ -235,7 +235,7 @@ var unsafeBalancedNode = /* #__PURE__ */ (function () {
         if (v instanceof Node) {
             return v.value0;
         };
-        throw new Error("Failed pattern match at Data.Map.Internal (line 735, column 12 - line 737, column 26): " + [ v.constructor.name ]);
+        throw new Error("Failed pattern match at Data.Map.Internal (line 757, column 12 - line 759, column 26): " + [ v.constructor.name ]);
     };
     var rotateLeft = function (k, v, l, rk, rv, rl, rr) {
         if (rl instanceof Node && rl.value0 > height(rr)) {
@@ -273,7 +273,7 @@ var unsafeBalancedNode = /* #__PURE__ */ (function () {
             };
             return unsafeNode(k, v, l, r);
         };
-        throw new Error("Failed pattern match at Data.Map.Internal (line 695, column 40 - line 716, column 34): " + [ l.constructor.name ]);
+        throw new Error("Failed pattern match at Data.Map.Internal (line 717, column 40 - line 738, column 34): " + [ l.constructor.name ]);
     };
 })();
 var $lazy_unsafeSplit = /* #__PURE__ */ $runtime_lazy("unsafeSplit", "Data.Map.Internal", function () {
@@ -284,35 +284,35 @@ var $lazy_unsafeSplit = /* #__PURE__ */ $runtime_lazy("unsafeSplit", "Data.Map.I
         if (m instanceof Node) {
             var v = comp(k)(m.value2);
             if (v instanceof Data_Ordering.LT) {
-                var v1 = $lazy_unsafeSplit(771)(comp, k, m.value4);
+                var v1 = $lazy_unsafeSplit(793)(comp, k, m.value4);
                 return new Split(v1.value0, v1.value1, unsafeBalancedNode(m.value2, m.value3, v1.value2, m.value5));
             };
             if (v instanceof Data_Ordering.GT) {
-                var v1 = $lazy_unsafeSplit(774)(comp, k, m.value5);
+                var v1 = $lazy_unsafeSplit(796)(comp, k, m.value5);
                 return new Split(v1.value0, unsafeBalancedNode(m.value2, m.value3, m.value4, v1.value1), v1.value2);
             };
             if (v instanceof Data_Ordering.EQ) {
                 return new Split(new Data_Maybe.Just(m.value3), m.value4, m.value5);
             };
-            throw new Error("Failed pattern match at Data.Map.Internal (line 769, column 5 - line 777, column 30): " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Data.Map.Internal (line 791, column 5 - line 799, column 30): " + [ v.constructor.name ]);
         };
-        throw new Error("Failed pattern match at Data.Map.Internal (line 765, column 34 - line 777, column 30): " + [ m.constructor.name ]);
+        throw new Error("Failed pattern match at Data.Map.Internal (line 787, column 34 - line 799, column 30): " + [ m.constructor.name ]);
     };
 });
-var unsafeSplit = /* #__PURE__ */ $lazy_unsafeSplit(764);
+var unsafeSplit = /* #__PURE__ */ $lazy_unsafeSplit(786);
 var $lazy_unsafeSplitLast = /* #__PURE__ */ $runtime_lazy("unsafeSplitLast", "Data.Map.Internal", function () {
     return function (k, v, l, r) {
         if (r instanceof Leaf) {
             return new SplitLast(k, v, l);
         };
         if (r instanceof Node) {
-            var v1 = $lazy_unsafeSplitLast(757)(r.value2, r.value3, r.value4, r.value5);
+            var v1 = $lazy_unsafeSplitLast(779)(r.value2, r.value3, r.value4, r.value5);
             return new SplitLast(v1.value0, v1.value1, unsafeBalancedNode(k, v, l, v1.value2));
         };
-        throw new Error("Failed pattern match at Data.Map.Internal (line 754, column 37 - line 758, column 57): " + [ r.constructor.name ]);
+        throw new Error("Failed pattern match at Data.Map.Internal (line 776, column 37 - line 780, column 57): " + [ r.constructor.name ]);
     };
 });
-var unsafeSplitLast = /* #__PURE__ */ $lazy_unsafeSplitLast(753);
+var unsafeSplitLast = /* #__PURE__ */ $lazy_unsafeSplitLast(775);
 var unsafeJoinNodes = function (v, v1) {
     if (v instanceof Leaf) {
         return v1;
@@ -321,7 +321,7 @@ var unsafeJoinNodes = function (v, v1) {
         var v2 = unsafeSplitLast(v.value2, v.value3, v.value4, v.value5);
         return unsafeBalancedNode(v2.value0, v2.value1, v2.value2, v1);
     };
-    throw new Error("Failed pattern match at Data.Map.Internal (line 742, column 25 - line 746, column 38): " + [ v.constructor.name, v1.constructor.name ]);
+    throw new Error("Failed pattern match at Data.Map.Internal (line 764, column 25 - line 768, column 38): " + [ v.constructor.name, v1.constructor.name ]);
 };
 var $lazy_unsafeDifference = /* #__PURE__ */ $runtime_lazy("unsafeDifference", "Data.Map.Internal", function () {
     return function (comp, l, r) {
@@ -333,14 +333,14 @@ var $lazy_unsafeDifference = /* #__PURE__ */ $runtime_lazy("unsafeDifference", "
         };
         if (r instanceof Node) {
             var v = unsafeSplit(comp, r.value2, l);
-            var l$prime = $lazy_unsafeDifference(819)(comp, v.value1, r.value4);
-            var r$prime = $lazy_unsafeDifference(820)(comp, v.value2, r.value5);
+            var l$prime = $lazy_unsafeDifference(841)(comp, v.value1, r.value4);
+            var r$prime = $lazy_unsafeDifference(842)(comp, v.value2, r.value5);
             return unsafeJoinNodes(l$prime, r$prime);
         };
-        throw new Error("Failed pattern match at Data.Map.Internal (line 814, column 39 - line 821, column 33): " + [ l.constructor.name, r.constructor.name ]);
+        throw new Error("Failed pattern match at Data.Map.Internal (line 836, column 39 - line 843, column 33): " + [ l.constructor.name, r.constructor.name ]);
     };
 });
-var unsafeDifference = /* #__PURE__ */ $lazy_unsafeDifference(813);
+var unsafeDifference = /* #__PURE__ */ $lazy_unsafeDifference(835);
 var $lazy_unsafeIntersectionWith = /* #__PURE__ */ $runtime_lazy("unsafeIntersectionWith", "Data.Map.Internal", function () {
     return function (comp, app, l, r) {
         if (l instanceof Leaf) {
@@ -351,20 +351,20 @@ var $lazy_unsafeIntersectionWith = /* #__PURE__ */ $runtime_lazy("unsafeIntersec
         };
         if (r instanceof Node) {
             var v = unsafeSplit(comp, r.value2, l);
-            var l$prime = $lazy_unsafeIntersectionWith(803)(comp, app, v.value1, r.value4);
-            var r$prime = $lazy_unsafeIntersectionWith(804)(comp, app, v.value2, r.value5);
+            var l$prime = $lazy_unsafeIntersectionWith(825)(comp, app, v.value1, r.value4);
+            var r$prime = $lazy_unsafeIntersectionWith(826)(comp, app, v.value2, r.value5);
             if (v.value0 instanceof Data_Maybe.Just) {
                 return unsafeBalancedNode(r.value2, app(v.value0.value0)(r.value3), l$prime, r$prime);
             };
             if (v.value0 instanceof Data_Maybe.Nothing) {
                 return unsafeJoinNodes(l$prime, r$prime);
             };
-            throw new Error("Failed pattern match at Data.Map.Internal (line 805, column 5 - line 809, column 37): " + [ v.value0.constructor.name ]);
+            throw new Error("Failed pattern match at Data.Map.Internal (line 827, column 5 - line 831, column 37): " + [ v.value0.constructor.name ]);
         };
-        throw new Error("Failed pattern match at Data.Map.Internal (line 798, column 49 - line 809, column 37): " + [ l.constructor.name, r.constructor.name ]);
+        throw new Error("Failed pattern match at Data.Map.Internal (line 820, column 49 - line 831, column 37): " + [ l.constructor.name, r.constructor.name ]);
     };
 });
-var unsafeIntersectionWith = /* #__PURE__ */ $lazy_unsafeIntersectionWith(797);
+var unsafeIntersectionWith = /* #__PURE__ */ $lazy_unsafeIntersectionWith(819);
 var $lazy_unsafeUnionWith = /* #__PURE__ */ $runtime_lazy("unsafeUnionWith", "Data.Map.Internal", function () {
     return function (comp, app, l, r) {
         if (l instanceof Leaf) {
@@ -375,20 +375,20 @@ var $lazy_unsafeUnionWith = /* #__PURE__ */ $runtime_lazy("unsafeUnionWith", "Da
         };
         if (r instanceof Node) {
             var v = unsafeSplit(comp, r.value2, l);
-            var l$prime = $lazy_unsafeUnionWith(787)(comp, app, v.value1, r.value4);
-            var r$prime = $lazy_unsafeUnionWith(788)(comp, app, v.value2, r.value5);
+            var l$prime = $lazy_unsafeUnionWith(809)(comp, app, v.value1, r.value4);
+            var r$prime = $lazy_unsafeUnionWith(810)(comp, app, v.value2, r.value5);
             if (v.value0 instanceof Data_Maybe.Just) {
                 return unsafeBalancedNode(r.value2, app(v.value0.value0)(r.value3), l$prime, r$prime);
             };
             if (v.value0 instanceof Data_Maybe.Nothing) {
                 return unsafeBalancedNode(r.value2, r.value3, l$prime, r$prime);
             };
-            throw new Error("Failed pattern match at Data.Map.Internal (line 789, column 5 - line 793, column 46): " + [ v.value0.constructor.name ]);
+            throw new Error("Failed pattern match at Data.Map.Internal (line 811, column 5 - line 815, column 46): " + [ v.value0.constructor.name ]);
         };
-        throw new Error("Failed pattern match at Data.Map.Internal (line 782, column 42 - line 793, column 46): " + [ l.constructor.name, r.constructor.name ]);
+        throw new Error("Failed pattern match at Data.Map.Internal (line 804, column 42 - line 815, column 46): " + [ l.constructor.name, r.constructor.name ]);
     };
 });
-var unsafeUnionWith = /* #__PURE__ */ $lazy_unsafeUnionWith(781);
+var unsafeUnionWith = /* #__PURE__ */ $lazy_unsafeUnionWith(803);
 var unionWith = function (dictOrd) {
     var compare = Data_Ord.compare(dictOrd);
     return function (app) {
@@ -426,11 +426,11 @@ var update = function (dictOrd) {
                         if (v2 instanceof Data_Maybe.Just) {
                             return new Node(v.value0, v.value1, v.value2, v2.value0, v.value4, v.value5);
                         };
-                        throw new Error("Failed pattern match at Data.Map.Internal (line 529, column 11 - line 533, column 38): " + [ v2.constructor.name ]);
+                        throw new Error("Failed pattern match at Data.Map.Internal (line 531, column 11 - line 535, column 38): " + [ v2.constructor.name ]);
                     };
-                    throw new Error("Failed pattern match at Data.Map.Internal (line 525, column 7 - line 533, column 38): " + [ v1.constructor.name ]);
+                    throw new Error("Failed pattern match at Data.Map.Internal (line 527, column 7 - line 535, column 38): " + [ v1.constructor.name ]);
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 522, column 8 - line 533, column 38): " + [ v.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 524, column 8 - line 535, column 38): " + [ v.constructor.name ]);
             };
             return go;
         };
@@ -448,7 +448,7 @@ var showTree = function (dictShow) {
                 if (v instanceof Node) {
                     return ind + ("[" + (show(v.value0) + ("] " + (show1(v.value2) + (" => " + (show2(v.value3) + "\x0a")))))) + (go(ind + "    ")(v.value4) + "\x0a" + go(ind + "    ")(v.value5));
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 231, column 12 - line 236, column 34): " + [ v.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 233, column 12 - line 238, column 34): " + [ v.constructor.name ]);
             };
         };
         return go("");
@@ -501,9 +501,9 @@ var member = function (dictOrd) {
                         $tco_done = true;
                         return true;
                     };
-                    throw new Error("Failed pattern match at Data.Map.Internal (line 457, column 7 - line 460, column 19): " + [ v1.constructor.name ]);
+                    throw new Error("Failed pattern match at Data.Map.Internal (line 459, column 7 - line 462, column 19): " + [ v1.constructor.name ]);
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 454, column 8 - line 460, column 19): " + [ v.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 456, column 8 - line 462, column 19): " + [ v.constructor.name ]);
             };
             while (!$tco_done) {
                 $tco_result = $tco_loop($copy_v);
@@ -527,17 +527,17 @@ var mapMaybeWithKey = function (dictOrd) {
                 if (v2 instanceof Data_Maybe.Nothing) {
                     return unsafeJoinNodes(go(v.value4), go(v.value5));
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 659, column 7 - line 663, column 47): " + [ v2.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 661, column 7 - line 665, column 47): " + [ v2.constructor.name ]);
             };
-            throw new Error("Failed pattern match at Data.Map.Internal (line 656, column 8 - line 663, column 47): " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Data.Map.Internal (line 658, column 8 - line 665, column 47): " + [ v.constructor.name ]);
         };
         return go;
     };
 };
 var mapMaybe = function (dictOrd) {
-    var $763 = mapMaybeWithKey(dictOrd);
-    return function ($764) {
-        return $763(Data_Function["const"]($764));
+    var $780 = mapMaybeWithKey(dictOrd);
+    return function ($781) {
+        return $780(Data_Function["const"]($781));
     };
 };
 var lookupLE = function (dictOrd) {
@@ -568,9 +568,9 @@ var lookupLE = function (dictOrd) {
                         value: v.value3
                     });
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 293, column 7 - line 300, column 38): " + [ v1.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 295, column 7 - line 302, column 38): " + [ v1.constructor.name ]);
             };
-            throw new Error("Failed pattern match at Data.Map.Internal (line 290, column 8 - line 300, column 38): " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Data.Map.Internal (line 292, column 8 - line 302, column 38): " + [ v.constructor.name ]);
         };
         return go;
     };
@@ -603,9 +603,9 @@ var lookupGE = function (dictOrd) {
                         value: v.value3
                     });
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 325, column 7 - line 331, column 42): " + [ v1.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 327, column 7 - line 333, column 42): " + [ v1.constructor.name ]);
             };
-            throw new Error("Failed pattern match at Data.Map.Internal (line 322, column 8 - line 331, column 42): " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Data.Map.Internal (line 324, column 8 - line 333, column 42): " + [ v.constructor.name ]);
         };
         return go;
     };
@@ -635,9 +635,9 @@ var lookup = function (dictOrd) {
                         $tco_done = true;
                         return new Data_Maybe.Just(v.value3);
                     };
-                    throw new Error("Failed pattern match at Data.Map.Internal (line 281, column 7 - line 284, column 22): " + [ v1.constructor.name ]);
+                    throw new Error("Failed pattern match at Data.Map.Internal (line 283, column 7 - line 286, column 22): " + [ v1.constructor.name ]);
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 278, column 8 - line 284, column 22): " + [ v.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 280, column 8 - line 286, column 22): " + [ v.constructor.name ]);
             };
             while (!$tco_done) {
                 $tco_result = $tco_loop($copy_v);
@@ -664,7 +664,7 @@ var iterMapU = function (iter) {
             };
             return new IterEmit(v.value2, v.value3, new IterNode(v.value4, new IterNode(v.value5, iter)));
         };
-        throw new Error("Failed pattern match at Data.Map.Internal (line 951, column 17 - line 966, column 56): " + [ v.constructor.name ]);
+        throw new Error("Failed pattern match at Data.Map.Internal (line 973, column 17 - line 988, column 56): " + [ v.constructor.name ]);
     };
 };
 var stepUnorderedCps = /* #__PURE__ */ stepWith(iterMapU);
@@ -677,9 +677,9 @@ var stepUnfoldrUnordered = /* #__PURE__ */ (function () {
     });
 })();
 var toUnfoldableUnordered = function (dictUnfoldable) {
-    var $765 = Data_Unfoldable.unfoldr(dictUnfoldable)(stepUnfoldrUnordered);
-    return function ($766) {
-        return $765(toMapIter($766));
+    var $782 = Data_Unfoldable.unfoldr(dictUnfoldable)(stepUnfoldrUnordered);
+    return function ($783) {
+        return $782(toMapIter($783));
     };
 };
 var stepUnordered = /* #__PURE__ */ (function () {
@@ -708,7 +708,7 @@ var iterMapR = /* #__PURE__ */ (function () {
                     $copy_v = v.value5;
                     return;
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 941, column 13 - line 948, column 48): " + [ v.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 963, column 13 - line 970, column 48): " + [ v.constructor.name ]);
             };
             while (!$tco_done) {
                 $tco_result = $tco_loop($tco_var_iter, $copy_v);
@@ -745,7 +745,7 @@ var iterMapL = /* #__PURE__ */ (function () {
                     $copy_v = v.value4;
                     return;
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 929, column 13 - line 936, column 48): " + [ v.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 951, column 13 - line 958, column 48): " + [ v.constructor.name ]);
             };
             while (!$tco_done) {
                 $tco_result = $tco_loop($tco_var_iter, $copy_v);
@@ -788,7 +788,7 @@ var eqMapIter = function (dictEq) {
                                 $tco_done = true;
                                 return true;
                             };
-                            throw new Error("Failed pattern match at Data.Map.Internal (line 837, column 14 - line 846, column 13): " + [ v.constructor.name ]);
+                            throw new Error("Failed pattern match at Data.Map.Internal (line 859, column 14 - line 868, column 13): " + [ v.constructor.name ]);
                         };
                         while (!$tco_done) {
                             $tco_result = $tco_loop($tco_var_a, $copy_b);
@@ -844,7 +844,7 @@ var ordMapIter = function (dictOrd) {
                                 $tco_done = true;
                                 return Data_Ordering.GT.value;
                             };
-                            throw new Error("Failed pattern match at Data.Map.Internal (line 851, column 14 - line 869, column 11): " + [ v1.constructor.name, v.constructor.name ]);
+                            throw new Error("Failed pattern match at Data.Map.Internal (line 873, column 14 - line 891, column 11): " + [ v1.constructor.name, v.constructor.name ]);
                         };
                         while (!$tco_done) {
                             $tco_result = $tco_loop($tco_var_a, $copy_b);
@@ -869,9 +869,9 @@ var stepUnfoldr = /* #__PURE__ */ (function () {
     });
 })();
 var toUnfoldable = function (dictUnfoldable) {
-    var $767 = Data_Unfoldable.unfoldr(dictUnfoldable)(stepUnfoldr);
-    return function ($768) {
-        return $767(toMapIter($768));
+    var $784 = Data_Unfoldable.unfoldr(dictUnfoldable)(stepUnfoldr);
+    return function ($785) {
+        return $784(toMapIter($785));
     };
 };
 var toUnfoldable1 = /* #__PURE__ */ toUnfoldable(Data_Unfoldable.unfoldableArray);
@@ -903,9 +903,9 @@ var isSubmap = function (dictOrd) {
                     if (v1 instanceof Data_Maybe.Just) {
                         return eq1(m1.value3)(v1.value0) && (go(m1.value4)(m2) && go(m1.value5)(m2));
                     };
-                    throw new Error("Failed pattern match at Data.Map.Internal (line 609, column 7 - line 612, column 40): " + [ v1.constructor.name ]);
+                    throw new Error("Failed pattern match at Data.Map.Internal (line 611, column 7 - line 614, column 40): " + [ v1.constructor.name ]);
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 606, column 14 - line 612, column 40): " + [ m1.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 608, column 14 - line 614, column 40): " + [ m1.constructor.name ]);
             };
         };
         return go;
@@ -950,9 +950,9 @@ var insertWith = function (dictOrd) {
                         if (v2 instanceof Data_Ordering.EQ) {
                             return new Node(v1.value0, v1.value1, k, app(v1.value3)(v), v1.value4, v1.value5);
                         };
-                        throw new Error("Failed pattern match at Data.Map.Internal (line 484, column 7 - line 487, column 44): " + [ v2.constructor.name ]);
+                        throw new Error("Failed pattern match at Data.Map.Internal (line 486, column 7 - line 489, column 44): " + [ v2.constructor.name ]);
                     };
-                    throw new Error("Failed pattern match at Data.Map.Internal (line 481, column 8 - line 487, column 44): " + [ v1.constructor.name ]);
+                    throw new Error("Failed pattern match at Data.Map.Internal (line 483, column 8 - line 489, column 44): " + [ v1.constructor.name ]);
                 };
                 return go;
             };
@@ -978,9 +978,9 @@ var insert = function (dictOrd) {
                     if (v2 instanceof Data_Ordering.EQ) {
                         return new Node(v1.value0, v1.value1, k, v, v1.value4, v1.value5);
                     };
-                    throw new Error("Failed pattern match at Data.Map.Internal (line 469, column 7 - line 472, column 35): " + [ v2.constructor.name ]);
+                    throw new Error("Failed pattern match at Data.Map.Internal (line 471, column 7 - line 474, column 35): " + [ v2.constructor.name ]);
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 466, column 8 - line 472, column 35): " + [ v1.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 468, column 8 - line 474, column 35): " + [ v1.constructor.name ]);
             };
             return go;
         };
@@ -995,7 +995,7 @@ var functorMap = {
             if (v instanceof Node) {
                 return new Node(v.value0, v.value1, v.value2, f(v.value3), go(v.value4), go(v.value5));
             };
-            throw new Error("Failed pattern match at Data.Map.Internal (line 145, column 10 - line 148, column 39): " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Data.Map.Internal (line 147, column 10 - line 150, column 39): " + [ v.constructor.name ]);
         };
         return go;
     }
@@ -1009,7 +1009,7 @@ var functorWithIndexMap = {
             if (v instanceof Node) {
                 return new Node(v.value0, v.value1, v.value2, f(v.value2)(v.value3), go(v.value4), go(v.value5));
             };
-            throw new Error("Failed pattern match at Data.Map.Internal (line 153, column 10 - line 156, column 41): " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Data.Map.Internal (line 155, column 10 - line 158, column 41): " + [ v.constructor.name ]);
         };
         return go;
     },
@@ -1026,12 +1026,12 @@ var foldableMap = {
                         return z$prime;
                     };
                     if (m$prime instanceof Node) {
-                        return $lazy_go(170)(m$prime.value4, f(m$prime.value3)($lazy_go(170)(m$prime.value5, z$prime)));
+                        return $lazy_go(172)(m$prime.value4, f(m$prime.value3)($lazy_go(172)(m$prime.value5, z$prime)));
                     };
-                    throw new Error("Failed pattern match at Data.Map.Internal (line 167, column 26 - line 170, column 43): " + [ m$prime.constructor.name ]);
+                    throw new Error("Failed pattern match at Data.Map.Internal (line 169, column 26 - line 172, column 43): " + [ m$prime.constructor.name ]);
                 };
             });
-            var go = $lazy_go(167);
+            var go = $lazy_go(169);
             return function (m) {
                 return go(m, z);
             };
@@ -1045,12 +1045,12 @@ var foldableMap = {
                         return z$prime;
                     };
                     if (m$prime instanceof Node) {
-                        return $lazy_go(176)(f($lazy_go(176)(z$prime, m$prime.value4))(m$prime.value3), m$prime.value5);
+                        return $lazy_go(178)(f($lazy_go(178)(z$prime, m$prime.value4))(m$prime.value3), m$prime.value5);
                     };
-                    throw new Error("Failed pattern match at Data.Map.Internal (line 173, column 26 - line 176, column 43): " + [ m$prime.constructor.name ]);
+                    throw new Error("Failed pattern match at Data.Map.Internal (line 175, column 26 - line 178, column 43): " + [ m$prime.constructor.name ]);
                 };
             });
-            var go = $lazy_go(173);
+            var go = $lazy_go(175);
             return function (m) {
                 return go(z, m);
             };
@@ -1067,7 +1067,7 @@ var foldableMap = {
                 if (v instanceof Node) {
                     return append1(go(v.value4))(append1(f(v.value3))(go(v.value5)));
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 179, column 10 - line 182, column 28): " + [ v.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 181, column 10 - line 184, column 28): " + [ v.constructor.name ]);
             };
             return go;
         };
@@ -1082,12 +1082,12 @@ var foldableWithIndexMap = {
                         return z$prime;
                     };
                     if (m$prime instanceof Node) {
-                        return $lazy_go(190)(m$prime.value4, f(m$prime.value2)(m$prime.value3)($lazy_go(190)(m$prime.value5, z$prime)));
+                        return $lazy_go(192)(m$prime.value4, f(m$prime.value2)(m$prime.value3)($lazy_go(192)(m$prime.value5, z$prime)));
                     };
-                    throw new Error("Failed pattern match at Data.Map.Internal (line 187, column 26 - line 190, column 45): " + [ m$prime.constructor.name ]);
+                    throw new Error("Failed pattern match at Data.Map.Internal (line 189, column 26 - line 192, column 45): " + [ m$prime.constructor.name ]);
                 };
             });
-            var go = $lazy_go(187);
+            var go = $lazy_go(189);
             return function (m) {
                 return go(m, z);
             };
@@ -1101,12 +1101,12 @@ var foldableWithIndexMap = {
                         return z$prime;
                     };
                     if (m$prime instanceof Node) {
-                        return $lazy_go(196)(f(m$prime.value2)($lazy_go(196)(z$prime, m$prime.value4))(m$prime.value3), m$prime.value5);
+                        return $lazy_go(198)(f(m$prime.value2)($lazy_go(198)(z$prime, m$prime.value4))(m$prime.value3), m$prime.value5);
                     };
-                    throw new Error("Failed pattern match at Data.Map.Internal (line 193, column 26 - line 196, column 45): " + [ m$prime.constructor.name ]);
+                    throw new Error("Failed pattern match at Data.Map.Internal (line 195, column 26 - line 198, column 45): " + [ m$prime.constructor.name ]);
                 };
             });
-            var go = $lazy_go(193);
+            var go = $lazy_go(195);
             return function (m) {
                 return go(z, m);
             };
@@ -1123,7 +1123,7 @@ var foldableWithIndexMap = {
                 if (v instanceof Node) {
                     return append1(go(v.value4))(append1(f(v.value2)(v.value3))(go(v.value5)));
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 199, column 10 - line 202, column 30): " + [ v.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 201, column 10 - line 204, column 30): " + [ v.constructor.name ]);
             };
             return go;
         };
@@ -1161,7 +1161,7 @@ var traversableMap = {
                         };
                     })(go(v.value4)))(f(v.value3)))(go(v.value5));
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 207, column 10 - line 213, column 19): " + [ v.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 209, column 10 - line 215, column 19): " + [ v.constructor.name ]);
             };
             return go;
         };
@@ -1196,7 +1196,7 @@ var traversableWithIndexMap = {
                         };
                     })(go(v.value4)))(f(v.value2)(v.value3)))(go(v.value5));
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 219, column 10 - line 225, column 19): " + [ v.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 221, column 10 - line 227, column 19): " + [ v.constructor.name ]);
             };
             return go;
         };
@@ -1232,7 +1232,7 @@ var foldSubmapBy = function (dictOrd) {
                             if (kmin instanceof Data_Maybe.Nothing) {
                                 return Data_Function["const"](false);
                             };
-                            throw new Error("Failed pattern match at Data.Map.Internal (line 387, column 7 - line 391, column 22): " + [ kmin.constructor.name ]);
+                            throw new Error("Failed pattern match at Data.Map.Internal (line 389, column 7 - line 393, column 22): " + [ kmin.constructor.name ]);
                         })();
                         var tooLarge = (function () {
                             if (kmax instanceof Data_Maybe.Just) {
@@ -1243,7 +1243,7 @@ var foldSubmapBy = function (dictOrd) {
                             if (kmax instanceof Data_Maybe.Nothing) {
                                 return Data_Function["const"](false);
                             };
-                            throw new Error("Failed pattern match at Data.Map.Internal (line 394, column 7 - line 398, column 22): " + [ kmax.constructor.name ]);
+                            throw new Error("Failed pattern match at Data.Map.Internal (line 396, column 7 - line 400, column 22): " + [ kmax.constructor.name ]);
                         })();
                         var inBounds = (function () {
                             if (kmin instanceof Data_Maybe.Just && kmax instanceof Data_Maybe.Just) {
@@ -1264,7 +1264,7 @@ var foldSubmapBy = function (dictOrd) {
                             if (kmin instanceof Data_Maybe.Nothing && kmax instanceof Data_Maybe.Nothing) {
                                 return Data_Function["const"](true);
                             };
-                            throw new Error("Failed pattern match at Data.Map.Internal (line 401, column 7 - line 409, column 21): " + [ kmin.constructor.name, kmax.constructor.name ]);
+                            throw new Error("Failed pattern match at Data.Map.Internal (line 403, column 7 - line 411, column 21): " + [ kmin.constructor.name, kmax.constructor.name ]);
                         })();
                         var go = function (v) {
                             if (v instanceof Leaf) {
@@ -1272,26 +1272,26 @@ var foldSubmapBy = function (dictOrd) {
                             };
                             if (v instanceof Node) {
                                 return appendFn(appendFn((function () {
-                                    var $640 = tooSmall(v.value2);
-                                    if ($640) {
+                                    var $643 = tooSmall(v.value2);
+                                    if ($643) {
                                         return memptyValue;
                                     };
                                     return go(v.value4);
                                 })())((function () {
-                                    var $641 = inBounds(v.value2);
-                                    if ($641) {
+                                    var $644 = inBounds(v.value2);
+                                    if ($644) {
                                         return f(v.value2)(v.value3);
                                     };
                                     return memptyValue;
                                 })()))((function () {
-                                    var $642 = tooLarge(v.value2);
-                                    if ($642) {
+                                    var $645 = tooLarge(v.value2);
+                                    if ($645) {
                                         return memptyValue;
                                     };
                                     return go(v.value5);
                                 })());
                             };
-                            throw new Error("Failed pattern match at Data.Map.Internal (line 411, column 10 - line 417, column 66): " + [ v.constructor.name ]);
+                            throw new Error("Failed pattern match at Data.Map.Internal (line 413, column 10 - line 419, column 66): " + [ v.constructor.name ]);
                         };
                         return go;
                     };
@@ -1325,7 +1325,7 @@ var findMin = function ($copy_v) {
             $copy_v = v.value4;
             return;
         };
-        throw new Error("Failed pattern match at Data.Map.Internal (line 359, column 11 - line 364, column 21): " + [ v.constructor.name ]);
+        throw new Error("Failed pattern match at Data.Map.Internal (line 361, column 11 - line 366, column 21): " + [ v.constructor.name ]);
     };
     while (!$tco_done) {
         $tco_result = $tco_loop($copy_v);
@@ -1357,9 +1357,9 @@ var lookupGT = function (dictOrd) {
                 if (v1 instanceof Data_Ordering.EQ) {
                     return findMin(v.value5);
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 340, column 7 - line 346, column 25): " + [ v1.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 342, column 7 - line 348, column 25): " + [ v1.constructor.name ]);
             };
-            throw new Error("Failed pattern match at Data.Map.Internal (line 337, column 8 - line 346, column 25): " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Data.Map.Internal (line 339, column 8 - line 348, column 25): " + [ v.constructor.name ]);
         };
         return go;
     };
@@ -1383,7 +1383,7 @@ var findMax = function ($copy_v) {
             $copy_v = v.value5;
             return;
         };
-        throw new Error("Failed pattern match at Data.Map.Internal (line 350, column 11 - line 355, column 21): " + [ v.constructor.name ]);
+        throw new Error("Failed pattern match at Data.Map.Internal (line 352, column 11 - line 357, column 21): " + [ v.constructor.name ]);
     };
     while (!$tco_done) {
         $tco_result = $tco_loop($copy_v);
@@ -1415,9 +1415,9 @@ var lookupLT = function (dictOrd) {
                 if (v1 instanceof Data_Ordering.EQ) {
                     return findMax(v.value4);
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 309, column 7 - line 316, column 21): " + [ v1.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 311, column 7 - line 318, column 21): " + [ v1.constructor.name ]);
             };
-            throw new Error("Failed pattern match at Data.Map.Internal (line 306, column 8 - line 316, column 21): " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Data.Map.Internal (line 308, column 8 - line 318, column 21): " + [ v.constructor.name ]);
         };
         return go;
     };
@@ -1436,7 +1436,7 @@ var filterWithKey = function (dictOrd) {
                     return unsafeJoinNodes(go(v.value4), go(v.value5));
                 };
             };
-            throw new Error("Failed pattern match at Data.Map.Internal (line 625, column 8 - line 631, column 47): " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Data.Map.Internal (line 627, column 8 - line 633, column 47): " + [ v.constructor.name ]);
         };
         return go;
     };
@@ -1455,15 +1455,15 @@ var filterKeys = function (dictOrd) {
                     return unsafeJoinNodes(go(v.value4), go(v.value5));
                 };
             };
-            throw new Error("Failed pattern match at Data.Map.Internal (line 638, column 8 - line 644, column 47): " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Data.Map.Internal (line 640, column 8 - line 646, column 47): " + [ v.constructor.name ]);
         };
         return go;
     };
 };
 var filter = function (dictOrd) {
-    var $769 = filterWithKey(dictOrd);
-    return function ($770) {
-        return $769(Data_Function["const"]($770));
+    var $786 = filterWithKey(dictOrd);
+    return function ($787) {
+        return $786(Data_Function["const"]($787));
     };
 };
 var eqMap = function (dictEq) {
@@ -1485,7 +1485,7 @@ var eqMap = function (dictEq) {
                         };
                         return false;
                     };
-                    throw new Error("Failed pattern match at Data.Map.Internal (line 92, column 14 - line 103, column 16): " + [ xs.constructor.name ]);
+                    throw new Error("Failed pattern match at Data.Map.Internal (line 94, column 14 - line 105, column 16): " + [ xs.constructor.name ]);
                 };
             }
         };
@@ -1632,9 +1632,9 @@ var $$delete = function (dictOrd) {
                 if (v1 instanceof Data_Ordering.EQ) {
                     return unsafeJoinNodes(v.value4, v.value5);
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 496, column 7 - line 499, column 43): " + [ v1.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 498, column 7 - line 501, column 43): " + [ v1.constructor.name ]);
             };
-            throw new Error("Failed pattern match at Data.Map.Internal (line 493, column 8 - line 499, column 43): " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Data.Map.Internal (line 495, column 8 - line 501, column 43): " + [ v.constructor.name ]);
         };
         return go;
     };
@@ -1654,7 +1654,7 @@ var checkValid = function (dictOrd) {
                 if (v.value5 instanceof Node) {
                     return v.value0 === 2 && (v.value5.value0 === 1 && (v.value1 > v.value5.value1 && (greaterThan1(v.value5.value2)(v.value2) && go(v.value5))));
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 262, column 11 - line 266, column 60): " + [ v.value5.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 264, column 11 - line 268, column 60): " + [ v.value5.constructor.name ]);
             };
             if (v.value4 instanceof Node) {
                 if (v.value5 instanceof Leaf) {
@@ -1663,11 +1663,11 @@ var checkValid = function (dictOrd) {
                 if (v.value5 instanceof Node) {
                     return v.value0 > v.value5.value0 && (greaterThan1(v.value5.value2)(v.value2) && (v.value0 > v.value4.value0 && (lessThan1(v.value4.value2)(v.value2) && (abs(v.value5.value0 - v.value4.value0 | 0) < 2 && (((v.value5.value1 + v.value4.value1 | 0) + 1 | 0) === v.value1 && (go(v.value4) && go(v.value5)))))));
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 268, column 11 - line 272, column 108): " + [ v.value5.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 270, column 11 - line 274, column 108): " + [ v.value5.constructor.name ]);
             };
-            throw new Error("Failed pattern match at Data.Map.Internal (line 260, column 7 - line 272, column 108): " + [ v.value4.constructor.name ]);
+            throw new Error("Failed pattern match at Data.Map.Internal (line 262, column 7 - line 274, column 108): " + [ v.value4.constructor.name ]);
         };
-        throw new Error("Failed pattern match at Data.Map.Internal (line 257, column 8 - line 272, column 108): " + [ v.constructor.name ]);
+        throw new Error("Failed pattern match at Data.Map.Internal (line 259, column 8 - line 274, column 108): " + [ v.constructor.name ]);
     };
     return go;
 };
@@ -1690,9 +1690,9 @@ var bindMap = function (dictOrd) {
         bind: function (m) {
             return function (f) {
                 return mapMaybeWithKey1(function (k) {
-                    var $771 = lookup1(k);
-                    return function ($772) {
-                        return $771(f($772));
+                    var $788 = lookup1(k);
+                    return function ($789) {
+                        return $788(f($789));
                     };
                 })(m);
             };
@@ -1701,6 +1701,30 @@ var bindMap = function (dictOrd) {
             return applyMap1;
         }
     };
+};
+var anyWithKey = function (predicate) {
+    var go = function (v) {
+        if (v instanceof Leaf) {
+            return false;
+        };
+        if (v instanceof Node) {
+            return predicate(v.value2)(v.value3) || (go(v.value4) || go(v.value5));
+        };
+        throw new Error("Failed pattern match at Data.Map.Internal (line 693, column 8 - line 695, column 62): " + [ v.constructor.name ]);
+    };
+    return go;
+};
+var any = function (predicate) {
+    var go = function (v) {
+        if (v instanceof Leaf) {
+            return false;
+        };
+        if (v instanceof Node) {
+            return predicate(v.value3) || (go(v.value4) || go(v.value5));
+        };
+        throw new Error("Failed pattern match at Data.Map.Internal (line 683, column 8 - line 685, column 58): " + [ v.constructor.name ]);
+    };
+    return go;
 };
 var alter = function (dictOrd) {
     var compare = Data_Ord.compare(dictOrd);
@@ -1715,7 +1739,7 @@ var alter = function (dictOrd) {
                 if (v2 instanceof Data_Maybe.Just) {
                     return unsafeBalancedNode(k, v2.value0, v.value1, v.value2);
                 };
-                throw new Error("Failed pattern match at Data.Map.Internal (line 512, column 3 - line 516, column 41): " + [ v2.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Map.Internal (line 514, column 3 - line 518, column 41): " + [ v2.constructor.name ]);
             };
         };
     };
@@ -1782,6 +1806,8 @@ export {
     mapMaybeWithKey,
     mapMaybe,
     catMaybes,
+    any,
+    anyWithKey,
     IterDone,
     IterNext,
     toMapIter,

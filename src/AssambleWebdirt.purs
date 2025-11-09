@@ -52,6 +52,8 @@ foreign import addNote :: Foreign -> Number -> Effect Foreign
 
 foreign import addVal :: Foreign -> String -> Number -> Effect Foreign
 
+-- foreign import pianola :: String -> Foreign -> Effect Foreign
+
 
 -- foreign import addVal :: String -> Number -> Foreign -> Effect Foreign
 --export const addVal =  valId  =>  val   => o => () => { o[valId] = val; return o; };

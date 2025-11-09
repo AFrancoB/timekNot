@@ -133,9 +133,9 @@ var check$prime = function (v) {
             if (!v2) {
                 return new Data_Either.Left("failed the check, time bites it's own tail");
             };
-            throw new Error("Failed pattern match at Main (line 106, column 30 - line 108, column 89): " + [ v2.constructor.name ]);
+            throw new Error("Failed pattern match at Main (line 107, column 30 - line 109, column 89): " + [ v2.constructor.name ]);
         };
-        throw new Error("Failed pattern match at Main (line 104, column 1 - line 104, column 74): " + [ v.constructor.name, v1.constructor.name ]);
+        throw new Error("Failed pattern match at Main (line 105, column 1 - line 105, column 74): " + [ v.constructor.name, v1.constructor.name ]);
     };
 };
 var define = function (tk) {
@@ -164,7 +164,7 @@ var define = function (tk) {
                     error: "bad syntax"
                 };
             };
-            throw new Error("Failed pattern match at Main (line 96, column 3 - line 102, column 52): " + [ pr.constructor.name ]);
+            throw new Error("Failed pattern match at Main (line 97, column 3 - line 103, column 52): " + [ pr.constructor.name ]);
         };
     };
 };

@@ -7,6 +7,7 @@ import * as Control_Monad_Cont_Class from "../Control.Monad.Cont.Class/index.js"
 import * as Control_Monad_Error_Class from "../Control.Monad.Error.Class/index.js";
 import * as Control_Monad_Reader_Class from "../Control.Monad.Reader.Class/index.js";
 import * as Control_Monad_Rec_Class from "../Control.Monad.Rec.Class/index.js";
+import * as Control_Monad_ST_Class from "../Control.Monad.ST.Class/index.js";
 import * as Control_Monad_State_Class from "../Control.Monad.State.Class/index.js";
 import * as Control_Monad_Trans_Class from "../Control.Monad.Trans.Class/index.js";
 import * as Control_Monad_Writer_Class from "../Control.Monad.Writer.Class/index.js";
@@ -22,8 +23,8 @@ var ReaderT = function (x) {
 };
 var withReaderT = function (f) {
     return function (v) {
-        return function ($146) {
-            return v(f($146));
+        return function ($152) {
+            return v(f($152));
         };
     };
 };
@@ -37,25 +38,25 @@ var newtypeReaderT = {
 };
 var monadTransReaderT = {
     lift: function (dictMonad) {
-        return function ($147) {
-            return ReaderT(Data_Function["const"]($147));
+        return function ($153) {
+            return ReaderT(Data_Function["const"]($153));
         };
     }
 };
 var lift = /* #__PURE__ */ Control_Monad_Trans_Class.lift(monadTransReaderT);
 var mapReaderT = function (f) {
     return function (v) {
-        return function ($148) {
-            return f(v($148));
+        return function ($154) {
+            return f(v($154));
         };
     };
 };
 var functorReaderT = function (dictFunctor) {
     return {
         map: (function () {
-            var $149 = Data_Functor.map(dictFunctor);
-            return function ($150) {
-                return mapReaderT($149($150));
+            var $155 = Data_Functor.map(dictFunctor);
+            return function ($156) {
+                return mapReaderT($155($156));
             };
         })()
     };
@@ -77,10 +78,10 @@ var distributiveReaderT = function (dictDistributive) {
         collect: function (dictFunctor) {
             var map = Data_Functor.map(dictFunctor);
             return function (f) {
-                var $151 = Data_Distributive.distribute(distributiveReaderT(dictDistributive))(dictFunctor);
-                var $152 = map(f);
-                return function ($153) {
-                    return $151($152($153));
+                var $157 = Data_Distributive.distribute(distributiveReaderT(dictDistributive))(dictFunctor);
+                var $158 = map(f);
+                return function ($159) {
+                    return $157($158($159));
                 };
             };
         },
@@ -136,9 +137,9 @@ var applicativeReaderT = function (dictApplicative) {
     var applyReaderT1 = applyReaderT(dictApplicative.Apply0());
     return {
         pure: (function () {
-            var $154 = Control_Applicative.pure(dictApplicative);
-            return function ($155) {
-                return ReaderT(Data_Function["const"]($154($155)));
+            var $160 = Control_Applicative.pure(dictApplicative);
+            return function ($161) {
+                return ReaderT(Data_Function["const"]($160($161)));
             };
         })(),
         Apply0: function () {
@@ -183,8 +184,8 @@ var monadContReaderT = function (dictMonadCont) {
         callCC: function (f) {
             return function (r) {
                 return callCC(function (c) {
-                    var v = f(function ($156) {
-                        return ReaderT(Data_Function["const"](c($156)));
+                    var v = f(function ($162) {
+                        return ReaderT(Data_Function["const"](c($162)));
                     });
                     return v(r);
                 });
@@ -200,10 +201,10 @@ var monadEffectReader = function (dictMonadEffect) {
     var monadReaderT1 = monadReaderT(Monad0);
     return {
         liftEffect: (function () {
-            var $157 = lift(Monad0);
-            var $158 = Effect_Class.liftEffect(dictMonadEffect);
-            return function ($159) {
-                return $157($158($159));
+            var $163 = lift(Monad0);
+            var $164 = Effect_Class.liftEffect(dictMonadEffect);
+            return function ($165) {
+                return $163($164($165));
             };
         })(),
         Monad0: function () {
@@ -241,10 +242,10 @@ var monadStateReaderT = function (dictMonadState) {
     var monadReaderT1 = monadReaderT(Monad0);
     return {
         state: (function () {
-            var $160 = lift(Monad0);
-            var $161 = Control_Monad_State_Class.state(dictMonadState);
-            return function ($162) {
-                return $160($161($162));
+            var $166 = lift(Monad0);
+            var $167 = Control_Monad_State_Class.state(dictMonadState);
+            return function ($168) {
+                return $166($167($168));
             };
         })(),
         Monad0: function () {
@@ -258,10 +259,10 @@ var monadTellReaderT = function (dictMonadTell) {
     var monadReaderT1 = monadReaderT(Monad1);
     return {
         tell: (function () {
-            var $163 = lift(Monad1);
-            var $164 = Control_Monad_Writer_Class.tell(dictMonadTell);
-            return function ($165) {
-                return $163($164($165));
+            var $169 = lift(Monad1);
+            var $170 = Control_Monad_Writer_Class.tell(dictMonadTell);
+            return function ($171) {
+                return $169($170($171));
             };
         })(),
         Semigroup0: function () {
@@ -291,10 +292,10 @@ var monadThrowReaderT = function (dictMonadThrow) {
     var monadReaderT1 = monadReaderT(Monad0);
     return {
         throwError: (function () {
-            var $166 = lift(Monad0);
-            var $167 = Control_Monad_Error_Class.throwError(dictMonadThrow);
-            return function ($168) {
-                return $166($167($168));
+            var $172 = lift(Monad0);
+            var $173 = Control_Monad_Error_Class.throwError(dictMonadThrow);
+            return function ($174) {
+                return $172($173($174));
             };
         })(),
         Monad0: function () {
@@ -318,6 +319,22 @@ var monadErrorReaderT = function (dictMonadError) {
         },
         MonadThrow0: function () {
             return monadThrowReaderT1;
+        }
+    };
+};
+var monadSTReaderT = function (dictMonadST) {
+    var Monad0 = dictMonadST.Monad0();
+    var monadReaderT1 = monadReaderT(Monad0);
+    return {
+        liftST: (function () {
+            var $175 = lift(Monad0);
+            var $176 = Control_Monad_ST_Class.liftST(dictMonadST);
+            return function ($177) {
+                return $175($176($177));
+            };
+        })(),
+        Monad0: function () {
+            return monadReaderT1;
         }
     };
 };
@@ -411,7 +428,8 @@ export {
     monadTellReaderT,
     monadWriterReaderT,
     distributiveReaderT,
-    monadRecReaderT
+    monadRecReaderT,
+    monadSTReaderT
 };
 export {
     ask,

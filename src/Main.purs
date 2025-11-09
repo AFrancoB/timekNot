@@ -53,6 +53,7 @@ import TimePacketOps
 import Parser
 import Voices
 import Novus
+import AssambleWebdirt
 
 import Parsing
 
@@ -155,4 +156,5 @@ playDirty tk dirt = do
   wEnd <- read tk.wE
   events <- render tk {zone: 0, windowStartTime: fromDateTimeToPosix $ wStart, windowEndTime: fromDateTimeToPosix $ wEnd} -- Effect (Array Foreign)
   x <- traverse_ (\x -> playSample dirt $ unsafeFromForeign x) events  -- type of this?? Unit
+  -- _ <- traverse_ (\x -> pianola "pianola" x) events
   pure x

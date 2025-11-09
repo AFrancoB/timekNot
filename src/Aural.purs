@@ -3,8 +3,9 @@ module Aural(aural,variationsStr, checkXPitch, getPitchMap, prog) where
 import Prelude
 
 import Data.Identity
-import Data.List (List(..), head, tail, elem, (:), filter, fromFoldable, (..), length, zip, concat, mapMaybe)
+import Data.List (List(..), head, tail, elem, (:), filter, fromFoldable, (..), length, zip, concat, mapMaybe, reverse, foldl)
 import Data.List.NonEmpty (NonEmptyList, toList)
+import Data.List.Lazy as Lz
 import Data.Array (fromFoldable, length) as A
 import Data.Either
 import Data.Int
@@ -14,6 +15,9 @@ import Data.Map (fromFoldable) as M
 import Data.Maybe (Maybe(..), fromMaybe)
 -- import Data.Set as Set
 import Data.String as Str
+
+import Effect.Unsafe (unsafePerformEffect)
+import Effect.Shuffle (shuffle)
 
 import Data.FunctorWithIndex (mapWithIndex)
 
@@ -90,8 +94,52 @@ value = do
     _ <- reservedOp "."
     val <- choice [try sound, try n, try gain, try pan, try speed, try begin, try end, try vowel, try cutoff, try cutoffh, try inter, try maxw, try minw, try legato, try orbit, try alpha, try beta, try gamma, try mayeh, try prog, try xeNotes, xeno] -- should be a tuple value variant
     op <- operadores <|> (pure mulVar)
-    trans <- transposer <|> (pure $ VList (VInt 1:Nil))
+    trans <- choice [try transposer, parens $ parsesStepVariant] <|> (pure $ VList (VInt 1:Nil))
     pure $ Tuple val $ operate val trans op
+
+
+
+parsesStepVariant:: P Variant
+parsesStepVariant = do 
+    _ <- pure 1
+    whitespace
+    -- fs <- funcs 
+    _ <- reserved "step" 
+    numSteps <- natural
+    stepSize <- parseNumber
+    startPt <- parseNumber
+    pure $ step numSteps stepSize startPt -- create a foldl (\l f -> f l) steps functions pattern for variants!!
+
+step:: Int -> Number -> Number -> Variant
+step numOfSteps stepSize startPoint = VList $ map (\n -> VNum n) $ fromFoldable $ Lz.take numOfSteps $ Lz.iterate (\nu -> nu + stepSize) startPoint
+
+
+-- step1:: TempoMark -> Rational -> Int -> List TempoMark
+-- step1 (CPM n) upTo numSteps = step1CPM n upTo numSteps
+-- step1 (CPS n) upTo numSteps = step1CPS n upTo numSteps
+-- step1 (BPM n t) upTo numSteps = step1BPM n t upTo numSteps
+-- step1 _ _ _ = Nil
+
+-- step1CPM:: Rational -> Rational -> Int -> List TempoMark
+-- step1CPM n upTo 0 = (CPM n) : Nil
+-- step1CPM n upTo 1 = (CPM n) : (CPM (n+upTo)) : Nil 
+-- step1CPM n upTo numSteps = step numSteps (stepSizeFromUpTo n upTo (toRational numSteps 1)) (CPM n)
+
+-- step1CPS:: Rational -> Rational -> Int -> List TempoMark
+-- step1CPS n upTo 0 = (CPS n) : Nil
+-- step1CPS n upTo 1 = (CPS n) : (CPS (n+upTo)) : Nil 
+-- step1CPS n upTo numSteps = step numSteps (stepSizeFromUpTo n upTo (toRational numSteps 1)) (CPS n)
+
+-- step1BPM:: Rational -> Rational -> Rational -> Int -> List TempoMark
+-- step1BPM n t upTo 0 = (BPM n t) : Nil
+-- step1BPM n t upTo 1 = (BPM n t) : (BPM n (t+upTo)) : Nil 
+-- step1BPM n t upTo numSteps = step numSteps (stepSizeFromUpTo t upTo (toRational numSteps 1)) (BPM n t)
+
+-- stepSizeFromUpTo:: Rational -> Rational -> Rational -> Rational
+-- stepSizeFromUpTo t upTo numOfSteps = ((t + upTo) - t) / (numOfSteps- (1%1)) 
+
+
+
 
 transposer:: P Variant
 transposer = do 
@@ -107,14 +155,17 @@ operadores:: P (Variant -> Variant -> Variant)
 operadores = choice [reservedOp "*" *> pure mulVar, reservedOp "+" *> pure addVar]
 
 --
+
+--
 prog:: P Value
 prog = do
     _ <- pure 1
     _ <- choice [reserved "prog"]
     _ <- reservedOp "="
     sp <- parseSpan <|> pure CycleEvent
+    fs <- funcs
     xs <- many idOfPitch
-    pure $ Prog sp $ fromFoldable xs
+    pure $ Prog sp $ foldl (\l f -> f l) (fromFoldable xs) fs
 
 idOfPitch:: P (Tuple String (Maybe Int))
 idOfPitch = do
@@ -128,9 +179,10 @@ xeNotes = do
     _ <- choice [reserved "xnotes"]
     _ <- reservedOp "="
     sp <- parseSpan <|> pure CycleEvent
+    fs <- funcs
     l <- choice [try (fromFoldable <$> parseRangeInt), fromFoldable <$> many natural]
     vars <- variationsInt <|> pure Nil
-    pure $ XNotes sp l vars
+    pure $ XNotes sp (foldl (\l f -> f l) l fs) vars
 
 alpha:: P Value
 alpha = do
@@ -144,8 +196,9 @@ makeAlpha:: P Value
 makeAlpha = do
     _ <- pure 1
     sp <- parseSpan <|> pure CycleEvent
+    fs <- funcs
     alphaList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
-    pure $ Alpha sp $ fromFoldable alphaList
+    pure $ Alpha sp $ foldl (\l f -> f l) (fromFoldable alphaList) fs
 
 beta:: P Value
 beta = do
@@ -159,8 +212,9 @@ makeBeta:: P Value
 makeBeta = do
     _ <- pure 1
     sp <- parseSpan <|> pure CycleEvent
+    fs <- funcs
     betaList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
-    pure $ Beta sp $ fromFoldable betaList
+    pure $ Beta sp $ foldl (\l f -> f l) (fromFoldable betaList) fs
 
 gamma:: P Value
 gamma = do
@@ -174,8 +228,9 @@ makeGamma:: P Value
 makeGamma = do
     _ <- pure 1
     sp <- parseSpan <|> pure CycleEvent
+    fs <- funcs
     gammaList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
-    pure $ Gamma sp $ fromFoldable gammaList
+    pure $ Gamma sp $ foldl (\l f -> f l) (fromFoldable gammaList) fs
 
 xeno:: P Value 
 xeno = do
@@ -183,8 +238,9 @@ xeno = do
     xID <- choice [try shurNot, try shurNot8, xeno']
     _ <- reservedOp "="
     sp <- parseSpan <|> pure CycleEvent
+    fs <- funcs
     xnL <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
-    pure $ Xeno xID sp $ fromFoldable xnL
+    pure $ Xeno xID sp $ foldl (\l f -> f l) (fromFoldable xnL) fs
 
 shurNot8:: P (Tuple String (Maybe Int))
 shurNot8 = do
@@ -222,8 +278,9 @@ makeShur:: P Value
 makeShur = do
     _ <- pure 1
     sp <- parseSpan  <|> pure CycleEvent
+    fs <- funcs
     shurList <- choice [try (A.fromFoldable <$> parseRangeInt), many shurNote]
-    pure $ Dastgah sp (Shur $ fromFoldable shurList)
+    pure $ Dastgah sp (Shur $ foldl (\l f -> f l) (fromFoldable shurList) fs)
 
 shurNote:: P Int
 shurNote = do
@@ -243,8 +300,9 @@ makeSegah:: P Value
 makeSegah = do
     _ <- pure 1
     sp <- parseSpan <|> pure CycleEvent
+    fs <- funcs
     segahList <- choice [try (A.fromFoldable <$> parseRangeInt), many segahNote]
-    pure $ Dastgah sp (Segah $ fromFoldable segahList)
+    pure $ Dastgah sp (Segah $ foldl (\l f -> f l) (fromFoldable segahList) fs)
 
 segahNote:: P Int
 segahNote = do
@@ -264,8 +322,9 @@ makeNava:: P Value
 makeNava = do
     _ <- pure 1
     sp <- parseSpan <|> pure CycleEvent
+    fs <- funcs
     navaList <- choice [try (A.fromFoldable <$> parseRangeInt), many navaNote]
-    pure $ Dastgah sp (Nava $ fromFoldable navaList)
+    pure $ Dastgah sp (Nava $ foldl (\l f -> f l) (fromFoldable navaList) fs)
 
 navaNote:: P Int
 navaNote = do
@@ -285,8 +344,9 @@ makeHomayun:: P Value
 makeHomayun = do
     _ <- pure 1
     sp <- parseSpan <|> pure CycleEvent
+    fs <- funcs
     homayunList <- choice [try (A.fromFoldable <$> parseRangeInt), many homayunNote]
-    pure $ Dastgah sp (Homayun $ fromFoldable homayunList)
+    pure $ Dastgah sp (Homayun $ foldl (\l f -> f l) (fromFoldable homayunList) fs)
 
 homayunNote:: P Int
 homayunNote = do
@@ -306,8 +366,9 @@ makeChahargah:: P Value
 makeChahargah = do
     _ <- pure 1
     sp <- parseSpan <|> pure CycleEvent
+    fs <- funcs
     chahargahList <- choice [try (A.fromFoldable <$> parseRangeInt), many chahargahNote]
-    pure $ Dastgah sp (Chahargah $ fromFoldable chahargahList)
+    pure $ Dastgah sp (Chahargah $ foldl (\l f -> f l) (fromFoldable chahargahList) fs)
 
 chahargahNote:: P Int
 chahargahNote = do
@@ -327,8 +388,9 @@ makeMahur:: P Value
 makeMahur = do
     _ <- pure 1
     sp <- parseSpan <|> pure CycleEvent
+    fs <- funcs
     mahurList <- choice [try (A.fromFoldable <$> parseRangeInt), many mahurNote]
-    pure $ Dastgah sp (Mahur $ fromFoldable mahurList)
+    pure $ Dastgah sp (Mahur $ foldl (\l f -> f l) (fromFoldable mahurList) fs)
 
 mahurNote:: P Int
 mahurNote = do
@@ -348,8 +410,9 @@ makeRastPanjgah:: P Value
 makeRastPanjgah = do
     _ <- pure 1
     sp <- parseSpan <|> pure CycleEvent
+    fs <- funcs
     rastPanjgahList <- choice [try (A.fromFoldable <$> parseRangeInt), many rastPanjgahNote]
-    pure $ Dastgah sp (RastPanjgah $ fromFoldable rastPanjgahList)
+    pure $ Dastgah sp $ RastPanjgah $ foldl (\l f -> f l) (fromFoldable rastPanjgahList) fs
 
 rastPanjgahNote:: P Int
 rastPanjgahNote = do
@@ -369,9 +432,10 @@ makeOrbit:: P Value
 makeOrbit = do
     _ <- pure 1
     sp <- parseSpan <|> pure CycleEvent
+    fs <- funcs
     nList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
     vars <- variationsInt <|> pure Nil
-    pure $ Orbit sp (fromFoldable nList) vars
+    pure $ Orbit sp (foldl (\l f -> f l) (fromFoldable nList) fs) vars
 
 legato:: P Value
 legato = do
@@ -385,9 +449,10 @@ makeLegato:: P Value
 makeLegato = do
     _ <- pure 1
     sp <- parseSpan <|> pure CycleEvent
+    fs <- funcs
     coLs <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
-    pure $ Legato sp (fromFoldable coLs) vars
+    pure $ Legato sp (foldl (\l f -> f l) (fromFoldable coLs) fs) vars
 
 --
 inter:: P Value
@@ -402,9 +467,10 @@ makeInter:: P Value
 makeInter = do
     _ <- pure 1
     sp <- parseSpan <|> pure CycleEvent
+    fs <- funcs
     coLs <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
-    pure $ Inter sp (fromFoldable coLs) vars
+    pure $ Inter sp (foldl (\l f -> f l) (fromFoldable coLs) fs) vars
 
 --
 minw:: P Value
@@ -419,9 +485,10 @@ makeMinw:: P Value
 makeMinw = do
     _ <- pure 1
     sp <- parseSpan  <|> pure CycleEvent
+    fs <- funcs
     coLs <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
-    pure $ MinW sp (fromFoldable coLs) vars
+    pure $ MinW sp (foldl (\l f -> f l) (fromFoldable coLs) fs) vars
 
 --
 maxw:: P Value
@@ -436,9 +503,10 @@ makeMaxw:: P Value
 makeMaxw = do
     _ <- pure 1
     sp <- parseSpan  <|> pure CycleEvent
+    fs <- funcs
     coLs <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
-    pure $ MaxW sp (fromFoldable coLs) vars
+    pure $ MaxW sp (foldl (\l f -> f l) (fromFoldable coLs) fs) vars
 
 --
 cutoffh:: P Value
@@ -453,9 +521,10 @@ makeCutOffH:: P Value
 makeCutOffH = do
     _ <- pure 1
     sp <- parseSpan  <|> pure CycleEvent
+    fs <- funcs
     coLs <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
-    pure $ CutOffH sp (fromFoldable coLs) vars
+    pure $ CutOffH sp (foldl (\l f -> f l) (fromFoldable coLs) fs) vars
 
 cutoff:: P Value
 cutoff = do
@@ -469,9 +538,10 @@ makeCutOff:: P Value
 makeCutOff = do
     _ <- pure 1
     sp <- parseSpan  <|> pure CycleEvent
+    fs <- funcs
     coLs <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
-    pure $ CutOff sp (fromFoldable coLs) vars
+    pure $ CutOff sp (foldl (\l f -> f l) (fromFoldable coLs) fs) vars
 
 vowel:: P Value
 vowel = do
@@ -485,9 +555,10 @@ makeVowel:: P Value
 makeVowel = do
     _ <- pure 1
     sp <- parseSpan  <|> pure CycleEvent
+    fs <- funcs
     vLs <- choice [many parseVowel]
     vars <- variationsVow <|> pure Nil
-    pure $ Vowel sp (fromFoldable vLs) vars
+    pure $ Vowel sp (foldl (\l f -> f l) (fromFoldable vLs) fs) vars
 
 variationsVow:: P (List (Variation String))
 variationsVow = do
@@ -523,9 +594,10 @@ makeEnd:: P Value
 makeEnd = do
     _ <- pure 1
     sp <- parseSpan  <|> pure CycleEvent
-    spdList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
+    fs <- funcs
+    endList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
-    pure $ End sp (fromFoldable spdList) vars
+    pure $ End sp (foldl (\l f -> f l) (fromFoldable endList) fs) vars
 
 begin:: P Value
 begin = do
@@ -539,9 +611,10 @@ makeBegin:: P Value
 makeBegin = do
     _ <- pure 1
     sp <- parseSpan  <|> pure CycleEvent
-    panList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
+    fs <- funcs
+    beginList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
-    pure $ Begin sp (fromFoldable panList) vars
+    pure $ Begin sp (foldl (\l f -> f l) (fromFoldable beginList) fs) vars
 
 speed:: P Value
 speed = do
@@ -555,9 +628,10 @@ makeSpeed:: P Value
 makeSpeed = do
     _ <- pure 1
     sp <- parseSpan  <|> pure CycleEvent
+    fs <- funcs
     spdList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
-    pure $ Speed sp (fromFoldable spdList) vars
+    pure $ Speed sp (foldl (\l f -> f l) (fromFoldable spdList) fs) vars
 
 pan:: P Value
 pan = do
@@ -571,9 +645,10 @@ makePan:: P Value
 makePan = do
     _ <- pure 1
     sp <- parseSpan  <|> pure CycleEvent
+    fs <- funcs
     panList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
-    pure $ Pan sp (fromFoldable panList) vars
+    pure $ Pan sp (foldl (\l f -> f l) (fromFoldable panList) fs) vars
 
 gain:: P Value
 gain = do
@@ -587,9 +662,10 @@ makeGain:: P Value
 makeGain = do
     _ <- pure 1
     sp <- parseSpan  <|> pure CycleEvent
+    fs <- funcs
     gainList <- choice [try (A.fromFoldable <$> parseRangeNum), many parseNumber]
     vars <- variationsNum <|> pure Nil
-    pure $ Gain sp (fromFoldable gainList) vars
+    pure $ Gain sp (foldl (\l f -> f l) (fromFoldable gainList) fs) vars
 
 n:: P Value
 n = do
@@ -603,9 +679,10 @@ makeN:: P Value
 makeN = do
     _ <- pure 1
     sp <- parseSpan  <|> pure CycleEvent
+    fs <- funcs
     nList <- choice [try (A.fromFoldable <$> parseRangeInt), A.fromFoldable <$> toList <$> many1 natural]
     vars <- variationsInt <|> pure Nil
-    pure $ N sp (fromFoldable nList) vars
+    pure $ N sp (foldl (\l f -> f l) (fromFoldable nList) fs) vars
 
 sound:: P Value
 sound = do
@@ -619,9 +696,10 @@ makeSound:: P Value
 makeSound = do
     _ <- pure 1
     sp <- parseSpan  <|> pure CycleEvent
+    fs <- funcs
     strList <- sampleParser 
     vars <- variationsStr <|> pure Nil
-    pure $ Sound sp strList vars
+    pure $ Sound sp (foldl (\l f -> f l) strList fs) vars
 
 transNumVal:: P (List (Number -> Number))
 transNumVal = do 
@@ -679,6 +757,55 @@ everyNum = do
     pure $ Every n sp xs
 
 --
+funcs:: forall a. P (List (List a -> List a))
+funcs = do
+    _ <- pure 1
+    fs <- fun `sepBy` (reserved "$")
+    pure $ fromFoldable fs
+
+fun:: forall a. P (List a -> List a)
+fun = do 
+    _ <- pure 1
+    x <- choice [try rev, try pal, try shuf] <|> pure nada
+    pure x
+
+rev:: forall a. P (List a -> List a)
+rev = do 
+    _ <- pure 1
+    r <- reserved "rev" *> pure reverse
+    pure r 
+
+pal:: forall a. P (List a -> List a)
+pal = do 
+    _ <- pure 1
+    p <- reserved "pal" *> pure palindrome
+    pure p
+
+palindrome:: forall a. List a -> List a
+palindrome xs = concat (xs : reverse xs : Nil)
+
+shuf:: forall a. P (List a -> List a) 
+shuf = do 
+    _ <- pure 1
+    shu <- reserved "shuffle" *> pure shuffle'
+    pure shu
+
+shuffle' :: forall a. List a -> List a
+shuffle' xs = unsafePerformEffect $ shuffle xs
+
+nada:: forall a. List a -> List a
+nada xs = xs 
+
+
+-- funca xs = map (\x -> x) xs
+
+-- List operations:
+-- substitute this on every value: choice [try (fromFoldable <$> parseRangeInt), fromFoldable <$> many natural]
+-- be able to do: reverse, stutter, pyramid, palindrome, etc...
+
+--- is here the right place to also produce: sine $ range 0 10, etc.?
+
+
 parseSpan:: P Span
 parseSpan = do
     _ <- pure 1

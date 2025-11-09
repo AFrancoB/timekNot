@@ -1,11 +1,12 @@
 
-module Parser(cFromParser, polytemporalRelation', temporal, check, parseProgram, getTemporalMap, getAuralMap, testRecursive, testP,xPitchExpression, expression, getVantageMap, parseDate, utcA, tempoOperArray) where
+module Parser(cFromParser, polytemporalRelation', temporal, check, parseProgram, getTemporalMap, getAuralMap, testRecursive, testP,xPitchExpression, expression, getVantageMap, parseDate, utcA, tempoOperArray, step, genTempoMarks) where
 
 import Prelude
 
 import Data.Identity
 import Data.List (List(..), head, tail, elem, (:), concat, (..), range)
 import Data.List (fromFoldable, filter) as L
+import Data.List.Lazy (iterate,take,toUnfoldable) as Lz
 import Data.Array (fromFoldable) as A
 import Data.Either
 import Data.Int
@@ -16,6 +17,8 @@ import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Set as Set
 import Data.Maybe
 import Data.Rational (Rational(..), toRational, fromInt, (%))
+-- import Data.Rational (toNumber) as R
+
 
 import Data.DateTime (exactDate, Year(..), Month(..), Day(..))
 
@@ -98,8 +101,77 @@ polytemporalRelation' = do
   subVoice <- subVoiceParser <|> pure ""
   cFrom <- try (brackets $ cFromParser) <|> pure (Tuple 0 (Process 0))
   cTo <- try (cToParser) <|> pure {idCTo: Nothing, indxCTo: Nothing} 
-  tempi <- choice [try tempoOperArray, try tempoMark', try tempoMarks] <|> pure (XTempo:Nil)
+  tempi <- choice [try genTempoMarks, try tempoOperArray, try tempoMark', try tempoMarks] <|> pure (XTempo:Nil)
   pure $ canonise (idFrom <> subVoice) cTo.idCTo cTo.indxCTo cFrom tempi
+
+
+----------- amazing program!
+-- ##timeknot 
+-- a [1/13 = 60bpm] | xooxooxo[oxx]xxo[xx] :|
+-- a.s = "ukulele" .shur = 0 1 2 3 4 5 6 1 3;
+
+-- b [1/12 = 120bpm] | (7,12) :|
+-- b.s = "808" .n = 1;
+
+-- c [1/8 = 120bpm] |  xxxx :|
+-- c.s = "bd bd cp sn";
+
+
+-- step numOfSteps sizeOfStep
+
+-- step1 min max numberOfSteps
+
+-- stepRecur operation limitCondition
+
+-- data TempoMark = XTempo | CPM Rational | BPM Rational Rational | CPS Rational | Prop String Int Int | Sin Sinusoidal | Dur Rational
+
+
+-- a[20] <- b[120>>] step 10 3 $ 300cpm | xxxx :|
+
+-- a[20] <- b[120>>] step1 (300cpm) 500 20 | xxxx :|
+
+genTempoMarks:: P (List TempoMark)
+genTempoMarks = do 
+  _ <- pure 1
+  whitespace
+  _ <- reserved "step" 
+  numSteps <- natural
+  stepSize <- parseNumber
+  tm <- tempoMark
+  pure $ step (numSteps) (toRat stepSize) tm
+
+
+step:: Int -> Rational -> TempoMark -> List TempoMark
+step numOfSteps stepSize (CPM n) = map (\t -> CPM t) $  L.fromFoldable $ Lz.take numOfSteps $ Lz.iterate (\nu -> nu + stepSize) n
+step numOfSteps stepSize (CPS n) = map (\t -> CPS t) $  L.fromFoldable $ Lz.take numOfSteps $ Lz.iterate (\nu -> nu + stepSize) n
+step numOfSteps stepSize (BPM n t') = map (\t -> BPM n t) $  L.fromFoldable $ Lz.take numOfSteps $ Lz.iterate (\nuT -> nuT + stepSize) t'
+step numOfSteps stepSize _ = L.fromFoldable Nil
+
+step1:: TempoMark -> Rational -> Int -> List TempoMark
+step1 (CPM n) upTo numSteps = step1CPM n upTo numSteps
+step1 (CPS n) upTo numSteps = step1CPS n upTo numSteps
+step1 (BPM n t) upTo numSteps = step1BPM n t upTo numSteps
+step1 _ _ _ = Nil
+
+step1CPM:: Rational -> Rational -> Int -> List TempoMark
+step1CPM n upTo 0 = (CPM n) : Nil
+step1CPM n upTo 1 = (CPM n) : (CPM (n+upTo)) : Nil 
+step1CPM n upTo numSteps = step numSteps (stepSizeFromUpTo n upTo (toRational numSteps 1)) (CPM n)
+
+step1CPS:: Rational -> Rational -> Int -> List TempoMark
+step1CPS n upTo 0 = (CPS n) : Nil
+step1CPS n upTo 1 = (CPS n) : (CPS (n+upTo)) : Nil 
+step1CPS n upTo numSteps = step numSteps (stepSizeFromUpTo n upTo (toRational numSteps 1)) (CPS n)
+
+step1BPM:: Rational -> Rational -> Rational -> Int -> List TempoMark
+step1BPM n t upTo 0 = (BPM n t) : Nil
+step1BPM n t upTo 1 = (BPM n t) : (BPM n (t+upTo)) : Nil 
+step1BPM n t upTo numSteps = step numSteps (stepSizeFromUpTo t upTo (toRational numSteps 1)) (BPM n t)
+
+stepSizeFromUpTo:: Rational -> Rational -> Rational -> Rational
+stepSizeFromUpTo t upTo numOfSteps = ((t + upTo) - t) / (numOfSteps- (1%1)) 
+
+-----
 
 subVoiceParser:: P String
 subVoiceParser = do

@@ -108,6 +108,8 @@ export {
 };
 export {
     alter,
+    any,
+    anyWithKey,
     catMaybes,
     checkValid,
     delete,

@@ -53,6 +53,8 @@ export const freezeImpl = copyImpl;
 
 export const thawImpl = copyImpl;
 
+export const cloneImpl = copyImpl;
+
 export const sortByImpl = (function () {
   function mergeFromTo(compare, fromOrdering, xs1, xs2, from, to) {
     var mid;
@@ -104,4 +106,8 @@ export const toAssocArrayImpl = function (xs) {
   var as = new Array(n);
   for (var i = 0; i < n; i++) as[i] = { value: xs[i], index: i };
   return as;
+};
+
+export const pushImpl = function (a, xs) {
+  return xs.push(a);
 };

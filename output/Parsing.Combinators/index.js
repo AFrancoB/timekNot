@@ -221,7 +221,7 @@ var choice = function (dictFoldable) {
             if (v instanceof Data_Maybe.Just) {
                 return new Data_Maybe.Just(alt(p1)(v.value0));
             };
-            throw new Error("Failed pattern match at Parsing.Combinators (line 358, column 11 - line 360, column 32): " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Parsing.Combinators (line 362, column 11 - line 364, column 32): " + [ v.constructor.name ]);
         };
     };
     var $95 = Data_Maybe.fromMaybe(empty);

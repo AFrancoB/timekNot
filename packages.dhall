@@ -99,8 +99,8 @@ in  upstream
 -------------------------------
 -}
 let upstream =
-      https://github.com/purescript/package-sets/releases/download/psc-0.15.10-20231003/packages.dhall
-        sha256:dccca0d661a634bfe39ad7abcb52fbd938d5b2e28322d2954964cbb7c145aa81
+      https://github.com/purescript/package-sets/releases/download/psc-0.15.15-20251105/packages.dhall
+        sha256:eb7b4122840d40368f012b6e342d946160c961d611d8c105ef8d600c42d99542
 
 in  upstream
   with purescript-webdirt =
@@ -114,7 +114,3 @@ in  upstream
     , repo = "https://github.com/dktr0/purescript-tempi"
     , version = "9329e3eac9e971af937c301a5c76d1fa419d8693"
     }
-
-  	
-
-

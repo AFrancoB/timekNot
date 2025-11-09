@@ -8,6 +8,7 @@ import * as Control_Monad_Cont_Class from "../Control.Monad.Cont.Class/index.js"
 import * as Control_Monad_Error_Class from "../Control.Monad.Error.Class/index.js";
 import * as Control_Monad_Reader_Class from "../Control.Monad.Reader.Class/index.js";
 import * as Control_Monad_Rec_Class from "../Control.Monad.Rec.Class/index.js";
+import * as Control_Monad_ST_Class from "../Control.Monad.ST.Class/index.js";
 import * as Control_Monad_State_Class from "../Control.Monad.State.Class/index.js";
 import * as Control_Monad_Trans_Class from "../Control.Monad.Trans.Class/index.js";
 import * as Control_Monad_Writer_Class from "../Control.Monad.Writer.Class/index.js";
@@ -23,8 +24,8 @@ var StateT = function (x) {
 };
 var withStateT = function (f) {
     return function (v) {
-        return function ($193) {
-            return v(f($193));
+        return function ($199) {
+            return v(f($199));
         };
     };
 };
@@ -52,8 +53,8 @@ var monadTransStateT = {
 var lift = /* #__PURE__ */ Control_Monad_Trans_Class.lift(monadTransStateT);
 var mapStateT = function (f) {
     return function (v) {
-        return function ($194) {
-            return f(v($194));
+        return function ($200) {
+            return f(v($200));
         };
     };
 };
@@ -167,9 +168,9 @@ var monadReaderStateT = function (dictMonadReader) {
     var monadAskStateT1 = monadAskStateT(dictMonadReader.MonadAsk0());
     return {
         local: (function () {
-            var $195 = Control_Monad_Reader_Class.local(dictMonadReader);
-            return function ($196) {
-                return mapStateT($195($196));
+            var $201 = Control_Monad_Reader_Class.local(dictMonadReader);
+            return function ($202) {
+                return mapStateT($201($202));
             };
         })(),
         MonadAsk0: function () {
@@ -203,10 +204,10 @@ var monadEffectState = function (dictMonadEffect) {
     var monadStateT1 = monadStateT(Monad0);
     return {
         liftEffect: (function () {
-            var $197 = lift(Monad0);
-            var $198 = Effect_Class.liftEffect(dictMonadEffect);
-            return function ($199) {
-                return $197($198($199));
+            var $203 = lift(Monad0);
+            var $204 = Effect_Class.liftEffect(dictMonadEffect);
+            return function ($205) {
+                return $203($204($205));
             };
         })(),
         Monad0: function () {
@@ -233,7 +234,7 @@ var monadRecStateT = function (dictMonadRec) {
                             if (v2.value0 instanceof Control_Monad_Rec_Class.Done) {
                                 return new Control_Monad_Rec_Class.Done(new Data_Tuple.Tuple(v2.value0.value0, v2.value1));
                             };
-                            throw new Error("Failed pattern match at Control.Monad.State.Trans (line 87, column 16 - line 89, column 40): " + [ v2.value0.constructor.name ]);
+                            throw new Error("Failed pattern match at Control.Monad.State.Trans (line 88, column 16 - line 90, column 40): " + [ v2.value0.constructor.name ]);
                         })());
                     });
                 };
@@ -252,8 +253,8 @@ var monadStateStateT = function (dictMonad) {
     var monadStateT1 = monadStateT(dictMonad);
     return {
         state: function (f) {
-            return function ($200) {
-                return pure(f($200));
+            return function ($206) {
+                return pure(f($206));
             };
         },
         Monad0: function () {
@@ -267,10 +268,10 @@ var monadTellStateT = function (dictMonadTell) {
     var monadStateT1 = monadStateT(Monad1);
     return {
         tell: (function () {
-            var $201 = lift(Monad1);
-            var $202 = Control_Monad_Writer_Class.tell(dictMonadTell);
-            return function ($203) {
-                return $201($202($203));
+            var $207 = lift(Monad1);
+            var $208 = Control_Monad_Writer_Class.tell(dictMonadTell);
+            return function ($209) {
+                return $207($208($209));
             };
         })(),
         Semigroup0: function () {
@@ -343,6 +344,22 @@ var monadErrorStateT = function (dictMonadError) {
         },
         MonadThrow0: function () {
             return monadThrowStateT1;
+        }
+    };
+};
+var monadSTStateT = function (dictMonadST) {
+    var Monad0 = dictMonadST.Monad0();
+    var monadStateT1 = monadStateT(Monad0);
+    return {
+        liftST: (function () {
+            var $210 = lift(Monad0);
+            var $211 = Control_Monad_ST_Class.liftST(dictMonadST);
+            return function ($212) {
+                return $210($211($212));
+            };
+        })(),
+        Monad0: function () {
+            return monadStateT1;
         }
     };
 };
@@ -450,7 +467,8 @@ export {
     monadTellStateT,
     monadWriterStateT,
     semigroupStateT,
-    monoidStateT
+    monoidStateT,
+    monadSTStateT
 };
 export {
     get,

@@ -33,3 +33,29 @@ export const addNote = o => note => () => { o.note = note; return o; }
 // export const addVal =  valId => val => o => () => { o[valId] = val; return o; };
 
 export const addVal = o => valId => val => () => { o[valId] = val; return o; };
+
+// export const pianola = canvasId => obj => () => {  
+//     const canvas = document.getElementById(canvasId);
+//     const ctx = canvas.getContext("2d");
+//     ctx.font = "bold italic 10px Arial";
+//     let previousTime = 0;
+//     let position = 0;
+    
+
+//     function step(currentTime) {
+        
+//         const delta = currentTime - previousTime;
+//         previousTime = currentTime;
+//         position += delta * 0.01; // Move at 0.1px per ms
+//         ctx.clearRect(0, 0, canvas.width, canvas.height);
+//         ctx.strokeText(obj.s,  obj.note*2,  position);
+        
+
+//         if (position < 300) {
+//             requestAnimationFrame(step);
+//         }
+//         }
+// requestAnimationFrame(step);
+
+// };
+

@@ -11,8 +11,8 @@ var right = function (dict) {
 var left = function (dict) {
     return dict.left;
 };
-var splitChoice = function (dictCategory) {
-    var composeFlipped = Control_Semigroupoid.composeFlipped(dictCategory.Semigroupoid0());
+var splitChoice = function (dictSemigroupoid) {
+    var composeFlipped = Control_Semigroupoid.composeFlipped(dictSemigroupoid);
     return function (dictChoice) {
         var left1 = left(dictChoice);
         var right1 = right(dictChoice);
@@ -23,17 +23,14 @@ var splitChoice = function (dictCategory) {
         };
     };
 };
-var fanin = function (dictCategory) {
-    var identity1 = Control_Category.identity(dictCategory);
-    var composeFlipped = Control_Semigroupoid.composeFlipped(dictCategory.Semigroupoid0());
-    var splitChoice1 = splitChoice(dictCategory);
+var fanin = function (dictSemigroupoid) {
+    var splitChoice1 = splitChoice(dictSemigroupoid);
     return function (dictChoice) {
-        var dimap = Data_Profunctor.dimap(dictChoice.Profunctor0());
+        var rmap = Data_Profunctor.rmap(dictChoice.Profunctor0());
         var splitChoice2 = splitChoice1(dictChoice);
         return function (l) {
             return function (r) {
-                var join = dimap(Data_Either.either(identity)(identity))(identity)(identity1);
-                return composeFlipped(splitChoice2(l)(r))(join);
+                return rmap(Data_Either.either(identity)(identity))(splitChoice2(l)(r));
             };
         };
     };

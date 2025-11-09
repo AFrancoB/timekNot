@@ -36,7 +36,7 @@ var sortBy = function (comp) {
         if (v instanceof Data_Ordering.LT) {
             return -1 | 0;
         };
-        throw new Error("Failed pattern match at Data.Array.ST (line 119, column 40 - line 122, column 11): " + [ v.constructor.name ]);
+        throw new Error("Failed pattern match at Data.Array.ST (line 129, column 40 - line 132, column 11): " + [ v.constructor.name ]);
     });
 };
 var sortWith = function (dictOrd) {
@@ -55,9 +55,7 @@ var run = function (st) {
     return bind(st)(unsafeFreeze)();
 };
 var pushAll = /* #__PURE__ */ Control_Monad_ST_Uncurried.runSTFn2($foreign.pushAllImpl);
-var push = function (a) {
-    return Control_Monad_ST_Uncurried.runSTFn2($foreign.pushAllImpl)([ a ]);
-};
+var push = /* #__PURE__ */ Control_Monad_ST_Uncurried.runSTFn2($foreign.pushImpl);
 var pop = /* #__PURE__ */ (function () {
     return Control_Monad_ST_Uncurried.runSTFn3($foreign.popImpl)(Data_Maybe.Just.create)(Data_Maybe.Nothing.value);
 })();
@@ -76,13 +74,14 @@ var modify = function (i) {
                 if (entry instanceof Data_Maybe.Nothing) {
                     return false;
                 };
-                throw new Error("Failed pattern match at Data.Array.ST (line 222, column 3 - line 224, column 26): " + [ entry.constructor.name ]);
+                throw new Error("Failed pattern match at Data.Array.ST (line 234, column 3 - line 236, column 26): " + [ entry.constructor.name ]);
             };
         };
     };
 };
 var length = /* #__PURE__ */ Control_Monad_ST_Uncurried.runSTFn1($foreign.lengthImpl);
 var freeze = /* #__PURE__ */ Control_Monad_ST_Uncurried.runSTFn1($foreign.freezeImpl);
+var clone = /* #__PURE__ */ Control_Monad_ST_Uncurried.runSTFn1($foreign.cloneImpl);
 export {
     new
 } from "./foreign.js";
@@ -105,6 +104,7 @@ export {
     sortWith,
     freeze,
     thaw,
+    clone,
     unsafeFreeze,
     unsafeThaw,
     toAssocArray

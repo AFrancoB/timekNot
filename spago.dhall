@@ -42,6 +42,7 @@ to generate this file without the comments in this block.
   , "rationals"
   , "record"
   , "refs"
+  , "shuffle"
   , "strings"
   , "svg-parser"
   , "tuples"
