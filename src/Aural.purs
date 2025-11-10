@@ -99,20 +99,27 @@ value = do
 
 
 
+-- varWithFold:: forall a. Variant -> List (List Variant -> List Variant) -> Variant
+-- varWithFold (VList xs) fs = VList $ foldl (\l f -> f l) xs fs 
+-- varWithFold _  _ = VList Nil
+
 parsesStepVariant:: P Variant
 parsesStepVariant = do 
     _ <- pure 1
     whitespace
-    -- fs <- funcs 
+    fs <- funcs
     _ <- reserved "step" 
     numSteps <- natural
     stepSize <- parseNumber
     startPt <- parseNumber
-    pure $ step numSteps stepSize startPt -- create a foldl (\l f -> f l) steps functions pattern for variants!!
+    pure $ step numSteps stepSize startPt fs -- create a foldl (\l f -> f l) steps functions pattern for variants!!
 
-step:: Int -> Number -> Number -> Variant
-step numOfSteps stepSize startPoint = VList $ map (\n -> VNum n) $ fromFoldable $ Lz.take numOfSteps $ Lz.iterate (\nu -> nu + stepSize) startPoint
+step:: forall a. Int -> Number -> Number -> List (List Number -> List Number) -> Variant
+step numOfSteps stepSize startPoint fs = VList $ map (\n -> VNum n) ls
+    where lista = fromFoldable $ Lz.take numOfSteps $ Lz.iterate (\nu -> nu + stepSize) startPoint
+          ls = foldl (\l f -> f l) lista fs
 
+-- foldl (\l f -> f l) (fromFoldable gainList) fs
 
 -- step1:: TempoMark -> Rational -> Int -> List TempoMark
 -- step1 (CPM n) upTo numSteps = step1CPM n upTo numSteps
@@ -792,6 +799,14 @@ shuf = do
 
 shuffle' :: forall a. List a -> List a
 shuffle' xs = unsafePerformEffect $ shuffle xs
+
+
+-- [0,1,2,3,4,5]  -> [[0,1,2],[3,4,5]] -> [[3,4,5],[0,1,2]] -> [3,4,5,0,1,2]
+
+-- partition :: forall a. (a -> Boolean) -> List a -> { no :: List a, yes :: List a }
+
+-- rotFrom 
+
 
 nada:: forall a. List a -> List a
 nada xs = xs 
