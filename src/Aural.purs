@@ -112,7 +112,7 @@ parsesStepVariant = do
     numSteps <- natural
     stepSize <- parseNumber
     startPt <- parseNumber
-    pure $ step numSteps stepSize startPt fs -- create a foldl (\l f -> f l) steps functions pattern for variants!!
+    pure $ step numSteps stepSize startPt fs 
 
 step:: forall a. Int -> Number -> Number -> List (List Number -> List Number) -> Variant
 step numOfSteps stepSize startPoint fs = VList $ map (\n -> VNum n) ls
