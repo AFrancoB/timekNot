@@ -103,23 +103,23 @@ value = do
 -- varWithFold (VList xs) fs = VList $ foldl (\l f -> f l) xs fs 
 -- varWithFold _  _ = VList Nil
 
-parsesStepVariant:: P Variant
-parsesStepVariant = do 
-    _ <- pure 1
-    whitespace
-    x <- choice [try fromTo, fromThenTo]
-    pure x
-
 -- parsesStepVariant:: P Variant
 -- parsesStepVariant = do 
 --     _ <- pure 1
 --     whitespace
---     fs <- funcs
---     _ <- reserved "step" 
---     numSteps <- natural
---     stepSize <- parseNumber
---     startPt <- parseNumber
---     pure $ step numSteps stepSize startPt fs 
+--     x <- choice [try fromTo, fromThenTo]
+--     pure x
+
+parsesStepVariant:: P Variant
+parsesStepVariant = do 
+    _ <- pure 1
+    whitespace
+    fs <- funcs
+    _ <- reserved "step" 
+    numSteps <- natural
+    stepSize <- parseNumber
+    startPt <- parseNumber
+    pure $ step numSteps stepSize startPt fs 
 
 fromTo:: P Variant
 fromTo = do 
