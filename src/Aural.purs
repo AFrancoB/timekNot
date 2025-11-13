@@ -1,4 +1,4 @@
-module Aural(aural,variationsStr, checkXPitch, getPitchMap, prog) where
+module Aural(aural,variationsStr, checkXPitch, getPitchMap, prog, fromThenTo, fromTo) where
 
 import Prelude
 
@@ -107,12 +107,54 @@ parsesStepVariant:: P Variant
 parsesStepVariant = do 
     _ <- pure 1
     whitespace
+    x <- choice [try fromTo, fromThenTo]
+    pure x
+
+-- parsesStepVariant:: P Variant
+-- parsesStepVariant = do 
+--     _ <- pure 1
+--     whitespace
+--     fs <- funcs
+--     _ <- reserved "step" 
+--     numSteps <- natural
+--     stepSize <- parseNumber
+--     startPt <- parseNumber
+--     pure $ step numSteps stepSize startPt fs 
+
+fromTo:: P Variant
+fromTo = do 
+    _ <- pure 1
+    whitespace
     fs <- funcs
-    _ <- reserved "step" 
-    numSteps <- natural
-    stepSize <- parseNumber
-    startPt <- parseNumber
-    pure $ step numSteps stepSize startPt fs 
+    from <- natural
+    _ <- reservedOp ".."
+    to <- natural 
+    pure $ step (1 + (to-from)) 1.0 (toNumber from) fs
+
+
+fromThenTo:: P Variant
+fromThenTo = do 
+    _ <- pure 1
+    whitespace
+    fs <- funcs
+    from <- parseNumber
+    _ <- reservedOp ","
+    thenn <- parseNumber
+    _ <- reservedOp ".."
+    to <- parseNumber 
+    pure $ step (1 + (floor $ (to-from)/(thenn-from))) (thenn-from) from fs
+    
+
+-- 100,102..120
+
+-- startPoint -> from
+
+-- stepSize -> (then-from)  
+
+-- numOfSteps ->  to-from /stepSize
+
+
+
 
 step:: forall a. Int -> Number -> Number -> List (List Number -> List Number) -> Variant
 step numOfSteps stepSize startPoint fs = VList $ map (\n -> VNum n) ls
