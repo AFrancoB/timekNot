@@ -19,7 +19,6 @@ import Data.Maybe
 import Data.Rational (Rational(..), toRational, fromInt, (%))
 -- import Data.Rational (toNumber) as R
 
-
 import Data.DateTime (exactDate, Year(..), Month(..), Day(..))
 
 import Data.FunctorWithIndex (mapWithIndex)
