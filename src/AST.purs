@@ -1,4 +1,4 @@
-module AST(TimekNot(..),Vantage(..), TimePoint(..), VantageMap(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..), Variation(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), Sinusoidal(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), Tuning(..), CPSNote(..), DastgahNote(..), Interval(..), Subset(..), Variant(..), showEventIndex, showStructureIndex) where
+module AST(TimekNot(..),Vantage(..), TimePoint(..), VantageMap(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..), Variation(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), Sinusoidal(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), Tuning(..), CPSNote(..), DastgahNote(..), Interval(..), Subset(..), Variant(..), showEventIndex, showStructureIndex, powTM, (**), stack', (|\)) where
 
 import Prelude
 import Effect.Ref
@@ -11,6 +11,9 @@ import Data.Map
 import Data.Tuple
 import Data.Either
 import Data.Maybe
+import Data.Int as I
+import Data.Number (pow)
+
 
 type TimekNot = {
   program :: Ref Program,
@@ -272,6 +275,106 @@ instance Show TempoMark where
   show (Prop id x y) = id <> " " <> show x <> ":" <> show y 
   show (Sin acc) = show acc
   show (Dur n) = "Dur " <> show n
+
+-- https://pursuit.purescript.org/packages/purescript-prelude/6.0.2/docs/Data.Semiring#v:zero
+
+class Stack a where 
+  stack :: a -> a -> List a
+
+instance stackStr :: Stack String where 
+  stack str1 str2 = str1 |\ str2 
+
+infixl 7 stack' as |\
+
+stack':: String -> String -> List String
+stack' str1 str2 = (str1:str2:Nil)
+
+class Pow' a where
+  pow' :: a -> a -> a
+
+instance powTempo :: Pow' TempoMark where
+  pow' t1 t2 = t1 ** t2
+
+infixl 6 powTM as **
+
+instance semiringTM :: Semiring TempoMark where
+  add t1 t2 = addTM t1 t2
+  mul t1 t2 = mulTM t1 t2
+  zero = CPM $ toRat 0.0
+  one = CPM $ toRat 1.0
+
+instance ringTM :: Ring TempoMark where
+  sub t1 t2 = subTM t1 t2
+
+instance commRing :: CommutativeRing TempoMark
+
+instance euclideanRing :: EuclideanRing TempoMark where
+  div t1 t2 = divTM t1 t2
+  degree t1 = 1                    --- degree and mod need to be functional
+  mod t1 t2 = CPM $ toRat 0.0
+
+addTM:: TempoMark -> TempoMark -> TempoMark
+addTM (CPM r1) (CPM r2) = CPM $ r1 + r2
+addTM (CPS r1) (CPS r2) = CPM $ (r1 * toRat 60.0) + (r2 * toRat 60.0)
+addTM (BPM bpm1 fig1) (BPM bpm2 fig2) = CPM $ (bpm1/fig1) + (bpm2/fig2)
+addTM (CPM cpm) (CPS cps) = CPM $ cpm + (cps * toRat 60.0)
+addTM (CPM cpm) (BPM bpm fig) = CPM $ cpm + (bpm/fig)
+addTM (CPS cps) (BPM bpm fig) = CPM $ (cps * toRat 60.0) + (bpm/fig)
+addTM _ _ = CPM $ toRat 0.0
+
+mulTM:: TempoMark -> TempoMark -> TempoMark
+mulTM (CPM r1) (CPM r2) = CPM $ r1 * r2
+mulTM (CPS r1) (CPS r2) = CPM $ (r1 * toRat 60.0) * (r2 * toRat 60.0)
+mulTM (BPM bpm1 fig1) (BPM bpm2 fig2) = CPM $ (bpm1/fig1) * (bpm2/fig2)
+mulTM (CPM cpm) (CPS cps) = CPM $ cpm * (cps * toRat 60.0)
+mulTM (CPM cpm) (BPM bpm fig) = CPM $ cpm * (bpm/fig)
+mulTM (CPS cps) (BPM bpm fig) = CPM $ (cps * toRat 60.0) * (bpm/fig)
+mulTM _ _ = CPM $ toRat 0.0
+
+subTM:: TempoMark -> TempoMark -> TempoMark
+subTM (CPM r1) (CPM r2) = CPM $ r1 - r2
+subTM (CPS r1) (CPS r2) = CPM $ (r1 * toRat 60.0) - (r2 * toRat 60.0)
+subTM (BPM bpm1 fig1) (BPM bpm2 fig2) = CPM $ (bpm1/fig1) - (bpm2/fig2)
+subTM (CPM cpm) (CPS cps) = CPM $ cpm - (cps * toRat 60.0)
+subTM (CPM cpm) (BPM bpm fig) = CPM $ cpm - (bpm/fig)
+subTM (CPS cps) (BPM bpm fig) = CPM $ (cps * toRat 60.0) - (bpm/fig)
+subTM (CPS cps) (CPM cpm) = CPM $ (cps * toRat 60.0) - cpm
+subTM (BPM bpm fig) (CPS cps) = CPM $ (bpm/fig) - (cps * toRat 60.0)
+subTM (BPM bpm fig) (CPM cpm) =  CPM $ (bpm/fig) - cpm
+subTM _ _ = CPM $ toRat 0.0
+
+powTM:: TempoMark -> TempoMark -> TempoMark
+powTM (CPM r1) (CPM r2) = CPM $ toRat $ pow (toNumber r1) (toNumber r2)
+powTM (CPS r1) (CPS r2) = CPM $ toRat $ pow ((toNumber r1) * 60.0) ((toNumber r2) * 60.0)
+powTM (BPM bpm1 fig1) (BPM bpm2 fig2) = CPM $ toRat $ pow (toNumber (bpm1/fig1)) (toNumber (bpm2/fig2))
+powTM (CPM cpm) (CPS cps) = CPM $ toRat $ pow (toNumber cpm) (toNumber (cps * toRat 60.0))
+powTM (CPM cpm) (BPM bpm fig) = CPM $ toRat $ pow (toNumber cpm) (toNumber (bpm/fig))
+powTM (CPS cps) (BPM bpm fig) = CPM $ toRat $ pow (toNumber (cps * toRat 60.0)) (toNumber (bpm/fig))
+powTM (CPS cps) (CPM cpm) = CPM $ toRat $  pow (toNumber cps * 60.0) (toNumber cpm)
+powTM (BPM bpm fig) (CPS cps) = CPM $ toRat $ pow (toNumber (bpm/fig)) ((toNumber cps) * 60.0)
+powTM (BPM bpm fig) (CPM cpm) =  CPM $ toRat $ pow (toNumber (bpm/fig)) (toNumber cpm)
+powTM _ _ = CPM $ toRat 0.0
+
+divTM:: TempoMark -> TempoMark -> TempoMark
+divTM (CPM r1) (CPM r2) = CPM $ r1 / r2
+divTM (CPS r1) (CPS r2) = CPM $ (r1 * toRat 60.0) / (r2 * toRat 60.0)
+divTM (BPM bpm1 fig1) (BPM bpm2 fig2) = CPM $ (bpm1/fig1) / (bpm2/fig2)
+divTM (CPM cpm) (CPS cps) = CPM $ cpm / (cps * toRat 60.0)
+divTM (CPM cpm) (BPM bpm fig) = CPM $ cpm / (bpm/fig)
+divTM (CPS cps) (BPM bpm fig) = CPM $ (cps * toRat 60.0) / (bpm/fig)
+divTM (CPS cps) (CPM cpm) = CPM $ (cps * toRat 60.0) / cpm
+divTM (BPM bpm fig) (CPS cps) = CPM $ (bpm/fig) / (cps * toRat 60.0)
+divTM (BPM bpm fig) (CPM cpm) =  CPM $ (bpm/fig) / cpm
+divTM _ _ = CPM $ toRat 0.0
+
+toRat:: Number -> Rational
+toRat x = 
+    let pFact = 1000000
+        floored = I.floor x -- 12
+        fract = x - (I.toNumber floored) -- 12.5 - 12.0 = 0.5
+        fract' = I.round $ fract * (I.toNumber pFact) -- 500000
+    in (floored%1) + (fract'%pFact) -- 12 + (500000%1000000)
+
 
 type Sinusoidal = {
   min:: TempoMark,

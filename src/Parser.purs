@@ -1,11 +1,11 @@
 
-module Parser(cFromParser, polytemporalRelation', temporal, check, parseProgram, getTemporalMap, getAuralMap, testRecursive, testP,xPitchExpression, expression, getVantageMap, parseDate, utcA, tempoOperArray, step, genTempoMarks) where
+module Parser(cFromParser, polytemporalRelation', temporal, check, parseProgram, getTemporalMap, getAuralMap, testRecursive, testP,xPitchExpression, expression, getVantageMap, parseDate, utcA, step, genTempoMarks) where
 
 import Prelude
 
 import Data.Identity
-import Data.List (List(..), head, tail, elem, (:), concat, (..), range)
-import Data.List (fromFoldable, filter) as L
+import Data.List (List(..), head, tail, elem, (:), concat, (..), range, null)
+import Data.List (fromFoldable, filter, mapMaybe) as L
 import Data.List.Lazy (iterate,take,toUnfoldable) as Lz
 import Data.Array (fromFoldable) as A
 import Data.Either
@@ -17,7 +17,7 @@ import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Set as Set
 import Data.Maybe
 import Data.Rational (Rational(..), toRational, fromInt, (%))
--- import Data.Rational (toNumber) as R
+import Data.Rational (toNumber) as R
 
 import Data.DateTime (exactDate, Year(..), Month(..), Day(..))
 
@@ -45,7 +45,8 @@ import Parsing.Token (makeTokenParser)
 import AST
 import Rhythm
 import Aural
-import Variant
+-- import Variant
+import VariExperiments as X
 
 import InACan
 
@@ -54,43 +55,43 @@ type P = ParserT String Identity
 testP str = runParser str parseProgram
 
 ---------
-tempoOperArray:: P (List TempoMark)
-tempoOperArray = do 
-  _ <- pure 1
-  t <- tempoMark'
-  op <- operadores <|> (pure mulVar) 
-  trans <- transposer -- <|> (pure $ VList (VInt 0:Nil)) 
-  pure $ getListTempo $ (op trans $ buildVTempo t)
+-- tempoOperArray:: P (List TempoMark)
+-- tempoOperArray = do 
+--   _ <- pure 1
+--   t <- tempoMark'
+--   op <- operadores <|> (pure mulVar) 
+--   trans <- transposer -- <|> (pure $ VList (VInt 0:Nil)) 
+--   pure $ getListTempo $ (op trans $ buildVTempo t)
 
-buildVTempo:: List TempoMark -> Variant
-buildVTempo xs = VTempo $ fromMaybe XTempo $ head xs
+-- buildVTempo:: List TempoMark -> Variant
+-- buildVTempo xs = VTempo $ fromMaybe XTempo $ head xs
 
--- external tempo does not work in canonic operators this is very important to understand!!!!
+-- -- external tempo does not work in canonic operators this is very important to understand!!!!
 
-transposer:: P Variant
-transposer = do 
-    _ <- pure 0
-    xs <- brackets $ (toVariant <$> naturalOrFloat) `sepBy` comma
-    pure $ VList $ L.fromFoldable xs
+-- transposer:: P Variant
+-- transposer = do 
+--     _ <- pure 0
+--     xs <- brackets $ (toVariant <$> naturalOrFloat) `sepBy` comma
+--     pure $ VList $ L.fromFoldable xs
 
-toVariant:: Either Int Number -> Variant
-toVariant (Left n) = VInt n 
-toVariant (Right x) = VNum x
+-- toVariant:: Either Int Number -> Variant
+-- toVariant (Left n) = VInt n 
+-- toVariant (Right x) = VNum x
 
-operadores:: P (Variant -> Variant -> Variant)
-operadores = choice [reservedOp "*" *> pure mulVar, reservedOp "+" *> pure addVar]
+-- operadores:: P (Variant -> Variant -> Variant)
+-- operadores = choice [reservedOp "*" *> pure mulVar, reservedOp "+" *> pure addVar]
 
-tempoMark':: P (List TempoMark)
-tempoMark' = do
-  _ <- pure 1
-  x <- try $ choice [try cpm, try bpm, try cps, try ratio, acceleration] -- added a try before choice for the broken parser situation
-  pure (x:Nil)
+-- tempoMark':: P (List TempoMark)
+-- tempoMark' = do
+--   _ <- pure 1
+--   x <- try $ choice [try cpm, try bpm, try cps, try ratio, acceleration] -- added a try before choice for the broken parser situation
+--   pure (x:Nil)
 
-tempoMarks:: P (List TempoMark)
-tempoMarks = do
-  _ <- pure 1
-  xs <- brackets $ (choice [try cpm, try bpm, try cps, try ratio, acceleration] `sepBy1` comma) 
-  pure $ L.fromFoldable xs
+-- tempoMarks:: P (List TempoMark)
+-- tempoMarks = do
+--   _ <- pure 1
+--   xs <- brackets $ (choice [try cpm, try bpm, try cps, try ratio, acceleration] `sepBy1` comma) 
+--   pure $ L.fromFoldable xs
 
 polytemporalRelation':: P (Map String Polytemporal)
 polytemporalRelation' = do
@@ -100,9 +101,20 @@ polytemporalRelation' = do
   subVoice <- subVoiceParser <|> pure ""
   cFrom <- try (brackets $ cFromParser) <|> pure (Tuple 0 (Process 0))
   cTo <- try (cToParser) <|> pure {idCTo: Nothing, indxCTo: Nothing} 
-  tempi <- choice [try genTempoMarks, try tempoOperArray, try tempoMark', try tempoMarks] <|> pure (XTempo:Nil)
+  -- tempi <- choice [try genTempoMarks, try tempoOperArray, try tempoMark', try tempoMarks] <|> pure (XTempo:Nil)
+  vtempi <- choice [try genTempoMarks, varixToTempi <$> X.expr]
+  tempi <- liftEither vtempi
   pure $ canonise (idFrom <> subVoice) cTo.idCTo cTo.indxCTo cFrom tempi
 
+varixToTempi:: X.V -> Either String (List TempoMark)
+varixToTempi (X.VTempo t) = Right $ L.fromFoldable [t]
+varixToTempi (X.VList xs) = if null res then (Left "empty tempo mark list") else (Right $ res)
+  where res = L.mapMaybe keepVTempi xs
+varixToTempi _ = Left "Not a tempo mark"
+
+keepVTempi:: X.V -> Maybe TempoMark
+keepVTempi (X.VTempo t) = Just t 
+keepVTempi _ = Nothing
 
 ----------- amazing program!
 -- ##timeknot 
@@ -129,16 +141,44 @@ polytemporalRelation' = do
 
 -- a[20] <- b[120>>] step1 (300cpm) 500 20 | xxxx :|
 
-genTempoMarks:: P (List TempoMark)
+
+-- [reminder from Wednesday: opening the pathway for tempomarks to be the good variant, now it works and trying to combine it with the genTempoMark with the new notation. There are some logical problems that need to be understood better]
+
+genTempoMarks:: P (Either String (List TempoMark))
 genTempoMarks = do 
   _ <- pure 1
   whitespace
-  _ <- reserved "step" 
-  numSteps <- natural
-  stepSize <- parseNumber
-  tm <- tempoMark
-  pure $ step (numSteps) (toRat stepSize) tm
+  tmx <- varixToTempo <$> X.expr  -- var Vtempo
+  from <- liftEither tmx
+  _ <- reservedOp ","
+  numx1 <- varixToNumber <$> X.expr -- var VNum
+  thenn <- liftEither numx1
+  _ <- reservedOp "til"
+  numx2 <- varixToNumber <$> X.expr
+  to <- liftEither numx2
+  pure $ Right $ step (1 + (floor $ (to-(numTM from))/(thenn-(numTM from)))) (toRat (thenn-(numTM from))) from 
+  
+-- varixToTempi:: X.Vari -> Either String (List TempoMark)
+-- varixToTempi (X.VTempo t) = Right $ L.fromFoldable [t]
+-- varixToTempi (X.VList xs) = if null res then (Left "empty tempo mark list") else (Right $ res)
+--   where res = L.mapMaybe keepVTempi xs
+-- varixToTempi _ = Left "Not a tempo mark"
 
+varixToTempo:: X.V -> Either String TempoMark
+varixToTempo (X.VTempo t) = Right t
+varixToTempo _ = Left "Not a tempo mark"
+
+varixToNumber:: X.V -> Either String Number
+varixToNumber (X.VNum x) = Right x 
+varixToNumber (X.VTempo _) = Left "tempo consistency needs to be kept: just number no tempo mark"
+varixToNumber (X.VList _) = Left "no list, please"
+varixToNumber _ = Left "failed at expression level" 
+
+numTM:: TempoMark -> Number
+numTM (CPM x) = R.toNumber x
+numTM (BPM n t) = R.toNumber t
+numTM (CPS x) = R.toNumber x
+numTM _ = 0.0
 
 step:: Int -> Rational -> TempoMark -> List TempoMark
 step numOfSteps stepSize (CPM n) = map (\t -> CPM t) $  L.fromFoldable $ Lz.take numOfSteps $ Lz.iterate (\nu -> nu + stepSize) n

@@ -26,6 +26,7 @@ to generate this file without the comments in this block.
   , "halogen-svg-elems"
   , "identity"
   , "integers"
+  , "js-bigints"
   , "js-timers"
   , "lists"
   , "maybe"
