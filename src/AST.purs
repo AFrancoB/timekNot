@@ -295,7 +295,7 @@ class Pow' a where
 instance powTempo :: Pow' TempoMark where
   pow' t1 t2 = t1 ** t2
 
-infixl 6 powTM as **
+infixl 7 powTM as **
 
 instance semiringTM :: Semiring TempoMark where
   add t1 t2 = addTM t1 t2

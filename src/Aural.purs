@@ -1,4 +1,4 @@
-module Aural(aural,variationsStr, checkXPitch, getPitchMap, prog, transposer, fromThenTo, fromTo) where
+module Aural(aural,variationsStr, checkXPitch, getPitchMap, prog, transposer, funcsToV) where
 
 import Prelude
 
@@ -43,7 +43,7 @@ aural:: P Expression
 aural = do 
     _ <- pure 1
     x <- parseValues
-    _ <- reserved ";" -- this need to be fixed!
+    -- _ <- reserved ";" -- this need to be fixed!
     pure $ AuralExpression x -- (Map Strg Aural)
 
 -- parseValues:: P (Map String Aural)
@@ -63,14 +63,13 @@ parseValues = do
     id <- voiceId
     index <- indexForID
     xs <- many value -- List (Tuple Value Variant)
-    pure $ auralInACan id index $ fromFoldable xs
+    pure $ auralInACan id index $ fromFoldable  xs
 
 indexForID:: P (Maybe (List Int))
 indexForID = do 
     _ <- pure 1
     whitespace
-    xs <- indexForID' <|> pure Nothing
-    pure xs
+    indexForID' <|> pure Nothing
 
 indexForID':: P (Maybe (List Int))
 indexForID' = do 
@@ -95,15 +94,18 @@ value = do
     _ <- reservedOp "."
     val <- choice [try sound, try n, try gain, try pan, try speed, try begin, try end, try vowel, try cutoff, try cutoffh, try inter, try maxw, try minw, try legato, try orbit, try alpha, try beta, try gamma, try mayeh, try prog, try xeNotes, xeno] -- Value (S span lista variation)
     op <- operadores <|> (pure X.mulVari) -- (V -> V)
-    trans <- choice [try transposer, parens $ parsesStepVariant] <|> (pure $ X.VList (X.VInt 1:Nil)) -- V
+    trans <- choice [try transposer] <|> (pure $ X.VList (X.VInt 1:Nil)) -- V
     pure $ Tuple val $ op (X.valToV val) trans
 
-parsesStepVariant:: P X.V
-parsesStepVariant = do 
-    _ <- pure 1
-    whitespace
-    x <- choice [try fromThenTo, fromTo]
-    pure x
+operadores:: P (X.V -> X.V -> X.V)
+operadores = choice [reservedOp "*" *> pure X.mulVari, reservedOp "+" *> pure X.addVari, reservedOp "-" *> pure X.subVari, reservedOp "/" *> pure X.divVari, reservedOp "^" *> pure X.powVari]
+
+-- parsesStepVariant:: P X.V
+-- parsesStepVariant = do 
+--     _ <- pure 1
+--     whitespace
+--     x <- choice [try fromThenTo, fromTo]
+--     pure x
 
 -- parsesStepVariant:: P Variant
 -- parsesStepVariant = do 
@@ -116,28 +118,28 @@ parsesStepVariant = do
 --     startPt <- parseNumber
 --     pure $ step numSteps stepSize startPt fs 
 
-fromTo:: P X.V
-fromTo = do 
-    _ <- pure 1
-    whitespace
-    fs <- funcs
-    from <- try natural
-    _ <- reservedOp "til"
-    to <- try natural 
-    pure $ step (1 + (to-from)) 1.0 (toNumber from) fs
+-- fromTo:: P X.V
+-- fromTo = do 
+--     _ <- pure 1
+--     whitespace
+--     fs <- funcs
+--     from <- try natural
+--     _ <- reservedOp "til"
+--     to <- try natural 
+--     pure $ step (1 + (to-from)) 1.0 (toNumber from) fs
 
 
-fromThenTo:: P X.V
-fromThenTo = do 
-    _ <- pure 1
-    whitespace
-    fs <- funcs
-    from <- parseNumber
-    _ <- reservedOp ","
-    thenn <- parseNumber
-    _ <- reservedOp "til"
-    to <- parseNumber 
-    pure $ step (1 + (floor $ (to-from)/(thenn-from))) (thenn-from) from fs
+-- fromThenTo:: P X.V
+-- fromThenTo = do 
+--     _ <- pure 1
+--     whitespace
+--     fs <- funcs
+--     from <- parseNumber
+--     _ <- reservedOp ","
+--     thenn <- parseNumber
+--     _ <- reservedOp "til"
+--     to <- parseNumber 
+--     pure $ step (1 + (floor $ (to-from)/(thenn-from))) (thenn-from) from fs
     
 
 -- 100,102..120
@@ -185,12 +187,21 @@ step numOfSteps stepSize startPoint fs = X.VList $ map (\n -> X.VNum n) ls
 transposer:: P X.V
 transposer = do 
     _ <- pure 0
+    fs <- funcs
     x <- X.expr
-    pure $ x
+    pure $ funcsToV fs x
 
 
-operadores:: P (X.V -> X.V -> X.V)
-operadores = choice [reservedOp "*" *> pure X.mulVari, reservedOp "+" *> pure X.addVari, reservedOp "-" *> pure X.subVari, reservedOp "/" *> pure X.divVari, reservedOp "^" *> pure X.powVari]
+funcsToV:: forall a. List (List Number -> List Number) -> X.V -> X.V
+funcsToV fs (X.VList xs) = X.VList $ map (\x -> X.VNum x) $ foldl (\l f -> f l) ls fs
+    where ls = map puvToNum xs
+          puvToNum:: X.V -> Number
+          puvToNum (X.VNum x) = x
+          puvToNum (X.VInt n) = toNumber n
+          puvToNum _ = 0.0   -- think this through     
+funcsToV fs (X.VNum x) = X.VList (X.VNum x:Nil)   -- think this through
+funcsToV fs (X.VInt n) = X.VList (X.VInt n:Nil)
+funcsToV fs _ = X.VList Nil
 
 --
 
@@ -832,6 +843,7 @@ shuf = do
 
 shuffle' :: forall a. List a -> List a
 shuffle' xs = unsafePerformEffect $ shuffle xs
+
 
 
 

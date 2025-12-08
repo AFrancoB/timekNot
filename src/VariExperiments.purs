@@ -6,6 +6,7 @@ import Data.Either
 import Data.Identity
 import Data.List hiding (many,take)
 import Data.List.Lazy (replicate,repeat,take)
+import Data.List.Lazy as Lz
 import Data.Foldable (foldl)
 import Data.Int
 import Data.Int (pow) as I
@@ -86,13 +87,13 @@ term:: P V
 term = do 
   _ <- pure 1 
   whitespace
-  power `chainl1` mulDivOpV
+  factor `chainl1` mulDivOpV
 
-power:: P V
-power = do 
-  _ <- pure 1 
-  whitespace 
-  factor `chainr1` expOpV
+-- power:: P V
+-- power = do 
+--   _ <- pure 1 
+--   whitespace 
+--   factor `chainr1` expOpV
 
 factor:: P V
 factor = do
@@ -113,13 +114,117 @@ mulDivOpV =  do
   whitespace
   (char '*' *> pure mulVari)
   <|> (char '/' *> pure divVari)
+  <|> (char '^' *> pure powVari)
 
-expOpV:: P (V -> V -> V)
-expOpV = do
+-- expOpV:: P (V -> V -> V)
+-- expOpV = do
+--   _ <- pure 1
+--   whitespace
+--   (char '^' *> pure powVari)
+
+
+parseVari:: P V
+parseVari = do
+  _ <- pure 0
+  whitespace
+  choice [try $ (parens fromThenTo), try $ (parens fromTo), VTempo <$> try tempoMark, try (toVariant <$> naturalOrFloat), try (VNum <$> (parens negNum)), listExpr]
+
+
+fromTo:: P V
+fromTo = do 
   _ <- pure 1
   whitespace
-  (char '^' *> pure powVari)
+  from <- fromVToInt <$> try expr
+  from <- liftEither from
+  _ <- reservedOp "til"
+  to <- fromVToInt <$> try expr
+  to <- liftEither to 
+  pure $ step (1 + (to-from)) 1.0 (toNumber from)
 
+fromVToInt:: V -> Either String Int
+fromVToInt (VInt n) = Right n
+fromVToInt (VNum x) = Right $ round x
+fromVToInt _ = Left "not accepted for til, only numbers"
+-- needs a function that prevents non integeres to be parsed
+
+fromThenTo:: P V
+fromThenTo = do 
+  _ <- pure 1
+  whitespace
+  from <- fromVToNum <$> expr
+  from <- liftEither from
+  _ <- reservedOp ","
+  thenn <- fromVToNum <$> expr
+  thenn <- liftEither thenn
+  _ <- reservedOp "til"
+  to <- fromVToNum <$> expr 
+  to <- liftEither to
+  pure $ step (1 + (floor $ (to-from)/(thenn-from))) (thenn-from) from  
+
+fromVToNum:: V -> Either String Number
+fromVToNum (VInt n) = Right $ toNumber n
+fromVToNum (VNum x) = Right x
+fromVToNum _ = Left "not accepted for til, only numbers"
+-- needs a function that only allows ints and numbers to be parsed (no tempo for now, specially no lists)
+
+step:: forall a. Int -> Number -> Number -> V
+step numOfSteps stepSize startPoint = VList $ map (\n -> VNum n) ls
+    where ls = fromFoldable $ Lz.take numOfSteps $ Lz.iterate (\nu -> nu + stepSize) startPoint
+
+
+          -- ls = foldl (\l f -> f l) lista fs  -- this pattern matters, do not erase!!!!
+
+-- foldl (\l f -> f l) (fromFoldable gainList) fs
+
+-- step1:: TempoMark -> Rational -> Int -> List TempoMark
+-- step1 (CPM n) upTo numSteps = step1CPM n upTo numSteps
+-- step1 (CPS n) upTo numSteps = step1CPS n upTo numSteps
+-- step1 (BPM n t) upTo numSteps = step1BPM n t upTo numSteps
+-- step1 _ _ _ = Nil
+
+-- step1CPM:: Rational -> Rational -> Int -> List TempoMark
+-- step1CPM n upTo 0 = (CPM n) : Nil
+-- step1CPM n upTo 1 = (CPM n) : (CPM (n+upTo)) : Nil 
+-- step1CPM n upTo numSteps = step numSteps (stepSizeFromUpTo n upTo (toRational numSteps 1)) (CPM n)
+
+-- step1CPS:: Rational -> Rational -> Int -> List TempoMark
+-- step1CPS n upTo 0 = (CPS n) : Nil
+-- step1CPS n upTo 1 = (CPS n) : (CPS (n+upTo)) : Nil 
+-- step1CPS n upTo numSteps = step numSteps (stepSizeFromUpTo n upTo (toRational numSteps 1)) (CPS n)
+
+-- step1BPM:: Rational -> Rational -> Rational -> Int -> List TempoMark
+-- step1BPM n t upTo 0 = (BPM n t) : Nil
+-- step1BPM n t upTo 1 = (BPM n t) : (BPM n (t+upTo)) : Nil 
+-- step1BPM n t upTo numSteps = step numSteps (stepSizeFromUpTo t upTo (toRational numSteps 1)) (BPM n t)
+
+-- stepSizeFromUpTo:: Rational -> Rational -> Rational -> Rational
+-- stepSizeFromUpTo t upTo numOfSteps = ((t + upTo) - t) / (numOfSteps- (1%1)) 
+
+-- a.n = 0 1 2 3 * [0,1,2,3]; -- [[0,1,2,3], [1,2,3,4], [2,3,4,5], [3,4,5,6]]
+
+
+
+negNum:: P Number
+negNum = do
+  _ <- charWS '-'
+  x <- naturalOrFloat
+  pure ((-1.0) * toNumber' x)
+
+charWS:: Char -> P Char
+charWS x = do
+  _ <- pure 1
+  x <- char x 
+  whitespace
+  pure x
+
+strWS:: String -> P String
+strWS x = do
+  _ <- pure 1
+  x <- string x 
+  whitespace
+  pure x
+
+--
 tempoVarVarAdd:: TempoMark -> V -> V
 tempoVarVarAdd (CPM r) (VNum x) = VTempo $ CPM (r + (toRat x))
 tempoVarVarAdd t (VTempo t2) = VTempo $ t + t2
@@ -128,6 +233,8 @@ tempoVarVarAdd _ _ = VString "failed at tempoVarVarAdd"
 
 -- stackVari:: V -> V -> V 
 -- stackVari (VString s1) (VString s2) = VList $ s1 |\ s2
+
+----- think about how to stack strings for sound!!!
 
 addVari:: V -> V -> V
 addVari (VInt x) (VInt y) = VInt (x+y)
@@ -291,6 +398,7 @@ valToV (Legato span lista variations) = VList $ map (\n -> VNum n) lista
 valToV (MaxW span lista variations) = VList $ map (\n -> VNum n) lista
 valToV (MinW span lista variations) = VList $ map (\n -> VNum n) lista
 valToV (Inter span lista variations) = VList $ map (\n -> VNum n) lista
+
 valToV (Dastgah span d) = dastgahToV d
 valToV (Alpha span lista) = VList $ map (\n -> VInt n) lista
 valToV (Beta span lista) = VList $ map (\n -> VInt n) lista
@@ -309,102 +417,10 @@ dastgahToV (RastPanjgah xs) = VList $ map (\n -> VInt n) xs
 
 
 
-parseVari:: P V
-parseVari = do
-  _ <- pure 0
-  whitespace
-  choice [VTempo <$> try tempoMark, try (toVariant <$> naturalOrFloat), try (VNum <$> (parens negNum)), listExpr]
-
-negNum:: P Number
-negNum = do
-  _ <- charWS '-'
-  x <- naturalOrFloat
-  pure ((-1.0) * toNumber' x)
-
-charWS:: Char -> P Char
-charWS x = do
-  _ <- pure 1
-  x <- char x 
-  whitespace
-  pure x
-
-strWS:: String -> P String
-strWS x = do
-  _ <- pure 1
-  x <- string x 
-  whitespace
-  pure x
-
-
-
 
 ----- for now, CPM, CPS and BPM convert one to another:
 -- is this a class instance of TempoMark?????  t͡ɬ    
 
--- addTM:: TempoMark -> TempoMark -> TempoMark
--- addTM (CPM r1) (CPM r2) = CPM $ r1 + r2
--- addTM (CPS r1) (CPS r2) = CPM $ (r1 * toRat 60.0) + (r2 * toRat 60.0)
--- addTM (BPM bpm1 fig1) (BPM bpm2 fig2) = CPM $ (bpm1/fig1) + (bpm2/fig2)
--- addTM (CPM cpm) (CPS cps) = CPM $ cpm + (cps * toRat 60.0)
--- addTM (CPM cpm) (BPM bpm fig) = CPM $ cpm + (bpm/fig)
--- addTM (CPS cps) (BPM bpm fig) = CPM $ (cps * toRat 60.0) + (bpm/fig)
--- addTM _ _ = CPM $ toRat 0.0
-
-
--- mulTM:: TempoMark -> TempoMark -> TempoMark
--- mulTM (CPM r1) (CPM r2) = CPM $ r1 * r2
--- mulTM (CPS r1) (CPS r2) = CPM $ (r1 * toRat 60.0) * (r2 * toRat 60.0)
--- mulTM (BPM bpm1 fig1) (BPM bpm2 fig2) = CPM $ (bpm1/fig1) * (bpm2/fig2)
--- mulTM (CPM cpm) (CPS cps) = CPM $ cpm * (cps * toRat 60.0)
--- mulTM (CPM cpm) (BPM bpm fig) = CPM $ cpm * (bpm/fig)
--- mulTM (CPS cps) (BPM bpm fig) = CPM $ (cps * toRat 60.0) * (bpm/fig)
--- mulTM _ _ = CPM $ toRat 0.0
-
--- subTM:: TempoMark -> TempoMark -> TempoMark
--- subTM (CPM r1) (CPM r2) = CPM $ r1 - r2
--- subTM (CPS r1) (CPS r2) = CPM $ (r1 * toRat 60.0) - (r2 * toRat 60.0)
--- subTM (BPM bpm1 fig1) (BPM bpm2 fig2) = CPM $ (bpm1/fig1) - (bpm2/fig2)
--- subTM (CPM cpm) (CPS cps) = CPM $ cpm - (cps * toRat 60.0)
--- subTM (CPM cpm) (BPM bpm fig) = CPM $ cpm - (bpm/fig)
--- subTM (CPS cps) (BPM bpm fig) = CPM $ (cps * toRat 60.0) - (bpm/fig)
--- subTM (CPS cps) (CPM cpm) = CPM $ (cps * toRat 60.0) - cpm
--- subTM (BPM bpm fig) (CPS cps) = CPM $ (bpm/fig) - (cps * toRat 60.0)
--- subTM (BPM bpm fig) (CPM cpm) =  CPM $ (bpm/fig) - cpm
--- subTM _ _ = CPM $ toRat 0.0
-
--- divTM:: TempoMark -> TempoMark -> TempoMark
--- divTM (CPM r1) (CPM r2) = CPM $ r1 / r2
--- divTM (CPS r1) (CPS r2) = CPM $ (r1 * toRat 60.0) / (r2 * toRat 60.0)
--- divTM (BPM bpm1 fig1) (BPM bpm2 fig2) = CPM $ (bpm1/fig1) / (bpm2/fig2)
--- divTM (CPM cpm) (CPS cps) = CPM $ cpm / (cps * toRat 60.0)
--- divTM (CPM cpm) (BPM bpm fig) = CPM $ cpm / (bpm/fig)
--- divTM (CPS cps) (BPM bpm fig) = CPM $ (cps * toRat 60.0) / (bpm/fig)
--- divTM (CPS cps) (CPM cpm) = CPM $ (cps * toRat 60.0) / cpm
--- divTM (BPM bpm fig) (CPS cps) = CPM $ (bpm/fig) / (cps * toRat 60.0)
--- divTM (BPM bpm fig) (CPM cpm) =  CPM $ (bpm/fig) / cpm
--- divTM _ _ = CPM $ toRat 0.0
-
--- powTM:: TempoMark -> TempoMark -> TempoMark
--- powTM (CPM r1) (CPM r2) = CPM $ toRat $ pow (R.toNumber r1) (R.toNumber r2)
--- powTM (CPS r1) (CPS r2) = CPM $ toRat $ pow ((R.toNumber r1) * 60.0) ((R.toNumber r2) * 60.0)
--- powTM (BPM bpm1 fig1) (BPM bpm2 fig2) = CPM $ toRat $ pow (R.toNumber (bpm1/fig1)) (R.toNumber (bpm2/fig2))
--- powTM (CPM cpm) (CPS cps) = CPM $ toRat $ pow (R.toNumber cpm) (R.toNumber (cps * toRat 60.0))
--- powTM (CPM cpm) (BPM bpm fig) = CPM $ toRat $ pow (R.toNumber cpm) (R.toNumber (bpm/fig))
--- powTM (CPS cps) (BPM bpm fig) = CPM $ toRat $ pow (R.toNumber (cps * toRat 60.0)) (R.toNumber (bpm/fig))
--- powTM (CPS cps) (CPM cpm) = CPM $ toRat $  pow (R.toNumber cps * 60.0) (R.toNumber cpm)
--- powTM (BPM bpm fig) (CPS cps) = CPM $ toRat $ pow (R.toNumber (bpm/fig)) ((R.toNumber cps) * 60.0)
--- powTM (BPM bpm fig) (CPM cpm) =  CPM $ toRat $ pow (R.toNumber (bpm/fig)) (R.toNumber cpm)
--- powTM _ _ = CPM $ toRat 0.0
-
--- processTempoMark:: TempoMark -> Tempo -> M.Map String Temporal -> Number 
--- processTempoMark (CPM cpm) _ _ = R.toNumber (cpm / (4%1))
--- processTempoMark (BPM bpm figure) _ _ = R.toNumber ((bpm / (4%1)) / figure)
--- processTempoMark (CPS cps) _ _ = R.toNumber (cps * (60%1))
--- processTempoMark XTempo t _ = (R.toNumber (t.freq * (60%1) * (4%1)))
--- processTempoMark (Prop id x y) t mapa = fromMaybe 120.0 otherTempo
---   where prop = (toNumber x / toNumber y)
---         otherTempo = (\temporal -> calculateRTempo mapa t (tempoMark temporal) prop) <$> M.lookup id mapa
--- processTempoMark other t mapa = 0.0 
 
 ---- how to articulate all tempo marks together, two problems:
 -- 1) XTempo and Proportion rely on external tempi. This means that this operation cannot be performed at parsing level, this needs to be thought in debt

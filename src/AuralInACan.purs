@@ -34,7 +34,6 @@ import AST
 import VariExperiments as X
 
 -- pitch is unattended also!
-
 auralInACan:: String -> Maybe (List Int) -> List (Tuple Value X.V) -> Map String Aural
 auralInACan id Nothing xs = asMap
     where len = fromMaybe 0 $ maximum $ map (\(Tuple _ x) -> maxLenVLists x ) xs
