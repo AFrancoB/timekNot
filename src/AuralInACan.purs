@@ -1,4 +1,4 @@
-module AuralInACan (operate, auralInACan) where
+module AuralInACan (auralInACan) where
 
 import Prelude
 
@@ -30,11 +30,19 @@ import Parsing.Language (haskellStyle)
 import Parsing.Token (makeTokenParser)
 
 import AST
-import Variant
+-- import Variant
+import VariExperiments as X
+
+
+-- make tuning  canonisable; 
+-- pimp tuning up: math, better parsers, special functions like: state per octave, state per movement
+--implement a parameter to the Temporal and Politemporal builder that represents: echoic distance (the distance between canonic voices), kariotic distance (distance to/from evaluation time), chronologic distance (a false echoic distance between two temporal lines that converge but are not canonic)
+-- implement multiple CP for canonic structures
+-- implement a evaluation time that can be skipped for a modulo value
+
 
 -- pitch is unattended also!
-
-auralInACan:: String -> Maybe (List Int) -> List (Tuple Value Variant) -> Map String Aural
+auralInACan:: String -> Maybe (List Int) -> List (Tuple Value X.V) -> Map String Aural
 auralInACan id Nothing xs = asMap
     where len = fromMaybe 0 $ maximum $ map (\(Tuple _ x) -> maxLenVLists x ) xs
           ids = map (\n -> id <> "-" <> show n) (0..(len -1))
@@ -50,49 +58,49 @@ auralInACan id (Just ns) xs = selectAuralInACan id ns xs
 --           varToVal = map (\(Tuple val var) -> valInACan val var) newXS -- Maybe (List Value)
 --           asMap = fromMaybe empty $ singleton newID <$> varToVal
 
-selectAuralInACan:: String -> List Int -> List (Tuple Value Variant) -> Map String Aural
+selectAuralInACan:: String -> List Int -> List (Tuple Value X.V) -> Map String Aural
 selectAuralInACan id ns xs = intersectionWith (\a b -> b) newMap fullMap
     where ids = map (\n -> id <> "-" <> show n) ns
           newMap = M.fromFoldable $ map (\id -> Tuple id Nil) ids
           fullMap = auralInACan id Nothing xs -- Map String Aural
 
-cycleVLists:: Variant -> Int -> Variant
-cycleVLists (VList ns) len = VList $ fromFoldable $ Lz.take len $ cycle $ Lz.fromFoldable ns
-cycleVLists _ len = VList Nil
+cycleVLists:: X.V -> Int -> X.V
+cycleVLists (X.VList ns) len = X.VList $ fromFoldable $ Lz.take len $ cycle $ Lz.fromFoldable ns
+cycleVLists _ len = X.VList Nil
 
 -- this acts in top VList
-maxLenVLists:: Variant -> Int
-maxLenVLists (VList xs) = length xs--fromMaybe 0 $ maximum $ map lenVList xs 
+maxLenVLists:: X.V -> Int
+maxLenVLists (X.VList xs) = length xs--fromMaybe 0 $ maximum $ map lenVList xs 
 maxLenVLists _ = 0
 
-lenVList:: Variant -> Int
-lenVList (VList xs) = length xs 
+lenVList:: X.V -> Int
+lenVList (X.VList xs) = length xs 
 lenVList _ = 0
 
-valInACan:: Value -> Variant -> List Value
-valInACan (N spn _ v') (VList ns) = map (\n -> N spn (getVListInt n) v') ns
-valInACan (Orbit spn _ v') (VList ns) = map (\n -> Orbit spn (getVListInt n) v') ns
-valInACan (Gain spn _ v') (VList xs) = map (\x -> Gain spn (getVListNum x) v') xs
-valInACan (Pan spn _ v') (VList xs) = map (\x -> Pan spn (getVListNum x) v') xs
-valInACan (Speed spn _ v') (VList xs) = map (\x -> Speed spn (getVListNum x) v') xs
-valInACan (Begin spn _ v') (VList xs) = map (\x -> Begin spn (getVListNum x) v') xs
-valInACan (End spn _ v') (VList xs) = map (\x -> End spn (getVListNum x) v') xs
-valInACan (CutOff spn _ v') (VList xs) = map (\x -> CutOff spn (getVListNum x) v') xs
-valInACan (CutOffH spn _ v') (VList xs) = map (\x -> CutOffH spn (getVListNum x) v') xs
-valInACan (Legato spn _ v') (VList xs) = map (\x -> Legato spn (getVListNum x) v') xs
-valInACan (MaxW spn _ v') (VList xs) = map (\x -> MaxW spn (getVListNum x) v') xs
-valInACan (MinW spn _ v') (VList xs) = map (\x -> MinW spn (getVListNum x) v') xs
-valInACan (Inter spn _ v') (VList xs) = map (\x -> Inter spn (getVListNum x) v') xs
-valInACan (Sound spn _ v') (VList sts) = map (\st -> Sound spn (getVListStr st) v') sts
-valInACan (Vowel spn _ v') (VList sts) = map (\st -> Vowel spn (getVListStr st) v') sts
-valInACan (Dastgah spn d) (VList ns) = dastgahInACan spn d ns
-valInACan (Alpha spn _) (VList ns) = map (\n -> Alpha spn (getVListInt n)) ns 
-valInACan (Beta spn _) (VList ns) = map (\n -> Beta spn (getVListInt n)) ns 
-valInACan (Gamma spn _) (VList ns) = map (\n -> Gamma spn (getVListInt n)) ns 
-valInACan (Xeno id spn _) (VList ns) = map (\n -> Xeno id spn (getVListInt n)) ns
+valInACan:: Value -> X.V -> List Value
+valInACan (N spn _ v') (X.VList ns) = map (\n -> N spn (getVListInt n) v') ns
+valInACan (Orbit spn _ v') (X.VList ns) = map (\n -> Orbit spn (getVListInt n) v') ns
+valInACan (Gain spn _ v') (X.VList xs) = map (\x -> Gain spn (getVListNum x) v') xs
+valInACan (Pan spn _ v') (X.VList xs) = map (\x -> Pan spn (getVListNum x) v') xs
+valInACan (Speed spn _ v') (X.VList xs) = map (\x -> Speed spn (getVListNum x) v') xs
+valInACan (Begin spn _ v') (X.VList xs) = map (\x -> Begin spn (getVListNum x) v') xs
+valInACan (End spn _ v') (X.VList xs) = map (\x -> End spn (getVListNum x) v') xs
+valInACan (CutOff spn _ v') (X.VList xs) = map (\x -> CutOff spn (getVListNum x) v') xs
+valInACan (CutOffH spn _ v') (X.VList xs) = map (\x -> CutOffH spn (getVListNum x) v') xs
+valInACan (Legato spn _ v') (X.VList xs) = map (\x -> Legato spn (getVListNum x) v') xs
+valInACan (MaxW spn _ v') (X.VList xs) = map (\x -> MaxW spn (getVListNum x) v') xs
+valInACan (MinW spn _ v') (X.VList xs) = map (\x -> MinW spn (getVListNum x) v') xs
+valInACan (Inter spn _ v') (X.VList xs) = map (\x -> Inter spn (getVListNum x) v') xs
+valInACan (Sound spn _ v') (X.VList sts) = map (\st -> Sound spn (getVListStr st) v') sts
+valInACan (Vowel spn _ v') (X.VList sts) = map (\st -> Vowel spn (getVListStr st) v') sts
+valInACan (Dastgah spn d) (X.VList ns) = dastgahInACan spn d ns
+valInACan (Alpha spn _) (X.VList ns) = map (\n -> Alpha spn (getVListInt n)) ns 
+valInACan (Beta spn _) (X.VList ns) = map (\n -> Beta spn (getVListInt n)) ns 
+valInACan (Gamma spn _) (X.VList ns) = map (\n -> Gamma spn (getVListInt n)) ns 
+valInACan (Xeno id spn _) (X.VList ns) = map (\n -> Xeno id spn (getVListInt n)) ns
 valInACan _ _ = Nil
 
-dastgahInACan:: Span -> Dastgah -> List Variant -> List Value
+dastgahInACan:: Span -> Dastgah -> List X.V -> List Value
 -- dastgahInACan _ _ _ = Nil
 dastgahInACan sp (Shur _) ns = map (\n -> Dastgah sp (Shur (getVListInt n))) ns
 dastgahInACan sp (Segah _) ns = map (\n -> Dastgah sp (Segah (getVListInt n))) ns
@@ -103,32 +111,32 @@ dastgahInACan sp (Mahur _) ns = map (\n -> Dastgah sp (Mahur (getVListInt n))) n
 dastgahInACan sp (RastPanjgah _) ns = map (\n -> Dastgah sp (RastPanjgah (getVListInt n))) ns
 
 
-getVarStr:: Variant -> String
-getVarStr (VString str) = str
-getVarStr (VNum x) = show x
-getVarStr (VInt n) = show n
+getVarStr:: X.V -> String
+getVarStr (X.VString str) = str
+getVarStr (X.VNum x) = show x
+getVarStr (X.VInt n) = show n
 getVarStr _ = "2666"
 
-getVListStr:: Variant -> List String
-getVListStr (VList ns) = map getVarStr ns
+getVListStr:: X.V -> List String
+getVListStr (X.VList ns) = map getVarStr ns
 getVListStr _ = Nil
 
-getVarInt:: Variant -> Int
-getVarInt (VInt n) = n
-getVarInt (VNum x) = round x
+getVarInt:: X.V -> Int
+getVarInt (X.VInt n) = n
+getVarInt (X.VNum x) = round x
 getVarInt _ = 2666
 
-getVListInt:: Variant -> List Int
-getVListInt (VList ns) = map getVarInt ns
+getVListInt:: X.V -> List Int
+getVListInt (X.VList ns) = map getVarInt ns
 getVListInt _ = Nil
 
-getVarNum:: Variant -> Number
-getVarNum (VInt n) = toNumber n
-getVarNum (VNum x) = x
+getVarNum:: X.V -> Number
+getVarNum (X.VInt n) = toNumber n
+getVarNum (X.VNum x) = x
 getVarNum _ = 2666.0
 
-getVListNum:: Variant -> List Number
-getVListNum (VList ns) = map getVarNum ns
+getVListNum:: X.V -> List Number
+getVListNum (X.VList ns) = map getVarNum ns
 getVListNum _ = Nil
 
 -- List (Tuple Value Variant)
@@ -164,54 +172,7 @@ getVListNum _ = Nil
 -- Right goes to operate (:: Tuple Value Variant), Left returns the Tuple in the Left
 
 --
-operate:: Value -> Variant -> (Variant -> Variant -> Variant) -> Variant
-operate val trans op = op trans valAsVar --mulVar
-    where valAsVar = g val 
 
-g:: Value -> Variant -- VList (VList:VList:etc)
-g (N span lista variations) = VList $ map (\n -> VInt n) lista
-g (Orbit span lista variations) = VList $ map (\n -> VInt n) lista
-g (Sound span lista variations) = VList $ map (\n -> VString n) lista
-g (Vowel span lista variations) = VList $ map (\n -> VString n) lista
-g (Gain span lista variations) = VList $ map (\n -> VNum n) lista
-g (Pan span lista variations) = VList $ map (\n -> VNum n) lista
-g (Speed span lista variations) = VList $ map (\n -> VNum n) lista
-g (Begin span lista variations) = VList $ map (\n -> VNum n) lista
-g (End span lista variations) = VList $ map (\n -> VNum n) lista
-g (CutOff span lista variations) = VList $ map (\n -> VNum n) lista
-g (CutOffH span lista variations) = VList $ map (\n -> VNum n) lista
-g (Legato span lista variations) = VList $ map (\n -> VNum n) lista
-g (MaxW span lista variations) = VList $ map (\n -> VNum n) lista
-g (MinW span lista variations) = VList $ map (\n -> VNum n) lista
-g (Inter span lista variations) = VList $ map (\n -> VNum n) lista
-g (Dastgah span d) = dastgahToVariant d
-g (Alpha span lista) = VList $ map (\n -> VInt n) lista
-g (Beta span lista) = VList $ map (\n -> VInt n) lista
-g (Gamma span lista) = VList $ map (\n -> VInt n) lista
-g (Xeno id span lista) = VList $ map (\n -> VInt n) lista 
-g _ = VInt 2666 -- add pitch stuff!!!
-
-dastgahToVariant:: Dastgah -> Variant
-dastgahToVariant (Shur xs) = VList $ map (\n -> VInt n) xs
-dastgahToVariant (Segah xs) = VList $ map (\n -> VInt n) xs
-dastgahToVariant (Nava xs) = VList $ map (\n -> VInt n) xs
-dastgahToVariant (Homayun xs) = VList $ map (\n -> VInt n) xs
-dastgahToVariant (Chahargah xs) = VList $ map (\n -> VInt n) xs
-dastgahToVariant (Mahur xs) = VList $ map (\n -> VInt n) xs
-dastgahToVariant (RastPanjgah xs) = VList $ map (\n -> VInt n) xs
-
--- transposeList:: Value -> Variant -> Variant -- VList (VList:VList:etc)
--- transposeList (N span lista variations) variant = mulVar variant $ VList $ map (\n -> VInt n) lista
--- transposer _ _ = VInt 2666
-
--- createVariantInt:: P Variant 
--- createVariantInt = do 
---     _ <- pure 0
---     _ <- whitespace
---     _ <- reservedOp "*"
---     _ <- whitespace
---     ns <- brackets $ natural `sepBy` comma
---     pure $ VList $ map (\n -> VInt n) $ fromFoldable ns
 
 
 tokenParser = makeTokenParser haskellStyle

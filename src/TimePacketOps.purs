@@ -1,4 +1,4 @@
-module TimePacketOps (assambleTimePacket,secsFromOriginAtVantage, secsFromOriginAtWS, secsFromOriginAtWE, secsFromOriginAtEval,metricFromOriginAtWS, metricFromOriginAtWE, metricFromOriginAtEval, voiceFromOriginToEval, fromDateTimeToPosix, fromDateTimeToPosixMaybe, numToDateTime, metricToTempoMark) where
+module TimePacketOps (assambleTimePacket,secsFromOriginAtVantage, secsFromOriginAtWS, secsFromOriginAtWE, secsFromOriginAtEval,metricFromOriginAtWS, metricFromOriginAtWE, metricFromOriginAtEval, voiceFromOriginToEval, fromDateTimeToPosix, fromDateTimeToPosixMaybe, numToDateTime, metricToTempoMark, secsFromOriginAtEvalMod) where
 
 import Prelude
 import Data.Maybe
@@ -12,8 +12,8 @@ import Data.DateTime.Instant
 import Data.Time.Duration
 import Data.Map (Map, lookup)
 
-assambleTimePacket:: DateTime -> DateTime -> DateTime -> Tempo -> VantageMap -> TimePacket
-assambleTimePacket ws we eval t v = {ws: ws, we: we, eval: eval, origin: origin t, tempo: t, vantageMap: v}
+assambleTimePacket:: DateTime -> DateTime -> DateTime -> DateTime -> Int -> Tempo -> VantageMap -> TimePacket
+assambleTimePacket ws we eval prevEval eCount t v = {ws: ws, we: we, evalCount: eCount, eval: eval, pEval: prevEval, origin: origin t, tempo: t, vantageMap: v}
 
 numToDateTime:: Number -> DateTime 
 numToDateTime x =
@@ -40,6 +40,13 @@ secsFromOriginAtWE:: TimePacket -> Number
 secsFromOriginAtWE tp = we - oPosix
     where oPosix = fromDateTimeToPosix tp.origin
           we = fromDateTimeToPosix tp.we
+
+secsFromOriginAtEvalMod:: TimePacket -> Int -> Number
+secsFromOriginAtEvalMod tp modu = eval - oPosix
+    where count = tp.evalCount
+          eval' = if count`mod`modu == 0 then tp.eval else tp.pEval  
+          oPosix = fromDateTimeToPosix tp.origin
+          eval = fromDateTimeToPosix tp.eval
 
 secsFromOriginAtEval:: TimePacket -> Number
 secsFromOriginAtEval tp = eval - oPosix

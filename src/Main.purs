@@ -60,6 +60,21 @@ import Parsing
 main :: Effect Unit 
 main = pure unit
 
+
+---- Muestra de notacion de convergencia: en el horizonte: convergence expression
+-- a[1: 13 <~ 1 <~~ 3 <~ 10 ~> 6 ] <- reloj[20]
+
+-- a-0[6] <- a-3[10]
+-- a-1[13] <- reloj[20]
+-- a-2[13] <- a-0[1]
+-- a-3[13] <- a-1[3]
+-- a-4[3] <- a-2[10]
+
+-- 13 <- 1
+-- 13 <- 3
+-- 3 <- 10
+-- 6 <- 10
+
 -- test editor view
 -- grid 2 1 [[label 1,code 2 0 []],[[label 5,code 3 0 []],[metre 2666]]]
 
@@ -79,9 +94,16 @@ launch _ = do
   tempo <- newTempo (1 % 1) >>= new 
   vantageMap <- new $ (M.empty)
   eval <- new launchTime
+  previousEval <- new launchTime
+  evalCount <- new 0
   wS <- new launchTime
   wE <- new launchTime
-  pure { program, tempo, eval, vantageMap, wS, wE}  
+  pure { program, tempo, eval, previousEval, evalCount, vantageMap, wS, wE}  
+
+
+
+
+{- ISSUE: evaluation happens after you changed the program so, it is all off by one.... when you reset it does not come into effect after the second time you evaluate, this sucks sooo bad! -}
 
 -- { zone :: Int, time :: Number, text :: String }
 define:: TimekNot -> { zone :: Int, time :: Number, text :: String } -> Effect { success :: Boolean, error :: String }
@@ -92,14 +114,22 @@ define tk args = do
   log $ "currentVM" <> show currentVM
   log $ "programDefined: " <> show program
   tempo <- read tk.tempo
+  oldEval <- read tk.eval
+  write oldEval tk.previousEval
   eval <- nowDateTime
-  let pr = check' currentVM $ runParser args.text parseProgram
+  evalC <- read tk.evalCount
+  log $ "old eval count: " <> show evalC
+  let pr = check' currentVM $ runParser args.text $ parseProgram
   case pr of
     Left error -> pure $ { success: false, error }
     Right p -> do
       write eval tk.eval 
       write p tk.program 
-      write (processVantage (getVantageMap p) currentVM eval tempo) $ tk.vantageMap
+      write (updateEvalCount (getVantageMap p) evalC) $ tk.evalCount
+      evalCNew <- read tk.evalCount
+      log $ "new eval count: " <> show evalCNew
+      write (processVantage (getVantageMap p) currentVM eval evalCNew tempo) $ tk.vantageMap
+      -- write (evalC + 1) $ tk.evalCount 
       pure $ { success: true, error: "bad syntax" }
 
 check':: VantageMap -> Either ParseError Program -> Either String Program
@@ -118,8 +148,10 @@ render tk args = do
     -- log $ "vm: " <> show vantageMap
     t <- read tk.tempo
     eval <- read tk.eval
-    let tp = assambleTimePacket ws we eval t vantageMap
-    log $ show program
+    prevEval <- read tk.previousEval
+    eCount <- read tk.evalCount 
+    let tp = assambleTimePacket ws we eval prevEval eCount t vantageMap
+    -- log $ show program
     -- log $ "wsR: " <> show (fromDateTimeToPosix ws)
     -- log $ show we
     -- log $ show t

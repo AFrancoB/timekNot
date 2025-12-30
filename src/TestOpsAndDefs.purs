@@ -66,7 +66,7 @@ getConvergeFrom _ = defConvergeFrom
 --   where parsed = runParser str parseProgram
 
 defMapTemporals = M.fromFoldable [
-  Tuple "v0" (Temporal (Metric (ProcessTo 1 Snap) (Process 0) (BPM (135%1) (1%4))) (Rhythmics (fromFoldable [X,X,X,X])) false),
+  Tuple "v0" (Temporal (Metric (ProcessTo 1 SnapAfter) (Process 0) (BPM (135%1) (1%4))) (Rhythmics (fromFoldable [X,X,X,X])) false),
   Tuple "v1" (Temporal (Converge "v0" (ProcessTo 3 Origin) (Process 0) (BPM (150%1) (1%4))) (Rhythmics (fromFoldable [X,X,X,X])) false),
   Tuple "v2" (Temporal (Converge "v1" (ProcessTo 0 Origin) (Process 0) XTempo) (Rhythmics (fromFoldable [X,X,X,X])) false) --,
   -- Tuple "v3" (Temporal (Converge "v2" (ProcessTo 0 Origin) (Process 0) (CPM (120%1))) X false),

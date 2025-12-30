@@ -23,6 +23,13 @@ import TimePacketOps
 import Data.Rational (Rational(..), (%), fromInt)
 import Data.Rational (toNumber) as R -- still need to convert all Number calcs into Rational!!
 
+{-
+MOD is not transmited through the recursive structure properly. This needs to be checked better in a real program. With a mod that is non-zero
+
+this module is a nightmare, I need to work on this so it is less of a recursive hell
+
+-}
+
 
 calculateTemporal:: M.Map String Temporal -> TimePacket -> String -> Temporal -> Effect (Array Event)
 calculateTemporal m tp aKey (Temporal (Kairos asap tm) rhythmic loop) = do
@@ -91,7 +98,7 @@ calculateTemporal mapa tp aKey (Temporal (Novus vKey cFrom' tm) rhythmic loop) =
   let dur = establishDur tm tp.tempo mapa rhythmic
   let lengthRhythm = (length $ fromFoldable $ rhythmicToOnsets' tm tp.tempo mapa rhythmic)-1
   let simCFrom = simplifyCFrom lengthRhythm cFrom'
-  let cp = secsFromOriginAtVantage tp vKey
+  let cp = secsFromOriginAtVantage tp vKey  ----- this needs a MODDDDDDDDD&&&!!U!Y!Y!YUY@U@Y@UY@YU@#TYT#TY#R#R#
   -- log ("cp novus: " <> show cp)
   x1 <- x1NovusVoice tp tm cp simCFrom rhythmic mapa -- v1
 
@@ -133,7 +140,7 @@ simplifyCFrom n cfrom = cfrom
 -- find x1 and dur of referenceVoice for convergent temporal
 ---- this needs a simplifyCTo and simplifyCFrom????????????
 x1ConvergeVoice:: TimePacket -> TempoMark -> String -> ConvergeTo -> ConvergeFrom -> Rhythmic -> M.Map String Temporal -> Effect Number 
-x1ConvergeVoice  tp tm cKey cTo' cFrom' rhythmic mapa = do
+x1ConvergeVoice tp tm cKey cTo' cFrom' rhythmic mapa = do
   let refTemporal = fromMaybe defTemporal $ M.lookup cKey mapa
   let refRhythmic = getRhythmic refTemporal 
   let refDur = establishDur (tempoMark refTemporal) tp.tempo mapa refRhythmic
@@ -149,7 +156,7 @@ x1ConvergeVoice  tp tm cKey cTo' cFrom' rhythmic mapa = do
   -- cuando empieza la voz en secs, cuanto dura cada bloque en secs, donde esta la voz en eval
   pure (refX1 + x1)
 
-findReferencedX1::TimePacket -> Temporal -> M.Map String Temporal -> Effect Number
+findReferencedX1:: TimePacket -> Temporal -> M.Map String Temporal -> Effect Number
 findReferencedX1 tp (Temporal (Kairos asap tm) rhy _) mapa = do
   let eval = secsFromOriginAtEval tp
   let x1 = eval + asap
@@ -308,7 +315,8 @@ calculateCToNEW innerPos cyclesAtEval _ = 0.0
 
 aligner:: Number -> CPAlign -> Number -- in cycles of external metre
 aligner cyclesAtEval Origin = 0.0 
-aligner cyclesAtEval Snap = (toNumber $ ceil cyclesAtEval) 
+aligner cyclesAtEval SnapAfter = (toNumber $ ceil cyclesAtEval) 
+aligner cyclesAtEval SnapBefore = (toNumber $ floor cyclesAtEval)
 aligner cyclesAtEval (Mod m) = ceiledModInMetre * (toNumber m)
   where modInMetre = cyclesAtEval / (toNumber m)
         ceiledModInMetre = toNumber $ ceil modInMetre

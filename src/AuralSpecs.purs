@@ -123,6 +123,7 @@ processNote _ tu r (Just (Xeno id span lista)) _ e = spanMaybe span (fromFoldabl
   where target = getTUTarget (fst id) tu
         -- target = fromMaybe (EDO 0.0 0) $ M.lookup (fst id) tu 
         midiIntervals = pitchAsAuralPattern (Tuple target (snd id)) (fromFoldable lista) span r
+-- processNote v tu r (Just (Tuning id span lista)) _ e = if temporal is canonic and tuning has multiple sets then do something 
 processNote _ _ _ _ _ _ = Nothing
 
 

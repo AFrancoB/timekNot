@@ -1,4 +1,4 @@
-module Aural(aural,variationsStr, checkXPitch, getPitchMap, prog, fromThenTo, fromTo) where
+module Aural(aural,variationsStr, checkXPitch, getPitchMap, prog, transposer, funcsToV) where
 
 import Prelude
 
@@ -9,6 +9,7 @@ import Data.List.Lazy as Lz
 import Data.Array (fromFoldable, length) as A
 import Data.Either
 import Data.Int
+import Data.Number (sin,pi)
 import Data.Tuple (Tuple(..), fst, snd)
 import Data.Map (Map(..), lookup, keys, singleton, toUnfoldable, member, values, unions)
 import Data.Map (fromFoldable) as M
@@ -33,8 +34,9 @@ import Parsing.Token (makeTokenParser)
 
 import AST
 import Rhythm
-import Variant
+-- import Variant
 import AuralInACan
+import VariExperiments as X
 
 type P = ParserT String Identity
 
@@ -62,14 +64,13 @@ parseValues = do
     id <- voiceId
     index <- indexForID
     xs <- many value -- List (Tuple Value Variant)
-    pure $ auralInACan id index $ fromFoldable xs
+    pure $ auralInACan id index $ fromFoldable  xs
 
 indexForID:: P (Maybe (List Int))
 indexForID = do 
     _ <- pure 1
     whitespace
-    xs <- indexForID' <|> pure Nothing
-    pure xs
+    indexForID' <|> pure Nothing
 
 indexForID':: P (Maybe (List Int))
 indexForID' = do 
@@ -88,27 +89,24 @@ toInt' (Right x) = round x
 --     valType <- choice [try sound,try n, try gain, try pan, try speed, try begin, try end, try vowel, try cutoff, try cutoffh, try inter, try maxw, try minw, try legato, try orbit, try mayeh, try prog, try xeNotes, xeno]
 --     pure valType
 
-value:: P (Tuple Value Variant) -- WORKS
+value:: P (Tuple Value X.V) -- WORKS
 value = do
     _ <- pure 1
     _ <- reservedOp "."
-    val <- choice [try sound, try n, try gain, try pan, try speed, try begin, try end, try vowel, try cutoff, try cutoffh, try inter, try maxw, try minw, try legato, try orbit, try alpha, try beta, try gamma, try mayeh, try prog, try xeNotes, xeno] -- should be a tuple value variant
-    op <- operadores <|> (pure mulVar)
-    trans <- choice [try transposer, parens $ parsesStepVariant] <|> (pure $ VList (VInt 1:Nil))
-    pure $ Tuple val $ operate val trans op
+    val <- choice [try sound, try n, try gain, try pan, try speed, try begin, try end, try vowel, try cutoff, try cutoffh, try inter, try maxw, try minw, try legato, try orbit, try alpha, try beta, try gamma, try mayeh, try prog, try xeNotes, xeno] -- Value (S span lista variation)
+    op <- operadores <|> (pure X.mulVari) -- (V -> V)
+    trans <- choice [try transposer] <|> (pure $ X.VList (X.VInt 1:Nil)) -- V
+    pure $ Tuple val $ op (X.valToV val) trans
 
+operadores:: P (X.V -> X.V -> X.V)
+operadores = choice [reservedOp "*" *> pure X.mulVari, reservedOp "+" *> pure X.addVari, reservedOp "-" *> pure X.subVari, reservedOp "/" *> pure X.divVari, reservedOp "^" *> pure X.powVari]
 
-
--- varWithFold:: forall a. Variant -> List (List Variant -> List Variant) -> Variant
--- varWithFold (VList xs) fs = VList $ foldl (\l f -> f l) xs fs 
--- varWithFold _  _ = VList Nil
-
-parsesStepVariant:: P Variant
-parsesStepVariant = do 
-    _ <- pure 1
-    whitespace
-    x <- choice [try fromThenTo, fromTo]
-    pure x
+-- parsesStepVariant:: P X.V
+-- parsesStepVariant = do 
+--     _ <- pure 1
+--     whitespace
+--     x <- choice [try fromThenTo, fromTo]
+--     pure x
 
 -- parsesStepVariant:: P Variant
 -- parsesStepVariant = do 
@@ -121,28 +119,28 @@ parsesStepVariant = do
 --     startPt <- parseNumber
 --     pure $ step numSteps stepSize startPt fs 
 
-fromTo:: P Variant
-fromTo = do 
-    _ <- pure 1
-    whitespace
-    fs <- funcs
-    from <- try natural
-    _ <- reservedOp "~~"
-    to <- try natural 
-    pure $ step (1 + (to-from)) 1.0 (toNumber from) fs
+-- fromTo:: P X.V
+-- fromTo = do 
+--     _ <- pure 1
+--     whitespace
+--     fs <- funcs
+--     from <- try natural
+--     _ <- reservedOp "til"
+--     to <- try natural 
+--     pure $ step (1 + (to-from)) 1.0 (toNumber from) fs
 
 
-fromThenTo:: P Variant
-fromThenTo = do 
-    _ <- pure 1
-    whitespace
-    fs <- funcs
-    from <- parseNumber
-    _ <- reservedOp ","
-    thenn <- parseNumber
-    _ <- reservedOp "~~"
-    to <- parseNumber 
-    pure $ step (1 + (floor $ (to-from)/(thenn-from))) (thenn-from) from fs
+-- fromThenTo:: P X.V
+-- fromThenTo = do 
+--     _ <- pure 1
+--     whitespace
+--     fs <- funcs
+--     from <- parseNumber
+--     _ <- reservedOp ","
+--     thenn <- parseNumber
+--     _ <- reservedOp "til"
+--     to <- parseNumber 
+--     pure $ step (1 + (floor $ (to-from)/(thenn-from))) (thenn-from) from fs
     
 
 -- 100,102..120
@@ -153,11 +151,8 @@ fromThenTo = do
 
 -- numOfSteps ->  to-from /stepSize
 
-
-
-
-step:: forall a. Int -> Number -> Number -> List (List Number -> List Number) -> Variant
-step numOfSteps stepSize startPoint fs = VList $ map (\n -> VNum n) ls
+step:: forall a. Int -> Number -> Number -> List (List Number -> List Number) -> X.V
+step numOfSteps stepSize startPoint fs = X.VList $ map (\n -> X.VNum n) ls
     where lista = fromFoldable $ Lz.take numOfSteps $ Lz.iterate (\nu -> nu + stepSize) startPoint
           ls = foldl (\l f -> f l) lista fs
 
@@ -187,21 +182,27 @@ step numOfSteps stepSize startPoint fs = VList $ map (\n -> VNum n) ls
 -- stepSizeFromUpTo:: Rational -> Rational -> Rational -> Rational
 -- stepSizeFromUpTo t upTo numOfSteps = ((t + upTo) - t) / (numOfSteps- (1%1)) 
 
+-- a.n = 0 1 2 3 * [0,1,2,3]; -- [[0,1,2,3], [1,2,3,4], [2,3,4,5], [3,4,5,6]]
 
 
-
-transposer:: P Variant
+transposer:: P X.V
 transposer = do 
     _ <- pure 0
-    xs <- brackets $ (toVariant <$> naturalOrFloat) `sepBy` comma
-    pure $ VList $ fromFoldable xs
+    fs <- funcs
+    x <- X.expr
+    pure $ funcsToV fs x
 
-toVariant:: Either Int Number -> Variant
-toVariant (Left n) = VInt n 
-toVariant (Right x) = VNum x
 
-operadores:: P (Variant -> Variant -> Variant)
-operadores = choice [reservedOp "*" *> pure mulVar, reservedOp "+" *> pure addVar]
+funcsToV:: forall a. List (List Number -> List Number) -> X.V -> X.V
+funcsToV fs (X.VList xs) = X.VList $ map (\x -> X.VNum x) $ foldl (\l f -> f l) ls fs
+    where ls = map puvToNum xs
+          puvToNum:: X.V -> Number
+          puvToNum (X.VNum x) = x
+          puvToNum (X.VInt n) = toNumber n
+          puvToNum _ = 0.0   -- think this through     
+funcsToV fs (X.VNum x) = X.VList (X.VNum x:Nil)   -- think this through
+funcsToV fs (X.VInt n) = X.VList (X.VInt n:Nil)
+funcsToV fs _ = X.VList Nil
 
 --
 
@@ -280,6 +281,19 @@ makeGamma = do
     fs <- funcs
     gammaList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
     pure $ Gamma sp $ foldl (\l f -> f l) (fromFoldable gammaList) fs
+
+
+-- tuningCan:: P Value 
+-- tuningCan = do 
+--     _ <- pure 1
+--     id <- identifier
+--     n <- (Just <$> brackets $ reserved "_") <|> pure Nothing
+--     _ <- reservedOp "="
+--     sp <- parseSpan <|> pure CycleEvent
+--     fs <- funcs 
+--     xnL <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
+--     pure $ Tuning []
+
 
 xeno:: P Value 
 xeno = do
@@ -750,6 +764,8 @@ makeSound = do
     vars <- variationsStr <|> pure Nil
     pure $ Sound sp (foldl (\l f -> f l) strList fs) vars
 
+
+
 transNumVal:: P (List (Number -> Number))
 transNumVal = do 
     _ <- pure 1
@@ -805,6 +821,8 @@ everyNum = do
     xs <- choice [try parseRangeNum, fromFoldable <$> many parseNumber]
     pure $ Every n sp xs
 
+
+
 --
 funcs:: forall a. P (List (List a -> List a))
 funcs = do
@@ -843,11 +861,56 @@ shuffle' :: forall a. List a -> List a
 shuffle' xs = unsafePerformEffect $ shuffle xs
 
 
+
+
+
+----- this is sinusoidal wave that needs a reference of time, frequency and amplitude: range 10 200 $ freq freqNum $ sine
+sine :: Number -> Number -> Number -> Number -> Number
+sine frequency currentTime amplitude phase =
+  amplitude * sin (2.0 * pi * frequency * currentTime + phase)
+
+
 -- [0,1,2,3,4,5]  -> [[0,1,2],[3,4,5]] -> [[3,4,5],[0,1,2]] -> [3,4,5,0,1,2]
 
 -- partition :: forall a. (a -> Boolean) -> List a -> { no :: List a, yes :: List a }
 
--- rotFrom 
+-- rotFrom 12 $ (0,2 til 20)
+
+-- 0 2 4 6 8 10 12 14 16 18 20
+
+-- 12 14 16 18 20 0 2 4 6 8 10 
+
+
+-- cosa [intervalo1, intervalo2...] iteraciones
+-- cosa [2 3] 2 $ (0,2,20)
+
+-- 0,2,4,6,8,10,12,14,16,18,20
+
+-- 0 4 10 14 20 sobran 2 6 8 12 16 18 Iter 1
+
+-- 2 8 18 sobran 6 12 16 Iter 2
+
+-- 6 16 sobran 12 Iter 3
+ 
+-- 12 Iter 4
+
+
+
+---- partition bool func1 func2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 nada:: forall a. List a -> List a
@@ -878,8 +941,12 @@ parseSpan = do
 
 sampleParser:: P (List String)
 sampleParser = do
-    sampleNames <- stringLit
-    pure $ stringToSamples sampleNames
+    sampleSpace <- stringLit
+    pure $ stringToSamples sampleSpace
+
+stringToSampleLists:: String -> List (List String)
+stringToSampleLists s =  map (\str -> stringToSamples str) $ fromFoldable $ Str.split (Str.Pattern "|") $ Str.trim s
+
 
 stringToSamples:: String -> List String -- what to do with commas??
 stringToSamples s = fromFoldable $ Str.split (Str.Pattern " ") $ Str.trim s

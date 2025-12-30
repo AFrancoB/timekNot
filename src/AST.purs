@@ -1,4 +1,4 @@
-module AST(TimekNot(..),Vantage(..), TimePoint(..), VantageMap(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..), Variation(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), Sinusoidal(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), Tuning(..), CPSNote(..), DastgahNote(..), Interval(..), Subset(..), Variant(..), showEventIndex, showStructureIndex) where
+module AST(TimekNot(..),Vantage(..), TimePoint(..), VantageMap(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..), Variation(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), Sinusoidal(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), Tuning(..), CPSNote(..), DastgahNote(..), Interval(..), Subset(..), Variant(..), showEventIndex, showStructureIndex, powTM, (**), stack', (|\)) where
 
 import Prelude
 import Effect.Ref
@@ -11,11 +11,16 @@ import Data.Map
 import Data.Tuple
 import Data.Either
 import Data.Maybe
+import Data.Int as I
+import Data.Number (pow)
+
 
 type TimekNot = {
   program :: Ref Program,
   tempo :: Ref Tempo,
   eval :: Ref DateTime,
+  evalCount :: Ref Int,
+  previousEval :: Ref DateTime,
   vantageMap :: Ref (Map String DateTime),
   wS :: Ref DateTime,
   wE :: Ref DateTime
@@ -28,7 +33,7 @@ data Expression = TimeExpression (Map String Temporal) | AuralExpression (Map St
 instance expressionShow :: Show Expression where
   show (TimeExpression x) = "TimeExpression " <> show x
   show (AuralExpression x) = "AuralExpression " <> show x
-  show (PitchExpression x) = "XenoPitchExpression " <> show x -- change to tunning expression
+  show (PitchExpression x) = "PitchExpression " <> show x -- change to tunning expression
   show (VantagePointExpression x) = "VantagePointExpression " <> show x
 
 -- Temporal values is short for TemporalRelationship and Aural is short for Aural Values. Polytemporal stands for TempoRelationship, Rhythmic stands shor for Rhythmic values
@@ -47,10 +52,12 @@ type Aural = List Value -- aural is a list of aural attributes for a given time 
 
 type VantageMap = Map String DateTime
 
-data Vantage = Build TimePoint | Move (Either Rational Rational) | Remove
+data Vantage = Build TimePoint | Move (Either Rational Rational) | Remove | VEval Int | Reset
 
 instance vantageShow :: Show Vantage where
-  show (Build x) = "established " <> show x 
+  show (VEval n) = "evalVP " <> show n
+  show Reset = " reset"
+  show (Build x) = " established " <> show x 
   show (Move num) = " moved by " <> show x -- fornow secs but enable xBeats
       where x = case num of
                   (Left beat) -> show beat <> " beats"
@@ -145,12 +152,18 @@ instance showDatsgah :: Show Dastgah where
   show (Mahur l) = "mahur " <> show l
   show (RastPanjgah l) = "rastPanjgah " <> show l
 
+------
+
+data Eval = Eval DateTime | MEval DateTime Int
+
+instance show :: Show Eval where 
+  show (Eval dt) = "Eval " <> show dt
+  show (MEval dt m) = "MEval" <> show dt
+
 data Temporal = Temporal Polytemporal Rhythmic Boolean 
 
- -- this will require a check and the recursive implementation now very familiar
-
 instance temporalShow :: Show Temporal where
-    show (Temporal x y z) = show x <> " " <> show y <> (if z then " looped" else " unlooped")
+    show (Temporal x y z) = show x <> " " <> show y <> (if z then " looped" else " unlooped") 
 
 data Polytemporal = 
   Kairos Number TempoMark | -- last arg is tempo -- Arg: universal time unit (miliseconds and datetime in purs)
@@ -158,10 +171,6 @@ data Polytemporal =
   Metric ConvergeTo ConvergeFrom TempoMark | -- starts a program attached to a default underlying voice (a tempo grid basically) first number is the point to where the new voice will converge, second number is the point from which it converges. 
   Converge String ConvergeTo ConvergeFrom TempoMark | -- Args: String is the voice identifier, convergAt (where this voice converges with the identified voice) and convergedFrom (the point of this voice that converges with the identified voice)  -- Converge starts a program in relationship with another voice
   Novus String ConvergeFrom TempoMark -- |
---  Canonic (List Polytemporal)
-  -- InACan (List Polytemporal)
-
-
 
 instance polytemporalShowInstance :: Show Polytemporal where
   show (Kairos asap t) = "Kairos " <> show asap <> " " <> show t
@@ -223,11 +232,12 @@ instance euclideanShowInstance :: Show Euclidean where
 -- THIS IS DUE NOW:
 -- data CPAlign = CeilMod Int | CeilSnap | RoundMod Int | RoundSnap | FloorMod Int | FloorSnap | Origin 
 
-data CPAlign = Mod Int | Snap | Origin  -- this is the first stage
+data CPAlign = Mod Int | SnapAfter | SnapBefore | Origin  -- this is the first stage
 
 instance Show CPAlign where
   show (Mod m) = "Mod " <> show m
-  show  Snap = "Snap"
+  show  SnapAfter = "Snap >>"
+  show SnapBefore = "Snap <<"
   show  Origin = "Origin"
 
 
@@ -273,6 +283,106 @@ instance Show TempoMark where
   show (Sin acc) = show acc
   show (Dur n) = "Dur " <> show n
 
+-- https://pursuit.purescript.org/packages/purescript-prelude/6.0.2/docs/Data.Semiring#v:zero
+
+class Stack a where 
+  stack :: a -> a -> List a
+
+instance stackStr :: Stack String where 
+  stack str1 str2 = str1 |\ str2 
+
+infixl 7 stack' as |\
+
+stack':: String -> String -> List String
+stack' str1 str2 = (str1:str2:Nil)
+
+class Pow' a where
+  pow' :: a -> a -> a
+
+instance powTempo :: Pow' TempoMark where
+  pow' t1 t2 = t1 ** t2
+
+infixl 7 powTM as **
+
+instance semiringTM :: Semiring TempoMark where
+  add t1 t2 = addTM t1 t2
+  mul t1 t2 = mulTM t1 t2
+  zero = CPM $ toRat 0.0
+  one = CPM $ toRat 1.0
+
+instance ringTM :: Ring TempoMark where
+  sub t1 t2 = subTM t1 t2
+
+instance commRing :: CommutativeRing TempoMark
+
+instance euclideanRing :: EuclideanRing TempoMark where
+  div t1 t2 = divTM t1 t2
+  degree t1 = 1                    --- degree and mod need to be functional
+  mod t1 t2 = CPM $ toRat 0.0
+
+addTM:: TempoMark -> TempoMark -> TempoMark
+addTM (CPM r1) (CPM r2) = CPM $ r1 + r2
+addTM (CPS r1) (CPS r2) = CPM $ (r1 * toRat 60.0) + (r2 * toRat 60.0)
+addTM (BPM bpm1 fig1) (BPM bpm2 fig2) = CPM $ (bpm1/fig1) + (bpm2/fig2)
+addTM (CPM cpm) (CPS cps) = CPM $ cpm + (cps * toRat 60.0)
+addTM (CPM cpm) (BPM bpm fig) = CPM $ cpm + (bpm/fig)
+addTM (CPS cps) (BPM bpm fig) = CPM $ (cps * toRat 60.0) + (bpm/fig)
+addTM _ _ = CPM $ toRat 0.0
+
+mulTM:: TempoMark -> TempoMark -> TempoMark
+mulTM (CPM r1) (CPM r2) = CPM $ r1 * r2
+mulTM (CPS r1) (CPS r2) = CPM $ (r1 * toRat 60.0) * (r2 * toRat 60.0)
+mulTM (BPM bpm1 fig1) (BPM bpm2 fig2) = CPM $ (bpm1/fig1) * (bpm2/fig2)
+mulTM (CPM cpm) (CPS cps) = CPM $ cpm * (cps * toRat 60.0)
+mulTM (CPM cpm) (BPM bpm fig) = CPM $ cpm * (bpm/fig)
+mulTM (CPS cps) (BPM bpm fig) = CPM $ (cps * toRat 60.0) * (bpm/fig)
+mulTM _ _ = CPM $ toRat 0.0
+
+subTM:: TempoMark -> TempoMark -> TempoMark
+subTM (CPM r1) (CPM r2) = CPM $ r1 - r2
+subTM (CPS r1) (CPS r2) = CPM $ (r1 * toRat 60.0) - (r2 * toRat 60.0)
+subTM (BPM bpm1 fig1) (BPM bpm2 fig2) = CPM $ (bpm1/fig1) - (bpm2/fig2)
+subTM (CPM cpm) (CPS cps) = CPM $ cpm - (cps * toRat 60.0)
+subTM (CPM cpm) (BPM bpm fig) = CPM $ cpm - (bpm/fig)
+subTM (CPS cps) (BPM bpm fig) = CPM $ (cps * toRat 60.0) - (bpm/fig)
+subTM (CPS cps) (CPM cpm) = CPM $ (cps * toRat 60.0) - cpm
+subTM (BPM bpm fig) (CPS cps) = CPM $ (bpm/fig) - (cps * toRat 60.0)
+subTM (BPM bpm fig) (CPM cpm) =  CPM $ (bpm/fig) - cpm
+subTM _ _ = CPM $ toRat 0.0
+
+powTM:: TempoMark -> TempoMark -> TempoMark
+powTM (CPM r1) (CPM r2) = CPM $ toRat $ pow (toNumber r1) (toNumber r2)
+powTM (CPS r1) (CPS r2) = CPM $ toRat $ pow ((toNumber r1) * 60.0) ((toNumber r2) * 60.0)
+powTM (BPM bpm1 fig1) (BPM bpm2 fig2) = CPM $ toRat $ pow (toNumber (bpm1/fig1)) (toNumber (bpm2/fig2))
+powTM (CPM cpm) (CPS cps) = CPM $ toRat $ pow (toNumber cpm) (toNumber (cps * toRat 60.0))
+powTM (CPM cpm) (BPM bpm fig) = CPM $ toRat $ pow (toNumber cpm) (toNumber (bpm/fig))
+powTM (CPS cps) (BPM bpm fig) = CPM $ toRat $ pow (toNumber (cps * toRat 60.0)) (toNumber (bpm/fig))
+powTM (CPS cps) (CPM cpm) = CPM $ toRat $  pow (toNumber cps * 60.0) (toNumber cpm)
+powTM (BPM bpm fig) (CPS cps) = CPM $ toRat $ pow (toNumber (bpm/fig)) ((toNumber cps) * 60.0)
+powTM (BPM bpm fig) (CPM cpm) =  CPM $ toRat $ pow (toNumber (bpm/fig)) (toNumber cpm)
+powTM _ _ = CPM $ toRat 0.0
+
+divTM:: TempoMark -> TempoMark -> TempoMark
+divTM (CPM r1) (CPM r2) = CPM $ r1 / r2
+divTM (CPS r1) (CPS r2) = CPM $ (r1 * toRat 60.0) / (r2 * toRat 60.0)
+divTM (BPM bpm1 fig1) (BPM bpm2 fig2) = CPM $ (bpm1/fig1) / (bpm2/fig2)
+divTM (CPM cpm) (CPS cps) = CPM $ cpm / (cps * toRat 60.0)
+divTM (CPM cpm) (BPM bpm fig) = CPM $ cpm / (bpm/fig)
+divTM (CPS cps) (BPM bpm fig) = CPM $ (cps * toRat 60.0) / (bpm/fig)
+divTM (CPS cps) (CPM cpm) = CPM $ (cps * toRat 60.0) / cpm
+divTM (BPM bpm fig) (CPS cps) = CPM $ (bpm/fig) / (cps * toRat 60.0)
+divTM (BPM bpm fig) (CPM cpm) =  CPM $ (bpm/fig) / cpm
+divTM _ _ = CPM $ toRat 0.0
+
+toRat:: Number -> Rational
+toRat x = 
+    let pFact = 1000000
+        floored = I.floor x -- 12
+        fract = x - (I.toNumber floored) -- 12.5 - 12.0 = 0.5
+        fract' = I.round $ fract * (I.toNumber pFact) -- 500000
+    in (floored%1) + (fract'%pFact) -- 12 + (500000%1000000)
+
+
 type Sinusoidal = {
   min:: TempoMark,
   max:: TempoMark,
@@ -283,7 +393,9 @@ type Sinusoidal = {
 type TimePacket = {
   ws:: DateTime,
   we:: DateTime,
+  evalCount:: Int,
   eval:: DateTime,
+  pEval:: DateTime,
   origin:: DateTime,
   tempo:: Tempo,
   vantageMap:: VantageMap
