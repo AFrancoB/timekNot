@@ -19,6 +19,8 @@ type TimekNot = {
   program :: Ref Program,
   tempo :: Ref Tempo,
   eval :: Ref DateTime,
+  evalCount :: Ref Int,
+  previousEval :: Ref DateTime,
   vantageMap :: Ref (Map String DateTime),
   wS :: Ref DateTime,
   wE :: Ref DateTime
@@ -31,7 +33,7 @@ data Expression = TimeExpression (Map String Temporal) | AuralExpression (Map St
 instance expressionShow :: Show Expression where
   show (TimeExpression x) = "TimeExpression " <> show x
   show (AuralExpression x) = "AuralExpression " <> show x
-  show (PitchExpression x) = "XenoPitchExpression " <> show x -- change to tunning expression
+  show (PitchExpression x) = "PitchExpression " <> show x -- change to tunning expression
   show (VantagePointExpression x) = "VantagePointExpression " <> show x
 
 -- Temporal values is short for TemporalRelationship and Aural is short for Aural Values. Polytemporal stands for TempoRelationship, Rhythmic stands shor for Rhythmic values
@@ -50,10 +52,12 @@ type Aural = List Value -- aural is a list of aural attributes for a given time 
 
 type VantageMap = Map String DateTime
 
-data Vantage = Build TimePoint | Move (Either Rational Rational) | Remove
+data Vantage = Build TimePoint | Move (Either Rational Rational) | Remove | VEval Int | Reset
 
 instance vantageShow :: Show Vantage where
-  show (Build x) = "established " <> show x 
+  show (VEval n) = "evalVP " <> show n
+  show Reset = " reset"
+  show (Build x) = " established " <> show x 
   show (Move num) = " moved by " <> show x -- fornow secs but enable xBeats
       where x = case num of
                   (Left beat) -> show beat <> " beats"
@@ -148,12 +152,18 @@ instance showDatsgah :: Show Dastgah where
   show (Mahur l) = "mahur " <> show l
   show (RastPanjgah l) = "rastPanjgah " <> show l
 
+------
+
+data Eval = Eval DateTime | MEval DateTime Int
+
+instance show :: Show Eval where 
+  show (Eval dt) = "Eval " <> show dt
+  show (MEval dt m) = "MEval" <> show dt
+
 data Temporal = Temporal Polytemporal Rhythmic Boolean 
 
- -- this will require a check and the recursive implementation now very familiar
-
 instance temporalShow :: Show Temporal where
-    show (Temporal x y z) = show x <> " " <> show y <> (if z then " looped" else " unlooped")
+    show (Temporal x y z) = show x <> " " <> show y <> (if z then " looped" else " unlooped") 
 
 data Polytemporal = 
   Kairos Number TempoMark | -- last arg is tempo -- Arg: universal time unit (miliseconds and datetime in purs)
@@ -161,10 +171,6 @@ data Polytemporal =
   Metric ConvergeTo ConvergeFrom TempoMark | -- starts a program attached to a default underlying voice (a tempo grid basically) first number is the point to where the new voice will converge, second number is the point from which it converges. 
   Converge String ConvergeTo ConvergeFrom TempoMark | -- Args: String is the voice identifier, convergAt (where this voice converges with the identified voice) and convergedFrom (the point of this voice that converges with the identified voice)  -- Converge starts a program in relationship with another voice
   Novus String ConvergeFrom TempoMark -- |
---  Canonic (List Polytemporal)
-  -- InACan (List Polytemporal)
-
-
 
 instance polytemporalShowInstance :: Show Polytemporal where
   show (Kairos asap t) = "Kairos " <> show asap <> " " <> show t
@@ -226,11 +232,12 @@ instance euclideanShowInstance :: Show Euclidean where
 -- THIS IS DUE NOW:
 -- data CPAlign = CeilMod Int | CeilSnap | RoundMod Int | RoundSnap | FloorMod Int | FloorSnap | Origin 
 
-data CPAlign = Mod Int | Snap | Origin  -- this is the first stage
+data CPAlign = Mod Int | SnapAfter | SnapBefore | Origin  -- this is the first stage
 
 instance Show CPAlign where
   show (Mod m) = "Mod " <> show m
-  show  Snap = "Snap"
+  show  SnapAfter = "Snap >>"
+  show SnapBefore = "Snap <<"
   show  Origin = "Origin"
 
 
@@ -386,7 +393,9 @@ type Sinusoidal = {
 type TimePacket = {
   ws:: DateTime,
   we:: DateTime,
+  evalCount:: Int,
   eval:: DateTime,
+  pEval:: DateTime,
   origin:: DateTime,
   tempo:: Tempo,
   vantageMap:: VantageMap

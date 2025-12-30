@@ -33,6 +33,14 @@ import AST
 -- import Variant
 import VariExperiments as X
 
+
+-- make tuning  canonisable; 
+-- pimp tuning up: math, better parsers, special functions like: state per octave, state per movement
+--implement a parameter to the Temporal and Politemporal builder that represents: echoic distance (the distance between canonic voices), kariotic distance (distance to/from evaluation time), chronologic distance (a false echoic distance between two temporal lines that converge but are not canonic)
+-- implement multiple CP for canonic structures
+-- implement a evaluation time that can be skipped for a modulo value
+
+
 -- pitch is unattended also!
 auralInACan:: String -> Maybe (List Int) -> List (Tuple Value X.V) -> Map String Aural
 auralInACan id Nothing xs = asMap

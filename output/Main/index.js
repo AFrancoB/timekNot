@@ -27,15 +27,16 @@ import * as TimePacketOps from "../TimePacketOps/index.js";
 import * as Voices from "../Voices/index.js";
 import * as WebDirt from "../WebDirt/index.js";
 var bind = /* #__PURE__ */ Control_Bind.bind(Effect.bindEffect);
-var show = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_List_Types.showList(AST.expressionShow));
 var traverse_ = /* #__PURE__ */ Data_Foldable.traverse_(Effect.applicativeEffect)(Data_Foldable.foldableArray);
 var pure = /* #__PURE__ */ Control_Applicative.pure(Effect.applicativeEffect);
 var adjust = /* #__PURE__ */ Data_DateTime.adjust(Data_Time_Duration.durationMilliseconds);
 var lessThanOrEq = /* #__PURE__ */ Data_Ord.lessThanOrEq(Data_DateTime.ordDateTime);
-var show1 = /* #__PURE__ */ Data_Show.show(Data_Show.showString);
+var show = /* #__PURE__ */ Data_Show.show(Data_Show.showString);
 var fromFoldable = /* #__PURE__ */ Data_List.fromFoldable(Data_Foldable.foldableArray);
 var toRational = /* #__PURE__ */ Data_Rational.toRational(Data_Rational.toRationalInt);
-var show2 = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_Map_Internal.showMap(Data_Show.showString)(Data_DateTime.showDateTime));
+var show1 = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_Map_Internal.showMap(Data_Show.showString)(Data_DateTime.showDateTime));
+var show2 = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_List_Types.showList(AST.expressionShow));
+var show3 = /* #__PURE__ */ Data_Show.show(Data_Show.showInt);
 var setTempo = function (tk) {
     return function (t) {
         return Effect_Ref.write(Data_Tempo.fromForeignTempo(t))(tk.tempo);
@@ -50,8 +51,9 @@ var render = function (tk) {
             var vantageMap = Effect_Ref.read(tk.vantageMap)();
             var t = Effect_Ref.read(tk.tempo)();
             var $$eval = Effect_Ref.read(tk["eval"])();
-            var tp = TimePacketOps.assambleTimePacket(ws)(we)($$eval)(t)(vantageMap);
-            Effect_Console.log(show(program))();
+            var prevEval = Effect_Ref.read(tk.previousEval)();
+            var eCount = Effect_Ref.read(tk.evalCount)();
+            var tp = TimePacketOps.assambleTimePacket(ws)(we)($$eval)(prevEval)(eCount)(t)(vantageMap);
             return Voices.programToForeign(program)(tp)();
         };
     };
@@ -79,15 +81,15 @@ var renderStandalone = function (tk) {
             var now = Effect_Now.nowDateTime();
             var prevWE = Effect_Ref.read(tk.wE)();
             var future = Data_Maybe.fromMaybe(now)(adjust(400.0)(now));
-            var $22 = lessThanOrEq(prevWE)(future);
-            if ($22) {
+            var $23 = lessThanOrEq(prevWE)(future);
+            if ($23) {
                 var wE = Data_Maybe.fromMaybe(now)(adjust(500.0)(prevWE));
                 Effect_Ref.write(prevWE)(tk.wS)();
                 Effect_Ref.write(wE)(tk.wE)();
                 var t = Effect_Ref.read(tk.tempo)();
                 return playDirty(tk)(d.webdirt)();
             };
-            return Effect_Console.log(show1("sleep"))();
+            return Effect_Console.log(show("sleep"))();
         };
     };
 };
@@ -108,12 +110,16 @@ var launch = function (v) {
         var tempo = bind(Data_Tempo.newTempo(toRational(1)(1)))(Effect_Ref["new"])();
         var vantageMap = Effect_Ref["new"](Data_Map_Internal.empty)();
         var $$eval = Effect_Ref["new"](launchTime)();
+        var previousEval = Effect_Ref["new"](launchTime)();
+        var evalCount = Effect_Ref["new"](0)();
         var wS = Effect_Ref["new"](launchTime)();
         var wE = Effect_Ref["new"](launchTime)();
         return {
             program: program,
             tempo: tempo,
             "eval": $$eval,
+            previousEval: previousEval,
+            evalCount: evalCount,
             vantageMap: vantageMap,
             wS: wS,
             wE: wE
@@ -133,9 +139,9 @@ var check$prime = function (v) {
             if (!v2) {
                 return new Data_Either.Left("failed the check, time bites it's own tail");
             };
-            throw new Error("Failed pattern match at Main (line 107, column 30 - line 109, column 89): " + [ v2.constructor.name ]);
+            throw new Error("Failed pattern match at Main (line 137, column 30 - line 139, column 89): " + [ v2.constructor.name ]);
         };
-        throw new Error("Failed pattern match at Main (line 105, column 1 - line 105, column 74): " + [ v.constructor.name, v1.constructor.name ]);
+        throw new Error("Failed pattern match at Main (line 135, column 1 - line 135, column 74): " + [ v.constructor.name, v1.constructor.name ]);
     };
 };
 var define = function (tk) {
@@ -144,10 +150,14 @@ var define = function (tk) {
             Effect_Console.log("timekNot: evaluate")();
             var program = Effect_Ref.read(tk.program)();
             var currentVM = Effect_Ref.read(tk.vantageMap)();
-            Effect_Console.log("currentVM" + show2(currentVM))();
-            Effect_Console.log("programDefined: " + show(program))();
+            Effect_Console.log("currentVM" + show1(currentVM))();
+            Effect_Console.log("programDefined: " + show2(program))();
             var tempo = Effect_Ref.read(tk.tempo)();
+            var oldEval = Effect_Ref.read(tk["eval"])();
+            Effect_Ref.write(oldEval)(tk.previousEval)();
             var $$eval = Effect_Now.nowDateTime();
+            var evalC = Effect_Ref.read(tk.evalCount)();
+            Effect_Console.log("old eval count: " + show3(evalC))();
             var pr = check$prime(currentVM)(Parsing.runParser(args.text)(Parser.parseProgram));
             if (pr instanceof Data_Either.Left) {
                 return {
@@ -158,13 +168,16 @@ var define = function (tk) {
             if (pr instanceof Data_Either.Right) {
                 Effect_Ref.write($$eval)(tk["eval"])();
                 Effect_Ref.write(pr.value0)(tk.program)();
-                Effect_Ref.write(Novus.processVantage(Parser.getVantageMap(pr.value0))(currentVM)($$eval)(tempo))(tk.vantageMap)();
+                Effect_Ref.write(Novus.updateEvalCount(Parser.getVantageMap(pr.value0))(evalC))(tk.evalCount)();
+                var evalCNew = Effect_Ref.read(tk.evalCount)();
+                Effect_Console.log("new eval count: " + show3(evalCNew))();
+                Effect_Ref.write(Novus.processVantage(Parser.getVantageMap(pr.value0))(currentVM)($$eval)(evalCNew)(tempo))(tk.vantageMap)();
                 return {
                     success: true,
                     error: "bad syntax"
                 };
             };
-            throw new Error("Failed pattern match at Main (line 97, column 3 - line 103, column 52): " + [ pr.constructor.name ]);
+            throw new Error("Failed pattern match at Main (line 123, column 3 - line 133, column 52): " + [ pr.constructor.name ]);
         };
     };
 };

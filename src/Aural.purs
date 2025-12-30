@@ -9,6 +9,7 @@ import Data.List.Lazy as Lz
 import Data.Array (fromFoldable, length) as A
 import Data.Either
 import Data.Int
+import Data.Number (sin,pi)
 import Data.Tuple (Tuple(..), fst, snd)
 import Data.Map (Map(..), lookup, keys, singleton, toUnfoldable, member, values, unions)
 import Data.Map (fromFoldable) as M
@@ -43,7 +44,7 @@ aural:: P Expression
 aural = do 
     _ <- pure 1
     x <- parseValues
-    -- _ <- reserved ";" -- this need to be fixed!
+    _ <- reserved ";" -- this need to be fixed!
     pure $ AuralExpression x -- (Map Strg Aural)
 
 -- parseValues:: P (Map String Aural)
@@ -280,6 +281,19 @@ makeGamma = do
     fs <- funcs
     gammaList <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
     pure $ Gamma sp $ foldl (\l f -> f l) (fromFoldable gammaList) fs
+
+
+-- tuningCan:: P Value 
+-- tuningCan = do 
+--     _ <- pure 1
+--     id <- identifier
+--     n <- (Just <$> brackets $ reserved "_") <|> pure Nothing
+--     _ <- reservedOp "="
+--     sp <- parseSpan <|> pure CycleEvent
+--     fs <- funcs 
+--     xnL <- choice [try (A.fromFoldable <$> parseRangeInt), many natural]
+--     pure $ Tuning []
+
 
 xeno:: P Value 
 xeno = do
@@ -807,6 +821,8 @@ everyNum = do
     xs <- choice [try parseRangeNum, fromFoldable <$> many parseNumber]
     pure $ Every n sp xs
 
+
+
 --
 funcs:: forall a. P (List (List a -> List a))
 funcs = do
@@ -848,16 +864,21 @@ shuffle' xs = unsafePerformEffect $ shuffle xs
 
 
 
+----- this is sinusoidal wave that needs a reference of time, frequency and amplitude: range 10 200 $ freq freqNum $ sine
+sine :: Number -> Number -> Number -> Number -> Number
+sine frequency currentTime amplitude phase =
+  amplitude * sin (2.0 * pi * frequency * currentTime + phase)
+
+
 -- [0,1,2,3,4,5]  -> [[0,1,2],[3,4,5]] -> [[3,4,5],[0,1,2]] -> [3,4,5,0,1,2]
 
 -- partition :: forall a. (a -> Boolean) -> List a -> { no :: List a, yes :: List a }
 
--- rotFrom 12 $ (0,2..20)
+-- rotFrom 12 $ (0,2 til 20)
 
 -- 0 2 4 6 8 10 12 14 16 18 20
 
 -- 12 14 16 18 20 0 2 4 6 8 10 
-
 
 
 -- cosa [intervalo1, intervalo2...] iteraciones

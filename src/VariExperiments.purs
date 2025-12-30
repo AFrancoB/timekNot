@@ -60,7 +60,7 @@ type P = ParserT String Identity
 -- 4) creating taylor made tuning systems
 
 
-data V = VString String | VNum Number | VInt Int | VList (List V) | VTempo TempoMark
+data V = VString String | VNum Number | VInt Int | VList (List V) | VTempo TempoMark 
 
 instance variShow :: Show V where
   show (VString st) = st 
@@ -68,7 +68,9 @@ instance variShow :: Show V where
   show (VInt n) = show n 
   show (VList xs) = show xs
   show (VTempo t) = show t
+  -- show (VConv c) = show c
 
+--------------
 
 listExpr:: P V
 listExpr = do

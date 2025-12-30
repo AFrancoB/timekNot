@@ -1,5 +1,5 @@
 
-module Parser(cFromParser, polytemporalRelation', temporal, check, parseProgram, getTemporalMap, getAuralMap, testRecursive, testP,xPitchExpression, expression, getVantageMap, parseDate, utcA, step, genTempoMarks) where
+module Parser(cFromParser, polytemporalRelation', temporal, check, parseProgram, getTemporalMap, getAuralMap, {-testRecursive, testP,-} tuningExpression, expression, getVantageMap, parseDate, utcA, step, genTempoMarks) where
 
 import Prelude
 
@@ -52,7 +52,24 @@ import InACan
 
 type P = ParserT String Identity
 
-testP str = runParser str parseProgram
+-- testP str = runParser str $ parseProgram 0
+
+
+-- reloj 300tl | x :|
+
+-- a[1200] <~ b[100] <~ reloj[10>>]   -- crea dos politemporales: a from1200 to bat100 y b from100 to relojat10 after E
+
+-- a[1200] <~ reloj[10>>] ~> b[100]   -- crea dos politemporales: a from1200 to reloj10 after E y b from100 to relojat10 after E
+
+-- a[1200] <~ reloj[10>>] ~> b[100] ~> c[2300] -- creates pt: afrom1200 to reloj, bfrom100 to relojat10, and cfrom2300 to reloj at 10
+
+
+-- a[1200 <~ 100] <~ reloj[10>>] -- creates 2 pt: a-0from1200 to relojat100, and a-1from100 to aat1200
+
+-- a[1200 <~ 100 ~> 800] <~ reloj[10>>] -- creates 3 pt: a-0from1200 to a-1at100, a-2from800 to a-1at100, and a-1from100 to relojat10 after E
+
+-- a[many: 12 300 400 1200] <~ reloj[10>>] -- creates 4 pt with different froms and converging with reloj[10>>]
+
 
 ---------
 -- tempoOperArray:: P (List TempoMark)
@@ -99,7 +116,7 @@ polytemporalRelation' = do
   whitespace
   idFrom <- voiceId
   subVoice <- subVoiceParser <|> pure ""
-  cFrom <- try (brackets $ cFromParser) <|> pure (Tuple 0 (Process 0))
+  cFrom <- try (brackets $ cFromParser) <|> pure (Tuple 0 ((Process 0):Nil))
   cTo <- try (cToParser) <|> pure {idCTo: Nothing, indxCTo: Nothing} 
   -- tempi <- choice [try genTempoMarks, try tempoOperArray, try tempoMark', try tempoMarks] <|> pure (XTempo:Nil)
   vtempi <- choice [try genTempoMarks, varixToTempi <$> X.expr]
@@ -116,33 +133,6 @@ keepVTempi:: X.V -> Maybe TempoMark
 keepVTempi (X.VTempo t) = Just t 
 keepVTempi _ = Nothing
 
------------ amazing program!
--- ##timeknot 
--- a [1/13 = 60bpm] | xooxooxo[oxx]xxo[xx] :|
--- a.s = "ukulele" .shur = 0 1 2 3 4 5 6 1 3;
-
--- b [1/12 = 120bpm] | (7,12) :|
--- b.s = "808" .n = 1;
-
--- c [1/8 = 120bpm] |  xxxx :|
--- c.s = "bd bd cp sn";
-
-
--- step numOfSteps sizeOfStep
-
--- step1 min max numberOfSteps
-
--- stepRecur operation limitCondition
-
--- data TempoMark = XTempo | CPM Rational | BPM Rational Rational | CPS Rational | Prop String Int Int | Sin Sinusoidal | Dur Rational
-
-
--- a[20] <- b[120>>] step 10 3 $ 300cpm | xxxx :|
-
--- a[20] <- b[120>>] step1 (300cpm) 500 20 | xxxx :|
-
-
--- [reminder from Wednesday: opening the pathway for tempomarks to be the good variant, now it works and trying to combine it with the genTempoMark with the new notation. There are some logical problems that need to be understood better]
 
 genTempoMarks:: P (Either String (List TempoMark))
 genTempoMarks = do 
@@ -157,12 +147,6 @@ genTempoMarks = do
   numx2 <- varixToNumber <$> X.expr
   to <- liftEither numx2
   pure $ Right $ step (1 + (floor $ (to-(numTM from))/(thenn-(numTM from)))) (toRat (thenn-(numTM from))) from 
-  
--- varixToTempi:: X.Vari -> Either String (List TempoMark)
--- varixToTempi (X.VTempo t) = Right $ L.fromFoldable [t]
--- varixToTempi (X.VList xs) = if null res then (Left "empty tempo mark list") else (Right $ res)
---   where res = L.mapMaybe keepVTempi xs
--- varixToTempi _ = Left "Not a tempo mark"
 
 varixToTempo:: X.V -> Either String TempoMark
 varixToTempo (X.VTempo t) = Right t
@@ -173,6 +157,11 @@ varixToNumber (X.VNum x) = Right x
 varixToNumber (X.VTempo _) = Left "tempo consistency needs to be kept: just number no tempo mark"
 varixToNumber (X.VList _) = Left "no list, please"
 varixToNumber _ = Left "failed at expression level" 
+
+varixToInt:: X.V -> Int
+varixToInt (X.VInt x) = x
+varixToInt (X.VNum x) = round x
+varixToInt _ = 0 
 
 numTM:: TempoMark -> Number
 numTM (CPM x) = R.toNumber x
@@ -293,25 +282,24 @@ voiceIdM = do
     x <- identifier -- many $ noneOf ['\\','<',' ']
     pure (Just $ Right x)
 
-cFromParser:: P (Tuple Int ConvergeFrom)
+cFromParser:: P (Tuple Int (List ConvergeFrom))
 cFromParser = do
   _ <- pure 0
   whitespace
-  cFrom <- choice [try indxCFrom, defaultIndx]
-  pure $ Tuple (fst cFrom) (snd cFrom)
+  choice [try indxCFrom, defaultIndx]
 
-defaultIndx:: P (Tuple Int ConvergeFrom)
+defaultIndx:: P (Tuple Int (List ConvergeFrom))
 defaultIndx = do
   _ <- pure 0
-  cFrom <- choice [try cFromLast, try cFromPercen, try cFromStructure, cFromProcess]
-  pure $ Tuple 0 cFrom
+  cFrom <- many1 $ choice [try cFromLast, try cFromPercen, try cFromStructure, cFromProcess]
+  pure $ Tuple 0 $ L.fromFoldable cFrom
 
-indxCFrom:: P (Tuple Int ConvergeFrom)
+indxCFrom:: P (Tuple Int (List ConvergeFrom))
 indxCFrom = do
   _ <- pure 0
   indx <- indexParser <|> pure 0
-  cFrom <- try $ choice [try cFromLast, try cFromPercen, try cFromStructure, cFromProcess]
-  pure $ Tuple indx cFrom
+  cFrom <- many1 $ choice [try cFromLast, try cFromPercen, try cFromStructure, cFromProcess]
+  pure $ Tuple indx $ L.fromFoldable cFrom
 
 indexParser:: P Int 
 indexParser = do
@@ -377,16 +365,16 @@ parseProgram = do
 expression:: P Expression
 expression = do
   _ <- pure 1
-  choice [try timeExpression, try aural, try vantageExpression, xPitchExpression]
+  choice [try timeExpression, try aural, try vantageExpression, tuningExpression]
   
-xPitchExpression:: P Expression
-xPitchExpression = do
+tuningExpression:: P Expression
+tuningExpression = do
   _ <- pure 1
-  x <- braces $ many $ xPitch
+  x <- braces $ many $ tuning
   pure $ PitchExpression $ unions x
 
-xPitch:: P (Map String Tuning)
-xPitch = do
+tuning:: P (Map String Tuning)
+tuning = do
   _ <- pure 1
   id <- identifier
   _ <- reserved "<-"
@@ -439,8 +427,6 @@ ratioScala = do
 -- { myGradyHarrisonScale <- scala  21/20(\s) 9/8(\f) 7/6 5/4 21/16 4/3 7/5 3/2(\ch-up) 63/40(\ch-down) 27/16 7/4 15/8(\p) 63/32 2/1;
 --  myEDO <- edo 24 2:1 functions: 
 -- }
-
-
 
 
 cpSet:: P Tuning
@@ -498,22 +484,39 @@ difference = do
 vantageExpression:: P Expression
 vantageExpression = do
   _ <- pure 1
-  x <- vantage
+  x <- choice [try vantage, resetCount]
   pure $ VantagePointExpression x
 
 vantage:: P (Map String Vantage)
 vantage = do
   _ <- pure 1
+  _ <- reservedOp "\\"
   id <- identifier
-  x <- choice [buildA, moveA, removeA]
+  x <- choice [try buildA, try moveA, try removeA, evalA]
   _ <- charWS ';'
   pure $ singleton id x
+
+resetCount:: P (Map String Vantage) 
+resetCount = do 
+  _ <- pure 1
+  _ <- reservedOp "\\"
+  _ <- reserved "reset"
+  _ <- charWS ';'
+  pure $ singleton "reset" Reset
+
+evalA:: P Vantage 
+evalA = do 
+  _ <- pure 1
+  _ <- reserved ".eval"
+  _ <- reservedOp "="
+  n <- natural
+  pure $ VEval n
 
 -- MyID.lift = 20 beats from eval;
 buildA:: P Vantage
 buildA = do
   _ <- pure 1
-  _ <- reserved ".lift"
+  _ <- reserved ".build"
   _ <- reservedOp "="
   x <- choice [try beatA, try secsA, utcA]
   pure $ Build x
@@ -604,6 +607,13 @@ removeA = do
   _ <- pure 1
   _ <- reserved ".remove"
   pure $ Remove
+
+
+
+
+
+
+
 --
 
 timeExpression:: P Expression
@@ -621,6 +631,7 @@ polytemporalRelation:: P (Map String Temporal)
 polytemporalRelation = do
   _ <- pure 1
   -- p <- choice [try kairos, try metric, try converge]
+
   p <- polytemporalRelation'
   rhydur <- choice [try rhythmicWrapper, durWrapper]
   pure $ inACan p rhydur
@@ -691,8 +702,8 @@ lastSnap:: P ConvergeTo
 lastSnap = do
   _ <- pure 1
   _ <- strWS "last" 
-  _ <- reserved "afterEval"
-  pure $ LastTo Snap
+  _ <- reserved "afterEval"  -- aqui esta el BUG de LAST!!!!!!!!
+  pure $ LastTo SnapAfter
 
 lastMod:: P ConvergeTo
 lastMod = do
@@ -703,22 +714,27 @@ lastMod = do
   _ <- reserved "afterEval"
   pure $ LastTo (Mod m)
 
+-----
+-- the snapBefore parses will not work before the value, since the index is interwined with all of the layers of indexes etc. 
+---- need to rethingk how to conceptualise the Convergences.
+----
+
 parsePercenTo:: P ConvergeTo
 parsePercenTo = do
   _ <- pure 1
-  p <- choice [try percenMod, try percenSnap, percenOrigin]
+  p <- choice [try percenMod, try percenSnap, try percenSnapBefore, percenOrigin]
   pure p
 
 parseProcessTo:: P ConvergeTo
 parseProcessTo = do
   _ <- pure 1
-  c <- choice [try processMod, try processSnap, processOrigin]
+  c <- choice [try processMod, try processSnap, try processSnapBefore, processOrigin]
   pure c
 
 parseStructureTo:: P ConvergeTo
 parseStructureTo = do
   _ <- pure 1
-  c <- choice [try structureMod, try structureSnap, structureOrigin]
+  c <- choice [try structureMod, try structureSnap, try structureSnapBefore, structureOrigin]
   pure c
 
 percenOrigin:: P ConvergeTo
@@ -734,7 +750,15 @@ percenSnap = do
   n <- naturalOrFloat
   _ <- charWS '%'
   _ <- reserved "afterEval" <|> reserved ">>"
-  pure $ PercenTo (toNumber' n) Snap
+  pure $ PercenTo (toNumber' n) SnapAfter
+
+percenSnapBefore:: P ConvergeTo
+percenSnapBefore = do
+  _ <- pure 1
+  n <- naturalOrFloat
+  _ <- charWS '%'
+  _ <- reserved "beforeEval" <|> reserved "<<"
+  pure $ PercenTo ((toNumber' n)* (-1.0)) SnapBefore
 
 percenMod:: P ConvergeTo
 percenMod = do
@@ -757,7 +781,14 @@ processSnap = do
   _ <- pure 1
   n <- natural
   _ <- reserved "afterEval" <|> reserved ">>"
-  pure $ ProcessTo n Snap
+  pure $ ProcessTo n SnapAfter
+  
+processSnapBefore:: P ConvergeTo
+processSnapBefore = do
+  _ <- pure 1
+  n <- natural
+  _ <- reserved "beforeEval" <|> reserved "<<"
+  pure $ ProcessTo n SnapBefore
 
 processMod:: P ConvergeTo
 processMod = do
@@ -779,7 +810,14 @@ structureSnap = do
   _ <- pure 1
   st <- forStructure
   _ <- reserved "afterEval" <|> reserved ">>"
-  pure $ StructureTo (fst st) (snd st) Snap
+  pure $ StructureTo (fst st) (snd st) SnapAfter
+
+structureSnapBefore:: P ConvergeTo
+structureSnapBefore = do
+  _ <- pure 1
+  st <- forStructure
+  _ <- reserved "beforeEval" <|> reserved "<<"
+  pure $ StructureTo (fst st) (snd st) SnapBefore
 
 structureMod:: P ConvergeTo
 structureMod = do
@@ -881,13 +919,14 @@ indexIDParse = do
 
 
 --
-testRecursive :: VantageMap -> String -> Either String Program
-testRecursive vm x =
-  case runParser x parseProgram of
-    Left (ParseError err _) -> Left err
-    Right prog -> case check vm prog of
-                    true -> Right prog
-                    false -> Left "failed the check"
+-- this test needs the new datetime of the eval rather than the 0 (Int)
+-- testRecursive :: VantageMap -> String -> Either String Program
+-- testRecursive vm x =
+--   case runParser x $ parseProgram 0 of
+--     Left (ParseError err _) -> Left err
+--     Right prog -> case check vm prog of
+--                     true -> Right prog
+--                     false -> Left "failed the check"
 
 getTemporalMap:: Program -> Map String Temporal
 getTemporalMap program = unions $ map unexpressTempo $ L.filter (\ expression -> isTemporal expression) program
