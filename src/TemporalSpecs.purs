@@ -31,6 +31,8 @@ this module is a nightmare, I need to work on this so it is less of a recursive 
 -}
 
 
+-- caluclateTemporal should be in a Monad that combines State with Effect: EvalTime = StateT s Effect a
+
 calculateTemporal:: M.Map String Temporal -> TimePacket -> String -> Temporal -> Effect (Array Event)
 calculateTemporal m tp aKey (Temporal (Kairos asap tm) rhythmic loop) = do
   let dur = establishDur tm tp.tempo m rhythmic
