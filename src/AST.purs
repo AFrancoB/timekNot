@@ -154,11 +154,9 @@ instance showDatsgah :: Show Dastgah where
 
 ------
 
-data Eval = Eval DateTime | MEval DateTime Int
 
-instance show :: Show Eval where 
-  show (Eval dt) = "Eval " <> show dt
-  show (MEval dt m) = "MEval" <> show dt
+-- we need to have an eval value that can hold state:
+-- data Tromba =  State DateTime Temporal
 
 data Temporal = Temporal Polytemporal Rhythmic Boolean 
 
