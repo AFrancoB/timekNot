@@ -176,7 +176,7 @@ segahIntToFuncAndMIDIInt n = case (n`mod`7) of
                           2 -> Tuple 3.5 "Āghāz, finalis, stop"
                           3 -> Tuple 5.0 "note"
                           4 -> Tuple 7.0 "note"
-                          5 -> Tuple 8.5 "note" 
+                          5 -> Tuple 9.0 "note" 
                           6 -> Tuple 10.0 "note"
                           _ -> Tuple 0.0 "unknown"
 
