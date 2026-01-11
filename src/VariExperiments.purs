@@ -1,4 +1,4 @@
-module VariExperiments (V(..), expr, addVari, mulVari, subVari, divVari, powVari, valToV) where
+module VariExperiments (V(..), expr, addVari, mulVari, subVari, divVari, powVari, valToV, flattener) where
 
 import Prelude
 
@@ -129,8 +129,26 @@ parseVari:: P V
 parseVari = do
   _ <- pure 0
   whitespace
-  choice [try $ (parens fromThenTo), try $ (parens fromTo), VTempo <$> try tempoMark, try (toVariant <$> naturalOrFloat), try (VNum <$> (parens negNum)), listExpr]
+  choice [try flat, try $ (parens fromThenTo), try $ (parens fromTo), VTempo <$> try tempoMark, try (toVariant <$> naturalOrFloat), try (VNum <$> (parens negNum)), listExpr]
 
+
+flat:: P V 
+flat = do 
+  _ <- pure 1
+  f <- reservedOp "flat" *> pure flattener
+  xpr <- expr
+  pure $ f xpr
+
+flattener:: V -> V
+flattener (VInt n) = VList (VInt n:Nil)
+flattener (VNum x) = VList (VNum x:Nil)
+flattener (VTempo t) = VList (VTempo t:Nil)
+flattener (VString str) = VList (VString str:Nil) 
+flattener (VList xs) =  VList $ concat $ map (\x -> f x) xs
+
+f:: V -> List V
+f (VList xs) = xs
+f x = f $ flattener x
 
 fromTo:: P V
 fromTo = do 
