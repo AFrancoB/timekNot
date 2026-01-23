@@ -1,4 +1,4 @@
-module AST(TimekNot(..),Vantage(..), TimePoint(..), VantageMap(..), Voices(..), Voice(..),Program(..),Expression(..),Aural(..),Value(..), Variation(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), Sinusoidal(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), Tuning(..), CPSNote(..), DastgahNote(..), Interval(..), Subset(..), Variant(..), showEventIndex, showStructureIndex, powTM, (**), stack', (|\)) where
+module AST(TimekNot(..),Vantage(..), TimePoint(..), VantageMap(..), Voices(..), Voice(..),Programs(..),Program(..),Expression(..),Aural(..),Value(..), Variation(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), Sinusoidal(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), Tuning(..), CPSNote(..), DastgahNote(..), Interval(..), Subset(..), Variant(..), showEventIndex, showStructureIndex, powTM, (**), stack', (|\)) where
 
 import Prelude
 import Effect.Ref
@@ -16,15 +16,15 @@ import Data.Number (pow)
 
 
 type TimekNot = {
-  program :: Ref Program,
   tempo :: Ref Tempo,
-  eval :: Ref DateTime,
-  evalCount :: Ref Int,
-  previousEval :: Ref DateTime,
   vantageMap :: Ref (Map String DateTime),
   wS :: Ref DateTime,
-  wE :: Ref DateTime
+  wE :: Ref DateTime,
+  programs :: Ref Programs
   }
+
+
+type Programs = Map Int (Tuple DateTime Program)
 
 type Program = List Expression
 
@@ -391,9 +391,7 @@ type Sinusoidal = {
 type TimePacket = {
   ws:: DateTime,
   we:: DateTime,
-  evalCount:: Int,
   eval:: DateTime,
-  pEval:: DateTime,
   origin:: DateTime,
   tempo:: Tempo,
   vantageMap:: VantageMap

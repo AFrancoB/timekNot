@@ -1,4 +1,4 @@
-module Novus(processVantage, updateEvalCount) where
+module Novus(processVantage) where
 
 import Prelude
 
@@ -22,24 +22,10 @@ import AST
 -- a[100] <- 'x' 300tl | xxxx :|
 -- type VantageMap = Map String DateTime
 
--- data Vantage = Build TimePoint | Move (Either Rational Rational) | Remove | Eval TimePoint Int | Reset
-updateEvalCount:: Map String Vantage -> Int -> Int
-updateEvalCount novus count = if isEmpty (filter (\v -> isReset v)   novus) then count + 1 else 0
-  where isReset Reset = true
-        isReset _ = false
 
-processVantage:: Map String Vantage -> VantageMap -> DateTime -> Int -> Tempo -> VantageMap
-processVantage novus vm eval evalC t = difference (unions [processed,unprocessed,remainFromBuild,processedNewOnes,processedOldOnes]) remove
+processVantage:: Map String Vantage -> VantageMap -> DateTime -> Tempo -> VantageMap
+processVantage novus vm eval t = difference (unions [processed,unprocessed,remainFromBuild]) remove
   where unprocessed = difference vm novus -- remain the ones that are not altered
-        isEval (VEval _) = true
-        isEval _ = false
-        evalProgram = filter (\v -> isEval v) novus  -- eval from just evaluated Program (as Map String Vantage), could be already existing or new ones
-        evalPrAndMap = intersection evalProgram vm  -- eval from evaluated program that were already in the map
-        evalJustMap = difference vm evalProgram -- eval from the vantage map
-        evalNewOnes = difference evalProgram vm   -- eval just from evaluated program (new ones)
-
-        processedNewOnes = mapMaybeWithKey (\k v -> transformEvalNew k v eval evalC t vm) evalNewOnes
-        processedOldOnes = mapMaybeWithKey (\k v -> transformEvalOld k v eval evalC t vm) evalPrAndMap
 
         isBuild (Build _) = true
         isBuild _ = false

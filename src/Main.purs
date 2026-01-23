@@ -10,7 +10,7 @@ import Effect.Class
 import Effect.Console (log)
 import Data.Tempo
 import Effect.Ref (new,write)
-import Data.Traversable
+import Data.Traversable (traverse, traverse_)
 
 import Data.Rational
 import Data.List.Lazy hiding (many,Pattern)
@@ -86,19 +86,17 @@ launchDirt = do
   initializeWebAudio dirt
   pure dirt
 
+
 launch:: {} -> Effect TimekNot
 launch _ = do
   log "timekNot: launch"
   launchTime <- nowDateTime
-  program <- new $ L.fromFoldable [TimeExpression  M.empty]
+  programs <- new $ M.empty
   tempo <- newTempo (1 % 1) >>= new 
   vantageMap <- new $ (M.empty)
-  eval <- new launchTime
-  previousEval <- new launchTime
-  evalCount <- new 0
   wS <- new launchTime
   wE <- new launchTime
-  pure { program, tempo, eval, previousEval, evalCount, vantageMap, wS, wE}  
+  pure {tempo, vantageMap, wS, wE, programs}  
 
 
 
@@ -109,28 +107,46 @@ launch _ = do
 define:: TimekNot -> { zone :: Int, time :: Number, text :: String } -> Effect { success :: Boolean, error :: String }
 define tk args = do
   log "timekNot: evaluate"
-  program <- read tk.program -- this does not do anything, can be erased...?
+  prs <- read tk.programs
+  -- program <- read tk.program -- this does not do anything, can be erased...?
   currentVM <- read tk.vantageMap
   log $ "currentVM" <> show currentVM
-  log $ "programDefined: " <> show program
+  -- log $ "programDefined: " <> show program
   tempo <- read tk.tempo
-  oldEval <- read tk.eval
-  write oldEval tk.previousEval
   eval <- nowDateTime
-  evalC <- read tk.evalCount
-  log $ "old eval count: " <> show evalC
   let pr = check' currentVM $ runParser args.text $ parseProgram
   case pr of
     Left error -> pure $ { success: false, error }
-    Right p -> do
-      write eval tk.eval 
-      write p tk.program 
-      write (updateEvalCount (getVantageMap p) evalC) $ tk.evalCount
-      evalCNew <- read tk.evalCount
-      log $ "new eval count: " <> show evalCNew
-      write (processVantage (getVantageMap p) currentVM eval evalCNew tempo) $ tk.vantageMap
-      -- write (evalC + 1) $ tk.evalCount 
+    Right p -> do 
+      let newPrograms = zoneToPrograms args.zone eval p prs
+      
+
+      write newPrograms tk.programs
+      write (processVantage (getVantageMap p) currentVM eval tempo) $ tk.vantageMap
       pure $ { success: true, error: "bad syntax" }
+
+zoneToPrograms:: Int -> DateTime -> Program -> Programs -> Programs -- associates a zone to a program (with an eval time) and passes forward a Map with the programs - the program for that zone
+zoneToPrograms z eval pr prs = M.union (M.singleton z $ Tuple eval pr) prs
+
+
+-- type TimekNot = {
+--   programs :: Ref Programs,
+--   program :: Ref Program,  -- this gets erased
+--   tempo :: Ref Tempo,
+--   evalCount :: Ref Int,
+--   previousEval :: Ref DateTime,
+--   vantageMap :: Ref (Map String DateTime),
+--   wS :: Ref DateTime,
+--   wE :: Ref DateTime
+--   }
+
+-- type Programs = Map Int (Tuple DateTime Program)
+
+-- type Program = List Expression
+
+
+-- programToZonedPrograms:: 
+
 
 check':: VantageMap -> Either ParseError Program -> Either String Program
 check' vm (Left error) = Left $ parseErrorMessage error
@@ -143,20 +159,30 @@ render:: TimekNot -> {zone :: Int, windowStartTime :: Number, windowEndTime :: N
 render tk args = do
     let ws = numToDateTime (args.windowStartTime * 1000.0000) -- haskell comes in milliseconds, purescript needs seconds
     let we = numToDateTime (args.windowEndTime * 1000.0000)
-    program <- read tk.program
-    vantageMap <- read tk.vantageMap
+
+    programs <- read tk.programs
+
+    v <- read tk.vantageMap
     -- log $ "vm: " <> show vantageMap
-    t <- read tk.tempo
-    eval <- read tk.eval
-    prevEval <- read tk.previousEval
-    eCount <- read tk.evalCount 
-    let tp = assambleTimePacket ws we eval prevEval eCount t vantageMap
+    t <- read tk.tempo 
+
+    let tp = {ws: ws, we: we, origin: origin t, tempo: t, vantageMap: v}
+
+
+    map A.concat $ traverse (\pr -> programToForeign pr tp) $ A.fromFoldable $ M.values programs
+
     -- log $ show program
     -- log $ "wsR: " <> show (fromDateTimeToPosix ws)
     -- log $ show we
     -- log $ show t
-    programToForeign program tp
+    -- programToForeign (Tuple eval program) tp
  -- programToForeign:: Program -> TimePacket -> Effect (Array Foreign)
+
+-- type Programs = Map Int (Tuple DateTime Program)
+
+-- getProgramByZone:: Int -> Programs -> Tuple DateTime Program
+-- getProgramByZone z prs = 
+
 
 
 setTempo:: TimekNot -> ForeignTempo -> Effect Unit
