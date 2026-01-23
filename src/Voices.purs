@@ -14,6 +14,7 @@ import Data.TraversableWithIndex
 import Data.Maybe
 import Foreign
 import Data.Tempo
+import Data.DateTime
 
 import AST
 import Parser -- getTemporalMap
@@ -33,10 +34,13 @@ import AuralSpecs
 ---- structure-oriented index: an int identifier for each segment on a voice and an array to identifier internal events in a voice: The head is the 'natural' subdivisions of the voice, each new element in the array is a new subdivision
 ---- a structure oriented index has a voice index and a structure index. A voice index is an Int while the Structure Index is an Array Int. The notation I have made for the structure oriented index is: 3-0.2.4  to the left of the (-) is the block index and to the right of it is the event position in the rhythmic idea. The head of the array is the top level of the nested subdivisions and the last is the deepest level of the subdivisions.  
 
-programToForeign:: Program -> TimePacket -> Effect (Array Foreign)
-programToForeign program timePacket = concat <$> calculatedVoices -- waste
+
+programToForeign::  Tuple DateTime Program -> {ws:: DateTime, we:: DateTime, origin:: DateTime, tempo:: Tempo, vantageMap:: VantageMap}
+ -> Effect (Array Foreign)
+programToForeign (Tuple e program) tp = concat <$> calculatedVoices -- waste
   where voices' = programToVoice program -- Voices
         tuning = getPitchMap program -- Map String XenoPitch
+        timePacket = {ws: tp.ws, we: tp.we, eval: e, origin: tp.origin, tempo: tp.tempo, vantageMap: tp.vantageMap}
         calculatedVoices = fromFoldable <$> M.values <$> calculateVoices (getTemporalMap program) voices' tuning timePacket
 
 programToVoice:: Program -> Voices
