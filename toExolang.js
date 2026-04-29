@@ -29,6 +29,10 @@ TimekNot.prototype.renderStandalone = function(args) {
   return Tk.renderStandalone(this.timeknot)(args)();
 }
 
+TimekNot.prototype.renderStandaloneVisuals = function(args) {
+  return Tk.renderStandaloneVisuals(this.timeknot)();
+}
+
 TimekNot.prototype.setTempo = function(foreignTempo) {
   return Tk.setTempo(this.timeknot)(foreignTempo)();
 }
