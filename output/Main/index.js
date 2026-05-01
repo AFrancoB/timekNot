@@ -34,12 +34,13 @@ var map = /* #__PURE__ */ Data_Functor.map(Effect.functorEffect);
 var traverse = /* #__PURE__ */ Data_Traversable.traverse(Data_Traversable.traversableArray)(Effect.applicativeEffect);
 var fromFoldable = /* #__PURE__ */ Data_Array.fromFoldable(Data_List_Types.foldableList);
 var traverse_ = /* #__PURE__ */ Data_Foldable.traverse_(Effect.applicativeEffect)(Data_Foldable.foldableArray);
-var pure = /* #__PURE__ */ Control_Applicative.pure(Effect.applicativeEffect);
 var adjust = /* #__PURE__ */ Data_DateTime.adjust(Data_Time_Duration.durationMilliseconds);
+var show = /* #__PURE__ */ Data_Show.show(Data_Show.showNumber);
 var lessThanOrEq = /* #__PURE__ */ Data_Ord.lessThanOrEq(Data_DateTime.ordDateTime);
-var show = /* #__PURE__ */ Data_Show.show(Data_Show.showString);
+var show1 = /* #__PURE__ */ Data_Show.show(Data_Show.showString);
+var pure = /* #__PURE__ */ Control_Applicative.pure(Effect.applicativeEffect);
 var toRational = /* #__PURE__ */ Data_Rational.toRational(Data_Rational.toRationalInt);
-var show1 = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_Map_Internal.showMap(Data_Show.showString)(Data_DateTime.showDateTime));
+var show2 = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_Map_Internal.showMap(Data_Show.showString)(Data_DateTime.showDateTime));
 var zoneToPrograms = function (z) {
     return function ($$eval) {
         return function (pr) {
@@ -85,10 +86,9 @@ var playDirty = function (tk) {
                 windowStartTime: TimePacketOps.fromDateTimeToPosix(wStart),
                 windowEndTime: TimePacketOps.fromDateTimeToPosix(wEnd)
             })();
-            var x = traverse_(function (x) {
+            return traverse_(function (x) {
                 return WebDirt.playSample(dirt)(Foreign.unsafeFromForeign(x));
             })(events)();
-            return x;
         };
     };
 };
@@ -98,15 +98,20 @@ var renderStandalone = function (tk) {
             var now = Effect_Now.nowDateTime();
             var prevWE = Effect_Ref.read(tk.wE)();
             var future = Data_Maybe.fromMaybe(now)(adjust(400.0)(now));
-            var $24 = lessThanOrEq(prevWE)(future);
-            if ($24) {
+            Effect_Console.log("-- new rendering iteration:")();
+            Effect_Console.log("prevWE " + show(TimePacketOps.fromDateTimeToPosix(prevWE)))();
+            Effect_Console.log("future " + show(TimePacketOps.fromDateTimeToPosix(future)))();
+            var $25 = lessThanOrEq(prevWE)(future);
+            if ($25) {
                 var wE = Data_Maybe.fromMaybe(now)(adjust(500.0)(prevWE));
+                var y = Effect_Console.log("rendering between: " + show(TimePacketOps.fromDateTimeToPosix(prevWE)))();
+                var z = Effect_Console.log("and " + show(TimePacketOps.fromDateTimeToPosix(wE)))();
                 Effect_Ref.write(prevWE)(tk.wS)();
                 Effect_Ref.write(wE)(tk.wE)();
                 var t = Effect_Ref.read(tk.tempo)();
                 return playDirty(tk)(d.webdirt)();
             };
-            return Effect_Console.log(show("sleep"))();
+            return Effect_Console.log(show1("sleep"))();
         };
     };
 };
@@ -128,12 +133,16 @@ var launch = function (v) {
         var vantageMap = Effect_Ref["new"](Data_Map_Internal.empty)();
         var wS = Effect_Ref["new"](launchTime)();
         var wE = Effect_Ref["new"](launchTime)();
+        var vwS = Effect_Ref["new"](launchTime)();
+        var vwE = Effect_Ref["new"](launchTime)();
         return {
             tempo: tempo,
             vantageMap: vantageMap,
             wS: wS,
             wE: wE,
-            programs: programs
+            programs: programs,
+            vwS: vwS,
+            vwE: vwE
         };
     };
 };
@@ -150,9 +159,9 @@ var check$prime = function (v) {
             if (!v2) {
                 return new Data_Either.Left("failed the check, time bites it's own tail");
             };
-            throw new Error("Failed pattern match at Main (line 153, column 30 - line 155, column 89): " + [ v2.constructor.name ]);
+            throw new Error("Failed pattern match at Main (line 155, column 30 - line 157, column 89): " + [ v2.constructor.name ]);
         };
-        throw new Error("Failed pattern match at Main (line 151, column 1 - line 151, column 74): " + [ v.constructor.name, v1.constructor.name ]);
+        throw new Error("Failed pattern match at Main (line 153, column 1 - line 153, column 74): " + [ v.constructor.name, v1.constructor.name ]);
     };
 };
 var define = function (tk) {
@@ -161,7 +170,7 @@ var define = function (tk) {
             Effect_Console.log("timekNot: evaluate")();
             var prs = Effect_Ref.read(tk.programs)();
             var currentVM = Effect_Ref.read(tk.vantageMap)();
-            Effect_Console.log("currentVM" + show1(currentVM))();
+            Effect_Console.log("currentVM" + show2(currentVM))();
             var tempo = Effect_Ref.read(tk.tempo)();
             var $$eval = Effect_Now.nowDateTime();
             var pr = check$prime(currentVM)(Parsing.runParser(args.text)(Parser.parseProgram));
@@ -180,7 +189,7 @@ var define = function (tk) {
                     error: "bad syntax"
                 };
             };
-            throw new Error("Failed pattern match at Main (line 118, column 3 - line 126, column 52): " + [ pr.constructor.name ]);
+            throw new Error("Failed pattern match at Main (line 122, column 3 - line 128, column 52): " + [ pr.constructor.name ]);
         };
     };
 };

@@ -1,4 +1,4 @@
-module AST(TimekNot(..),Vantage(..), TimePoint(..), VantageMap(..), Voices(..), Voice(..),Programs(..),Program(..),Expression(..),Aural(..),Value(..), Variation(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), Sinusoidal(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), Tuning(..), CPSNote(..), DastgahNote(..), Interval(..), Subset(..), Variant(..), showEventIndex, showStructureIndex, powTM, (**), stack', (|\)) where
+module AST(TimekNot(..),Vantage(..), TimePoint(..), VantageMap(..), Voices(..), Voice(..),Programs(..),Program(..),Expression(..),Visual(..),VoiceTag(..),Aural(..),Value(..), Variation(..),Dastgah(..),Span(..),Temporal(..),Polytemporal(..),Rhythmic(..), Euclidean(..), Event(..), TimePacket(..), Onset(..), Index(..), TempoMark(..), Sinusoidal(..), ConvergeTo(..), ConvergeFrom(..), CPAlign(..), Tuning(..), CPSNote(..), DastgahNote(..), Interval(..), Subset(..), Variant(..), showEventIndex, showStructureIndex, powTM, (**), stack', (|\)) where
 
 import Prelude
 import Effect.Ref
@@ -20,7 +20,9 @@ type TimekNot = {
   vantageMap :: Ref (Map String DateTime),
   wS :: Ref DateTime,
   wE :: Ref DateTime,
-  programs :: Ref Programs
+  programs :: Ref Programs,
+  vwS :: Ref DateTime,
+  vwE :: Ref DateTime
   }
 
 
@@ -33,7 +35,7 @@ data Expression = TimeExpression (Map String Temporal) | AuralExpression (Map St
 instance expressionShow :: Show Expression where
   show (TimeExpression x) = "TimeExpression " <> show x
   show (AuralExpression x) = "AuralExpression " <> show x
-  show (PitchExpression x) = "PitchExpression " <> show x -- change to tunning expression
+  show (PitchExpression x) = "PitchExpression " <> show x -- change to tuning expression
   show (VantagePointExpression x) = "VantagePointExpression " <> show x
 
 -- Temporal values is short for TemporalRelationship and Aural is short for Aural Values. Polytemporal stands for TempoRelationship, Rhythmic stands shor for Rhythmic values
@@ -45,6 +47,8 @@ data Voice = Voice Temporal (List Aural)
 
 instance voiceShow :: Show Voice where
     show (Voice t a) = show t <> " " <> show a 
+
+type Visual = {when:: Number, onset:: Boolean, s:: String, n:: Int}
 
 type Aural = List Value -- aural is a list of aural attributes for a given time layer. tend to be 1 sound, 1 n, 1 gain, 1 pan, etc.
 
@@ -73,6 +77,24 @@ instance timePoint :: Show TimePoint where
 
 -- future additions to Value: OSound | OTransposedSound | Full Sound OSound
 -- for now only X generates sounds, O should be allowed to invoke sound as well. Full will allow to invoke sound for X and O as pairs
+
+data VoiceTag = Canonic String Int | NonCanonic String
+
+instance voiceTagShow :: Show VoiceTag where
+  show (NonCanonic x) = show x
+  show (Canonic x n) = show x <> " " <> show n
+
+instance Eq VoiceTag where 
+  eq (NonCanonic x) (NonCanonic y) = x == y
+  eq (NonCanonic x) (Canonic y n) = x == y
+  eq (Canonic x n) (NonCanonic y) = x == y
+  eq (Canonic x n) (Canonic y n') = n == n'
+
+instance Ord VoiceTag where
+  compare (NonCanonic x) (NonCanonic y) = x `compare` y 
+  compare (NonCanonic x) (Canonic y n) = x `compare` y
+  compare (Canonic x n) (NonCanonic y) = x `compare` y
+  compare (Canonic x n) (Canonic y n') = n `compare` n'
 
 data Variation a = Every Int Span (List a)
 

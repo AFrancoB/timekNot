@@ -55,6 +55,8 @@ import Voices
 import Novus
 import AssambleWebdirt
 
+import PianoRollTesting (draw)
+
 import Parsing
 
 main :: Effect Unit 
@@ -96,7 +98,9 @@ launch _ = do
   vantageMap <- new $ (M.empty)
   wS <- new launchTime
   wE <- new launchTime
-  pure {tempo, vantageMap, wS, wE, programs}  
+  vwS <- new launchTime
+  vwE <- new launchTime
+  pure {tempo, vantageMap, wS, wE, programs, vwS, vwE}  
 
 
 
@@ -119,8 +123,6 @@ define tk args = do
     Left error -> pure $ { success: false, error }
     Right p -> do 
       let newPrograms = zoneToPrograms args.zone eval p prs
-      
-
       write newPrograms tk.programs
       write (processVantage (getVantageMap p) currentVM eval tempo) $ tk.vantageMap
       pure $ { success: true, error: "bad syntax" }
@@ -159,17 +161,37 @@ render:: TimekNot -> {zone :: Int, windowStartTime :: Number, windowEndTime :: N
 render tk args = do
     let ws = numToDateTime (args.windowStartTime * 1000.0000) -- haskell comes in milliseconds, purescript needs seconds
     let we = numToDateTime (args.windowEndTime * 1000.0000)
-
     programs <- read tk.programs
-
     v <- read tk.vantageMap
-    -- log $ "vm: " <> show vantageMap
     t <- read tk.tempo 
 
     let tp = {ws: ws, we: we, origin: origin t, tempo: t, vantageMap: v}
 
-
     map A.concat $ traverse (\pr -> programToForeign pr tp) $ A.fromFoldable $ M.values programs
+
+
+-- renderV:: TimekNot -> {zone :: Int, windowStartTime :: Number, windowEndTime :: Number} -> forall opts. Effect (Array Unit)
+-- renderV tk args = do
+--     let ws = numToDateTime (args.windowStartTime * 1000.0000) -- haskell comes in milliseconds, purescript needs seconds
+--     let we = numToDateTime (args.windowEndTime * 1000.0000)
+
+--     programs <- read tk.programs
+
+--     v <- read tk.vantageMap
+--     -- log $ "vm: " <> show vantageMap
+--     t <- read tk.tempo 
+
+--     let tp = {ws: ws, we: we, origin: origin t, tempo: t, vantageMap: v}
+
+--     -- log $ "ws: " <> show ((args.windowStartTime * 1000.0000)-100.0)
+--     -- log $ "we: " <> show ((args.windowEndTime * 1000.0000)+100.0)
+--     traverse (\pr -> programToVisuals pr tp) $ A.fromFoldable $ M.values programs
+  
+
+
+    -- _ <- draw ((args.windowStartTime * 1000.0000)) ((args.windowEndTime * 1000.0000)) x
+
+
 
     -- log $ show program
     -- log $ "wsR: " <> show (fromDateTimeToPosix ws)
@@ -190,16 +212,25 @@ setTempo tk t = do
   -- log $ "setTempo is called" <> show (fromForeignTempo t)
   write (fromForeignTempo t) tk.tempo    
 
+-- renderStandaloneVisuals :: TimekNot -> Effect Unit
+-- renderStandaloneVisuals tk = do 
+--     t <- read $ tk.tempo -- is this usefull??
+--     _ <- renderV tk {zone: 0, windowStartTime: fromDateTimeToPosix $ tk.wS, windowEndTime: fromDateTimeToPosix $ tk.wE}
+--     pure unit    
+
 renderStandalone :: TimekNot -> {webdirt:: WebDirt} -> Effect Unit
 renderStandalone tk d = do 
   now <- nowDateTime  
   prevWE <- read $ tk.wE  -- 500
   let future = fromMaybe now $ adjust (Milliseconds 400.00) now -- :: Milliseconds -- 400
+  log "-- new rendering iteration:"
+  log $ "prevWE " <> show (fromDateTimeToPosix prevWE)
+  log $ "future " <> show (fromDateTimeToPosix future) 
   if prevWE <= future then do
     let wS = prevWE
     let wE = fromMaybe now $ adjust (Milliseconds 500.0) wS 
-    -- y <- log $ "wsS: " <> show (fromDateTimeToPosix wS)
-    -- z <- log $ "we: " <> show (fromDateTimeToPosix wE)
+    y <- log $ "rendering between: " <> show (fromDateTimeToPosix wS)
+    z <- log $ "and " <> show (fromDateTimeToPosix wE)
     write wS tk.wS
     write wE tk.wE
     t <- read $ tk.tempo -- is this usefull??
@@ -212,7 +243,7 @@ playDirty:: TimekNot -> WebDirt -> Effect Unit
 playDirty tk dirt = do
   wStart <- read tk.wS
   wEnd <- read tk.wE
+  -- log $ show "ws: " <> show wStart
+  -- log $ show "we: " <> show wEnd 
   events <- render tk {zone: 0, windowStartTime: fromDateTimeToPosix $ wStart, windowEndTime: fromDateTimeToPosix $ wEnd} -- Effect (Array Foreign)
-  x <- traverse_ (\x -> playSample dirt $ unsafeFromForeign x) events  -- type of this?? Unit
-  -- _ <- traverse_ (\x -> pianola "pianola" x) events
-  pure x
+  traverse_ (\x -> playSample dirt $ unsafeFromForeign x) events  -- type of this?? Unit

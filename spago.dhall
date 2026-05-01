@@ -14,6 +14,7 @@ to generate this file without the comments in this block.
 , dependencies =
   [ "arrays"
   , "bifunctors"
+  , "canvas"
   , "console"
   , "datetime"
   , "effect"
