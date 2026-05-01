@@ -30,15 +30,15 @@ import * as Voices from "../Voices/index.js";
 import * as WebDirt from "../WebDirt/index.js";
 var union = /* #__PURE__ */ Data_Map_Internal.union(Data_Ord.ordInt);
 var bind = /* #__PURE__ */ Control_Bind.bind(Effect.bindEffect);
+var map = /* #__PURE__ */ Data_Functor.map(Effect.functorEffect);
 var traverse = /* #__PURE__ */ Data_Traversable.traverse(Data_Traversable.traversableArray)(Effect.applicativeEffect);
 var fromFoldable = /* #__PURE__ */ Data_Array.fromFoldable(Data_List_Types.foldableList);
-var pure = /* #__PURE__ */ Control_Applicative.pure(Effect.applicativeEffect);
-var map = /* #__PURE__ */ Data_Functor.map(Effect.functorEffect);
 var traverse_ = /* #__PURE__ */ Data_Foldable.traverse_(Effect.applicativeEffect)(Data_Foldable.foldableArray);
 var adjust = /* #__PURE__ */ Data_DateTime.adjust(Data_Time_Duration.durationMilliseconds);
 var show = /* #__PURE__ */ Data_Show.show(Data_Show.showNumber);
 var lessThanOrEq = /* #__PURE__ */ Data_Ord.lessThanOrEq(Data_DateTime.ordDateTime);
 var show1 = /* #__PURE__ */ Data_Show.show(Data_Show.showString);
+var pure = /* #__PURE__ */ Control_Applicative.pure(Effect.applicativeEffect);
 var toRational = /* #__PURE__ */ Data_Rational.toRational(Data_Rational.toRationalInt);
 var show2 = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_Map_Internal.showMap(Data_Show.showString)(Data_DateTime.showDateTime));
 var zoneToPrograms = function (z) {
@@ -53,33 +53,6 @@ var zoneToPrograms = function (z) {
 var setTempo = function (tk) {
     return function (t) {
         return Effect_Ref.write(Data_Tempo.fromForeignTempo(t))(tk.tempo);
-    };
-};
-var renderV = function (tk) {
-    return function (args) {
-        var ws = TimePacketOps.numToDateTime(args.windowStartTime * 1000.0);
-        var we = TimePacketOps.numToDateTime(args.windowEndTime * 1000.0);
-        return function __do() {
-            var programs = Effect_Ref.read(tk.programs)();
-            var v = Effect_Ref.read(tk.vantageMap)();
-            var t = Effect_Ref.read(tk.tempo)();
-            var tp = {
-                ws: ws,
-                we: we,
-                origin: Data_Tempo.origin(t),
-                tempo: t,
-                vantageMap: v
-            };
-            return traverse(function (pr) {
-                return Voices.programToVisuals(pr)(tp);
-            })(fromFoldable(Data_Map_Internal.values(programs)))();
-        };
-    };
-};
-var renderStandaloneVisuals = function (tk) {
-    return function __do() {
-        var t = Effect_Ref.read(tk.tempo)();
-        return Data_Unit.unit;
     };
 };
 var render = function (tk) {
@@ -228,9 +201,7 @@ export {
     zoneToPrograms,
     check$prime,
     render,
-    renderV,
     setTempo,
-    renderStandaloneVisuals,
     renderStandalone,
     playDirty
 };

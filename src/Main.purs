@@ -170,22 +170,22 @@ render tk args = do
     map A.concat $ traverse (\pr -> programToForeign pr tp) $ A.fromFoldable $ M.values programs
 
 
-renderV:: TimekNot -> {zone :: Int, windowStartTime :: Number, windowEndTime :: Number} -> forall opts. Effect (Array Unit)
-renderV tk args = do
-    let ws = numToDateTime (args.windowStartTime * 1000.0000) -- haskell comes in milliseconds, purescript needs seconds
-    let we = numToDateTime (args.windowEndTime * 1000.0000)
+-- renderV:: TimekNot -> {zone :: Int, windowStartTime :: Number, windowEndTime :: Number} -> forall opts. Effect (Array Unit)
+-- renderV tk args = do
+--     let ws = numToDateTime (args.windowStartTime * 1000.0000) -- haskell comes in milliseconds, purescript needs seconds
+--     let we = numToDateTime (args.windowEndTime * 1000.0000)
 
-    programs <- read tk.programs
+--     programs <- read tk.programs
 
-    v <- read tk.vantageMap
-    -- log $ "vm: " <> show vantageMap
-    t <- read tk.tempo 
+--     v <- read tk.vantageMap
+--     -- log $ "vm: " <> show vantageMap
+--     t <- read tk.tempo 
 
-    let tp = {ws: ws, we: we, origin: origin t, tempo: t, vantageMap: v}
+--     let tp = {ws: ws, we: we, origin: origin t, tempo: t, vantageMap: v}
 
-    -- log $ "ws: " <> show ((args.windowStartTime * 1000.0000)-100.0)
-    -- log $ "we: " <> show ((args.windowEndTime * 1000.0000)+100.0)
-    traverse (\pr -> programToVisuals pr tp) $ A.fromFoldable $ M.values programs
+--     -- log $ "ws: " <> show ((args.windowStartTime * 1000.0000)-100.0)
+--     -- log $ "we: " <> show ((args.windowEndTime * 1000.0000)+100.0)
+--     traverse (\pr -> programToVisuals pr tp) $ A.fromFoldable $ M.values programs
   
 
 
@@ -212,11 +212,11 @@ setTempo tk t = do
   -- log $ "setTempo is called" <> show (fromForeignTempo t)
   write (fromForeignTempo t) tk.tempo    
 
-renderStandaloneVisuals :: TimekNot -> Effect Unit
-renderStandaloneVisuals tk = do 
-    t <- read $ tk.tempo -- is this usefull??
-    _ <- renderV tk {zone: 0, windowStartTime: fromDateTimeToPosix $ tk.wS, windowEndTime: fromDateTimeToPosix $ tk.wE}
-    pure unit    
+-- renderStandaloneVisuals :: TimekNot -> Effect Unit
+-- renderStandaloneVisuals tk = do 
+--     t <- read $ tk.tempo -- is this usefull??
+--     _ <- renderV tk {zone: 0, windowStartTime: fromDateTimeToPosix $ tk.wS, windowEndTime: fromDateTimeToPosix $ tk.wE}
+--     pure unit    
 
 renderStandalone :: TimekNot -> {webdirt:: WebDirt} -> Effect Unit
 renderStandalone tk d = do 
