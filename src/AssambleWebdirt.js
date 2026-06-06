@@ -30,6 +30,8 @@ export const addOrbit = o => orbit => () => { o.orbit = orbit; return o; }
 
 export const addNote = o => note => () => { o.note = note; return o; }
 
+export const addKey = o => key => () => { o.key = key; return o; }
+
 // export const addVal =  valId => val => o => () => { o[valId] = val; return o; };
 
 export const addVal = o => valId => val => () => { o[valId] = val; return o; };

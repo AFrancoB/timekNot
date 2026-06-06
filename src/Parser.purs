@@ -313,7 +313,6 @@ indexParser = do
 ----------
 
 -- ISSUES
----- range of Numbers is absolutely broken. DO NOT USE
 ---- Make all tests: start testing all the checks: tempoCheck
 -- TO DO LIST October 17th:
 ---- refactor Aural and Value
@@ -639,7 +638,7 @@ polytemporalRelation = do
   pure $ inACan p rhydur
   -- pure $ singleton (fst p) $ Temporal (snd p) (fst rhydur) (snd rhydur)
 
-inACan:: Map String Polytemporal -> Tuple Rhythmic Boolean -> Map String  Temporal
+inACan:: Map String Polytemporal -> Tuple Rhythmic Boolean -> Map String Temporal -- this string already contains the index
 inACan mapa rhy = mapMaybe (\p -> Just (Temporal p (fst rhy) (snd rhy))) mapa 
 
 -- inACanCheck:: Map String Polytemporal -> Map String Polytemporal
