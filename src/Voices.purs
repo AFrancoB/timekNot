@@ -144,4 +144,4 @@ calculateVoice:: M.Map String Temporal -> Voices -> M.Map String Tuning-> TimePa
 calculateVoice tempoMap voiceMap tuning tp aKey (Voice temporal aurals) = do 
     let events = calculateTemporal tempoMap tp aKey temporal -- Array Event
     let rhythmic = getRhythmic temporal
-    events >>= (auralSpecs voiceMap rhythmic aurals tuning) 
+    events >>= (auralSpecs voiceMap rhythmic aurals tuning aKey)   ---- the aKey goes to the auralSpecs through here!!!!! So easy!!!!!!!
