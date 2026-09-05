@@ -480,7 +480,7 @@ dastgahToV (RastPanjgah xs) = VList $ map (\n -> VInt n) xs
 tempoMark:: P TempoMark
 tempoMark = do
   _ <- pure 1
-  x <- choice [try cpm, try bpm, try cps, try ratio, acceleration]
+  x <- choice [try tl, try cpm, try cps] --, try bpm, try ratio, acceleration]
   pure x
 
 acceleration:: P TempoMark -- (~ 1 << 0 range 100cpm, 1000cpm)
@@ -491,18 +491,37 @@ acceleration = do
   _ <- reserved "phase:"
   ph <- toNumber' <$> naturalOrFloat
   _ <- reservedOp "range"
-  max <- choice [try cpm, try bpm, try cps, try ratio]
+  max <- choice [try tl, try cpm, try cps] --, try bpm, try ratio]
   _ <- reservedOp ","
-  min <- choice [try cpm, try bpm, try cps, try ratio]
+  min <- choice [try tl, try cpm, try cps] --, try bpm, try ratio]
   pure $ Sin {osc: toRat freq, min: min, max: max, phase: toRat ph}
 
-cpm:: P TempoMark 
-cpm = do
+-- refactor tempo mark everything gets to TemporalSpecs as CPM, at parser level have functions that parse TL to CPM, CPS to CPM and CPM remains CPM
+-- so the output of all P TempoMark should be the Constructor CPM Rat
+-- think about exceptions specially three: Prop, Dur, and Acceleration (where acceleration is a differet kind of problem)
+
+tl:: P TempoMark 
+tl = do
   _ <- pure 1
   x <- toNumber' <$> naturalOrFloat
-  _ <- choice [reserved "tl", reserved "cpm"]
-  pure $ CPM (toRat x)
+  _ <- choice [reserved "tl"]
+  pure $ CPM ((toRat x) / (4%1) )
 
+cpm:: P TempoMark
+cpm  = do
+  _ <- pure 1
+  x <- toNumber' <$> naturalOrFloat
+  _ <- choice [reserved "cpm"]
+  pure $ CPM (toRat x) 
+
+cps:: P TempoMark
+cps = do
+  _ <- pure 1
+  x <- toNumber' <$> naturalOrFloat
+  _ <- reserved "cps"
+  pure $ CPM ((toRat x) * (60%1))
+
+-- bpm, ratio and acc are broken for now **** DO NOT USE
 bpm:: P TempoMark 
 bpm = do
   _ <- pure 1
@@ -518,13 +537,6 @@ figure = do
   _ <- charWS '/'
   d <- natural 
   pure $ toRational n d
-
-cps:: P TempoMark
-cps = do
-  _ <- pure 1
-  x <- toNumber' <$> naturalOrFloat
-  _ <- reserved "cps"
-  pure $ CPS (toRat x)
 
 ratio:: P TempoMark
 ratio = do

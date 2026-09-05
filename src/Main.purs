@@ -223,14 +223,14 @@ renderStandalone tk d = do
   now <- nowDateTime  
   prevWE <- read $ tk.wE  -- 500
   let future = fromMaybe now $ adjust (Milliseconds 400.00) now -- :: Milliseconds -- 400
-  log "-- new rendering iteration:"
-  log $ "prevWE " <> show (fromDateTimeToPosix prevWE)
-  log $ "future " <> show (fromDateTimeToPosix future) 
+  -- log "-- new rendering iteration:"
+  -- log $ "prevWE " <> show (fromDateTimeToPosix prevWE)
+  -- log $ "future " <> show (fromDateTimeToPosix future) 
   if prevWE <= future then do
     let wS = prevWE
     let wE = fromMaybe now $ adjust (Milliseconds 500.0) wS 
-    y <- log $ "rendering between: " <> show (fromDateTimeToPosix wS)
-    z <- log $ "and " <> show (fromDateTimeToPosix wE)
+    -- y <- log $ "rendering between: " <> show (fromDateTimeToPosix wS)
+    -- z <- log $ "and " <> show (fromDateTimeToPosix wE)
     write wS tk.wS
     write wE tk.wE
     t <- read $ tk.tempo -- is this usefull??

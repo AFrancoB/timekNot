@@ -292,10 +292,11 @@ instance Show ConvergeTo where
 -- data TimeSignature = Duration Rational | TM TempoMark | Sin Sinusoidal
 -- type Sinusoidal = {tempoMark:: TempoMark, freq:: Rational, amp:: Rational}
 
-data TempoMark = XTempo | CPM Rational | BPM Rational Rational | CPS Rational | Prop String Int Int | Sin Sinusoidal | Dur Rational
+data TempoMark = XTempo | TL Rational | CPM Rational | BPM Rational Rational | CPS Rational | Prop String Int Int | Sin Sinusoidal | Dur Rational
 
 instance Show TempoMark where
   show XTempo = "XTempo"
+  show (TL tl) = show tl <> "tl"
   show (CPM cpm) = show cpm <> "cpm"
   show (BPM bpm fig) = show fig <> " = " <> show bpm <> "bpm"
   show (CPS cps) = show cps <> "cps"

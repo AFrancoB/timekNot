@@ -107,7 +107,7 @@ makeWebDirtEvent aKey when s n gain pan speed begin end vowel cutoff cutoffh max
   oV <- optVStr oOrbit vowel addVowel
   oN <- optVNum oV note addNote
   oFinal <- optVStr oN (Just aKey) addKey
-  log $ unsafeFromForeign oFinal
+--   log $ unsafeFromForeign oFinal
   pure oFinal
 
 

@@ -1,4 +1,4 @@
-module TestOpsAndDefs (getPolytemporal,getRhythmic, getRhythmicFromMap,getLoop,tempoMark,convergeTo,convergeFrom,defMapTemporals,defTemporal,defPolytemporal,defConvergeTo,defConvergeFrom,defVoice,defAural, defEvent) where
+module TestOpsAndDefs (getPolytemporal,getRhythmic, getRhythmicFromMap,getLoop,tempoMark,convergeTo,convergeFrom,defMapTemporals,defTemporal,defPolytemporal,defConvergeTo,defConvergeFrom,defVoice,defAural, defEvent, t) where
 
 import Prelude
 

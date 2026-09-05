@@ -213,7 +213,7 @@ cToParser:: P {idCTo:: Maybe (Either String String), indxCTo:: Maybe (Tuple Int 
 cToParser = do
   _ <- pure 0
   whitespace
-  _ <- strWS "<-"
+  _ <- reservedOp "><"
   cTo <- choice [try cToNovus, try cToExternal, cToConverge]
   pure {idCTo: cTo.idCTo, indxCTo: cTo.indxCTo}
 
@@ -371,14 +371,14 @@ expression = do
 tuningExpression:: P Expression
 tuningExpression = do
   _ <- pure 1
-  x <- braces $ many $ tuning
-  pure $ PitchExpression $ unions x
+  x <- tuning
+  pure $ PitchExpression x
 
 tuning:: P (Map String Tuning)
 tuning = do
   _ <- pure 1
   id <- identifier
-  _ <- reserved "<-"
+  _ <- reservedOp ":"
   x <- choice [try cpSet, parseScala] --, try mos, try edo]
   _ <- reserved ";"
   pure $ singleton id x
