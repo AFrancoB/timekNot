@@ -35,12 +35,11 @@ var traverse = /* #__PURE__ */ Data_Traversable.traverse(Data_Traversable.traver
 var fromFoldable = /* #__PURE__ */ Data_Array.fromFoldable(Data_List_Types.foldableList);
 var traverse_ = /* #__PURE__ */ Data_Foldable.traverse_(Effect.applicativeEffect)(Data_Foldable.foldableArray);
 var adjust = /* #__PURE__ */ Data_DateTime.adjust(Data_Time_Duration.durationMilliseconds);
-var show = /* #__PURE__ */ Data_Show.show(Data_Show.showNumber);
 var lessThanOrEq = /* #__PURE__ */ Data_Ord.lessThanOrEq(Data_DateTime.ordDateTime);
-var show1 = /* #__PURE__ */ Data_Show.show(Data_Show.showString);
+var show = /* #__PURE__ */ Data_Show.show(Data_Show.showString);
 var pure = /* #__PURE__ */ Control_Applicative.pure(Effect.applicativeEffect);
 var toRational = /* #__PURE__ */ Data_Rational.toRational(Data_Rational.toRationalInt);
-var show2 = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_Map_Internal.showMap(Data_Show.showString)(Data_DateTime.showDateTime));
+var show1 = /* #__PURE__ */ Data_Show.show(/* #__PURE__ */ Data_Map_Internal.showMap(Data_Show.showString)(Data_DateTime.showDateTime));
 var zoneToPrograms = function (z) {
     return function ($$eval) {
         return function (pr) {
@@ -98,20 +97,15 @@ var renderStandalone = function (tk) {
             var now = Effect_Now.nowDateTime();
             var prevWE = Effect_Ref.read(tk.wE)();
             var future = Data_Maybe.fromMaybe(now)(adjust(400.0)(now));
-            Effect_Console.log("-- new rendering iteration:")();
-            Effect_Console.log("prevWE " + show(TimePacketOps.fromDateTimeToPosix(prevWE)))();
-            Effect_Console.log("future " + show(TimePacketOps.fromDateTimeToPosix(future)))();
-            var $25 = lessThanOrEq(prevWE)(future);
-            if ($25) {
+            var $24 = lessThanOrEq(prevWE)(future);
+            if ($24) {
                 var wE = Data_Maybe.fromMaybe(now)(adjust(500.0)(prevWE));
-                var y = Effect_Console.log("rendering between: " + show(TimePacketOps.fromDateTimeToPosix(prevWE)))();
-                var z = Effect_Console.log("and " + show(TimePacketOps.fromDateTimeToPosix(wE)))();
                 Effect_Ref.write(prevWE)(tk.wS)();
                 Effect_Ref.write(wE)(tk.wE)();
                 var t = Effect_Ref.read(tk.tempo)();
                 return playDirty(tk)(d.webdirt)();
             };
-            return Effect_Console.log(show1("sleep"))();
+            return Effect_Console.log(show("sleep"))();
         };
     };
 };
@@ -170,7 +164,7 @@ var define = function (tk) {
             Effect_Console.log("timekNot: evaluate")();
             var prs = Effect_Ref.read(tk.programs)();
             var currentVM = Effect_Ref.read(tk.vantageMap)();
-            Effect_Console.log("currentVM" + show2(currentVM))();
+            Effect_Console.log("currentVM" + show1(currentVM))();
             var tempo = Effect_Ref.read(tk.tempo)();
             var $$eval = Effect_Now.nowDateTime();
             var pr = check$prime(currentVM)(Parsing.runParser(args.text)(Parser.parseProgram));
