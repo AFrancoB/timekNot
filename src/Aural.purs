@@ -348,7 +348,7 @@ makeShur = do
 shurNote:: P Int
 shurNote = do
     _ <- pure 1
-    x <- choice [(try $ reserved "\\a") *> pure 0, (try $ reserved "\\f") *> pure 1, (try $ reserved "\\m") *> pure 5, natural]
+    x <- choice [(try $ reserved "a") *> pure 0, (try $ reserved "f") *> pure 1, (try $ reserved "m") *> pure 5, natural]
     pure x
 
 segah:: P Value
@@ -370,7 +370,7 @@ makeSegah = do
 segahNote:: P Int
 segahNote = do
     _ <- pure 1
-    x <- choice [(try $ reserved "\\m") *> pure 1, (try $ reserved "\\a") *> pure 2, (try $ reserved "\\f") *> pure 2, (try $ reserved "\\s") *> pure 2, natural]
+    x <- choice [(try $ reserved "m") *> pure 1, (try $ reserved "a") *> pure 2, (try $ reserved "f") *> pure 2, (try $ reserved "s") *> pure 2, natural]
     pure x
 
 nava:: P Value
@@ -392,7 +392,7 @@ makeNava = do
 navaNote:: P Int
 navaNote = do
     _ <- pure 1
-    x <- choice [(try $ reserved "\\i") *> pure 2, (try $ reserved "\\a") *> pure 3, (try $ reserved "\\f") *> pure 4, natural]
+    x <- choice [(try $ reserved "i") *> pure 2, (try $ reserved "a") *> pure 3, (try $ reserved "f") *> pure 4, natural]
     pure x
 
 homayun:: P Value
@@ -414,7 +414,7 @@ makeHomayun = do
 homayunNote:: P Int
 homayunNote = do
     _ <- pure 1
-    x <- choice [(try $ reserved "\\i") *> pure 3, (try $ reserved "\\a") *> pure 2, (try $ reserved "\\f") *> pure 4, (try $ reserved "\\s") *> pure 5, natural]
+    x <- choice [(try $ reserved "i") *> pure 3, (try $ reserved "a") *> pure 2, (try $ reserved "f") *> pure 4, (try $ reserved "s") *> pure 5, natural]
     pure x
 
 chahargah:: P Value
@@ -436,7 +436,7 @@ makeChahargah = do
 chahargahNote:: P Int
 chahargahNote = do
     _ <- pure 1
-    x <- choice [(try $ reserved "\\f") *> pure 0, (try $ reserved "\\a") *> pure 5, natural]
+    x <- choice [(try $ reserved "f") *> pure 0, (try $ reserved "a") *> pure 5, natural]
     pure x
 
 mahur:: P Value
@@ -458,7 +458,7 @@ makeMahur = do
 mahurNote:: P Int
 mahurNote = do
     _ <- pure 1
-    x <- choice [(try $ reserved "\\f") *> pure 0, (try $ reserved "\\a") *> pure 0, (try $ reserved "\\s") *> pure 1, natural]
+    x <- choice [(try $ reserved "f") *> pure 0, (try $ reserved "a") *> pure 0, (try $ reserved "s") *> pure 1, natural]
     pure x
 
 rastPanjgah:: P Value
@@ -480,7 +480,7 @@ makeRastPanjgah = do
 rastPanjgahNote:: P Int
 rastPanjgahNote = do
     _ <- pure 1
-    x <- choice [(try $ reserved "\\f") *> pure 3, (try $ reserved "\\a") *> pure 3, natural]
+    x <- choice [(try $ reserved "f") *> pure 3, (try $ reserved "a") *> pure 3, natural]
     pure x
 
 orbit:: P Value
@@ -931,9 +931,9 @@ parseSpan = do
     _ <- pure 1
     x <- choice [
                    reserved "-_" *>  pure CycleInBlock <|> reserved ":cycleIn" *> pure CycleInBlock
-                 , try $ reserved "_-" *>  pure CycleBlock <|> reserved ":cycleBlock" *> pure CycleBlock
+                 , try $ reserved "_-" *>  pure CycleBlock <|> reserved ":isorhythmicBlock" *> pure CycleBlock
                  , try $ reserved "_-_" *> pure SpreadBlock <|> reserved ":spread" *> pure SpreadBlock
-                 , reserved "_" *>   pure  CycleEvent <|> reserved ":cycle" *> pure CycleEvent
+                 , reserved "_" *>   pure  CycleEvent <|> reserved ":isorhythmic" *> pure CycleEvent
                 ]  <|> pure CycleEvent
     pure x
 

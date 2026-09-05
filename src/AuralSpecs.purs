@@ -1,4 +1,4 @@
-module AuralSpecs (auralSpecs) where 
+module AuralSpecs (auralSpecs, visualSpecs) where 
 
 import Prelude
 
@@ -40,14 +40,14 @@ import Data.DateTime.Instant
 import Data.Time.Duration
 
 -- aural specs maps on the list of aurals. One aural attribute at the time to process
-auralSpecs:: Voices -> Rhythmic -> List Aural -> M.Map String Tuning -> Array Event -> Effect (Array Foreign)
-auralSpecs v r aurals x es' = map concat <$> traverseDefault (\a -> auralSpecs' v r a x es) $ fromFoldable aurals
+auralSpecs:: Voices -> Rhythmic -> List Aural -> M.Map String Tuning -> String -> Array Event -> Effect (Array Foreign)
+auralSpecs v r aurals t aKey es' = map concat <$> traverseDefault (\a -> auralSpecs' v r a t aKey es) $ fromFoldable aurals
     where es = filter checkOnset es' -- here O get removed!
 
-auralSpecs':: Voices -> Rhythmic -> Aural -> M.Map String Tuning -> Array Event -> Effect (Array Foreign)
-auralSpecs' voices rhy aural tuning events 
+auralSpecs':: Voices -> Rhythmic -> Aural -> M.Map String Tuning -> String -> Array Event -> Effect (Array Foreign)
+auralSpecs' voices rhy aural tuning aKey events 
    | (checkForSound aural) = pure []
-   | otherwise = traverseDefault (processEvent voices rhy aural tuning) events
+   | otherwise = traverseDefault (processEventAsAural voices rhy aural tuning aKey) events
 
 checkForSound:: List Value -> Boolean
 checkForSound aural = not $ elem true $ map isSound aural 
@@ -55,8 +55,21 @@ checkForSound aural = not $ elem true $ map isSound aural
 checkOnset:: Event -> Boolean
 checkOnset (Event o i) = (\(Onset b p) -> b) o 
 
-processEvent:: Voices -> Rhythmic -> List Value -> M.Map String Tuning -> Event -> Effect Foreign
-processEvent v r vals tu ev = do
+visualSpecs:: Voices -> Rhythmic -> List Aural -> M.Map String Tuning -> Array Event -> Effect (Array Visual)
+visualSpecs v r aurals x es = pure $ concat $ map (\a -> visualSpecs' v r a x es) $ fromFoldable aurals
+
+visualSpecs':: Voices -> Rhythmic -> Aural -> M.Map String Tuning -> Array Event -> Array Visual
+visualSpecs' voices rhy aural tuning events = map (processEventAsVisual voices rhy aural tuning) events
+
+processEventAsVisual:: Voices -> Rhythmic -> List Value -> M.Map String Tuning -> Event -> Visual
+processEventAsVisual v r vals tu ev = {when: when,onset:  o,s: s,n: n}
+    where when = processWhen ev 
+          o = checkOnset ev
+          s = processSound v r (getS vals) ev 
+          n = processN v r (getN vals) ev 
+
+processEventAsAural:: Voices -> Rhythmic -> List Value -> M.Map String Tuning -> String -> Event -> Effect Foreign
+processEventAsAural v r vals tu aKey ev = do
   let when = processWhen ev 
   let s = processSound v r (getS vals) ev 
   let n = processN v r (getN vals) ev 
@@ -74,10 +87,10 @@ processEvent v r vals tu ev = do
   let legato = processLegato v r (getLegato vals) ev
   let orbit = processOrbit v r (getOrbit vals) ev
   let note = processNote v tu r (getNote vals) (getXNote vals) ev
-  makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh maxw minw inter legato orbit note
-
-makeWebDirtEvent:: Number -> String -> Int -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe String -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Int -> Maybe Number -> Effect Foreign
-makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh maxw minw inter legato orbit note = do
+  makeWebDirtEvent aKey when s n gain pan speed begin end vowel cutoff cutoffh maxw minw inter legato orbit note
+  
+makeWebDirtEvent:: String -> Number -> String -> Int -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe String -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Number -> Maybe Int -> Maybe Number -> Effect Foreign
+makeWebDirtEvent aKey when s n gain pan speed begin end vowel cutoff cutoffh maxw minw inter legato orbit note = do
   oEvent <- objectWithWhenSN when s n
   oG <- optVNum oEvent gain addGain
   oP <- optVNum oG pan addPan 
@@ -93,7 +106,9 @@ makeWebDirtEvent when s n gain pan speed begin end vowel cutoff cutoffh maxw min
   oOrbit <- optVInt oLeg orbit addOrbit
   oV <- optVStr oOrbit vowel addVowel
   oN <- optVNum oV note addNote
-  pure oN
+  oFinal <- optVStr oN (Just aKey) addKey
+--   log $ unsafeFromForeign oFinal
+  pure oFinal
 
 
 optVNum:: Foreign -> Maybe Number -> (Foreign -> Number -> Effect Foreign) -> Effect Foreign

@@ -1,4 +1,4 @@
-module TemporalSpecs (calculateTemporal) where
+module TemporalSpecs (calculateTemporal, processTempoMark) where
 
 import Prelude
 import Effect (Effect)
@@ -75,17 +75,21 @@ calculateTemporal mapa tp aKey (Temporal (Metric cTo' cFrom' tm) rhythmic loop) 
   let unlooped = addPosixOriginToCalculation posixAtOrigin $ filter (\e -> (posFromEvent e) >= ws && (posFromEvent e) < we) $ unloopEvents events
   pure $ if loop then looped else unlooped
                                   -- v2            --v1
-calculateTemporal mapa tp aKey (Temporal (Converge cKey cTo' cFrom' tm) rhythmic loop) = do
+calculateTemporal mapa tp aKey (Temporal (Converge cKey cTo' cFrom' tm) rhythmic loop) = do 
   let dur = establishDur tm tp.tempo mapa rhythmic
   let lengthRhythm = (length $ fromFoldable $ rhythmicToOnsets rhythmic)-1
   let lengthRhythmTo = (length $ fromFoldable $ rhythmicToOnsets $ getRhythmicFromMap mapa cKey)-1
   let simCTo = simplifyCTo lengthRhythmTo cTo'   
   let simCFrom = simplifyCFrom lengthRhythm cFrom'
+  -- x1ConvergeVoice:: TimePacket -> TempoMark -> String -> ConvergeTo -> ConvergeFrom -> Rhythmic -> M.Map String Temporal -> Effect Number 
+  -- log ("convergenceFrom: " <> aKey)
+  -- log ("convergenceTo: " <> cKey)
   x1 <- x1ConvergeVoice tp tm cKey simCTo simCFrom rhythmic mapa -- v1
   let posixAtOrigin = fromDateTimeToPosix (origin tp.tempo)
   let ws = secsFromOriginAtWS tp
   let we = secsFromOriginAtWE tp
   let blocks = getBlocks (ws - dur) we x1 dur -- to check
+  -- log ("blocksConvergeTemporal: " <> show blocks)
   let onsetPercent = fromFoldable $ rhythmicToOnsets' tm tp.tempo mapa rhythmic --[Onsets] Pos in Percentage
   let onsets = onsetsFromBlocks blocks onsetPercent dur --[Onsets] absolute position        
   let indexes = getIndexes rhythmic (ws - dur) we x1 dur -- Array Index
@@ -95,6 +99,9 @@ calculateTemporal mapa tp aKey (Temporal (Converge cKey cTo' cFrom' tm) rhythmic
   let looped = addPosixOriginToCalculation posixAtOrigin $ filter (\e -> (posFromEvent e) >= ws && (posFromEvent e) < we) events
   let unlooped = addPosixOriginToCalculation posixAtOrigin $ filter (\e -> (posFromEvent e) >= ws && (posFromEvent e) < we) $ unloopEvents events
   pure $ if loop then looped else unlooped
+
+
+
 ----- CALCULATE NOVUS!!!!!!!!!!!!!
 calculateTemporal mapa tp aKey (Temporal (Novus vKey cFrom' tm) rhythmic loop) = do
   let dur = establishDur tm tp.tempo mapa rhythmic
@@ -149,6 +156,7 @@ x1ConvergeVoice tp tm cKey cTo' cFrom' rhythmic mapa = do
   refX1 <- findReferencedX1 tp refTemporal mapa
   refVoiceAtEval <- elapsedVoiceAtEval tp refX1 refDur -- not secs but cycles
   -- log ("refVoiceAtEval top " <> show refVoiceAtEval)
+  -- log ("key recur 2: " <> cKey)
   let innerPos = innerPosCTo refRhythmic cTo'
   let cTo = calculateCToNEW innerPos refVoiceAtEval cTo'
   let cFrom = calculateCFrom cFrom' rhythmic
@@ -173,7 +181,7 @@ findReferencedX1 tp (Temporal (Converge cKey cTo cFrom tm) rhy l) mapa = do
   -- log ("key " <> show cKey) 
   -- log ("way: " <> show way)      -- v1               --v0
   recursiveX1 <- recursiveRefX1 tp (Temporal (Converge cKey cTo cFrom tm) rhy l) mapa Nothing way -- v1's x1
-  -- log ("x1 converge voice" <> show recursiveX1)
+  log ("x1 converge voice" <> show recursiveX1)      
   pure recursiveX1
   ---- calculate NOVUS!!!!!!!!!!!!!!!!!!!!!!!!
 findReferencedX1 tp (Temporal (Novus vKey cFrom tm) rhy l) mapa = pure 0.0
@@ -403,18 +411,24 @@ rhythmicToOnsets' tm xT m rhy = case tm of
                                       otherRhy = getRhythmic otherTemporal
                               _ -> rhythmicToOnsets rhy
 
+
+-- transforms all tempo marks into one tempo frequency: Cycles per minute. So, the freq of any singular onset/offset (X/O). If tempo is 60CPM then the output of this function is 60.0. This output (freq) is the input for establishDur and the output of establishDur is a block's duration in seconds.
 processTempoMark:: TempoMark -> Tempo -> M.Map String Temporal -> Number 
-processTempoMark (CPM cpm) _ _ = R.toNumber (cpm / (4%1))
-processTempoMark (BPM bpm figure) _ _ = R.toNumber ((bpm / (4%1)) / figure)
+processTempoMark (TL tl) _ _ = R.toNumber (tl / (4%1))
+processTempoMark (CPM cpm) _ _ = R.toNumber cpm
 processTempoMark (CPS cps) _ _ = R.toNumber (cps * (60%1))
+processTempoMark (BPM bpm figure) _ _ = R.toNumber ((bpm / (4%1)) / figure)
 processTempoMark XTempo t _ = (R.toNumber (t.freq * (60%1) * (4%1)))
 processTempoMark (Prop id x y) t mapa = fromMaybe 120.0 otherTempo
   where prop = (toNumber x / toNumber y)
         otherTempo = (\temporal -> calculateRTempo mapa t (tempoMark temporal) prop) <$> M.lookup id mapa
 processTempoMark other t mapa = 0.0 
 
+
+-- This function calculates the freq for tempi derived from other tempi
 calculateRTempo:: M.Map String Temporal -> Tempo -> TempoMark -> Number -> Number 
-calculateRTempo m t (CPM cpm) prop = (R.toNumber (cpm / (4%1))) * prop
+calculateRTempo m t (TL tl) prop = (R.toNumber (tl / (4%1))) * prop
+calculateRTempo m t (CPM cpm) prop = (R.toNumber cpm) * prop
 calculateRTempo m t (BPM bpm figure) prop = (R.toNumber ((bpm / (4%1)) / figure)) * prop
 calculateRTempo m t (CPS cps) prop = R.toNumber (cps * (60%1)) * prop
 calculateRTempo m t XTempo prop = (R.toNumber (t.freq * (60%1) * (4%1))) * prop

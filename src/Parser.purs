@@ -116,7 +116,8 @@ polytemporalRelation' = do
   whitespace
   idFrom <- voiceId
   subVoice <- subVoiceParser <|> pure ""
-  cFrom <- try (brackets $ cFromParser) <|> pure (Tuple 0 ((Process 0):Nil))
+  cFrom <- try (brackets $ cFromParser) <|> pure (Tuple 0 (Process 0))
+  -- cFrom <- try (brackets $ cFromParser) <|> pure (Tuple 0 ((Process 0):Nil))
   cTo <- try (cToParser) <|> pure {idCTo: Nothing, indxCTo: Nothing} 
   -- tempi <- choice [try genTempoMarks, try tempoOperArray, try tempoMark', try tempoMarks] <|> pure (XTempo:Nil)
   vtempi <- choice [try genTempoMarks, varixToTempi <$> X.expr]
@@ -212,7 +213,7 @@ cToParser:: P {idCTo:: Maybe (Either String String), indxCTo:: Maybe (Tuple Int 
 cToParser = do
   _ <- pure 0
   whitespace
-  _ <- strWS "<-"
+  _ <- reservedOp "><"
   cTo <- choice [try cToNovus, try cToExternal, cToConverge]
   pure {idCTo: cTo.idCTo, indxCTo: cTo.indxCTo}
 
@@ -282,24 +283,25 @@ voiceIdM = do
     x <- identifier -- many $ noneOf ['\\','<',' ']
     pure (Just $ Right x)
 
-cFromParser:: P (Tuple Int (List ConvergeFrom))
+cFromParser:: P (Tuple Int ConvergeFrom)
 cFromParser = do
   _ <- pure 0
   whitespace
-  choice [try indxCFrom, defaultIndx]
+  cFrom <- choice [try indxCFrom, defaultIndx]
+  pure $ Tuple (fst cFrom) (snd cFrom)
 
-defaultIndx:: P (Tuple Int (List ConvergeFrom))
+defaultIndx:: P (Tuple Int ConvergeFrom)
 defaultIndx = do
   _ <- pure 0
-  cFrom <- many1 $ choice [try cFromLast, try cFromPercen, try cFromStructure, cFromProcess]
-  pure $ Tuple 0 $ L.fromFoldable cFrom
+  cFrom <- choice [try cFromLast, try cFromPercen, try cFromStructure, cFromProcess]
+  pure $ Tuple 0 cFrom
 
-indxCFrom:: P (Tuple Int (List ConvergeFrom))
+indxCFrom:: P (Tuple Int ConvergeFrom)
 indxCFrom = do
   _ <- pure 0
   indx <- indexParser <|> pure 0
-  cFrom <- many1 $ choice [try cFromLast, try cFromPercen, try cFromStructure, cFromProcess]
-  pure $ Tuple indx $ L.fromFoldable cFrom
+  cFrom <- try $ choice [try cFromLast, try cFromPercen, try cFromStructure, cFromProcess]
+  pure $ Tuple indx cFrom
 
 indexParser:: P Int 
 indexParser = do
@@ -311,7 +313,6 @@ indexParser = do
 ----------
 
 -- ISSUES
----- range of Numbers is absolutely broken. DO NOT USE
 ---- Make all tests: start testing all the checks: tempoCheck
 -- TO DO LIST October 17th:
 ---- refactor Aural and Value
@@ -370,14 +371,14 @@ expression = do
 tuningExpression:: P Expression
 tuningExpression = do
   _ <- pure 1
-  x <- braces $ many $ tuning
-  pure $ PitchExpression $ unions x
+  x <- tuning
+  pure $ PitchExpression x
 
 tuning:: P (Map String Tuning)
 tuning = do
   _ <- pure 1
   id <- identifier
-  _ <- reserved "<-"
+  _ <- reservedOp ":"
   x <- choice [try cpSet, parseScala] --, try mos, try edo]
   _ <- reserved ";"
   pure $ singleton id x
@@ -637,7 +638,7 @@ polytemporalRelation = do
   pure $ inACan p rhydur
   -- pure $ singleton (fst p) $ Temporal (snd p) (fst rhydur) (snd rhydur)
 
-inACan:: Map String Polytemporal -> Tuple Rhythmic Boolean -> Map String  Temporal
+inACan:: Map String Polytemporal -> Tuple Rhythmic Boolean -> Map String Temporal -- this string already contains the index
 inACan mapa rhy = mapMaybe (\p -> Just (Temporal p (fst rhy) (snd rhy))) mapa 
 
 -- inACanCheck:: Map String Polytemporal -> Map String Polytemporal
@@ -907,15 +908,12 @@ ratio = do
   y <- natural
   pure $ Prop (id <> "-" <> indexID)  x y
 
-indexIDParse:: P String -- you are here
+indexIDParse:: P String 
 indexIDParse = do
   _ <- pure 1
   n <- brackets $ natural
   pure $ show n
 
--- to do: tempo should be allowed to be multiplied by factors or added or something!
--- like this: 300cpm * [1.1,2.1,3.2,0.9]
--- add negative numbers to all this mess
 
 
 --
@@ -1069,29 +1067,3 @@ toRat x =
         fract = x - (toNumber floored) -- 12.5 - 12.0 = 0.5
         fract' = round $ fract * (toNumber pFact) -- 500000
     in (floored%1) + (fract'%pFact) -- 12 + (500000%1000000)
-
-
-
-
------- this is an attempt to create a Number range using Formatter
--- getProperDigits:: String -> String -> Either String N.Formatter
--- getProperDigits a b =
---   case (length a' <= 2) && (length b' <= 2) of  
---     false -> "not really a number"
---     true -> if a'!0 > b'!0 then 
---   where a' = split (Pattern ".") a
---         b' = split (Pattern ".") b
-
--- compareAB:: Maybe Int -> Maybe Int -> String
--- compareAB (Just a) (Just b) = if a>=b then a "0" else b
--- compareAB Nothing (Just b) = b
--- compareAB (Just a) Nothing = a
--- compareAB Nothing Nothing = 0
-
--- parseNumFormatter:: Either String N.Formatter
--- parseNumFormatter = N.parseFormatString "0.000"
-
--- parseNum:: String -> Either String Number
--- parseNum s = case parseNumFormatter of 
---                 Left x -> Left x
---                 Right x -> N.unformat x s

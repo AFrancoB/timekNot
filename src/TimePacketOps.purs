@@ -80,9 +80,10 @@ voiceFromOriginToEval tp vTempo vUnits = originSecsAtEval / voiceDur
           voiceDur = durInSecs vUnits vTempo
 
 
-fromDateTimeToPosix:: DateTime -> Number
+fromDateTimeToPosix:: DateTime -> Number -- this is expressed in seconds fromDateTime generates Instant which is in miliseconds from the start of this epoch
 fromDateTimeToPosix x = (unwrap $ unInstant $ fromDateTime x)/1000.0000
 
 fromDateTimeToPosixMaybe:: Maybe DateTime -> Maybe Number
 fromDateTimeToPosixMaybe (Just x) = Just $ (unwrap $ unInstant $ fromDateTime x)/1000.0000
 fromDateTimeToPosixMaybe Nothing = Nothing
+

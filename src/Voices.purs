@@ -1,4 +1,4 @@
-module Voices (programToForeign,canAuralMap,mapA) where
+module Voices (programToForeign, programToVisuals,canAuralMap,mapA) where
 
 import Prelude
 import Effect (Effect)
@@ -22,6 +22,9 @@ import Aural  -- getPitchXMap  --- this two functions do not seem to belong in t
 import TestOpsAndDefs
 import TemporalSpecs
 import AuralSpecs
+import TimePacketOps (fromDateTimeToPosix, numToDateTime)
+
+import PianoRollTesting
 
 -- glosario:
 ---- Voice is an ongoing or finished or yet-to-be-played musical idea enabled by 
@@ -33,6 +36,18 @@ import AuralSpecs
 ---- eventIndex is the way I will refer to process oriented indexes
 ---- structure-oriented index: an int identifier for each segment on a voice and an array to identifier internal events in a voice: The head is the 'natural' subdivisions of the voice, each new element in the array is a new subdivision
 ---- a structure oriented index has a voice index and a structure index. A voice index is an Int while the Structure Index is an Array Int. The notation I have made for the structure oriented index is: 3-0.2.4  to the left of the (-) is the block index and to the right of it is the event position in the rhythmic idea. The head of the array is the top level of the nested subdivisions and the last is the deepest level of the subdivisions.  
+
+programToVisuals::  Tuple DateTime Program -> {ws:: DateTime, we:: DateTime, origin:: DateTime, tempo:: Tempo, vantageMap:: VantageMap}
+ -> Effect Unit  -- check the return type of draw
+programToVisuals (Tuple e program) tp = do 
+  let temporal = getTemporalMap program -- Temporal Map
+  let voices' = programToVoice program -- Voices
+  let tuning = getPitchMap program -- Map String Pitch
+  let timePacket = {ws: numToDateTime (((fromDateTimeToPosix tp.ws) - 5.0)*1000.0), we: numToDateTime (((fromDateTimeToPosix tp.we) + 5.0)*1000.0), eval: e, origin: tp.origin, tempo: tp.tempo, vantageMap: tp.vantageMap}
+
+  visualMap <- calculateVisuals temporal voices' tuning timePacket  -- :: Map String Visuals
+
+  draw visualMap timePacket
 
 
 programToForeign::  Tuple DateTime Program -> {ws:: DateTime, we:: DateTime, origin:: DateTime, tempo:: Tempo, vantageMap:: VantageMap}
@@ -112,6 +127,16 @@ splitter str = fromMaybe (Tuple "2666" Nothing) $ funca strList
 ---------- Map String (List Aural) to:
 ------------- Map String (List (Tuple Aural Transposition))
 
+calculateVisuals:: M.Map String Temporal -> Voices -> M.Map String Tuning -> TimePacket ->  Effect (M.Map String (Array Visual))
+calculateVisuals tempoMap voiceMap tuning tp = traverseWithIndex (calculateVisual tempoMap voiceMap tuning tp) voiceMap
+
+calculateVisual:: M.Map String Temporal -> Voices -> M.Map String Tuning-> TimePacket -> String -> Voice -> Effect (Array Visual)
+calculateVisual tempoMap voiceMap tuning tp aKey (Voice temporal aurals) = do 
+    let events = calculateTemporal tempoMap tp aKey temporal
+    let rhythmic = getRhythmic temporal
+    events >>= (visualSpecs voiceMap rhythmic aurals tuning)
+        
+        
 calculateVoices:: M.Map String Temporal -> Voices -> M.Map String Tuning -> TimePacket -> Effect (M.Map String (Array Foreign)) -- (M.Map String (Array AlmostWaste))
 calculateVoices tempoMap voiceMap tuning tp = traverseWithIndex (calculateVoice tempoMap voiceMap tuning tp) voiceMap  -- to get rid of Effect, change traverseWithIndex to mapWithIndex
 
@@ -119,4 +144,4 @@ calculateVoice:: M.Map String Temporal -> Voices -> M.Map String Tuning-> TimePa
 calculateVoice tempoMap voiceMap tuning tp aKey (Voice temporal aurals) = do 
     let events = calculateTemporal tempoMap tp aKey temporal -- Array Event
     let rhythmic = getRhythmic temporal
-    events >>= (auralSpecs voiceMap rhythmic aurals tuning) 
+    events >>= (auralSpecs voiceMap rhythmic aurals tuning aKey)   ---- the aKey goes to the auralSpecs through here!!!!! So easy!!!!!!!
