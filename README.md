@@ -2,7 +2,7 @@ TimekNot
 ==============
 ***Polytemporal language for Live Coding and Tempo Music Experimentation***
 
-**Author:** *Alejandro Franco Briones*
+*Alejandro Franco Briones*
 
 
 # Temporal Expressions
@@ -52,7 +52,7 @@ myClock.s = "muted" .n = 4 3 2 1 0 .shur = 0 2 4; -- we will ignore this line fo
 myClock 350cpm | ![xx][ox]x#3 [oxx] :|
 ~~~~
 
-This notation is a shortcut to create longer *rhythmic blocks*. Notice the `!` at the begining o what needs to be repeated and the suffix is a `#` with the amount of repetitions required. The block above is equivalent to:
+This notation is a shortcut to create longer *rhythmic blocks*. Notice the `!` at the begining of what needs to be repeated and the suffix is a `#` with the amount of repetitions required. The block above is equivalent to:
 
 ~~~~
 myClock 350cpm | [xx][ox]x [xx][ox]x [xx][ox]x [oxx] :|
@@ -71,7 +71,7 @@ With rotation:
 `(3,8,1)` will produce `ooxooxox`
 
 With a partial pattern:
-`(xx,3,8)` will produce `xxooooxxooooxxoo`
+`(xx,3,8)` will produce `xxoooo xxoooo xxoo`
 
 With a full pattern:
 `(x[xx],o[ox], 3,8)` will produce `x[xx] o[ox] o[ox] x[xx] o[ox] o[ox] x[xx] o[ox]`
@@ -134,17 +134,17 @@ After span, players need to provide a list of values. Sound, exceptionally requi
 ~~~~
 myClock 300tl | xxox :|
 
-myClock.s = "muted sankoor muted" .n = 0 2 4 3 1;
+myClock.s = _ "muted sankoor muted" .n = _ 0 2 4 3 1;
 ~~~~
 
 This produces an isorhythmic sequence as follows:
 
 Like this:
 
-| val | X     | X     | O     | X     | X     | X     | O     | X     | etc... |
-|-----|-------|-------|-------|-------|-------|-------|-------|-------|--------|
-| s   | muted |sankoor| muted | muted |sankoor| muted | muted |sankoor| etc... |
-| n   | 0     | 2     | 4     | 3     | 1     | 0     | 2     | 4     | etc... |
+| *val* | X     | X     | O     | X     | X     | X     | O     | X     | etc... |
+|-------|-------|-------|-------|-------|-------|-------|-------|-------|--------|
+| *s*   | muted |sankoor| muted | muted |sankoor| muted | muted |sankoor| etc... |
+| *n*   | 0     | 2     | 4     | 3     | 1     | 0     | 2     | 4     | etc... |
 
 
 The notation for this section will drastically improve soon...
