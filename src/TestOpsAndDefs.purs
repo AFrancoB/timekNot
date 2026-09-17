@@ -1,4 +1,4 @@
-module TestOpsAndDefs (getPolytemporal,getRhythmic, getRhythmicFromMap,getLoop,tempoMark,convergeTo,convergeFrom,defMapTemporals,defTemporal,defPolytemporal,defConvergeTo,defConvergeFrom,defVoice,defAural, defEvent, t) where
+module TestOpsAndDefs (tp,a,b,c,d,e,f,g, rhD, tmD, convergeToD, convergeFromD, getPolytemporal,getRhythmic, getRhythmicFromMap,getLoop,tempoMark,convergeTo,convergeFrom,defMapTemporals,defTemporal,defTemporalMetric,defPolytemporal,defConvergeTo,defConvergeFrom,defVoice,defAural, defEvent, t) where
 
 import Prelude
 
@@ -19,6 +19,7 @@ import Data.DateTime
 import Data.Enum
 import Partial.Unsafe
 
+import TimePacketOps
 --- helpers
 
 -- if need to get polytempo, loop tempomark follow the model of getRhythmicFromMap
@@ -65,15 +66,52 @@ getConvergeFrom _ = defConvergeFrom
 -- testProgramToWaste ws we eval bpm str = (\pr -> programToWaste pr (wP ws) (wP we) (wP eval) (t' bpm)) <$> parsed 
 --   where parsed = runParser str parseProgram
 
+
+-- Tuple "b-0" Converge "a-0" 10 Snap >> 0 60 % 1cpm xo looped
+
+tmD = CPM (60%1)
+
+convergeToD = ProcessTo 0 Origin
+
+convergeFromD = Process 0
+
+rhD = Rhythmics (fromFoldable [X,O])
+
+-- temporals from above:
+-- a = Temporal (Metric (ProcessTo 3 SnapAfter) (Process 0) (CPM (60%1))) (Rhythmics (fromFoldable [X])) true
+-- b = Temporal (Converge "a-0" (ProcessTo 1 Origin) (Process 0) (CPM (60%1))) (Rhythmics (fromFoldable [X,O])) true
+-- c = Temporal (Converge "b-0" (ProcessTo 1 Origin) (Process 0) (CPM (60%1))) (Rhythmics (fromFoldable [X,O])) true
+-- d = Temporal (Converge "c-0" (ProcessTo 1 Origin) (Process 0) (CPM (60%1))) (Rhythmics (fromFoldable [X,O])) true
+-- e = Temporal (Converge "d-0" (ProcessTo 1 Origin) (Process 0) (CPM (60%1))) (Rhythmics (fromFoldable [X,O])) true
+-- f = Temporal (Converge "e-0" (ProcessTo 1 Origin) (Process 0) (CPM (60%1))) (Rhythmics (fromFoldable [X,O])) true
+-- g = Temporal (Converge "f-0" (ProcessTo 1 Origin) (Process 0) (CPM (60%1))) (Rhythmics (fromFoldable [X,O])) true
+
+
+a = Temporal (Metric (ProcessTo 0 Origin) (Process 0) (CPM (60%1))) (Rhythmics $ fromFoldable [X]) true
+b = Temporal (Converge "a-0" (ProcessTo 3 SnapAfter) (Process 0) (CPM (60%1))) (Sd $ Rhythmics $ fromFoldable [O,X]) true
+c = Temporal (Converge "b-0" (ProcessTo 2 Origin) (Process 0) (CPM (120%1))) (Sd $ Rhythmics $ fromFoldable [O,X]) true
+d = Temporal (Converge "c-0" (ProcessTo 3 Origin) (Process 0) (CPM (60%1))) (Sd $ Rhythmics $ fromFoldable [O,X,X]) true
+e = Temporal (Converge "d-0" (ProcessTo 3 Origin) (Process 0) (CPM (60%1))) (Sd $ Rhythmics $ fromFoldable [O,X,X]) true
+f = Temporal (Converge "e-0" (ProcessTo 3 Origin) (Process 0) (CPM (60%1))) (Sd $ Rhythmics $ fromFoldable [O,X,X]) true
+g = Temporal (Converge "f-0" (ProcessTo 3 Origin) (Process 0) (CPM (60%1))) (Sd $ Rhythmics $ fromFoldable [O,X,X]) true
+
+
 defMapTemporals = M.fromFoldable [
-  Tuple "v0" (Temporal (Metric (ProcessTo 1 SnapAfter) (Process 0) (BPM (135%1) (1%4))) (Rhythmics (fromFoldable [X,X,X,X])) false),
-  Tuple "v1" (Temporal (Converge "v0" (ProcessTo 3 Origin) (Process 0) (BPM (150%1) (1%4))) (Rhythmics (fromFoldable [X,X,X,X])) false),
-  Tuple "v2" (Temporal (Converge "v1" (ProcessTo 0 Origin) (Process 0) XTempo) (Rhythmics (fromFoldable [X,X,X,X])) false) --,
+  Tuple "a-0" a,
+  Tuple "b-0" b,
+  Tuple "c-0" c,
+  Tuple "d-0" d,
+  Tuple "e-0" e,
+  Tuple "f-0" f,
+  Tuple "g-0" g
   -- Tuple "v3" (Temporal (Converge "v2" (ProcessTo 0 Origin) (Process 0) (CPM (120%1))) X false),
   -- Tuple "v4" (Temporal (Kairos 0.0 (CPM (120%1))) O false)
 ]
 
-defTemporal = Temporal (Kairos 0.0 (CPM (120%1))) O false
+
+defTemporalMetric = Temporal (Metric (ProcessTo 0 Origin) (Process 0) (CPM (60%1))) (Rhythmics (fromFoldable [X,O])) true
+-- defTemporal = Temporal (Kairos 0.0 (CPM (120%1))) O false
+defTemporal = Temporal (Converge "def-2666" (ProcessTo 5666 SnapAfter) (Process 3666) (CPM (2666%1))) (Rhythmics (fromFoldable [X,O])) true
 defTempoMark = CPM (120%1)
 defPolytemporal = Kairos 0.0 defTempoMark
 
@@ -90,6 +128,9 @@ defOnset = Onset true 0.0
 defIndex = Index 0 [0] 0
 
   ---- testing stuff ---------------
+tp:: TimePacket
+tp = assambleTimePacket (wP 1.0) (wP 1.2) eval t M.empty
+
 makeDate :: Int -> Month -> Int -> Date
 makeDate y m d = 
     unsafePartial $ fromJust $ 
